@@ -1,4 +1,5 @@
 import HomePage from '../pages/home.vue';
+import CategoriesPage from '../pages/categories.vue';
 import Question from '../pages/question.vue';
 import Home1Page from '../pages/home1.vue';
 import AboutPage from '../pages/about.vue';
@@ -17,7 +18,7 @@ var routes = [
   {
     path: '/categories/',
     name: 'Categories',
-    component: HomePage
+    component: CategoriesPage
   },
   {
     path: '/categories/:categoryID/questions',
