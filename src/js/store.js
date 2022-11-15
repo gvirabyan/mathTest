@@ -12,13 +12,21 @@ const getAnswersList = (data, answer) => {
 
 const store = createStore({
   state: {
+    user: {
+      id: 1,
+      username: "testUser"
+    },
     categories: [],
     category: [],
     questions: [],
+    question: {},
     questionIndex: 0,
-    categoryAnswers: [],
+    categoryAnswers: []
   },
   getters: {
+    user({ state }) {
+      return state.user;
+    },
     categories({ state }) {
       return state.categories;
     },
@@ -28,11 +36,11 @@ const store = createStore({
     questions({ state }) {
       return state.questions;
     },
-    questionIndex({ state }) {
-      return state.questionIndex;
+    question({ state }) {
+      return state.question;
     },
     getAnswers({ state }) {
-      return getAnswersList(state.categoryAnswers, state.questions[state.questionIndex]?.attributes?.answer)
+      return getAnswersList(state.categoryAnswers, state.question?.attributes?.answer)
     }
   },
   actions: {
@@ -42,12 +50,36 @@ const store = createStore({
       })
     },
     getCategory({ state }, categoryID) {
-      fetch(`http://localhost:1337/api/categories/${categoryID}?fields=name&populate=questions,answer`).then(res => res.json()).then(data => {
+      fetch(`http://localhost:1337/api/categories/${categoryID}?fields=name&populate=answer`).then(res => res.json()).then(data => {
         state.category = { id: data?.data?.id, name: data?.data?.attributes?.name } || [];
-        state.questions = data?.data?.attributes?.questions?.data || [];
         state.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
       })
     },
+    getQuestions({ state }, categoryID) {
+      fetch(`http://localhost:1337/api/questions?filters[user_answers][id][$null]=true&filters[category][id][$eq]=${categoryID}`).then(res => res.json()).then(data => {
+        state.questions = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
+        state.question = state.questions[state.questionIndex];
+      })
+    },
+    async updateUserAnsweredQuestions({ state }, answer) {
+      return fetch(`http://localhost:1337/api/user-answers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({data: answer})
+      }).then(res => res.json()).then(data => {
+        if (!data.error) {
+          return { status: 'success' }
+        } else {
+          return  { status: 'error', message: data.error?.message }
+        }
+      })
+    },
+    getNextQuestion({ state }) {
+      state.questionIndex++;
+      state.question = state.questions[state.questionIndex];
+    }
   }
 })
 export default store;

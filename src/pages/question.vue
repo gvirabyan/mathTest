@@ -1,24 +1,37 @@
 <template>
   <f7-page name="category">
     <f7-navbar :title="category.name" back-link="Back"></f7-navbar>
-    <f7-block-title>{{ questions[questionIndex]?.attributes?.question }}</f7-block-title>
-    <f7-block-header>What will be the result of this mathematical operation ?</f7-block-header>
-    <f7-list>
-      <f7-list-item v-for="(answer, index) in questionAnswers"
-                    :title="answer"
-                    radio-icon="end"
-                    name="demo-radio-end"
-                    radio
-      ></f7-list-item>
-    </f7-list>
+    <div v-if="question">
+      <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
+      <f7-block-header>What will be the result of this mathematical operation ?</f7-block-header>
 
-    <f7-list>
-      {{questions.length ? questions[questionIndex] : 'zz'}}
-      <f7-list-item v-for="question in questions"
-                    :link="`/categories/${f7route.params.categoryID}/questions/${question.id}`"
-                    :title="question.attributes.question"
-      ></f7-list-item>
-    </f7-list>
+      <f7-list>
+        <f7-list-item v-for="(answer, index) in questionAnswers"
+                      :class="{
+                        'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
+                        'hg-correct-answer': chosenAnswer && question.attributes?.answer === answer
+                      }"
+                      :disabled="!!chosenAnswer"
+                      :title="answer"
+                      radio-icon="end"
+                      name="demo-radio-end"
+                      @change="chooseAnswer(answer, index)"
+                      radio
+        ></f7-list-item>
+      </f7-list>
+
+      <div class="hg-actions-btns-content">
+        <button v-if="!chosenAnswer"
+                class="button button-outline hg-default-btn-width"
+                @click="skip"
+        >Skip</button>
+
+        <button v-else
+                class="button button-fill hg-default-btn-width"
+                @click="next"
+        >Next</button>
+      </div>
+    </div>
   </f7-page>
 </template>
 
@@ -32,23 +45,87 @@ export default {
     f7route: Object,
   },
   setup() {
+    const user = useStore('user');
     const category = useStore('category');
-    const questions = useStore('questions');
-    const questionIndex = useStore('questionIndex');
+    const question = useStore('question');
     const questionAnswers = useStore('getAnswers');
 
     return {
+      user,
       category,
-      questions,
-      questionIndex,
+      question,
       questionAnswers
     }
   },
   data() {
-    return {}
+    return {
+      chosenAnswer: false,
+      chosenAnswerIndex: false
+    }
   },
   mounted() {
     store.dispatch('getCategory', this.f7route.params.categoryID);
+    store.dispatch('getQuestions', this.f7route.params.categoryID);
+  },
+  methods: {
+    chooseAnswer(answer, index) {
+      this.chosenAnswer = answer;
+      this.chosenAnswerIndex = index;
+
+      store.dispatch('updateUserAnsweredQuestions', {
+        users_permissions_user: this.user.id,
+        question: this.question.id,
+        answer: answer,
+        status: this.question.attributes.answer === answer ? 'correct' : 'wrong'
+      }).then(resp => {
+        if (resp.status !== 'success') {
+          this.clearChosenData();
+          console.error(resp.message);
+        }
+      });
+    },
+    skip() {
+      store.dispatch('updateUserAnsweredQuestions', {
+        users_permissions_user: this.user.id,
+        question: this.question.id,
+        answer: '',
+        status: 'skipped'
+      }).then(resp => {
+        if (resp.status === 'success') {
+          this.next();
+        } else {
+          console.error(resp.message);
+        }
+      });
+    },
+    next() {
+      this.clearChosenData();
+      store.dispatch('getNextQuestion')
+    },
+    clearChosenData() {
+      this.chosenAnswer = false;
+      this.chosenAnswerIndex = false;
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.hg-wrong-answer {
+  border: 1px solid red;
+}
+.hg-correct-answer {
+  border: 1px solid green;
+}
+.hg-actions-btns-content {
+  display: flex;
+  justify-content: center;
+}
+.hg-default-btn-width {
+  width: 100px;
+}
+
+.ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
+  display: none;
+}
+</style>

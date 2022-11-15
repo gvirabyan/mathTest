@@ -47,3 +47,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.list {
+  .item-content {
+    height: 60px;
+  }
+}
+</style>
