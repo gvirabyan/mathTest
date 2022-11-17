@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="home">
+  <f7-page name="categories">
     <!-- Top Navbar -->
     <f7-navbar large :sliding="false">
       <f7-nav-left>
@@ -31,7 +31,7 @@ import { useStore } from 'framework7-vue';
 import store from '../js/store';
 
 export default {
-  name: "Home",
+  name: "Categories",
   setup() {
     const categories = useStore('categories');
 

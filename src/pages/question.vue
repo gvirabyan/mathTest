@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="category">
+  <f7-page class="hg-question-page" name="question">
     <f7-navbar :title="category.name" back-link="Back"></f7-navbar>
     <div v-if="question">
       <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
@@ -40,7 +40,7 @@ import store from "../js/store";
 import {useStore} from "framework7-vue";
 
 export default {
-  name: "Category",
+  name: "Question",
   props: {
     f7route: Object,
   },
@@ -111,21 +111,24 @@ export default {
 </script>
 
 <style lang="scss">
-.hg-wrong-answer {
-  border: 1px solid red;
-}
-.hg-correct-answer {
-  border: 1px solid green;
-}
-.hg-actions-btns-content {
-  display: flex;
-  justify-content: center;
-}
-.hg-default-btn-width {
-  width: 100px;
+.hg-question-page {
+  .hg-wrong-answer {
+    border: 1px solid red;
+  }
+  .hg-correct-answer {
+    border: 1px solid green;
+  }
+  .hg-actions-btns-content {
+    display: flex;
+    justify-content: center;
+  }
+
+  .ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
+    display: none;
+  }
 }
 
-.ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
-  display: none;
+.hg-default-btn-width {
+  width: 100px;
 }
 </style>

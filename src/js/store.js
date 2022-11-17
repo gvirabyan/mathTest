@@ -12,10 +12,8 @@ const getAnswersList = (data, answer) => {
 
 const store = createStore({
   state: {
-    user: {
-      id: 1,
-      username: "testUser"
-    },
+    token: localStorage.getItem('user') || '',
+    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     categories: [],
     category: [],
     questions: [],
@@ -79,6 +77,52 @@ const store = createStore({
     getNextQuestion({ state }) {
       state.questionIndex++;
       state.question = state.questions[state.questionIndex];
+    },
+    login({ state }, userData) {
+      return fetch(`http://localhost:1337/api/auth/local`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      }).then(res => res.json()).then(data => {
+        if (!data.error) {
+          state.token = data?.jwt
+          state.user = data?.user
+          localStorage.setItem('token', state.token)
+          localStorage.setItem('user', JSON.stringify(state.user))
+          return { status: 'success' }
+        } else {
+          return  { status: 'error', message: data.error?.message }
+        }
+      })
+    },
+    register({ state }, userData) {
+      return fetch(`http://localhost:1337/api/auth/local/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      }).then(res => res.json()).then(data => {
+        if (!data.error) {
+          state.token = data?.jwt
+          state.user = data?.user
+          localStorage.setItem('token', state.token)
+          localStorage.setItem('user', JSON.stringify(state.user))
+          return { status: 'success' }
+        } else {
+          return  { status: 'error', message: data.error?.message }
+        }
+      })
+    },
+    async logout({ state }) {
+      state.token = ''
+      state.user = null
+      localStorage.removeItem('token', state.token)
+      localStorage.removeItem('user', JSON.stringify(state.user))
+
+      return { status: 'success' }
     }
   }
 })
