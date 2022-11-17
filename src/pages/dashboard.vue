@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="dashboard">
+  <f7-page class="hg-dashboard-content" name="dashboard">
     <!-- Top Navbar -->
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -115,63 +115,5 @@ export default {
 </script>
 
 <style lang="scss">
-.list {
-  .item-content {
-    height: 60px;
-  }
-}
-
-.hg-statistics-content {
-  .hg-statistic-item {
-    .card {
-      margin-top: 0;
-      margin-left: 0;
-      margin-right: 0;
-      border-radius: 12px;
-      padding: 10px 12px 7px 12px;
-
-      .hg-body-content {
-        display: flex;
-        justify-content: space-between;
-
-        .hg-content-value {
-          float: right;
-          color: #4f4f4f;
-          font-size: 18px;
-          font-weight: 700;
-        }
-      }
-      .hg-content-title {
-        color: #6c6c6c;
-        text-align: right;
-      }
-    }
-
-    &.hg-last-category-content {
-      .hg-content-icon {
-        color: #31caa0;
-      }
-    }
-    &.hg-answered-questions-content {
-      .hg-content-icon {
-        color: #008eff;
-      }
-    }
-    &.hg-experience-points-content {
-      .hg-content-icon {
-        color: #bd00ff;
-      }
-    }
-    &.hg-active-categories-content {
-      .hg-content-icon {
-        color: #31caa0;
-      }
-    }
-    &.hg-categories-list-content {
-      .hg-content-icon {
-        color: #dc1212;
-      }
-    }
-  }
-}
+@import "../assets/scss/pages/dashboard";
 </style>

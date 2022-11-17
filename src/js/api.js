@@ -1,16 +1,20 @@
-const defaultOptions = {
-  headers: {
-    'Content-Type': 'application/json'
-  },
-};
-if (localStorage.getItem('token')) {
-  defaultOptions.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+const defaultOptions = () => {
+  let options = {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  };
+  if (localStorage.getItem('token')) {
+    options.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+  }
+
+  return options
 }
 
-const get = (url) => fetch(`http://localhost:1337/api/${url}`, defaultOptions);
+const get = (url) => fetch(`http://localhost:1337/api/${url}`, defaultOptions());
 
 const post = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
-  ...defaultOptions,
+  ...defaultOptions(),
   method: "POST",
   body: JSON.stringify(body)
 });

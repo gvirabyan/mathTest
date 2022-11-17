@@ -30,13 +30,5 @@ export default {
 </script>
 
 <style lang="scss">
-.hg-home-page {
-  .hg-welcome-message {
-    margin: auto;
-  }
-
-  .hg-actions-btns-content {
-    margin-top: 70px;
-  }
-}
+@import "../assets/scss/pages/home";
 </style>

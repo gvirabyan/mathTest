@@ -111,24 +111,5 @@ export default {
 </script>
 
 <style lang="scss">
-.hg-question-page {
-  .hg-wrong-answer {
-    border: 1px solid red;
-  }
-  .hg-correct-answer {
-    border: 1px solid green;
-  }
-  .hg-actions-btns-content {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
-  display: none;
-}
-
-.hg-default-btn-width {
-  width: 100px;
-}
+@import "../assets/scss/pages/question";
 </style>

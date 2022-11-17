@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="categories">
+  <f7-page class="hg-categories-page" name="categories">
     <!-- Top Navbar -->
     <f7-navbar large :sliding="false">
       <f7-nav-left>
@@ -49,9 +49,5 @@ export default {
 </script>
 
 <style lang="scss">
-.list {
-  .item-content {
-    height: 60px;
-  }
-}
+@import "../assets/scss/pages/categories";
 </style>
