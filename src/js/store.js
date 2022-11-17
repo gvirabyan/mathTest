@@ -1,3 +1,4 @@
+import api from './api'
 import { createStore } from 'framework7/lite';
 
 const getAnswersList = (data, answer) => {
@@ -43,30 +44,24 @@ const store = createStore({
   },
   actions: {
     getCategories({ state }) {
-      fetch('http://localhost:1337/api/categories').then(res => res.json()).then(data => {
+      api.get('categories').then(res => res.json()).then(data => {
         state.categories = data.data;
       })
     },
     getCategory({ state }, categoryID) {
-      fetch(`http://localhost:1337/api/categories/${categoryID}?fields=name&populate=answer`).then(res => res.json()).then(data => {
+      api.get(`categories/${categoryID}?fields=name&populate=answer`).then(res => res.json()).then(data => {
         state.category = { id: data?.data?.id, name: data?.data?.attributes?.name } || [];
         state.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
       })
     },
     getQuestions({ state }, categoryID) {
-      fetch(`http://localhost:1337/api/questions?filters[user_answers][id][$null]=true&filters[category][id][$eq]=${categoryID}`).then(res => res.json()).then(data => {
+      api.get(`questions?filters[user_answers][id][$null]=true&filters[category][id][$eq]=${categoryID}`).then(res => res.json()).then(data => {
         state.questions = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
         state.question = state.questions[state.questionIndex];
       })
     },
     async updateUserAnsweredQuestions({ state }, answer) {
-      return fetch(`http://localhost:1337/api/user-answers`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({data: answer})
-      }).then(res => res.json()).then(data => {
+      return api.post('user-answers', { data: answer }).then(res => res.json()).then(data => {
         if (!data.error) {
           return { status: 'success' }
         } else {
@@ -79,13 +74,7 @@ const store = createStore({
       state.question = state.questions[state.questionIndex];
     },
     login({ state }, userData) {
-      return fetch(`http://localhost:1337/api/auth/local`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      }).then(res => res.json()).then(data => {
+      api.post('auth/local', userData).then(res => res.json()).then(data => {
         if (!data.error) {
           state.token = data?.jwt
           state.user = data?.user
@@ -98,13 +87,7 @@ const store = createStore({
       })
     },
     register({ state }, userData) {
-      return fetch(`http://localhost:1337/api/auth/local/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      }).then(res => res.json()).then(data => {
+      api.post('auth/local/register', userData).then(res => res.json()).then(data => {
         if (!data.error) {
           state.token = data?.jwt
           state.user = data?.user

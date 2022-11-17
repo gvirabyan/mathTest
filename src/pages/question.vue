@@ -122,10 +122,10 @@ export default {
     display: flex;
     justify-content: center;
   }
+}
 
-  .ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
-    display: none;
-  }
+.ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {
+  display: none;
 }
 
 .hg-default-btn-width {
