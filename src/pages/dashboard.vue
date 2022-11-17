@@ -107,7 +107,7 @@ export default {
   methods: {
     logout() {
       store.dispatch('logout').then(() => {
-        this.f7router.navigate('/')
+        this.f7router.navigate('/login/')
       });
     }
   }

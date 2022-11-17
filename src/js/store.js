@@ -73,8 +73,8 @@ const store = createStore({
       state.questionIndex++;
       state.question = state.questions[state.questionIndex];
     },
-    login({ state }, userData) {
-      api.post('auth/local', userData).then(res => res.json()).then(data => {
+    async login({ state }, userData) {
+      return api.post('auth/local', userData).then(res => res.json()).then(data => {
         if (!data.error) {
           state.token = data?.jwt
           state.user = data?.user
@@ -86,8 +86,8 @@ const store = createStore({
         }
       })
     },
-    register({ state }, userData) {
-      api.post('auth/local/register', userData).then(res => res.json()).then(data => {
+    async register({ state }, userData) {
+      return api.post('auth/local/register', userData).then(res => res.json()).then(data => {
         if (!data.error) {
           state.token = data?.jwt
           state.user = data?.user
