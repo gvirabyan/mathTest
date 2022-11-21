@@ -14,7 +14,7 @@ export default {
   },
   async getAnsweredQuestions({ state }, categoryID) {
     const questionsIds = []
-    await api.get(`user-answers?populate[0]=question&filters[category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${state.user.id}&populate[question][fields]=id&fields=id`).then(res => res.json()).then(data => {
+    await api.get(`user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${state.user.id}&populate[question][fields]=id&fields=id`).then(res => res.json()).then(data => {
       data?.data.forEach(answer => {
         questionsIds.push(answer?.attributes?.question?.data?.id)
       })
