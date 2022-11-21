@@ -67,6 +67,7 @@ export default {
         if (resp.status === 'success') {
           this.f7router.navigate('/dashboard/')
         } else {
+          alert(resp.message);
           console.error(resp.message);
         }
       });
