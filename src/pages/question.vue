@@ -65,7 +65,9 @@ export default {
   },
   mounted() {
     store.dispatch('getCategory', this.f7route.params.categoryID);
-    store.dispatch('getQuestions', this.f7route.params.categoryID);
+    store.dispatch('getAnsweredQuestions', this.f7route.params.categoryID).then(resp => {
+      store.dispatch('getQuestions', this.f7route.params.categoryID, );
+    });
   },
   methods: {
     chooseAnswer(answer, index) {
@@ -75,6 +77,7 @@ export default {
       store.dispatch('updateUserAnsweredQuestions', {
         users_permissions_user: this.user.id,
         question: this.question.id,
+        category: this.category.id,
         answer: answer,
         status: this.question.attributes.answer === answer ? 'correct' : 'wrong'
       }).then(resp => {
@@ -88,6 +91,7 @@ export default {
       store.dispatch('updateUserAnsweredQuestions', {
         users_permissions_user: this.user.id,
         question: this.question.id,
+        category: this.category.id,
         answer: '',
         status: 'skipped'
       }).then(resp => {

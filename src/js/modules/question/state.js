@@ -1,3 +1,6 @@
 export default {
-  categoryAnswers: []
+  questions: [],
+  question: {},
+  questionIndex: 0,
+  answeredQuestions: [],
 }
