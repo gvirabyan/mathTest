@@ -30,9 +30,17 @@ export default {
   async logout({state}) {
     state.token = ''
     state.user = null
-    localStorage.removeItem('token', state.token)
-    localStorage.removeItem('user', JSON.stringify(state.user))
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
 
     return {status: 'success'}
-  }
+  },
+  async updatePoints({state}, answerType) {
+    const point = state.user.points + state.pointsForAnswers[answerType]
+    return api.put(`users/${state.user.id}`, {points : point}).then(res => res.json()).then(data => {
+      state.user.points = point
+      localStorage.setItem('user', JSON.stringify(state.user))
+      return {status: 'success'}
+    })
+  },
 }

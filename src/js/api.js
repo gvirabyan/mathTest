@@ -19,7 +19,14 @@ const post = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
   body: JSON.stringify(body)
 });
 
+const put = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
+  ...defaultOptions(),
+  method: "PUT",
+  body: JSON.stringify(body)
+});
+
 export default {
   get,
-  post
+  post,
+  put
 };

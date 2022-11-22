@@ -13,6 +13,7 @@
                       }"
                       :disabled="!!chosenAnswer"
                       :title="answer"
+                      :checked="chosenAnswer === answer"
                       radio-icon="end"
                       name="demo-radio-end"
                       @change="chooseAnswer(answer, index)"
@@ -73,17 +74,20 @@ export default {
     chooseAnswer(answer, index) {
       this.chosenAnswer = answer;
       this.chosenAnswerIndex = index;
+      let status = this.question.attributes.answer === answer ? 'correct' : 'wrong';
 
       store.dispatch('updateUserAnsweredQuestions', {
         users_permissions_user: this.user.id,
         question: this.question.id,
         category: this.category.id,
         answer: answer,
-        status: this.question.attributes.answer === answer ? 'correct' : 'wrong'
+        status: status
       }).then(resp => {
         if (resp.status !== 'success') {
           this.clearChosenData();
           console.error(resp.message);
+        } else {
+          store.dispatch('updatePoints', status)
         }
       });
     },
@@ -96,7 +100,9 @@ export default {
         status: 'skipped'
       }).then(resp => {
         if (resp.status === 'success') {
-          this.next();
+          store.dispatch('updatePoints', 'skipped').then(response => {
+            this.next();
+          })
         } else {
           console.error(resp.message);
         }
