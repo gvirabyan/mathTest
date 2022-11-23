@@ -1,16 +1,6 @@
 import HomePage from '../pages/home.vue';
-import LoginPage from '../pages/login.vue';
-import RegisterPage from '../pages/register.vue';
-import DashboardPage from '../pages/dashboard.vue';
-import CategoriesPage from '../pages/categories.vue';
-import Question from '../pages/question.vue';
-import Home1Page from '../pages/home1.vue';
-import AboutPage from '../pages/about.vue';
-import FormPage from '../pages/form.vue';
-
-import DynamicRoutePage from '../pages/dynamic-route.vue';
+import Dashboard from '../pages/dashboard.vue';
 import RequestAndLoad from '../pages/request-and-load.vue';
-import NotFoundPage from '../pages/404.vue';
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem('token');
@@ -27,7 +17,7 @@ function checkAuth({ to, from, resolve, reject }) {
   }
 }
 
-var routes = [
+const routes = [
   {
     path: '/',
     async({ resolve }) {
@@ -36,7 +26,7 @@ var routes = [
       if (token && user) {
         resolve({
           name: 'Dashboard',
-          component: DashboardPage,
+          component: Dashboard
         })
       } else {
         resolve({
@@ -55,67 +45,83 @@ var routes = [
   {
     path: '/login/',
     name: 'Login',
-    component: LoginPage,
+    asyncComponent: () => import('../pages/login.vue'),
     beforeEnter: checkAuth,
   },
   {
     path: '/register/',
     name: 'Register',
-    component: RegisterPage,
+    asyncComponent: () => import('../pages/register.vue'),
     beforeEnter: checkAuth,
   },
   {
     path: '/dashboard/',
     name: 'Dashboard',
-    component: DashboardPage,
+    component: Dashboard,
     beforeEnter: checkAuth,
   },
   {
     path: '/categories/',
     name: 'Categories',
-    component: CategoriesPage,
+    asyncComponent: () => import('../pages/categories.vue'),
     beforeEnter: checkAuth,
   },
   {
     path: '/categories/:categoryID/questions',
     name: 'Question',
-    component: Question,
+    asyncComponent: () => import('../pages/question.vue'),
     beforeEnter: checkAuth,
   },
   {
-    path: '/home1',
-    component: Home1Page,
+    path: '/profile/',
+    name: 'Profile',
+    asyncComponent: () => import('../pages/profile.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/my-stats/',
+    name: 'MyStats',
+    asyncComponent: () => import('../pages/my-stats.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/top-lists/',
+    name: 'TopLists',
+    asyncComponent: () => import('../pages/top-lists.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/start/',
+    asyncComponent: () => import('../pages/start.vue'),
   },
   {
     path: '/about/',
-    component: AboutPage,
+    asyncComponent: () => import('../pages/about.vue'),
   },
   {
     path: '/form/',
-    component: FormPage,
+    asyncComponent: () => import('../pages/form.vue'),
   },
-
-
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
-    component: DynamicRoutePage,
+    asyncComponent: () => import('../pages/dynamic-route.vue'),
   },
   {
     path: '/request-and-load/user/:userId/',
     async: function ({ router, to, resolve }) {
       // App instance
-      var app = router.app;
+      const app = router.app;
 
       // Show Preloader
       app.preloader.show();
 
       // User ID from request
-      var userId = to.params.userId;
+      const userId = to.params.userId;
 
       // Simulate Ajax Request
       setTimeout(function () {
         // We got user data from request
-        var user = {
+        const user = {
           firstName: 'Vladimir',
           lastName: 'Kharlampidi',
           about: 'Hello, i am creator of Framework7! Hope you like it!',
@@ -149,7 +155,7 @@ var routes = [
   },
   {
     path: '(.*)',
-    component: NotFoundPage,
+    asyncComponent: () => import('../pages/not-found.vue'),
   },
 ];
 
