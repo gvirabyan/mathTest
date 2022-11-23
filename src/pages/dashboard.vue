@@ -7,14 +7,10 @@
       </f7-nav-left>
       <f7-nav-title sliding>Math</f7-nav-title>
       <f7-nav-right>
-        <f7-link icon-ios="f7:square_arrow_right" icon-aurora="f7:menu" icon-md="material:menu" @click="logout"></f7-link>
+        <f7-link icon-ios="f7:square_arrow_right" icon-aurora="f7:square_arrow_right" icon-md="material:logout" @click="logout"></f7-link>
       </f7-nav-right>
     </f7-navbar>
-    <!-- Toolbar-->
-    <f7-toolbar bottom>
-      <f7-link>Left Link</f7-link>
-      <f7-link>Right Link</f7-link>
-    </f7-toolbar>
+
     <!-- Page content-->
     <answered-questions-popup />
     <active-categories-popup />
@@ -79,8 +75,8 @@
 <script>
 import { useStore } from 'framework7-vue';
 import store from '../js/store';
-import AnsweredQuestionsPopup from '../components/AnsweredQuestionsPopup.vue';
-import ActiveCategoriesPopup from '../components/ActiveCategoriesPopup.vue';
+import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
+import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 export default {
   name: "Home",

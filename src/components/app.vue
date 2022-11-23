@@ -3,23 +3,11 @@
 
   <!-- Left panel with cover effect-->
   <f7-panel left cover dark>
-    <f7-view>
-      <f7-page>
-        <f7-navbar title="Left Panel"></f7-navbar>
-        <f7-block>Left panel content goes here</f7-block>
-      </f7-page>
-    </f7-view>
-  </f7-panel>
+    <f7-page>
+      <f7-navbar title="Menu"></f7-navbar>
 
-
-  <!-- Right panel with reveal effect-->
-  <f7-panel right reveal dark>
-    <f7-view>
-      <f7-page>
-        <f7-navbar title="Right Panel"></f7-navbar>
-        <f7-block>Right panel content goes here</f7-block>
-      </f7-page>
-    </f7-view>
+      <main-menu/>
+    </f7-page>
   </f7-panel>
 
 
@@ -72,52 +60,38 @@
     </f7-login-screen>
   </f7-app>
 </template>
-<script>
+<script setup>
   import { ref, onMounted } from 'vue';
   import { f7, f7ready } from 'framework7-vue';
-
+  import MainMenu from './main-menu.vue'
 
   import routes from '../js/routes.js';
   import store from '../js/store';
 
-  export default {
-    setup() {
+  const f7params = {
+    name: 'Math App', // App name
+    theme: 'auto', // Automatic theme detection
+    // App store
+    store: store,
+    // App routes
+    routes: routes,
+  };
 
-      // Framework7 Parameters
-      const f7params = {
-        name: 'My App', // App name
-        theme: 'auto', // Automatic theme detection
+  // Login screen data
+  const username = ref('');
+  const password = ref('');
 
-
-
-        // App store
-        store: store,
-        // App routes
-        routes: routes,
-      };
-      // Login screen data
-      const username = ref('');
-      const password = ref('');
-
-      const alertLoginData = () => {
-        f7.dialog.alert('Username: ' + username.value + '<br>Password: ' + password.value, () => {
-          f7.loginScreen.close();
-        });
-      }
-      onMounted(() => {
-        f7ready(() => {
-
-
-          // Call F7 APIs here
-        });
-      });
-
-      return {
-        f7params,
-        username,
-        password,
-        alertLoginData
-      }
-    }
+  const alertLoginData = () => {
+    f7.dialog.alert('Username: ' + username.value + '<br>Password: ' + password.value, () => {
+      f7.loginScreen.close();
+    });
   }
+
+  onMounted(() => {
+    f7ready(() => {
+
+
+      // Call F7 APIs here
+    });
+  });
 </script>

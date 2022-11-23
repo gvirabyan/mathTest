@@ -11,11 +11,6 @@
       </f7-nav-right>
       <f7-nav-title-large>My App</f7-nav-title-large>
     </f7-navbar>
-    <!-- Toolbar-->
-    <f7-toolbar bottom>
-      <f7-link>Left Link</f7-link>
-      <f7-link>Right Link</f7-link>
-    </f7-toolbar>
     <!-- Page content-->
     <f7-block strong>
       <p>Here is your blank Framework7 app. Let's see what we have here.</p>
