@@ -5,10 +5,7 @@
   </f7-page>
 </template>
 
-<script>
-export default {
-  name: 'my-stats'
-};
+<script setup>
 </script>
 
 <style scoped>

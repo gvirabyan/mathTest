@@ -66,13 +66,11 @@
   import MainMenu from './main-menu.vue'
 
   import routes from '../js/routes.js';
-  import store from '../js/store';
+  // import store from '../js/store';
 
   const f7params = {
     name: 'Math App', // App name
     theme: 'auto', // Automatic theme detection
-    // App store
-    store: store,
     // App routes
     routes: routes,
   };
@@ -89,8 +87,6 @@
 
   onMounted(() => {
     f7ready(() => {
-
-
       // Call F7 APIs here
     });
   });

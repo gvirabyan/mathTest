@@ -6,7 +6,7 @@
       <f7-block-header>What will be the result of this mathematical operation ?</f7-block-header>
 
       <f7-list>
-        <f7-list-item v-for="(answer, index) in questionAnswers"
+        <f7-list-item v-for="(answer, index) in answersData"
                       :class="{
                         'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
                         'hg-correct-answer': chosenAnswer && question.attributes?.answer === answer
@@ -25,99 +25,110 @@
         <button v-if="!chosenAnswer"
                 class="button button-outline hg-default-btn-width"
                 @click="skip"
-        >Skip</button>
+        >Skip
+        </button>
 
         <button v-else
                 class="button button-fill hg-default-btn-width"
                 @click="next"
-        >Next</button>
+        >Next
+        </button>
       </div>
     </div>
   </f7-page>
 </template>
 
-<script>
-import store from "../js/store";
-import {useStore} from "framework7-vue";
+<script setup>
+import {f7} from 'framework7-vue';
+import {defineProps, onMounted, ref} from 'vue';
+import {storeToRefs} from 'pinia';
+import {useAuthStore} from '@/js/stores/auth';
+import {useCategoryStore} from '@/js/stores/categories';
+import {useCategoryAnswerStore} from '@/js/stores/category-answer';
+import {useQuestionsStore} from '@/js/stores/questions';
 
-export default {
-  name: "Question",
-  props: {
-    f7route: Object,
-  },
-  setup() {
-    const user = useStore('user');
-    const category = useStore('category');
-    const question = useStore('question');
-    const questionAnswers = useStore('getAnswers');
+const props = defineProps({
+  f7route: Object,
+});
 
-    return {
-      user,
-      category,
-      question,
-      questionAnswers
+const authStore = useAuthStore();
+const categoryStore = useCategoryStore();
+const questionStore = useQuestionsStore();
+const categoryAnswerStore = useCategoryAnswerStore();
+
+const {user} = storeToRefs(authStore);
+const {category} = storeToRefs(categoryStore);
+const {question} = storeToRefs(questionStore);
+const {answersData} = storeToRefs(categoryAnswerStore);
+
+const {updatePoints} = authStore;
+const {getCategory} = categoryStore;
+const {getQuestions, getAnsweredQuestions, getNextQuestion} = questionStore;
+const {updateUserAnsweredQuestions} = categoryAnswerStore;
+
+const chosenAnswer = ref(false);
+const chosenAnswerIndex = ref(false);
+
+onMounted(() => {
+  getCategory(props.f7route.params.categoryID);
+  getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
+    getQuestions(props.f7route.params.categoryID);
+  });
+});
+
+const chooseAnswer = (answer, index) => {
+  chosenAnswer.value = answer;
+  chosenAnswerIndex.value = index;
+
+  let status = question.value.attributes.answer === answer ? 'correct' : 'wrong';
+
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: question.value.id,
+    category: category.value.id,
+    answer,
+    status
+  }).then(resp => {
+    if (resp.status !== 'success') {
+      clearChosenData();
+      f7.dialog.alert(resp.message);
+
+      return;
     }
-  },
-  data() {
-    return {
-      chosenAnswer: false,
-      chosenAnswerIndex: false
-    }
-  },
-  mounted() {
-    store.dispatch('getCategory', this.f7route.params.categoryID);
-    store.dispatch('getAnsweredQuestions', this.f7route.params.categoryID).then(resp => {
-      store.dispatch('getQuestions', this.f7route.params.categoryID, );
-    });
-  },
-  methods: {
-    chooseAnswer(answer, index) {
-      this.chosenAnswer = answer;
-      this.chosenAnswerIndex = index;
-      let status = this.question.attributes.answer === answer ? 'correct' : 'wrong';
 
-      store.dispatch('updateUserAnsweredQuestions', {
-        users_permissions_user: this.user.id,
-        question: this.question.id,
-        category: this.category.id,
-        answer: answer,
-        status: status
-      }).then(resp => {
-        if (resp.status !== 'success') {
-          this.clearChosenData();
-          console.error(resp.message);
-        } else {
-          store.dispatch('updatePoints', status)
-        }
+    updatePoints(status);
+  });
+};
+
+const skip = () => {
+  updateUserAnsweredQuestions({
+    users_permissions_user: this.user.id,
+    question: this.question.id,
+    category: this.category.id,
+    answer: '',
+    status: 'skipped'
+  }).then(resp => {
+    if (resp.status === 'success') {
+      updatePoints('skipped').then(() => {
+        next();
       });
-    },
-    skip() {
-      store.dispatch('updateUserAnsweredQuestions', {
-        users_permissions_user: this.user.id,
-        question: this.question.id,
-        category: this.category.id,
-        answer: '',
-        status: 'skipped'
-      }).then(resp => {
-        if (resp.status === 'success') {
-          store.dispatch('updatePoints', 'skipped').then(response => {
-            this.next();
-          })
-        } else {
-          console.error(resp.message);
-        }
-      });
-    },
-    next() {
-      this.clearChosenData();
-      store.dispatch('getNextQuestion')
-    },
-    clearChosenData() {
-      this.chosenAnswer = false;
-      this.chosenAnswerIndex = false;
+
+      return;
     }
-  }
-}
+
+    f7.dialog.alert(resp.message);
+  });
+};
+
+const next = () => {
+  clearChosenData();
+  getNextQuestion();
+};
+
+const clearChosenData = () => {
+  chosenAnswer.value = false;
+  chosenAnswerIndex.value = false;
+};
 </script>
 
 <style lang="scss">

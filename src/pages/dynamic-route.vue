@@ -24,11 +24,11 @@
     </f7-block>
   </f7-page>
 </template>
-<script>
-  export default {
-    props: {
-      f7route: Object,
-      f7router: Object,
-    },
-  };
+<script setup>
+import {defineProps} from 'vue'
+
+const props = defineProps({
+  f7route: Object,
+  f7router: Object,
+});
 </script>

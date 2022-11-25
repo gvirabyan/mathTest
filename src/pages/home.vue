@@ -1,6 +1,5 @@
 <template>
   <f7-page class="hg-home-page" name="home">
-    <!-- Top Navbar -->
     <f7-navbar :sliding="false">
       <f7-nav-title sliding>Math</f7-nav-title>
     </f7-navbar>
@@ -23,10 +22,7 @@
   </f7-page>
 </template>
 
-<script>
-export default {
-  name: "Home",
-}
+<script setup>
 </script>
 
 <style lang="scss">

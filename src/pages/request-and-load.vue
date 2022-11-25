@@ -16,10 +16,10 @@
     </f7-list>
   </f7-page>
 </template>
-<script>
-  export default {
-    props: {
-      user: Object,
-    }
-  }
+<script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  user: Object,
+})
 </script>
