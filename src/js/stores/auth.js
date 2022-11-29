@@ -44,6 +44,18 @@ export const useAuthStore = defineStore('auth', () => {
     })
   };
 
+  const updateUser = async (userData) => {
+    return api.put(`users/${user.value.id}`, {...userData}).then(res => res.json()).then(data => {
+      if (!data.error) {
+        user.value = data
+        localStorage.setItem('user', JSON.stringify(user.value))
+        return {status: 'success'}
+      } else {
+        return {status: 'error', message: data.error?.message}
+      }
+    })
+  }
+
   const logout = async () => {
     token.value = ''
     user.value = null
@@ -69,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
     userData,
     login,
     register,
+    updateUser,
     logout,
     updatePoints
   }

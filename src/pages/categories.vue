@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-categories-page" name="categories">
-    <f7-navbar title="Categories" back-link="Back"></f7-navbar>
+    <f7-navbar title="Categories" back-link="Back" />
     <f7-block-title>Categories</f7-block-title>
 
     <f7-list>
@@ -17,8 +17,9 @@
 import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/js/stores/categories';
 
-const { categories } = storeToRefs(useCategoryStore());
-const { getCategories } = useCategoryStore();
+const categoriesStore = useCategoryStore()
+const { categories } = storeToRefs(categoriesStore);
+const { getCategories } = categoriesStore;
 
 getCategories()
 </script>

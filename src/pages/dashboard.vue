@@ -40,7 +40,7 @@
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">grid_circle</i>
-              <span class="hg-content-value">123</span>
+              <span class="hg-content-value">{{ user.points }}</span>
             </div>
             <div class="hg-content-title">Experience Points</div>
           </div>
@@ -73,12 +73,15 @@
 
 <script setup>
 import {storeToRefs} from 'pinia';
+import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
 import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
-const categoryStore = useCategoryStore()
+const authStore = useAuthStore();
+const categoryStore = useCategoryStore();
 
+const {user} = storeToRefs(authStore);
 const {categories} = storeToRefs(categoryStore);
 const {getCategories} = categoryStore;
 
