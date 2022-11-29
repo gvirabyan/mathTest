@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import {defineProps, reactive} from 'vue';
+import {reactive} from 'vue';
 import { useAuthStore } from '@/js/stores/auth';
 
 const props = defineProps({
