@@ -6,10 +6,6 @@
         <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
       </f7-nav-left>
       <f7-nav-title sliding>Math</f7-nav-title>
-      <f7-nav-right>
-        <f7-link icon-ios="f7:square_arrow_right" icon-aurora="f7:square_arrow_right" icon-md="material:logout"
-                 @click="logoutHandler"></f7-link>
-      </f7-nav-right>
     </f7-navbar>
 
     <!-- Page content-->
@@ -76,32 +72,17 @@
 </template>
 
 <script setup>
-import {onMounted, defineProps} from 'vue';
 import {storeToRefs} from 'pinia';
-import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
 import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
-const props = defineProps({
-  f7router: Object
-})
-
-const authStore = useAuthStore();
 const categoryStore = useCategoryStore()
 
 const {categories} = storeToRefs(categoryStore);
 const {getCategories} = categoryStore;
-const {logout} = authStore;
 
-onMounted(() => getCategories());
-
-const logoutHandler = () => {
-  logout().then(() => {
-    props.f7router.navigate('/login/');
-  });
-};
-
+getCategories()
 </script>
 
 <style lang="scss">
