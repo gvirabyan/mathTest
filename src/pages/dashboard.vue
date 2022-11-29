@@ -9,8 +9,9 @@
     </f7-navbar>
 
     <!-- Page content-->
-    <answered-questions-popup />
-    <active-categories-popup />
+    <answered-questions-popup/>
+
+    <active-categories-popup/>
 
     <div class="block hg-statistics-content">
       <div class="row">
@@ -24,7 +25,8 @@
           </div>
         </div>
 
-        <div class="col-50 hg-statistic-item hg-answered-questions-content popup-open" data-popup="#answeredQuestionsPopup">
+        <div class="col-50 hg-statistic-item hg-answered-questions-content popup-open"
+             data-popup="#answeredQuestionsPopup">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">status</i>
@@ -44,7 +46,8 @@
           </div>
         </div>
 
-        <div class="col-50 hg-statistic-item hg-active-categories-content popup-open" data-popup="#answeredQuestionsPopup">
+        <div class="col-50 hg-statistic-item hg-active-categories-content popup-open"
+             data-popup="#answeredQuestionsPopup">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
@@ -58,43 +61,28 @@
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">qrcode</i>
-              <span class="hg-content-value">2</span>
+              <span class="hg-content-value">{{ categories.length }}</span>
             </div>
             <div class="hg-content-title">Categories List</div>
           </div>
         </a>
-
       </div>
     </div>
   </f7-page>
 </template>
 
-<script>
-import { useStore } from 'framework7-vue';
-import store from '../js/store';
+<script setup>
+import {storeToRefs} from 'pinia';
+import {useCategoryStore} from '@/js/stores/categories';
 import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
-export default {
-  name: "Home",
-  components: {
-    AnsweredQuestionsPopup,
-    ActiveCategoriesPopup
-  },
-  setup() {
-    const categories = useStore('categories');
+const categoryStore = useCategoryStore()
 
-    return {
-      categories
-    }
-  },
-  data() {
-    return {}
-  },
-  mounted() {
-    store.dispatch('getCategories');
-  },
-}
+const {categories} = storeToRefs(categoryStore);
+const {getCategories} = categoryStore;
+
+getCategories()
 </script>
 
 <style lang="scss">

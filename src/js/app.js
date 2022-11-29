@@ -1,5 +1,6 @@
 // Import Vue
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
 // Import Framework7
 import Framework7 from 'framework7/lite-bundle';
@@ -22,9 +23,11 @@ Framework7.use(Framework7Vue);
 
 // Init App
 const app = createApp(App);
+const pinia = createPinia();
 
 // Register Framework7 Vue components
 registerComponents(app);
 
 // Mount the app
+app.use(pinia);
 app.mount('#app');

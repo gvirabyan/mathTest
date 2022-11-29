@@ -41,37 +41,30 @@
   </f7-page>
 </template>
 
-<script>
-import store from "../js/store";
+<script setup>
+import {defineProps, reactive} from 'vue';
+import { useAuthStore } from '@/js/stores/auth';
 
-export default {
-  name: "Login",
-  props: {
-    f7route: Object,
-    f7router: Object
-  },
-  data() {
-    return {
-      userData: {
-        identifier: null,
-        password: null
-      }
+const props = defineProps({
+  f7route: Object,
+  f7router: Object
+});
+
+const userData = reactive({
+  identifier: null,
+  password: null
+})
+
+const { login } = useAuthStore();
+
+const startLogin = () => {
+  login(userData).then(resp => {
+    if (resp.status === 'success') {
+      props.f7router.navigate('/dashboard/')
+    } else {
+      alert(resp.message);
+      console.error(resp.message);
     }
-  },
-  methods: {
-    startLogin() {
-      store.dispatch('login', {
-        identifier: this.userData.identifier,
-        password: this.userData.password,
-      }).then(resp => {
-        if (resp.status === 'success') {
-          this.f7router.navigate('/dashboard/')
-        } else {
-          alert(resp.message);
-          console.error(resp.message);
-        }
-      });
-    }
-  }
+  })
 }
 </script>

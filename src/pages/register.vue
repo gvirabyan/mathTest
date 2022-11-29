@@ -42,41 +42,37 @@
   </f7-page>
 </template>
 
-<script>
-import store from "../js/store";
+<script setup>
+import {defineProps, reactive} from 'vue';
+import {useAuthStore} from '@/js/stores/auth';
 
-export default {
-  name: "Register",
-  props: {
-    f7route: Object,
-    f7router: Object,
-  },
-  data() {
-    return {
-      userData: {
-        email: null,
-        password: null,
-        confirmPassword: null,
+const props = defineProps({
+  f7route: Object,
+  f7router: Object,
+});
+
+const userData = reactive({
+  email: null,
+  password: null,
+  confirmPassword: null,
+});
+
+const { register } = useAuthStore();
+
+const startRegister = () => {
+  if (userData.password === userData.confirmPassword) {
+    register({
+      username: userData.email,
+      email: userData.email,
+      password: userData.password,
+    }).then(resp => {
+      if (resp.status === 'success') {
+        props.f7router.navigate('/dashboard/')
+      } else {
+        alert(resp.message);
+        console.error(resp.message);
       }
-    }
-  },
-  methods: {
-    startRegister() {
-      if (this.userData.password === this.userData.confirmPassword) {
-        store.dispatch('register', {
-          username: this.userData.email,
-          email: this.userData.email,
-          password: this.userData.password,
-        }).then(resp => {
-          if (resp.status === 'success') {
-            this.f7router.navigate('/dashboard/')
-          } else {
-            alert(resp.message);
-            console.error(resp.message);
-          }
-        });
-      }
-    },
+    });
   }
 }
 </script>
