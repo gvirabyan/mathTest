@@ -1,5 +1,19 @@
 .main-menu {
-  .link {
-    color: var(--f7-bars-text-color);
+  margin-bottom: 0;
+
+  ul {
+    height: calc(100vh - 80px);
+
+    li {
+      &.hg-position-bottom {
+        top: auto;
+        bottom: 0;
+        position: absolute;
+      }
+
+      .link {
+        color: var(--f7-bars-text-color);
+      }
+    }
   }
 }

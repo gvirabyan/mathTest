@@ -6,9 +6,6 @@
         <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
       </f7-nav-left>
       <f7-nav-title sliding>Math</f7-nav-title>
-      <f7-nav-right>
-        <f7-link icon-ios="f7:square_arrow_right" icon-aurora="f7:square_arrow_right" icon-md="material:logout" @click="logout"></f7-link>
-      </f7-nav-right>
     </f7-navbar>
 
     <!-- Page content-->
@@ -80,9 +77,6 @@ import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 export default {
   name: "Home",
-  props: {
-    f7router: Object,
-  },
   components: {
     AnsweredQuestionsPopup,
     ActiveCategoriesPopup
@@ -100,13 +94,6 @@ export default {
   mounted() {
     store.dispatch('getCategories');
   },
-  methods: {
-    logout() {
-      store.dispatch('logout').then(() => {
-        this.f7router.navigate('/login/')
-      });
-    }
-  }
 }
 </script>
 
