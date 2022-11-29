@@ -1,15 +1,13 @@
 import {computed, ref} from 'vue';
 import { defineStore } from 'pinia';
 import api from '@/js/api';
-
 import { useQuestionsStore } from '@/js/stores/questions';
 
 export const useCategoryAnswerStore = defineStore('category-answer',() => {
   const questionStore = useQuestionsStore();
-
   const categoryAnswers = ref([]);
 
-  const answersData = computed(() => getAnswersList(categoryAnswers.value, questionStore.question?.value.attributes?.answer))
+  const answersData = computed(() => getAnswersList(categoryAnswers.value, questionStore.question?.attributes?.answer))
 
   const getAnswersList = (data, answer) => {
     const shuffled = [...data].sort(() => 0.5 - Math.random());
@@ -30,4 +28,11 @@ export const useCategoryAnswerStore = defineStore('category-answer',() => {
       }
     })
   };
+
+  return {
+    categoryAnswers,
+    answersData,
+    getAnswersList,
+    updateUserAnsweredQuestions
+  }
 })

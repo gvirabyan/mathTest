@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-question-page" name="question">
-    <f7-navbar :title="category.name" back-link="Back"></f7-navbar>
+    <f7-navbar :title="category?.name" back-link="Back"></f7-navbar>
     <div v-if="question">
       <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
       <f7-block-header>What will be the result of this mathematical operation ?</f7-block-header>
@@ -40,7 +40,7 @@
 
 <script setup>
 import {f7} from 'framework7-vue';
-import {defineProps, onMounted, ref} from 'vue';
+import {ref} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
@@ -69,13 +69,6 @@ const {updateUserAnsweredQuestions} = categoryAnswerStore;
 const chosenAnswer = ref(false);
 const chosenAnswerIndex = ref(false);
 
-onMounted(() => {
-  getCategory(props.f7route.params.categoryID);
-  getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
-    getQuestions(props.f7route.params.categoryID);
-  });
-});
-
 const chooseAnswer = (answer, index) => {
   chosenAnswer.value = answer;
   chosenAnswerIndex.value = index;
@@ -102,9 +95,9 @@ const chooseAnswer = (answer, index) => {
 
 const skip = () => {
   updateUserAnsweredQuestions({
-    users_permissions_user: this.user.id,
-    question: this.question.id,
-    category: this.category.id,
+    users_permissions_user: user.value.id,
+    question: question.value.id,
+    category: category.value.id,
     answer: '',
     status: 'skipped'
   }).then(resp => {
@@ -129,6 +122,11 @@ const clearChosenData = () => {
   chosenAnswer.value = false;
   chosenAnswerIndex.value = false;
 };
+
+getCategory(props.f7route.params.categoryID);
+getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
+  getQuestions(props.f7route.params.categoryID);
+});
 </script>
 
 <style lang="scss">

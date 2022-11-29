@@ -13,24 +13,14 @@
   </f7-page>
 </template>
 
-<script>
-import { onMounted } from 'vue';
+<script setup>
 import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/js/stores/categories';
 
-export default {
-  name: "Categories",
-  setup() {
-    const { categories } = storeToRefs(useCategoryStore());
-    const { getCategories } = useCategoryStore();
+const { categories } = storeToRefs(useCategoryStore());
+const { getCategories } = useCategoryStore();
 
-    onMounted(() => getCategories())
-
-    return {
-      categories,
-    }
-  },
-}
+getCategories()
 </script>
 
 <style lang="scss">
