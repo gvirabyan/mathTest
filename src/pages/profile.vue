@@ -8,7 +8,7 @@
         label="E-mail"
         type="email"
         placeholder="Your e-mail"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.email"
         :readonly="!editable"
       />
@@ -17,7 +17,7 @@
         label="Name"
         type="text"
         placeholder="Your name"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.name"
         :readonly="!editable"
       />
@@ -26,7 +26,7 @@
         label="Surname"
         type="text"
         placeholder="Your surname"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.surname"
         :readonly="!editable"
       />
@@ -35,7 +35,7 @@
         label="Nickname"
         type="text"
         placeholder="Your nickname"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.nickname"
         :readonly="!editable"
       />
@@ -50,28 +50,31 @@
       />
 
       <f7-list-input
+        class="country-autocomplete"
         label="Country"
         type="text"
         placeholder="Your country"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.country"
         :readonly="!editable"
       />
 
       <f7-list-input
+        class="city-autocomplete"
         label="City"
         type="text"
         placeholder="Your city"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.city"
         :readonly="!editable"
       />
 
       <f7-list-input
+        class="institution-autocomplete"
         label="School/University/College"
         type="text"
         placeholder="Your school/university/college"
-        clear-button
+        :clear-button="editable"
         v-model:value="profileData.institution"
         :readonly="!editable"
       />
@@ -86,26 +89,29 @@
       />
 
       <f7-block>
-        <f7-button v-if="!editable" fill @click="editable = true">Edit</f7-button>
+        <f7-button v-if="!editable" fill @click="editable = true">Go to edit</f7-button>
 
         <f7-row v-else>
           <f7-col>
             <f7-button color="red" fill @click="editable = false">Cancel</f7-button>
           </f7-col>
           <f7-col>
-            <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Submit</f7-button>
+            <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
           </f7-col>
         </f7-row>
       </f7-block>
     </f7-list>
+
+    <div id="map"></div>
   </f7-page>
 </template>
 
 <script setup>
-import {onMounted, reactive, ref} from 'vue';
+import {f7} from 'framework7-vue';
+import {computed, watch, onMounted, reactive, ref} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
-import {f7} from 'framework7-vue';
+import {getCountryCode} from '@/js/helpers/country-name-to-iso'
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -119,11 +125,13 @@ const profileData = reactive({
   surname: '',
   nickname: '',
   dateOfBirth: null,
-  country: '',
+  country: 'Armenia',
   city: '',
   institution: '',
   course: ''
 });
+
+const countryCode = computed(() => profileData.country !== '' ? getCountryCode(profileData.country) : null);
 
 const editProfile = () => {
   disableSubmit.value = true
@@ -138,11 +146,41 @@ const editProfile = () => {
     .finally(() => disableSubmit.value = false)
 }
 
+const initAutocompleteInputs = () => {
+  const autocompleteClasses = ['country', 'city', 'institution'];
+
+  for (const elName of autocompleteClasses) {
+    const autocomplete = new google.maps.places.Autocomplete(
+      document.querySelector(`.${elName}-autocomplete input`),
+    );
+
+    elName === 'country' && autocomplete.setTypes(['country'])
+    elName === 'city' && autocomplete.setTypes(['(cities)'])
+    elName === 'institution' && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
+
+    countryCode.value && autocomplete.setComponentRestrictions({ // restrict the country
+      country: countryCode.value
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      profileData[elName] = place.name;
+    });
+  }
+}
+
+watch(countryCode, val => {
+  val && initAutocompleteInputs()
+});
+
 onMounted(() => {
+  // fill profile data with initial values
   Object.keys(profileData).forEach(key => {
     profileData[key] = user?.value[key];
-  })
-})
+  });
+
+  window.checkAndAttachMapScript(initAutocompleteInputs);
+});
 </script>
 
 <style lang="scss" scoped>
