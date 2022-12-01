@@ -3,7 +3,7 @@
     <f7-navbar title="Profile" back-link="Back"></f7-navbar>
     <f7-block-title>Profile</f7-block-title>
 
-    <f7-list inline-labels no-hairlines-md>
+    <f7-list class="profile-form" inline-labels no-hairlines-md>
       <f7-list-input
         label="E-mail"
         type="email"
@@ -57,6 +57,9 @@
         :clear-button="editable"
         v-model:value="profileData.country"
         :readonly="!editable"
+        @focus="initAutocompleteInputs"
+        @input="clearCityAndSchool"
+        @input:clear="clearCityAndSchool"
       />
 
       <f7-list-input
@@ -67,6 +70,7 @@
         :clear-button="editable"
         v-model:value="profileData.city"
         :readonly="!editable"
+        @focus="initAutocompleteInputs"
       />
 
       <f7-list-input
@@ -77,6 +81,7 @@
         :clear-button="editable"
         v-model:value="profileData.institution"
         :readonly="!editable"
+        @focus="initAutocompleteInputs"
       />
 
       <f7-list-input
@@ -101,8 +106,6 @@
         </f7-row>
       </f7-block>
     </f7-list>
-
-    <div id="map"></div>
   </f7-page>
 </template>
 
@@ -125,7 +128,7 @@ const profileData = reactive({
   surname: '',
   nickname: '',
   dateOfBirth: null,
-  country: 'Armenia',
+  country: '',
   city: '',
   institution: '',
   course: ''
@@ -144,9 +147,16 @@ const editProfile = () => {
       }
     })
     .finally(() => disableSubmit.value = false)
+
+  initAutocompleteInputs();
 }
 
 const initAutocompleteInputs = () => {
+  // remove all autocomplete dropdowns
+  const pacContainers = document.querySelectorAll('.pac-container');
+  pacContainers.forEach(c => c.remove());
+
+  // init autocomplete on inputs
   const autocompleteClasses = ['country', 'city', 'institution'];
 
   for (const elName of autocompleteClasses) {
@@ -169,6 +179,11 @@ const initAutocompleteInputs = () => {
   }
 }
 
+const clearCityAndSchool = () => {
+  profileData.city = '';
+  profileData.institution = ''
+}
+
 watch(countryCode, val => {
   val && initAutocompleteInputs()
 });
@@ -179,7 +194,7 @@ onMounted(() => {
     profileData[key] = user?.value[key];
   });
 
-  window.checkAndAttachMapScript(initAutocompleteInputs);
+  initAutocompleteInputs()
 });
 </script>
 

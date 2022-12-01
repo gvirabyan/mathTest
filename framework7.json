@@ -3,7 +3,7 @@
   "type": [
     "web"
   ],
-  "name": "My App",
+  "name": "Math App",
   "framework": "vue",
   "template": "single-view",
   "cssPreProcessor": "scss",

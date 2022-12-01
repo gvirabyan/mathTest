@@ -1,5 +1,11 @@
-.date-input {
-  &.disabled {
-    opacity: 1 !important;
+.profile-form {
+  input:read-only {
+    pointer-events: none;
+  }
+
+  .date-input {
+    &.disabled {
+      opacity: 1 !important;
+    }
   }
 }
