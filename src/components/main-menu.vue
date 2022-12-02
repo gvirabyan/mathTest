@@ -53,5 +53,5 @@ const logoutHandler = () => {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/pages/main-menu.scss";
+@import "@/assets/scss/components/main-menu.scss";
 </style>

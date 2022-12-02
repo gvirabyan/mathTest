@@ -15,6 +15,7 @@
         v-for="category in filteredCategories"
         :link="`/categories/${category.id}/questions/`"
         :title="category.attributes.name"
+        :after="getAfterText(category)"
       />
     </f7-list>
   </f7-page>
@@ -26,20 +27,28 @@ import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/js/stores/categories';
 
 const categoriesStore = useCategoryStore();
-const { categories } = storeToRefs(categoriesStore);
+const { categoriesData } = storeToRefs(categoriesStore);
 const { getCategories } = categoriesStore;
 
 const searchStr = ref('');
 
 const filteredCategories = computed(() => {
   if (!searchStr.value) {
-    return categories.value;
+    return categoriesData.value;
   }
 
-  return categories.value.filter(c => c.attributes.name.toLowerCase().includes(searchStr.value.toLowerCase()))
-})
+  return categoriesData.value.filter(c => c.attributes.name.toLowerCase().includes(searchStr.value.toLowerCase()))
+});
 
-getCategories();
+const getAfterText = category => {
+  if (!category.questions_amount) {
+    return ''
+  }
+
+  return `${category.user_answers_amount}/${category.questions_amount}`
+}
+
+getCategories(true);
 </script>
 
 <style lang="scss">
