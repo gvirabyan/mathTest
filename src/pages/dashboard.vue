@@ -15,13 +15,14 @@
 
     <div class="block hg-statistics-content">
       <div class="row">
-        <div class="col-100 hg-statistic-item hg-last-category-content">
+        <div v-if="lastCategoryData?.lastCategory" class="col-100 hg-statistic-item hg-last-category-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
-              <span class="hg-content-value">Բազմապատկման աղյուսակ</span>
+              <span class="hg-content-value">{{ lastCategoryData.lastCategory.name }}</span>
             </div>
-            <div class="hg-content-title">Last Category</div>
+
+            <div class="hg-content-title">Last Category (<b class="hg-questions-answers-details">{{ lastCategoryData.totalQuestions }}/{{ lastCategoryData.answeredQuestions }}</b>)</div>
           </div>
         </div>
 
@@ -53,7 +54,7 @@
               <i class="f7-icons hg-content-icon">graph_square</i>
               <span class="hg-content-value">2</span>
             </div>
-            <div class="hg-content-title">Active Categories</div>
+            <div class="hg-content-title">Past Categories</div>
           </div>
         </div>
 
@@ -82,10 +83,11 @@ const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 
 const {user} = storeToRefs(authStore);
-const {categories} = storeToRefs(categoryStore);
-const {getCategories} = categoryStore;
+const {categories, lastCategoryData} = storeToRefs(categoryStore);
+const {getCategories, getLastCategory} = categoryStore;
 
-getCategories()
+getLastCategory();
+getCategories();
 </script>
 
 <style lang="scss">

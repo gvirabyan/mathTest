@@ -7,6 +7,7 @@ import {useCategoryAnswerStore} from '@/js/stores/category-answer';
 export const useCategoryStore = defineStore('category', () => {
   const categories = ref([]);
   const category = ref(null);
+  const lastCategoryData = ref(null);
 
   const authStore = useAuthStore();
   const categoryAnswersStore = useCategoryAnswerStore();
@@ -42,12 +43,20 @@ export const useCategoryStore = defineStore('category', () => {
     })
   };
 
+  const getLastCategory = async () => {
+    api.get(`last-categories`).then(res => res.json()).then(data => {
+      lastCategoryData.value = data
+    })
+  };
+
   return {
     categories,
+    lastCategoryData,
     category,
     categoriesData,
     categoryData,
     getCategories,
-    getCategory
+    getCategory,
+    getLastCategory
   }
 });
