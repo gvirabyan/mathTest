@@ -43,10 +43,12 @@
       <f7-list-input
         class="date-input"
         label="Date of birth"
-        type="datepicker"
+        type="text"
+        v-model:value="profileData.dateOfBirth"
         placeholder="Your birth date"
         readonly
         :disabled="!editable"
+        @focus="isCalendarOpened = true"
       />
 
       <f7-list-input
@@ -105,6 +107,22 @@
           </f7-col>
         </f7-row>
       </f7-block>
+
+      <f7-sheet
+        class="calendar-sheet"
+        :opened="isCalendarOpened"
+        @sheet:closed="isCalendarOpened = false"
+        backdrop
+      >
+        <f7-toolbar>
+          <div class="left"></div>
+          <div class="right">
+            <f7-link sheet-close>Close</f7-link>
+          </div>
+        </f7-toolbar>
+
+        <date-picker v-model="rawDate" />
+      </f7-sheet>
     </f7-list>
   </f7-page>
 </template>
@@ -113,8 +131,10 @@
 import {f7} from 'framework7-vue';
 import {computed, watch, onMounted, reactive, ref} from 'vue';
 import {storeToRefs} from 'pinia';
+import {DatePicker} from 'v-calendar';
 import {useAuthStore} from '@/js/stores/auth';
-import {getCountryCode} from '@/js/helpers/country-name-to-iso'
+import {getCountryCode} from '@/js/helpers/country-name-to-iso';
+import 'v-calendar/dist/style.css';
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -127,12 +147,14 @@ const profileData = reactive({
   name: '',
   surname: '',
   nickname: '',
-  dateOfBirth: null,
+  dateOfBirth: '',
   country: '',
   city: '',
   institution: '',
   course: ''
 });
+const isCalendarOpened = ref(false);
+const rawDate = ref(null);
 
 const countryCode = computed(() => profileData.country !== '' ? getCountryCode(profileData.country) : null);
 
@@ -187,6 +209,14 @@ const clearCityAndSchool = () => {
 watch(countryCode, val => {
   val && initAutocompleteInputs()
 });
+
+watch(rawDate, val => {
+  if (val && val instanceof Date) {
+    // date formatting
+    profileData.dateOfBirth = val.toISOString().slice(0, 10).split('-').reverse().join('.');
+    isCalendarOpened.value = false;
+  }
+})
 
 onMounted(() => {
   // fill profile data with initial values
