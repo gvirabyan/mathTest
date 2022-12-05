@@ -8,36 +8,32 @@
         label="E-mail"
         type="email"
         placeholder="Your e-mail"
-        :clear-button="editable"
+        clear-button
         v-model:value="profileData.email"
-        :readonly="!editable"
       />
 
       <f7-list-input
         label="Name"
         type="text"
         placeholder="Your name"
-        :clear-button="editable"
         v-model:value="profileData.name"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
         label="Surname"
         type="text"
         placeholder="Your surname"
-        :clear-button="editable"
         v-model:value="profileData.surname"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
         label="Nickname"
         type="text"
         placeholder="Your nickname"
-        :clear-button="editable"
         v-model:value="profileData.nickname"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
@@ -47,7 +43,6 @@
         v-model:value="dateStr"
         placeholder="Your birth date"
         readonly
-        :disabled="!editable"
         @focus="isCalendarOpened = true"
       />
 
@@ -56,12 +51,11 @@
         label="Country"
         type="text"
         placeholder="Your country"
-        :clear-button="editable"
         v-model:value="profileData.country"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
         @input="clearCityAndSchool"
         @input:clear="clearCityAndSchool"
+        clear-button
       />
 
       <f7-list-input
@@ -69,10 +63,9 @@
         label="City"
         type="text"
         placeholder="Your city"
-        :clear-button="editable"
         v-model:value="profileData.city"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
+        clear-button
       />
 
       <f7-list-input
@@ -80,10 +73,9 @@
         label="School/University/College"
         type="text"
         placeholder="Your school/university/college"
-        :clear-button="editable"
         v-model:value="profileData.institution"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
+        clear-button
       />
 
       <f7-list-input
@@ -92,20 +84,10 @@
         placeholder="Your class/course"
         clear-button
         v-model:value="profileData.course"
-        :readonly="!editable"
       />
 
       <f7-block>
-        <f7-button v-if="!editable" fill @click="editable = true">Go to edit</f7-button>
-
-        <f7-row v-else>
-          <f7-col>
-            <f7-button color="red" fill @click="editable = false">Cancel</f7-button>
-          </f7-col>
-          <f7-col>
-            <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
-          </f7-col>
-        </f7-row>
+        <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
       </f7-block>
 
       <f7-sheet
@@ -140,7 +122,6 @@ const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
 const {updateUser} = authStore;
 
-const editable = ref(false);
 const disableSubmit = ref(false);
 const profileData = reactive({
   email: '',
