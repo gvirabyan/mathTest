@@ -44,7 +44,7 @@
         class="date-input"
         label="Date of birth"
         type="text"
-        v-model:value="profileData.dateOfBirth"
+        v-model:value="dateStr"
         placeholder="Your birth date"
         readonly
         :disabled="!editable"
@@ -121,7 +121,7 @@
           </div>
         </f7-toolbar>
 
-        <date-picker v-model="rawDate" :max-date="new Date()" />
+        <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" />
       </f7-sheet>
     </f7-list>
   </f7-page>
@@ -147,14 +147,14 @@ const profileData = reactive({
   name: '',
   surname: '',
   nickname: '',
-  dateOfBirth: '',
+  dateOfBirth: new Date(),
   country: '',
   city: '',
   institution: '',
   course: ''
 });
 const isCalendarOpened = ref(false);
-const rawDate = ref(null);
+const dateStr = ref(null);
 
 const countryCode = computed(() => profileData.country !== '' ? getCountryCode(profileData.country) : null);
 
@@ -210,10 +210,10 @@ watch(countryCode, val => {
   val && initAutocompleteInputs()
 });
 
-watch(rawDate, val => {
+watch(() => profileData.dateOfBirth, val => {
   if (val && val instanceof Date) {
     // date formatting
-    profileData.dateOfBirth = val.toISOString().slice(0, 10).split('-').reverse().join('.');
+    dateStr.value = val.toISOString().slice(0, 10).split('-').reverse().join('.');
     isCalendarOpened.value = false;
   }
 })

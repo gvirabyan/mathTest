@@ -17,4 +17,12 @@
     width: 100%;
     border: none;
   }
+
+  :deep(.vc-popover-content-wrapper) {
+    width: 100%;
+  }
+
+  :deep(.vc-nav-items) {
+    justify-items: center;
+  }
 }
