@@ -121,7 +121,7 @@
           </div>
         </f7-toolbar>
 
-        <date-picker v-model="rawDate" />
+        <date-picker v-model="rawDate" :max-date="new Date()" />
       </f7-sheet>
     </f7-list>
   </f7-page>
