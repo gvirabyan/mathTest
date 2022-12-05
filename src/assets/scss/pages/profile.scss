@@ -9,3 +9,12 @@
     }
   }
 }
+
+.calendar-sheet {
+  height: auto;
+
+  :deep(.vc-container) {
+    width: 100%;
+    border: none;
+  }
+}
