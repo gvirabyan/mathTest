@@ -31,7 +31,7 @@
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">status</i>
-              <span class="hg-content-value">13</span>
+              <span class="hg-content-value">{{ answeredQuestionsList.length }}</span>
             </div>
             <div class="hg-content-title">Answered Questions</div>
           </div>
@@ -76,18 +76,23 @@
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
+import {useQuestionsStore} from '@/js/stores/questions';
 import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
+const questionsStore = useQuestionsStore();
 
 const {user} = storeToRefs(authStore);
 const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
-const {getCategories, getLastCategory, getPastCategories } = categoryStore;
+const {getCategories, getLastCategory, getPastCategories} = categoryStore;
+const {answeredQuestionsList} = storeToRefs(questionsStore);
+const {getAnsweredQuestionsList} = questionsStore;
 
 getLastCategory();
 getPastCategories();
+getAnsweredQuestionsList();
 getCategories();
 </script>
 
