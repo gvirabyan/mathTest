@@ -52,7 +52,7 @@
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
-              <span class="hg-content-value">2</span>
+              <span class="hg-content-value">{{ pastCategoriesData.length }}</span>
             </div>
             <div class="hg-content-title">Past Categories</div>
           </div>
@@ -83,10 +83,11 @@ const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 
 const {user} = storeToRefs(authStore);
-const {categories, lastCategoryData} = storeToRefs(categoryStore);
-const {getCategories, getLastCategory} = categoryStore;
+const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
+const {getCategories, getLastCategory, getPastCategories } = categoryStore;
 
 getLastCategory();
+getPastCategories();
 getCategories();
 </script>
 
