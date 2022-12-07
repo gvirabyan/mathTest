@@ -30,7 +30,7 @@
         <div class="col-50 hg-statistic-item hg-answered-questions-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="answeredQuestionsCount">
+              <template v-if="answeredQuestionsCount !== null">
                 <i class="f7-icons hg-content-icon">status</i>
                 <span class="hg-content-value">{{ answeredQuestionsCount }}</span>
               </template>
