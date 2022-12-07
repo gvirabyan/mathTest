@@ -9,7 +9,7 @@
         <f7-list-item
           v-for="(answer, index) in answersData"
           :class="{
-            'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer == answer,
+            'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
             'hg-correct-answer': chosenAnswer && question.attributes?.answer === answer
           }"
           :disabled="!!chosenAnswer"

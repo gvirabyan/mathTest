@@ -8,7 +8,7 @@ export const useQuestionsStore = defineStore('questions',() => {
   const question = ref({});
   const questionIndex = ref(0);
   const answeredQuestions = ref([]);
-  const answeredQuestionsList = ref([]);
+  const answeredQuestionsCount = ref([]);
 
   const auth = useAuthStore();
 
@@ -43,9 +43,9 @@ export const useQuestionsStore = defineStore('questions',() => {
     question.value = questions.value[questionIndex.value];
   };
 
-  const getAnsweredQuestionsList = async () => {
+  const getAnsweredQuestionsCount = async () => {
     api.get(`answered-questions`).then(res => res.json()).then(data => {
-      answeredQuestionsList.value = data.results
+      answeredQuestionsCount.value = data.result
     })
   };
 
@@ -54,12 +54,12 @@ export const useQuestionsStore = defineStore('questions',() => {
     question,
     questionIndex,
     answeredQuestions,
-    answeredQuestionsList,
+    answeredQuestionsCount,
     questionsData,
     questionData,
     getQuestions,
     getAnsweredQuestions,
-    getAnsweredQuestionsList,
+    getAnsweredQuestionsCount,
     getNextQuestion
   }
 })

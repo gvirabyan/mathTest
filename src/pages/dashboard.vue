@@ -9,29 +9,29 @@
     </f7-navbar>
 
     <!-- Page content-->
-    <answered-questions-popup/>
-
     <active-categories-popup/>
 
     <div class="block hg-statistics-content">
       <div class="row">
-        <div v-if="lastCategoryData?.lastCategory" class="col-100 hg-statistic-item hg-last-category-content">
+        <a class="col-100 hg-statistic-item hg-last-category-content"
+           :href="`categories/${lastCategoryData.lastCategory.id}/questions`"
+           v-if="lastCategoryData?.lastCategory"
+        >
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
               <span class="hg-content-value">{{ lastCategoryData.lastCategory.name }}</span>
             </div>
 
-            <div class="hg-content-title">Last Category (<b class="hg-questions-answers-details">{{ lastCategoryData.totalQuestions }}/{{ lastCategoryData.answeredQuestions }}</b>)</div>
+            <div class="hg-content-title">Last Category (<b class="hg-questions-answers-details">{{ lastCategoryData.answeredQuestions }}/{{ lastCategoryData.totalQuestions }}</b>)</div>
           </div>
-        </div>
+        </a>
 
-        <div class="col-50 hg-statistic-item hg-answered-questions-content popup-open"
-             data-popup="#answeredQuestionsPopup">
+        <div class="col-50 hg-statistic-item hg-answered-questions-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">status</i>
-              <span class="hg-content-value">{{ answeredQuestionsList.length }}</span>
+              <span class="hg-content-value">{{ answeredQuestionsCount }}</span>
             </div>
             <div class="hg-content-title">Answered Questions</div>
           </div>
@@ -47,8 +47,7 @@
           </div>
         </div>
 
-        <div class="col-50 hg-statistic-item hg-active-categories-content popup-open"
-             data-popup="#answeredQuestionsPopup">
+        <div class="col-50 hg-statistic-item hg-active-categories-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
@@ -77,7 +76,6 @@ import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
 import {useQuestionsStore} from '@/js/stores/questions';
-import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 const authStore = useAuthStore();
@@ -87,12 +85,12 @@ const questionsStore = useQuestionsStore();
 const {user} = storeToRefs(authStore);
 const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
 const {getCategories, getLastCategory, getPastCategories} = categoryStore;
-const {answeredQuestionsList} = storeToRefs(questionsStore);
-const {getAnsweredQuestionsList} = questionsStore;
+const {answeredQuestionsCount} = storeToRefs(questionsStore);
+const {getAnsweredQuestionsCount} = questionsStore;
 
 getLastCategory();
 getPastCategories();
-getAnsweredQuestionsList();
+getAnsweredQuestionsCount();
 getCategories();
 </script>
 
