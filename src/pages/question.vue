@@ -1,38 +1,39 @@
 <template>
   <f7-page class="hg-question-page" name="question">
-    <f7-navbar :title="category?.name" back-link="Back"></f7-navbar>
+    <f7-navbar :title="category?.name" back-link="Back" />
     <div v-if="question">
       <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
-      <f7-block-header>What will be the result of this mathematical operation ?</f7-block-header>
+      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
 
       <f7-list>
-        <f7-list-item v-for="(answer, index) in answersData"
-                      :class="{
-                        'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
-                        'hg-correct-answer': chosenAnswer && question.attributes?.answer === answer
-                      }"
-                      :disabled="!!chosenAnswer"
-                      :title="answer"
-                      :checked="chosenAnswer === answer"
-                      radio-icon="end"
-                      name="demo-radio-end"
-                      @change="chooseAnswer(answer, index)"
-                      radio
+        <f7-list-item
+          v-for="(answer, index) in answersData"
+          :class="{
+            'hg-wrong-answer': chosenAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
+            'hg-correct-answer': chosenAnswer && question.attributes?.answer === answer
+          }"
+          :disabled="!!chosenAnswer"
+          :title="answer"
+          :checked="chosenAnswer === answer"
+          radio-icon="end"
+          name="demo-radio-end"
+          @change="chooseAnswer(answer, index)"
+          radio
         ></f7-list-item>
       </f7-list>
 
       <div class="hg-actions-btns-content">
-        <button v-if="!chosenAnswer"
-                class="button button-outline hg-default-btn-width"
-                @click="skip"
-        >Skip
-        </button>
+        <button
+          v-if="!chosenAnswer"
+          class="button button-outline hg-default-btn-width"
+          @click="skip"
+        >Skip</button>
 
-        <button v-else
-                class="button button-fill hg-default-btn-width"
-                @click="next"
-        >Next
-        </button>
+        <button
+          v-else
+          class="button button-fill hg-default-btn-width"
+          @click="next"
+        >Next</button>
       </div>
     </div>
   </f7-page>
@@ -66,11 +67,11 @@ const {getCategory} = categoryStore;
 const {getQuestions, getAnsweredQuestions, getNextQuestion} = questionStore;
 const {updateUserAnsweredQuestions} = categoryAnswerStore;
 
-const chosenAnswer = ref(false);
-const chosenAnswerIndex = ref(false);
+const chosenAnswer = ref(null);
+const chosenAnswerIndex = ref(null);
 
 const chooseAnswer = (answer, index) => {
-  chosenAnswer.value = answer;
+  chosenAnswer.value = typeof answer === 'string' ? answer : String(answer);
   chosenAnswerIndex.value = index;
 
   let status = question.value.attributes.answer === answer ? 'correct' : 'wrong';
@@ -79,7 +80,7 @@ const chooseAnswer = (answer, index) => {
     users_permissions_user: user.value.id,
     question: question.value.id,
     category: category.value.id,
-    answer,
+    answer: chosenAnswer.value,
     status
   }).then(resp => {
     if (resp.status !== 'success') {
@@ -119,8 +120,8 @@ const next = () => {
 };
 
 const clearChosenData = () => {
-  chosenAnswer.value = false;
-  chosenAnswerIndex.value = false;
+  chosenAnswer.value = null;
+  chosenAnswerIndex.value = null;
 };
 
 getCategory(props.f7route.params.categoryID);

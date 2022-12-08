@@ -3,34 +3,42 @@
     <!-- Top Navbar -->
     <f7-navbar :sliding="false">
       <f7-nav-left>
-        <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
+        <f7-link icon-ios="f7:menu" icon-md="material:menu" panel-open="left" />
       </f7-nav-left>
       <f7-nav-title sliding>Math</f7-nav-title>
     </f7-navbar>
 
     <!-- Page content-->
-    <answered-questions-popup/>
-
     <active-categories-popup/>
 
     <div class="block hg-statistics-content">
       <div class="row">
-        <div class="col-100 hg-statistic-item hg-last-category-content">
+        <a class="col-100 hg-statistic-item hg-last-category-content"
+           :href="`categories/${lastCategoryData?.lastCategory.id}/questions`"
+           v-if="lastCategoryData?.lastCategory"
+        >
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
               <i class="f7-icons hg-content-icon">graph_square</i>
-              <span class="hg-content-value">Բազմապատկման աղյուսակ</span>
+              <span class="hg-content-value">{{ lastCategoryData?.lastCategory.name }}</span>
             </div>
-            <div class="hg-content-title">Last Category</div>
-          </div>
-        </div>
 
-        <div class="col-50 hg-statistic-item hg-answered-questions-content popup-open"
-             data-popup="#answeredQuestionsPopup">
+            <div class="hg-content-title">Last Category (<b class="hg-questions-answers-details">{{ lastCategoryData?.answeredQuestions }}/{{ lastCategoryData?.totalQuestions }}</b>)</div>
+          </div>
+        </a>
+
+        <div class="col-50 hg-statistic-item hg-answered-questions-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <i class="f7-icons hg-content-icon">status</i>
-              <span class="hg-content-value">13</span>
+              <template v-if="answeredQuestionsCount !== null">
+                <i class="f7-icons hg-content-icon">status</i>
+                <span class="hg-content-value">{{ answeredQuestionsCount }}</span>
+              </template>
+
+              <div v-else class="hg-skeleton-wrapper">
+                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+              </div>
             </div>
             <div class="hg-content-title">Answered Questions</div>
           </div>
@@ -39,29 +47,46 @@
         <div class="col-50 hg-statistic-item hg-experience-points-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <i class="f7-icons hg-content-icon">grid_circle</i>
-              <span class="hg-content-value">{{ user.points }}</span>
+              <template v-if="user"><i class="f7-icons hg-content-icon">grid_circle</i>
+                <span class="hg-content-value">{{ user?.points }}</span>
+              </template>
+              <div v-else class="hg-skeleton-wrapper">
+                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+              </div>
             </div>
             <div class="hg-content-title">Experience Points</div>
           </div>
         </div>
 
-        <div class="col-50 hg-statistic-item hg-active-categories-content popup-open"
-             data-popup="#answeredQuestionsPopup">
+        <div class="col-50 hg-statistic-item hg-active-categories-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <i class="f7-icons hg-content-icon">graph_square</i>
-              <span class="hg-content-value">2</span>
+              <template v-if="pastCategoriesData">
+                <i class="f7-icons hg-content-icon">graph_square</i>
+                <span class="hg-content-value">{{ pastCategoriesData?.length }}</span>
+              </template>
+              <div v-else class="hg-skeleton-wrapper">
+                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+              </div>
             </div>
-            <div class="hg-content-title">Active Categories</div>
+            <div class="hg-content-title">Past Categories</div>
           </div>
         </div>
 
         <a class="col-50 hg-statistic-item hg-categories-list-content" href="/categories/">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <i class="f7-icons hg-content-icon">qrcode</i>
-              <span class="hg-content-value">{{ categories.length }}</span>
+              <template v-if="pastCategoriesData">
+                <i class="f7-icons hg-content-icon">qrcode</i>
+                <span class="hg-content-value">{{ categories?.length }}</span>
+              </template>
+
+              <div v-else class="hg-skeleton-wrapper">
+                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+              </div>
             </div>
             <div class="hg-content-title">Categories List</div>
           </div>
@@ -75,17 +100,23 @@
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
-import AnsweredQuestionsPopup from '../components/answered-questions-popup.vue';
+import {useQuestionsStore} from '@/js/stores/questions';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
+const questionsStore = useQuestionsStore();
 
 const {user} = storeToRefs(authStore);
-const {categories} = storeToRefs(categoryStore);
-const {getCategories} = categoryStore;
+const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
+const {getCategories, getLastCategory, getPastCategories} = categoryStore;
+const {answeredQuestionsCount} = storeToRefs(questionsStore);
+const {getAnsweredQuestionsCount} = questionsStore;
 
-getCategories()
+getLastCategory();
+getPastCategories();
+getAnsweredQuestionsCount();
+getCategories();
 </script>
 
 <style lang="scss">

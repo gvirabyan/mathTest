@@ -1,7 +1,14 @@
 .hg-categories-page {
   .list {
     .item-content {
-      height: 60px;
+      min-height: 60px;
+    }
+
+    .item-title {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      text-overflow: clip;
     }
   }
 }

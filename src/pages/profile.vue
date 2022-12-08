@@ -8,45 +8,42 @@
         label="E-mail"
         type="email"
         placeholder="Your e-mail"
-        :clear-button="editable"
+        clear-button
         v-model:value="profileData.email"
-        :readonly="!editable"
       />
 
       <f7-list-input
         label="Name"
         type="text"
         placeholder="Your name"
-        :clear-button="editable"
         v-model:value="profileData.name"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
         label="Surname"
         type="text"
         placeholder="Your surname"
-        :clear-button="editable"
         v-model:value="profileData.surname"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
         label="Nickname"
         type="text"
         placeholder="Your nickname"
-        :clear-button="editable"
         v-model:value="profileData.nickname"
-        :readonly="!editable"
+        clear-button
       />
 
       <f7-list-input
         class="date-input"
         label="Date of birth"
-        type="datepicker"
+        type="text"
+        v-model:value="dateStr"
         placeholder="Your birth date"
         readonly
-        :disabled="!editable"
+        @focus="isCalendarOpened = true"
       />
 
       <f7-list-input
@@ -54,12 +51,11 @@
         label="Country"
         type="text"
         placeholder="Your country"
-        :clear-button="editable"
         v-model:value="profileData.country"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
         @input="clearCityAndSchool"
         @input:clear="clearCityAndSchool"
+        clear-button
       />
 
       <f7-list-input
@@ -67,10 +63,9 @@
         label="City"
         type="text"
         placeholder="Your city"
-        :clear-button="editable"
         v-model:value="profileData.city"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
+        clear-button
       />
 
       <f7-list-input
@@ -78,10 +73,9 @@
         label="School/University/College"
         type="text"
         placeholder="Your school/university/college"
-        :clear-button="editable"
         v-model:value="profileData.institution"
-        :readonly="!editable"
         @focus="initAutocompleteInputs"
+        clear-button
       />
 
       <f7-list-input
@@ -90,21 +84,27 @@
         placeholder="Your class/course"
         clear-button
         v-model:value="profileData.course"
-        :readonly="!editable"
       />
 
       <f7-block>
-        <f7-button v-if="!editable" fill @click="editable = true">Go to edit</f7-button>
-
-        <f7-row v-else>
-          <f7-col>
-            <f7-button color="red" fill @click="editable = false">Cancel</f7-button>
-          </f7-col>
-          <f7-col>
-            <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
-          </f7-col>
-        </f7-row>
+        <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
       </f7-block>
+
+      <f7-sheet
+        class="calendar-sheet"
+        :opened="isCalendarOpened"
+        @sheet:closed="isCalendarOpened = false"
+        backdrop
+      >
+        <f7-toolbar>
+          <div class="left"></div>
+          <div class="right">
+            <f7-link sheet-close>Close</f7-link>
+          </div>
+        </f7-toolbar>
+
+        <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" />
+      </f7-sheet>
     </f7-list>
   </f7-page>
 </template>
@@ -113,26 +113,29 @@
 import {f7} from 'framework7-vue';
 import {computed, watch, onMounted, reactive, ref} from 'vue';
 import {storeToRefs} from 'pinia';
+import {DatePicker} from 'v-calendar';
 import {useAuthStore} from '@/js/stores/auth';
-import {getCountryCode} from '@/js/helpers/country-name-to-iso'
+import {getCountryCode} from '@/js/helpers/country-name-to-iso';
+import 'v-calendar/dist/style.css';
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
 const {updateUser} = authStore;
 
-const editable = ref(false);
 const disableSubmit = ref(false);
 const profileData = reactive({
   email: '',
   name: '',
   surname: '',
   nickname: '',
-  dateOfBirth: null,
+  dateOfBirth: new Date(),
   country: '',
   city: '',
   institution: '',
   course: ''
 });
+const isCalendarOpened = ref(false);
+const dateStr = ref(null);
 
 const countryCode = computed(() => profileData.country !== '' ? getCountryCode(profileData.country) : null);
 
@@ -187,6 +190,14 @@ const clearCityAndSchool = () => {
 watch(countryCode, val => {
   val && initAutocompleteInputs()
 });
+
+watch(() => profileData.dateOfBirth, val => {
+  if (val && val instanceof Date) {
+    // date formatting
+    dateStr.value = val.toISOString().slice(0, 10).split('-').reverse().join('.');
+    isCalendarOpened.value = false;
+  }
+})
 
 onMounted(() => {
   // fill profile data with initial values
