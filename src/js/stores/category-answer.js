@@ -10,8 +10,11 @@ export const useCategoryAnswerStore = defineStore('category-answer',() => {
   const answersData = computed(() => getAnswersList(categoryAnswers.value, questionStore.question?.attributes?.answer))
 
   const getAnswersList = (data, answer) => {
-    const shuffled = [...data].sort(() => 0.5 - Math.random());
+    const strData = data.map(item => typeof item === 'string' ? item : String(item));
+    const uniqueStrData = [...new Set(strData)];
+    const shuffled = [...uniqueStrData].sort(() => 0.5 - Math.random());
     const randomData = shuffled.slice(0, 4);
+
     if (!randomData.includes(answer)) {
       randomData[3] = answer
     }
