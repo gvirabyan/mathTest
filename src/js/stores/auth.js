@@ -1,4 +1,4 @@
-import {computed, reactive, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {defineStore} from 'pinia';
 import api from '@/js/api';
 
@@ -6,11 +6,6 @@ export const useAuthStore = defineStore('auth', () => {
   // state properties
   const token = ref(localStorage.getItem('user') || '');
   const user = ref(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
-  const pointsForAnswers = reactive({
-    correct: 3,
-    wrong: -2,
-    skipped: -1,
-  });
 
   // getters
   const userData = computed(() => user.value);
@@ -21,8 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
       if (!data.error) {
         token.value = data?.jwt
         user.value = data?.user
-        localStorage.setItem('token', token.value)
-        localStorage.setItem('user', JSON.stringify(user.value))
+
         return {status: 'success'}
       } else {
         return {status: 'error', message: data.error?.message}
@@ -35,8 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
       if (!data.error) {
         token.value = data?.jwt
         user.value = data?.user
-        localStorage.setItem('token', token.value)
-        localStorage.setItem('user', JSON.stringify(user.value))
+
         return {status: 'success'}
       } else {
         return {status: 'error', message: data.error?.message}
@@ -44,11 +37,23 @@ export const useAuthStore = defineStore('auth', () => {
     })
   };
 
+  const getUser = async () => {
+    return api.get(`users/${user.value.id}`).then(res => res.json()).then(data => {
+      if (!data.error) {
+        user.value = data
+
+        return {status: 'success'}
+      } else {
+        return {status: 'error', message: data.error?.message}
+      }
+    })
+  }
+
   const updateUser = async (userData) => {
     return api.put(`users/${user.value.id}`, {...userData}).then(res => res.json()).then(data => {
       if (!data.error) {
         user.value = data
-        localStorage.setItem('user', JSON.stringify(user.value))
+
         return {status: 'success'}
       } else {
         return {status: 'error', message: data.error?.message}
@@ -59,30 +64,36 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     token.value = ''
     user.value = null
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
 
     return {status: 'success'}
   };
 
-  const updatePoints = async (answerType) => {
-    const point = user.value.points + pointsForAnswers[answerType]
-    return api.put(`users/${user.value.id}`, {points : point}).then(res => res.json()).then(() => {
-      user.value.points = point
-      localStorage.setItem('user', JSON.stringify(user.value))
-      return {status: 'success'}
-    })
-  };
+  watch(token, (val) => {
+    if (!val) {
+      localStorage.removeItem('token');
+      return;
+    }
+
+    localStorage.setItem('token', val)
+  })
+
+  watch(user, (val) => {
+    if (!val) {
+      localStorage.removeItem('user');
+      return;
+    }
+
+    localStorage.setItem('user', JSON.stringify(val))
+  })
 
   return {
     token,
     user,
-    pointsForAnswers,
     userData,
     login,
     register,
+    getUser,
     updateUser,
     logout,
-    updatePoints
   }
 });
