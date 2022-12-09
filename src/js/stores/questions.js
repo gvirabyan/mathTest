@@ -21,10 +21,15 @@ export const useQuestionsStore = defineStore('questions',() => {
       idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`
     }
 
-    api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}`).then(res => res.json()).then(data => {
-      questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
-      question.value = questions.value[questionIndex.value];
-    })
+    const limit = 25;
+    const page = questions.value.length >= limit ? Math.ceil(questions.value.length / limit) : 1;
+
+    api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=${page}`)
+      .then(res => res.json())
+      .then(data => {
+        questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
+        question.value = questions.value[questionIndex.value];
+      })
   };
 
   const getAnsweredQuestions = async (categoryID) => {
