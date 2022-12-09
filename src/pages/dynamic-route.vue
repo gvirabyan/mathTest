@@ -24,10 +24,7 @@
     </f7-block>
   </f7-page>
 </template>
-<script setup>
-import {defineProps} from 'vue'
-
-const props = defineProps({
+<script setup>defineProps({
   f7route: Object,
   f7router: Object,
 });
