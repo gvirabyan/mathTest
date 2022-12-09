@@ -128,7 +128,7 @@ const profileData = reactive({
   name: '',
   surname: '',
   nickname: '',
-  dateOfBirth: new Date(),
+  dateOfBirth: new Date().setFullYear(new Date().getFullYear() - 10),
   country: '',
   city: '',
   institution: '',
@@ -194,6 +194,8 @@ watch(countryCode, val => {
 });
 
 watch(() => profileData.dateOfBirth, val => {
+  console.log(val)
+
   if (val && val instanceof Date) {
     // date formatting
     dateStr.value = val.toISOString().slice(0, 10).split('-').reverse().join('.');
