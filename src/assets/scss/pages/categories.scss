@@ -5,10 +5,11 @@
     }
 
     .item-title {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      text-overflow: clip;
+      white-space: unset;
+
+       & > p {
+         margin: 0;
+       }
     }
   }
 }
