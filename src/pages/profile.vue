@@ -145,8 +145,10 @@ const editProfile = () => {
   updateUser(profileData)
     .then(res => {
       if (res.status === 'success') {
-        f7.dialog.alert('Profile data have been changed');
-        editable.value = false;
+        f7.toast.show({
+          text: 'Profile data have been changed',
+          closeButton: true
+        });
       }
     })
     .finally(() => disableSubmit.value = false)
