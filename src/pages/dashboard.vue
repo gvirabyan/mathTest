@@ -47,7 +47,8 @@
         <div class="col-50 hg-statistic-item hg-experience-points-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="user"><i class="f7-icons hg-content-icon">grid_circle</i>
+              <template v-if="user.points">
+                <i class="f7-icons hg-content-icon">grid_circle</i>
                 <span class="hg-content-value">{{ user?.points }}</span>
               </template>
               <div v-else class="hg-skeleton-wrapper">
@@ -109,10 +110,12 @@ const questionsStore = useQuestionsStore();
 
 const {user} = storeToRefs(authStore);
 const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
+const {getUser} = authStore;
 const {getCategories, getLastCategory, getPastCategories} = categoryStore;
 const {answeredQuestionsCount} = storeToRefs(questionsStore);
 const {getAnsweredQuestionsCount} = questionsStore;
 
+getUser();
 getLastCategory();
 getPastCategories();
 getAnsweredQuestionsCount();

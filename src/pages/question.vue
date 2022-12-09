@@ -86,11 +86,9 @@ const chooseAnswer = (answer, index) => {
     if (resp.status !== 'success') {
       clearChosenData();
       f7.dialog.alert(resp.message);
-
-      return;
     }
 
-    updatePoints(status);
+    // updatePoints(status);
   });
 };
 
