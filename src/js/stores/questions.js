@@ -8,7 +8,7 @@ export const useQuestionsStore = defineStore('questions',() => {
   const question = ref({});
   const questionIndex = ref(0);
   const answeredQuestions = ref([]);
-  const answeredQuestionsCount = ref([]);
+  const answeredQuestionsCount = ref(null);
 
   const auth = useAuthStore();
 
@@ -22,9 +22,17 @@ export const useQuestionsStore = defineStore('questions',() => {
     }
 
     const limit = 25;
-    const page = questions.value.length >= limit ? Math.ceil(questions.value.length / limit) : 1;
+    let page;
 
-    api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=${page}`)
+    if (answeredQuestions.value.length > limit) {
+      page = Math.ceil(answeredQuestions.value.length / limit)
+    } else if (answeredQuestions.value.length === limit) {
+      page = Math.ceil(answeredQuestions.value.length / limit) + 1
+    } else {
+      page = 1;
+    }
+
+    api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
       .then(res => res.json())
       .then(data => {
         questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
@@ -34,10 +42,12 @@ export const useQuestionsStore = defineStore('questions',() => {
 
   const getAnsweredQuestions = async (categoryID) => {
     const questionsIds = []
-    await api.get(`user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id`).then(res => res.json()).then(data => {
-      data?.data.forEach(answer => {
-        questionsIds.push(answer?.attributes?.question?.data?.id)
-      })
+    await api.get(`user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[page]=2`)
+      .then(res => res.json())
+      .then(data => {
+        data?.data.forEach(answer => {
+          questionsIds.push(answer?.attributes?.question?.data?.id)
+        })
     })
 
     answeredQuestions.value = questionsIds

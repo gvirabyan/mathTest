@@ -1,7 +1,7 @@
 import {computed, ref} from 'vue';
 import { defineStore } from 'pinia';
-import api from '@/js/api';
 import { useQuestionsStore } from '@/js/stores/questions';
+import api from '@/js/api';
 
 export const useCategoryAnswerStore = defineStore('category-answer',() => {
   const questionStore = useQuestionsStore();

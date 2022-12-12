@@ -30,7 +30,7 @@
         <div class="col-50 hg-statistic-item hg-answered-questions-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="answeredQuestionsCount !== null">
+              <template v-if="!isLoading">
                 <i class="f7-icons hg-content-icon">status</i>
                 <span class="hg-content-value">{{ answeredQuestionsCount }}</span>
               </template>
@@ -47,7 +47,7 @@
         <div class="col-50 hg-statistic-item hg-experience-points-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="user.points">
+              <template v-if="!isLoading">
                 <i class="f7-icons hg-content-icon">grid_circle</i>
                 <span class="hg-content-value">{{ user?.points }}</span>
               </template>
@@ -63,7 +63,7 @@
         <div class="col-50 hg-statistic-item hg-active-categories-content">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="pastCategoriesData">
+              <template v-if="!isLoading">
                 <i class="f7-icons hg-content-icon">graph_square</i>
                 <span class="hg-content-value">{{ pastCategoriesData?.length }}</span>
               </template>
@@ -79,7 +79,7 @@
         <a class="col-50 hg-statistic-item hg-categories-list-content" href="/categories/">
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
-              <template v-if="pastCategoriesData">
+              <template v-if="!isLoading">
                 <i class="f7-icons hg-content-icon">qrcode</i>
                 <span class="hg-content-value">{{ categories?.length }}</span>
               </template>
@@ -98,10 +98,12 @@
 </template>
 
 <script setup>
+import {ref} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
 import {useQuestionsStore} from '@/js/stores/questions';
+import delay from '@/js/helpers/delay';
 import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
 
 const authStore = useAuthStore();
@@ -110,16 +112,36 @@ const questionsStore = useQuestionsStore();
 
 const {user} = storeToRefs(authStore);
 const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
+const {answeredQuestionsCount} = storeToRefs(questionsStore);
+const isLoading = ref(false);
+
 const {getUser} = authStore;
 const {getCategories, getLastCategory, getPastCategories} = categoryStore;
-const {answeredQuestionsCount} = storeToRefs(questionsStore);
 const {getAnsweredQuestionsCount} = questionsStore;
 
-getUser();
-getLastCategory();
-getPastCategories();
-getAnsweredQuestionsCount();
-getCategories();
+const getAllData = async () => {
+  isLoading.value = true;
+
+  await delay();
+
+  await Promise.all([
+    getUser(),
+    getLastCategory(),
+    getPastCategories(),
+    getAnsweredQuestionsCount(),
+    getCategories(),
+  ]).then(() => {
+    isLoading.value = false;
+  })
+}
+
+getAllData();
+
+// getUser();
+// getLastCategory();
+// getPastCategories();
+// getAnsweredQuestionsCount();
+// getCategories();
 </script>
 
 <style lang="scss">

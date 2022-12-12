@@ -76,6 +76,8 @@ const chooseAnswer = (answer, index) => {
 
   let status = question.value.attributes.answer === answer ? 'correct' : 'wrong';
 
+  // if ()
+
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: question.value.id,
@@ -88,7 +90,7 @@ const chooseAnswer = (answer, index) => {
       f7.dialog.alert(resp.message);
     }
 
-    // updatePoints(status);
+    console.log(resp)
   });
 };
 

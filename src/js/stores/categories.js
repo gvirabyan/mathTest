@@ -17,8 +17,10 @@ export const useCategoryStore = defineStore('category', () => {
     return categories.value.map(c => {
       const questionsArr = c.attributes.questions.data
       const userAnswersArr = questionsArr.map(
-        q => q.attributes.user_answers.data.filter(d => d.attributes.users_permissions_user.data?.id === authStore.userData.id)
+        q => q.attributes.user_answers.data.filter(d => d.attributes.users_permissions_user.data?.id === authStore.user?.id)
       ).filter(arr => arr.length);
+
+      console.log(userAnswersArr)
 
       return {
         ...c,
