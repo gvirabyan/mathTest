@@ -17,4 +17,8 @@
 
 .hg-default-btn-width {
   width: 100px;
+
+  &:disabled {
+    opacity: 0.6;
+  }
 }

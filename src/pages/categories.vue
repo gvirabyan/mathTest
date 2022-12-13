@@ -28,7 +28,7 @@
     </template>
 
     <template v-else>
-      <f7-list inset no-hairlines-md>
+      <f7-list inset >
         <f7-list-item
           v-for="i in 3"
           :key="`skeleton_${i}`"

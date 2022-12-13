@@ -17,6 +17,7 @@ import '../css/app.scss';
 
 // Import App Component
 import App from '../components/app.vue';
+import resetStore from '@/js/stores/plugins/reset-store';
 
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
@@ -24,6 +25,7 @@ Framework7.use(Framework7Vue);
 // Init App
 const app = createApp(App);
 const pinia = createPinia();
+pinia.use(resetStore)
 
 // Register Framework7 Vue components
 registerComponents(app);
