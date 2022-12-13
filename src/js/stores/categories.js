@@ -17,7 +17,7 @@ export const useCategoryStore = defineStore('category', () => {
     return categories.value.map(c => {
       const questionsArr = c.attributes.questions.data
       const userAnswersArr = questionsArr.map(
-        q => q.attributes.user_answers.data.filter(d => d.attributes.users_permissions_user.data?.id === authStore.userData.id)
+        q => q.attributes.user_answers.data.filter(d => d.attributes.users_permissions_user.data?.id === authStore.user?.id)
       ).filter(arr => arr.length);
 
       return {
@@ -38,8 +38,12 @@ export const useCategoryStore = defineStore('category', () => {
   };
 
   const getCategory = async (categoryID) => {
-    api.get(`categories/${categoryID}?fields=name&populate=answer`).then(res => res.json()).then(data => {
-      category.value = { id: data?.data?.id, name: data?.data?.attributes?.name } || [];
+    api.get(`categories/${categoryID}?fields=name&populate=answer&populate=questions`).then(res => res.json()).then(data => {
+      category.value = {
+        id: data?.data?.id,
+        name: data?.data?.attributes?.name,
+        questions_amount: data?.data?.attributes?.questions?.data?.length
+      } || [];
       categoryAnswersStore.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
     })
   };
