@@ -1,6 +1,14 @@
 <template>
   <f7-page class="hg-question-page" name="question">
-    <f7-navbar :title="category?.name" back-link="Back" @click:back="clearQuestionStore" />
+    <f7-navbar back-link="Back" @click:back="clearQuestionStore">
+      <template v-if="isLoading" #title>
+        Loading...
+      </template>
+
+      <template v-else #title>
+        {{ category?.name }}
+      </template>
+    </f7-navbar>
 
     <div v-if="question">
       <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
@@ -40,6 +48,29 @@
       </div>
     </div>
 
+    <div v-else-if="isLoading">
+      <f7-block-title>
+        <f7-skeleton-block effect="wave">
+          <f7-skeleton-text/>
+        </f7-skeleton-block>
+      </f7-block-title>
+
+      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
+
+      <f7-list inset>
+        <f7-list-item
+          v-for="i in 4"
+          :key="`skeleton_${i}`"
+        >
+          <template #root>
+            <f7-skeleton-block effect="wave">
+              <f7-skeleton-text/>
+            </f7-skeleton-block>
+          </template>
+        </f7-list-item>
+      </f7-list>
+    </div>
+
     <f7-block v-else-if="allQuestionsAnswered">You have answered all questions</f7-block>
   </f7-page>
 </template>
@@ -52,6 +83,7 @@ import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
 import {useCategoryAnswerStore} from '@/js/stores/category-answer';
 import {useQuestionsStore} from '@/js/stores/questions';
+import delay from '@/js/helpers/delay';
 
 const props = defineProps({
   f7route: Object,
@@ -71,11 +103,29 @@ const {getCategory} = categoryStore;
 const {getQuestions, getAnsweredQuestions, getNextQuestion} = questionStore;
 const {updateUserAnsweredQuestions} = categoryAnswerStore;
 
+const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
 const chosenAnswerIndex = ref(null);
 
-const allQuestionsAnswered = computed(() => category.value.questions_amount === answeredQuestions.value.length)
+const allQuestionsAnswered = computed(() =>
+  category.value.questions_amount !== null
+  && category.value.questions_amount === answeredQuestions.value.length
+);
+
+const getAllQuestionData = async () => {
+  isLoading.value = true;
+
+  await delay();
+
+  await getCategory(props.f7route.params.categoryID);
+  await getAnsweredQuestions(props.f7route.params.categoryID)
+    .then(() => {
+      getQuestions(props.f7route.params.categoryID)
+    });
+
+  isLoading.value = false
+}
 
 const chooseAnswer = (answer, index) => {
   chosenAnswer.value = typeof answer === 'string' ? answer : String(answer);
@@ -151,10 +201,7 @@ watch(() => answeredQuestions.value, val => {
   }
 }, {deep: true})
 
-getCategory(props.f7route.params.categoryID);
-getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
-  getQuestions(props.f7route.params.categoryID);
-});
+getAllQuestionData();
 </script>
 
 <style lang="scss">
