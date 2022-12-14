@@ -6,7 +6,7 @@ import {useCategoryAnswerStore} from '@/js/stores/category-answer';
 
 export const useCategoryStore = defineStore('category', () => {
   const categories = ref([]);
-  const category = ref(null);
+  const category = ref({});
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
 
