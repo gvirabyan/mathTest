@@ -30,7 +30,6 @@ export const useQuestionsStore = defineStore('questions',() => {
         api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
           .then(res => res.json())
           .then(data => {
-            console.log(data);
             let result = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
             questions.value = [...questions.value, ...result];
             question.value = questions.value[questionIndex.value];
