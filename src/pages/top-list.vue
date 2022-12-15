@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="top-list">
+  <f7-page name="top-list" infinite :infinite-distance="50" :infinite-preloader="showPreloader" @infinite="loadMore">
     <f7-navbar :title="`${title} Top List`" back-link="Back"/>
 
     <f7-block>
@@ -8,7 +8,8 @@
       </template>
 
       <f7-input
-        class="mb-16 py-8 autocomplete"
+        v-if="filter !== 'world'"
+        class="py-12 autocomplete"
         :class="{ 'autocomplete': isAutocomplete }"
         type="text"
         :placeholder="`Enter ${title} name`"
@@ -31,16 +32,25 @@
         <f7-col>There are no results yet</f7-col>
       </f7-row>
 
-      <template v-else>
-        <f7-row
-          v-for="({ nickname, username, points }, index) in topList"
+      <f7-list v-else class="top-list">
+        <f7-list-item
+          v-for="({ id, nickname, username, points }, index) in topList"
           :key="`list-item_${index + 1}`"
-          class="mb-8"
+          :class="{ 'my-score': id === user.id }"
         >
-          <f7-col width="75">{{ index + 1 }}. {{ nickname || username }}</f7-col>
-          <f7-col width="25" class="text-right">{{ points }}</f7-col>
-        </f7-row>
-      </template>
+          <template #before-title>
+            <span class="inline-block mr-8">{{ index + 1 }}</span>
+          </template>
+
+          <template #title>
+            {{ nickname || username }}
+          </template>
+
+          <template #after>
+            {{ points }}
+          </template>
+        </f7-list-item>
+      </f7-list>
     </f7-block>
   </f7-page>
 </template>
@@ -64,6 +74,7 @@ const {topList} = storeToRefs(topListStore);
 const {getTopList} = topListStore;
 
 const isLoading = ref(false);
+const showPreloader = ref(false);
 const searchStr = useDebouncedRef('', 2000);
 
 const filter = computed(() => props.f7route.params.filterName);
@@ -78,8 +89,8 @@ const title = computed(() => {
 
   return titleObj[filter.value];
 });
-const needToUpdateInfo = computed(() => !Boolean(user[filter]));
-const isAutocomplete = computed(() => ['country', 'city', 'institution'].includes(filter.value))
+const needToUpdateInfo = computed(() => filter.value !== 'world' && !Boolean(user[filter]));
+const isAutocomplete = computed(() => ['country', 'city', 'institution'].includes(filter.value));
 
 const initAutocompleteInput = () => {
   const pacContainer = document.querySelectorAll('.pac-container');
@@ -117,6 +128,8 @@ const getTopScores = async (filter, value) => {
   isLoading.value = false;
 };
 
+const loadMore = () => {}
+
 watch(searchStr, val => {
   val && getTopScores(filter.value, val);
 });
@@ -124,14 +137,13 @@ watch(searchStr, val => {
 onMounted(() => {
   if (filter.value !== 'world') {
     searchStr.value = user[filter.value];
+    initAutocompleteInput();
   } else {
     getTopScores('world', '');
   }
-
-  initAutocompleteInput();
 });
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import "../assets/scss/components/top-list.scss";
 </style>
