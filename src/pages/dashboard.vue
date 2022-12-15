@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard">
+  <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
     <!-- Top Navbar -->
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -13,9 +13,17 @@
 
     <div class="block hg-statistics-content">
       <div class="row">
+        <div v-if="isLoading" class="col-100 hg-statistic-item hg-last-category-content">
+          <div class="card card-content card-content-padding">
+            <f7-skeleton-block effect="wave" height="28px">
+              <f7-skeleton-text/>
+            </f7-skeleton-block>
+          </div>
+        </div>
+
         <a class="col-100 hg-statistic-item hg-last-category-content"
            :href="`categories/${lastCategoryData?.lastCategory.id}/questions`"
-           v-if="lastCategoryData?.lastCategory"
+           v-else-if="lastCategoryData?.lastCategory"
         >
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
@@ -98,7 +106,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useAuthStore} from '@/js/stores/auth';
 import {useCategoryStore} from '@/js/stores/categories';
@@ -133,15 +141,7 @@ const getAllData = async () => {
   ]).then(() => {
     isLoading.value = false;
   })
-}
-
-getAllData();
-
-// getUser();
-// getLastCategory();
-// getPastCategories();
-// getAnsweredQuestionsCount();
-// getCategories();
+};
 </script>
 
 <style lang="scss">

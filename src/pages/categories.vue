@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-categories-page" name="categories">
+  <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesHandler">
     <f7-navbar title="Categories" back-link="Back"/>
 
     <template v-if="!isLoading">
@@ -28,7 +28,7 @@
     </template>
 
     <template v-else>
-      <f7-list inset >
+      <f7-list no-hairlines-md inset>
         <f7-list-item
           v-for="i in 3"
           :key="`skeleton_${i}`"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import {ref, computed} from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import {storeToRefs} from 'pinia';
 import TextClamp from 'vue3-text-clamp';
 import {useCategoryStore} from '@/js/stores/categories';
@@ -85,8 +85,7 @@ const getCategoriesHandler = async () => {
     });
 }
 
-getCategoriesHandler();
-
+// getCategoriesHandler();
 </script>
 
 <style lang="scss">
