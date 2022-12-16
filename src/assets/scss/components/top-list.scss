@@ -1,9 +1,27 @@
 .top-list {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  font-size: 16px;
+  .my-score {
+    position: fixed;
+    bottom: 0;
+    width: calc(100vw - ((var(--f7-block-padding-horizontal) + var(--f7-safe-area-left)) * 2));
+    background-color: gold;
+    z-index: 999;
+  }
 
-  .search-input {
-    margin-bottom: 8px;
+  .item-inner {
+    padding-left: calc(var(--f7-list-item-padding-horizontal) + var(--f7-safe-area-right) - var(--menu-list-offset));
+  }
+
+  .item-content {
+    padding-left: 0;
+  }
+
+  .item-after {
+    color: var(--f7-list-item-title-text-color);
+    font-size: var(--f7-list-item-title-font-size);
+    font-weight: bold;
+  }
+
+  ul {
+    position: relative;
   }
 }

@@ -91,6 +91,12 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: '/top-list/:filterName/list',
+    name: 'TopList',
+    asyncComponent: () => import('../pages/top-list.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
     path: '/start/',
     asyncComponent: () => import('../pages/start.vue'),
   },
