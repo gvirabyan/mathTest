@@ -4,6 +4,7 @@
     bottom: 0;
     width: calc(100vw - ((var(--f7-block-padding-horizontal) + var(--f7-safe-area-left)) * 2));
     background-color: gold;
+    z-index: 999;
   }
 
   .item-inner {
@@ -18,5 +19,9 @@
     color: var(--f7-list-item-title-text-color);
     font-size: var(--f7-list-item-title-font-size);
     font-weight: bold;
+  }
+
+  ul {
+    position: relative;
   }
 }
