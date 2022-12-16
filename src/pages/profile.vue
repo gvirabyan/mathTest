@@ -53,8 +53,8 @@
         placeholder="Your country"
         v-model:value="profileData.country"
         @focus="initAutocompleteInputs"
-        @input="clearCityAndSchool"
-        @input:clear="clearCityAndSchool"
+        @input="updateCountry"
+        @input:clear="updateCountry"
         clear-button
       />
 
@@ -65,6 +65,8 @@
         placeholder="Your city"
         v-model:value="profileData.city"
         @focus="initAutocompleteInputs"
+        @input="updateCity"
+        @input:clear="updateCity"
         clear-button
       />
 
@@ -179,14 +181,31 @@ const initAutocompleteInputs = () => {
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
+      const countryValue = place.address_components.filter(c => c.types.includes('country'))[0].long_name;
+      const cityValue = place.address_components.filter(c => c.types.includes('locality'))[0].long_name;
+
       profileData[elName] = place.name;
+
+      if (countryValue) {
+        profileData.country = countryValue
+      }
+
+      if (cityValue) {
+        profileData.city = cityValue
+      }
     });
   }
 }
 
-const clearCityAndSchool = () => {
+const updateCountry = () => {
   profileData.city = '';
-  profileData.institution = ''
+  profileData.institution = '';
+  profileData.course = '';
+}
+
+const updateCity = () => {
+  profileData.institution = '';
+  profileData.course = '';
 }
 
 watch(countryCode, val => {
