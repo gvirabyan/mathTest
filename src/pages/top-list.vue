@@ -5,6 +5,7 @@
     :infinite-distance="50"
     :infinite-preloader="showPreloader"
     @infinite="loadMore"
+    @page:beforein="initTopScores"
   >
     <f7-navbar :title="`${title} Top List`" back-link="Back" @click:back="clearTopListStore"/>
 
@@ -19,7 +20,8 @@
         :class="{ 'autocomplete': isAutocomplete }"
         type="text"
         :placeholder="`Enter ${title} name`"
-        clear-button
+        @input="clearTopListStore"
+        @input:clear="clearTopListStore"
         v-model:value="searchStr"
       />
 
@@ -34,7 +36,7 @@
         </f7-row>
       </template>
 
-      <f7-row v-else-if="!needToUpdateInfo && !topList.length">
+      <f7-row v-else-if="!needToUpdateInfo && noResults">
         <f7-col>There are no results yet</f7-col>
       </f7-row>
 
@@ -62,13 +64,12 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch} from 'vue';
+import {ref, computed, watch} from 'vue';
 import {useAuthStore} from '@/js/stores/auth';
 import {useTopList} from '@/js/stores/top-list';
 import {storeToRefs} from 'pinia';
 import useDebouncedRef from '@/js/utils/use-debounced-ref';
 import delay from '@/js/helpers/delay';
-import {value} from 'dom7';
 
 const props = defineProps({
   f7route: Object,
@@ -81,9 +82,10 @@ const {topList, topListMeta} = storeToRefs(topListStore);
 const {getTopList} = topListStore;
 
 const isLoading = ref(false);
+const noResults = ref(false);
 const showPreloader = ref(false);
 const allowInfinite = ref(true);
-const searchStr = useDebouncedRef('', 2000);
+const searchStr = useDebouncedRef('', 2000, true);
 
 const filter = computed(() => props.f7route.params.filterName);
 const title = computed(() => {
@@ -97,14 +99,11 @@ const title = computed(() => {
 
   return titleObj[filter.value];
 });
-const needToUpdateInfo = computed(() => filter.value !== 'world' && !Boolean(user[filter]));
+const needToUpdateInfo = computed(() => filter.value !== 'world' && Boolean(user[filter]));
 const isAutocomplete = computed(() => ['country', 'city', 'institution'].includes(filter.value));
 const page = computed(() => topListMeta?.value?.page + 1 || 1);
 
 const initAutocompleteInput = () => {
-  const pacContainer = document.querySelectorAll('.pac-container');
-  pacContainer.length && pacContainer.remove();
-
   const autocomplete = new google.maps.places.Autocomplete(
     document.querySelector(`.autocomplete input`),
   );
@@ -130,9 +129,14 @@ const initAutocompleteInput = () => {
 
 const getTopScores = async (filter, value, page, showLoader = true) => {
   isLoading.value = !!showLoader;
+  noResults.value = false;
 
   await delay();
   await getTopList(filter, value, page);
+
+  if (!topList.value.length) {
+    noResults.value = true;
+  }
 
   isLoading.value = false;
 };
@@ -147,29 +151,37 @@ const loadMore = () => {
   }
 
   setTimeout(() => {
-    getTopScores(filter.value, searchStr.value || '', page.value, false).then(() => {
-      allowInfinite.value = true;
-    });
-  }, 1000);
+    getTopScores(filter.value, searchStr.value || '', page.value, false)
+      .then(() => {
+        allowInfinite.value = true;
+      });
+    }, 1000);
 };
 
 const clearTopListStore = () => {
+  if (!topList.value.length && !topListMeta.value) {
+    return;
+  }
+
+  noResults.value = false;
   topListStore.$reset();
+}
+
+const initTopScores = () => {
+  if (filter.value !== 'world') {
+    searchStr.value = user.value[filter.value];
+    initAutocompleteInput();
+    return;
+  }
+
+  getTopScores('world', '', page.value)
+    .then(() => {
+      showPreloader.value = topList.value.length === topListMeta?.value?.pageSize
+    })
 }
 
 watch(searchStr, val => {
   val && getTopScores(filter.value, val, page.value);
-});
-
-onMounted(() => {
-  if (filter.value !== 'world') {
-    searchStr.value = user[filter.value];
-    initAutocompleteInput();
-  } else {
-    getTopScores('world', '', page.value).then(() => {
-      showPreloader.value = topList.value.length === topListMeta?.value?.pageSize
-    })
-  }
 });
 </script>
 

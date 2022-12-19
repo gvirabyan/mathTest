@@ -15,7 +15,10 @@ export const useTopList = defineStore('topList', () => {
       .then(res => res.json())
       .then(({ results, pagination }) => {
         topList.value.push(...results);
-        topListMeta.value = pagination;
+
+        if (results.length) {
+          topListMeta.value = pagination;
+        }
       })
   }
 
