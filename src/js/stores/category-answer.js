@@ -7,9 +7,19 @@ export const useCategoryAnswerStore = defineStore('category-answer',() => {
   const questionStore = useQuestionsStore();
   const categoryAnswers = ref([]);
 
-  const answersData = computed(() => getAnswersList(categoryAnswers.value, questionStore.question?.attributes?.answer))
+  const answersData = computed(() => getAnswersList(
+    categoryAnswers.value,
+    questionStore.question?.attributes?.wrong_answers?.wrong_answers,
+    questionStore.question?.attributes?.answer)
+  )
 
-  const getAnswersList = (data, answer) => {
+  const getAnswersList = (data, wrongAnswers, answer) => {
+    if (wrongAnswers && wrongAnswers.length) {
+      const wrongData = wrongAnswers.map(item => typeof item === 'string' ? item : String(item));
+      const uniqueWrongData = [...new Set(wrongData)];
+      return [...uniqueWrongData, answer].sort(() => 0.5 - Math.random());
+    }
+
     const strData = data.map(item => typeof item === 'string' ? item : String(item));
     const uniqueStrData = [...new Set(strData)];
     const shuffled = [...uniqueStrData].sort(() => 0.5 - Math.random());
