@@ -9,24 +9,27 @@ export const useCategoryAnswerStore = defineStore('category-answer',() => {
 
   const answersData = computed(() => getAnswersList(
     categoryAnswers.value,
-    questionStore.question?.attributes?.wrong_answers?.wrong_answers,
+    questionStore.question?.attributes?.wrong_answers,
     questionStore.question?.attributes?.answer)
   )
 
   const getAnswersList = (data, wrongAnswers, answer) => {
     if (wrongAnswers && wrongAnswers.length) {
-      const wrongData = wrongAnswers.map(item => typeof item === 'string' ? item : String(item));
-      const uniqueWrongData = [...new Set(wrongData)];
-      return [...uniqueWrongData, answer].sort(() => 0.5 - Math.random());
+      const result =  createRandomData(wrongAnswers, answer);
+      return result.length > 1 ? result : createRandomData(data, answer);
     }
 
+    return createRandomData(data, answer);
+  }
+
+  const createRandomData = (data, answer) => {
     const strData = data.map(item => typeof item === 'string' ? item : String(item));
     const uniqueStrData = [...new Set(strData)];
     const shuffled = [...uniqueStrData].sort(() => 0.5 - Math.random());
-    const randomData = shuffled.slice(0, 4);
+    const randomData = shuffled.length > 4 ? shuffled.slice(0, 3) : shuffled.slice(0, 4)
 
     if (!randomData.includes(answer)) {
-      randomData[3] = answer
+      randomData.push(answer);
     }
 
     return [...randomData].sort(() => 0.5 - Math.random());
