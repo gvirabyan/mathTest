@@ -4,7 +4,7 @@ import api from '@/js/api';
 
 export const useTopList = defineStore('topList', () => {
   const topList = ref([]);
-  const topListMeta = ref(null)
+  const topListMeta = ref(null);
 
   const getTopList = (filter = '', value = '', page = 1) => {
     const url = filter !== 'world'
