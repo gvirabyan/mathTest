@@ -1,5 +1,9 @@
 .top-list {
   .my-score {
+    background-color: gold;
+  }
+
+  .my-score-fixed {
     position: fixed;
     bottom: 0;
     width: calc(100vw - ((var(--f7-block-padding-horizontal) + var(--f7-safe-area-left)) * 2));
@@ -23,5 +27,9 @@
 
   ul {
     position: relative;
+  }
+
+  .last {
+    margin-bottom: 48px;
   }
 }

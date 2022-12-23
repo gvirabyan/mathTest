@@ -44,7 +44,7 @@
         <f7-list-item
           v-for="({ id, nickname, username, points }, index) in topList"
           :key="`list-item_${index + 1}`"
-          :class="{ 'my-score': id === user.id }"
+          :class="{ 'my-score': id === user.id, 'last': index === topList.length - 1 }"
         >
           <template #before-title>
             <span class="inline-block mr-8">{{ index + 1 }}</span>
@@ -56,6 +56,22 @@
 
           <template #after>
             {{ points }}
+          </template>
+        </f7-list-item>
+
+        <f7-list-item
+          class="my-score-fixed"
+        >
+          <template #before-title>
+            <span class="inline-block mr-8">{{ myScore.index }}</span>
+          </template>
+
+          <template #title>
+            {{ myScore.nickname || myScore.username }}
+          </template>
+
+          <template #after>
+            {{ myScore.points }}
           </template>
         </f7-list-item>
       </f7-list>
@@ -102,6 +118,17 @@ const title = computed(() => {
 const needToUpdateInfo = computed(() => filter.value !== 'world' && Boolean(user[filter]));
 const isAutocomplete = computed(() => ['country', 'city', 'institution'].includes(filter.value));
 const page = computed(() => topListMeta?.value?.page + 1 || 1);
+const myScore = computed(() => {
+  const myResult = topList.value.find(t => t.id === user.value.id);
+  const myResultIndex = topList.value.findIndex(t => t.id === user.value.id);
+
+  return {
+    index: myResultIndex + 1,
+    nickname: myResult.nickname,
+    username: myResult.username,
+    points: myResult.points,
+  }
+});
 
 const initAutocompleteInput = () => {
   const autocomplete = new google.maps.places.Autocomplete(
