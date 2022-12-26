@@ -75,18 +75,39 @@
         label="School/University/College"
         type="text"
         placeholder="Your school/university/college"
-        v-model:value="profileData.institution"
+        v-model:value="profileData.institution.name"
         @focus="initAutocompleteInputs"
         clear-button
       />
 
       <f7-list-input
+        ref="coursesInput"
+        class="courses-input"
         label="Class/course"
         type="text"
         placeholder="Your class/course"
         clear-button
+        error-message="Please fill your school/university/college before class/course"
+        :error-message-force="showCourseErrorMsg"
         v-model:value="profileData.course"
-      />
+        @input="setCourseInputValid"
+        @focus="isCoursesDropdown = true"
+        v-click-out-side="() => isCoursesDropdown = false"
+      >
+        <template #root-end>
+          <f7-list
+            v-if="courses.length && isCoursesDropdown"
+            simple-list
+          >
+            <f7-list-item
+              v-for="(course, index) in courses"
+              :key="`course-item_${index + 1}`"
+              :title="course"
+              @click="selectCourse(course)"
+            />
+          </f7-list>
+        </template>
+      </f7-list-input>
 
       <f7-block>
         <f7-button color="blue" fill @click="editProfile" :disabled="disableSubmit">Edit</f7-button>
@@ -115,16 +136,20 @@
 import {f7} from 'framework7-vue';
 import {computed, watch, onMounted, reactive, ref} from 'vue';
 import {storeToRefs} from 'pinia';
-import {DatePicker} from 'v-calendar';
 import {useAuthStore} from '@/js/stores/auth';
+import {useCoursesStore} from '@/js/stores/courses';
 import {getCountryCode} from '@/js/helpers/country-name-to-iso';
+import { clickOutSide as vClickOutSide } from '@mahdikhashan/vue3-click-outside'
+import {DatePicker} from 'v-calendar';
 import 'v-calendar/dist/style.css';
 
 const authStore = useAuthStore();
+const coursesStore = useCoursesStore();
 const {user} = storeToRefs(authStore);
+const {courses} = storeToRefs(coursesStore);
 const {updateUser} = authStore;
+const {getCourses} = coursesStore;
 
-const disableSubmit = ref(false);
 const profileData = reactive({
   email: '',
   name: '',
@@ -133,15 +158,32 @@ const profileData = reactive({
   dateOfBirth: new Date().setFullYear(new Date().getFullYear() - 10),
   country: '',
   city: '',
-  institution: '',
+  institution: {
+    name: '',
+    place_id: ''
+  },
   course: ''
 });
+
+const coursesInput = ref();
 const isCalendarOpened = ref(false);
 const dateStr = ref(null);
+const isCoursesDropdown = ref(false);
+const showCourseErrorMsg = ref(false);
+const disableSubmit = ref(false);
 
 const countryCode = computed(() => profileData.country !== '' ? getCountryCode(profileData.country) : null);
 
 const editProfile = () => {
+  if (showCourseErrorMsg.value) {
+    f7.toast.show({
+      text: 'Fill aff of the inputs correctly',
+      closeButton: true
+    });
+
+    return;
+  }
+
   disableSubmit.value = true
 
   updateUser(profileData)
@@ -184,7 +226,12 @@ const initAutocompleteInputs = () => {
       const countryValue = place.address_components.filter(c => c.types.includes('country'))[0].long_name;
       const cityValue = place.address_components.filter(c => c.types.includes('locality'))[0].long_name;
 
-      profileData[elName] = place.name;
+      if (elName === 'institution') {
+        profileData.institution.name = place.name;
+        profileData.institution.place_id = place.place_id;
+      } else {
+        profileData[elName] = place.name;
+      }
 
       if (countryValue) {
         profileData.country = countryValue
@@ -199,13 +246,33 @@ const initAutocompleteInputs = () => {
 
 const updateCountry = () => {
   profileData.city = '';
-  profileData.institution = '';
+  profileData.institution = {
+    name: '',
+    place_id: ''
+  };
   profileData.course = '';
 }
 
 const updateCity = () => {
-  profileData.institution = '';
+  profileData.institution = {
+    name: '',
+    place_id: ''
+  };
   profileData.course = '';
+};
+
+const setCourseInputValid = (e) => {
+  if (e.target.value) {
+    showCourseErrorMsg.value = !Boolean(profileData.institution);
+    return;
+  }
+
+  showCourseErrorMsg.value = false;
+}
+
+const selectCourse = course => {
+  profileData.course = course;
+  isCoursesDropdown.value = false;
 }
 
 watch(countryCode, val => {
@@ -220,16 +287,25 @@ watch(() => profileData.dateOfBirth, val => {
   }
 })
 
+watch(() => profileData.institution, val => {
+  val.place_id && getCourses(val.place_id);
+}, { deep: true })
+
 onMounted(() => {
   // fill profile data with initial values
   Object.keys(profileData).forEach(key => {
-    profileData[key] = user?.value[key];
+    if (key === 'institution') {
+      profileData.institution.name = user?.value[key] ? user?.value[key].name : '';
+      profileData.institution.place_id = user?.value[key] ? user?.value[key].place_id : '';
+    } else {
+      profileData[key] = user?.value[key] || null;
+    }
   });
 
   initAutocompleteInputs()
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "@/assets/scss/pages/profile.scss";
 </style>

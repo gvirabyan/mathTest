@@ -8,8 +8,8 @@ export const useTopList = defineStore('topList', () => {
 
   const getTopList = (filter = '', value = '', page = 1) => {
     const url = filter !== 'world'
-      ? `user/get-points?filters[${filter}]=${value}&sort=points:desc&pagination[page]=${page}&pagination[pageSize]=20`
-      : `user/get-points?sort=points:desc&pagination[page]=${page}&pagination[pageSize]=20`
+      ? `get-points?filters[${filter}]=${value}&sort=points:desc&pagination[page]=${page}&pagination[pageSize]=20`
+      : `get-points?sort=points:desc&pagination[page]=${page}&pagination[pageSize]=20`
 
     return api.get(url)
       .then(res => res.json())

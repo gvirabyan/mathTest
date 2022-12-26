@@ -8,6 +8,18 @@
       opacity: 1 !important;
     }
   }
+
+  .courses-input .list {
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+  }
+
+  .courses-input .list ul {
+    padding-left: 0;
+  }
 }
 
 .calendar-sheet {
