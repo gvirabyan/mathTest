@@ -96,11 +96,11 @@
       >
         <template #root-end>
           <f7-list
-            v-if="user.institution.courses.length && isCoursesDropdown"
+            v-if="courses.length && isCoursesDropdown"
             simple-list
           >
             <f7-list-item
-              v-for="(course, index) in user.institution.courses"
+              v-for="(course, index) in courses"
               :key="`course-item_${index + 1}`"
               :title="course"
               @click="selectCourse(course)"
@@ -136,15 +136,19 @@
 import {f7} from 'framework7-vue';
 import {computed, watch, onMounted, reactive, ref} from 'vue';
 import {storeToRefs} from 'pinia';
-import {DatePicker} from 'v-calendar';
 import {useAuthStore} from '@/js/stores/auth';
+import {useCoursesStore} from '@/js/stores/courses';
 import {getCountryCode} from '@/js/helpers/country-name-to-iso';
 import { clickOutSide as vClickOutSide } from '@mahdikhashan/vue3-click-outside'
+import {DatePicker} from 'v-calendar';
 import 'v-calendar/dist/style.css';
 
 const authStore = useAuthStore();
+const coursesStore = useCoursesStore();
 const {user} = storeToRefs(authStore);
+const {courses} = storeToRefs(coursesStore);
 const {updateUser} = authStore;
+const {getCourses} = coursesStore;
 
 const profileData = reactive({
   email: '',
@@ -282,6 +286,10 @@ watch(() => profileData.dateOfBirth, val => {
     isCalendarOpened.value = false;
   }
 })
+
+watch(() => profileData.institution, val => {
+  val.place_id && getCourses(val.place_id);
+}, { deep: true })
 
 onMounted(() => {
   // fill profile data with initial values
