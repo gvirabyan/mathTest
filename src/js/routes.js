@@ -97,6 +97,48 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: '/settings/',
+    name: 'Settings',
+    asyncComponent: () => import('../pages/settings.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/terms',
+    name: 'Terms of services',
+    asyncComponent: () => import('../pages/terms.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/privacy',
+    name: 'Privacy',
+    asyncComponent: () => import('../pages/privacy.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/imprint',
+    name: 'Imprint',
+    asyncComponent: () => import('../pages/imprint.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/licenses',
+    name: 'Licenses',
+    asyncComponent: () => import('../pages/licenses.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/release-notes',
+    name: 'Release notes',
+    asyncComponent: () => import('../pages/release-notes.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: '/settings/feedback',
+    name: 'Write a review',
+    asyncComponent: () => import('../pages/feedback.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
     path: '/start/',
     asyncComponent: () => import('../pages/start.vue'),
   },
