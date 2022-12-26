@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "@fawmi/vue-google-maps": "^0.9.79",
+    "@mahdikhashan/vue3-click-outside": "^0.1.2",
     "dom7": "^4.0.4",
     "framework7": "^7.0.8",
     "framework7-icons": "^5.0.5",

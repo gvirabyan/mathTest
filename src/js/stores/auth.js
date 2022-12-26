@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // actions
   const login = async userData => {
-    return api.post('auth/local', userData).then(res => res.json()).then(data => {
+    return api.post('auth/local?populate[0]=institution', userData).then(res => res.json()).then(data => {
       if (!data.error) {
         token.value = data?.jwt
         user.value = data?.user
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const register = async userData => {
-    return api.post('auth/local/register', userData).then(res => res.json()).then(data => {
+    return api.post('auth/local/register?populate[0]=institution', userData).then(res => res.json()).then(data => {
       if (!data.error) {
         token.value = data?.jwt
         user.value = data?.user
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const getUser = async () => {
-    return api.get(`users/${user.value.id}`).then(res => res.json()).then(data => {
+    return api.get(`users/${user.value.id}?populate[0]=institution`).then(res => res.json()).then(data => {
       if (!data.error) {
         user.value = data
 
@@ -50,14 +50,16 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const updateUser = async (userData) => {
-    return api.put(`users/${user.value.id}`, {...userData}).then(res => res.json()).then(data => {
-      if (!data.error) {
-        user.value = data
+    return api.put(`users/${user.value.id}`, {...userData})
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          user.value = data
 
-        return {status: 'success'}
-      } else {
-        return {status: 'error', message: data.error?.message}
-      }
+          return {status: 'success'}
+        } else {
+          return {status: 'error', message: data.error?.message}
+        }
     })
   }
 
