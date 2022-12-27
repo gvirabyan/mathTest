@@ -96,7 +96,7 @@
       >
         <template #root-end>
           <f7-list
-            v-if="courses.length && isCoursesDropdown"
+            v-if="courses && isCoursesDropdown"
             simple-list
           >
             <f7-list-item
@@ -223,8 +223,8 @@ const initAutocompleteInputs = () => {
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
-      const countryValue = place.address_components.filter(c => c.types.includes('country'))[0].long_name;
-      const cityValue = place.address_components.filter(c => c.types.includes('locality'))[0].long_name;
+      const countryValue = place.address_components.filter(c => c.types.includes('country'))[0]?.long_name;
+      const cityValue = place.address_components.filter(c => c.types.includes('locality'))[0]?.long_name;
 
       if (elName === 'institution') {
         profileData.institution.name = place.name;

@@ -179,7 +179,7 @@ const isoCountries = {
   'qa' : 'Qatar',
   're' : 'Reunion',
   'ro' : 'Romania',
-  'ru' : 'Russian Federation',
+  'ru' : 'Russia',
   'rw' : 'Rwanda',
   'bl' : 'Saint Barthelemy',
   'sh' : 'Saint Helena',
