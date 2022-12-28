@@ -178,7 +178,7 @@ const countryCode = computed(() => profileData.country !== '' ? getCountryCode(p
 const editProfile = () => {
   if (showCourseErrorMsg.value) {
     f7.toast.show({
-      text: 'Fill aff of the inputs correctly',
+      text: 'Fill all of the inputs correctly',
       closeButton: true
     });
 
@@ -194,7 +194,14 @@ const editProfile = () => {
           text: 'Profile data have been changed',
           closeButton: true
         });
+
+        return;
       }
+
+      f7.toast.show({
+        text: res.message,
+        closeButton: true
+      });
     })
     .finally(() => disableSubmit.value = false)
 
