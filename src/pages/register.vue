@@ -11,7 +11,7 @@
         <f7-button
           :active="registerMode === 'nickname'"
           @click="registerMode = 'nickname'"
-        >Nickname</f7-button>
+        >Nickname only</f7-button>
       </f7-segmented>
     </f7-block>
 
@@ -106,7 +106,8 @@ const startRegister = () => {
       }
 
       f7.toast.show({
-        text: resp.message
+        text: resp.message,
+        closeButton: true
       });
     });
 
@@ -126,9 +127,17 @@ const startRegister = () => {
       }
 
       f7.toast.show({
-        text: resp.message
+        text: resp.message,
+        closeButton: true
       });
     });
+
+    return;
   }
+
+  f7.toast.show({
+    text: 'Password and password confirmation should match',
+    closeButton: true
+  });
 };
 </script>

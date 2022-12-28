@@ -25,8 +25,14 @@ const put = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
   body: JSON.stringify(body)
 });
 
+const remove = (url) => fetch(`http://localhost:1337/api/${url}`, {
+  ...defaultOptions(),
+  method: "DELETE",
+})
+
 export default {
   get,
   post,
-  put
+  put,
+  remove
 };

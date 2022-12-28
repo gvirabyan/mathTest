@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // getters
   const userData = computed(() => user.value);
+  const isNicknamedOnlyUser = computed(() => user.value && user.value.nickname && !user.value.email)
 
   // actions
   const login = async userData => {
@@ -40,7 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const registerByNickname = async userData => {
-    return api.post('auth/local/register-by-nickname', userData)
+    return api.post('auth/local/register-nicknamed-user', userData)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
@@ -82,6 +83,30 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  const updateNicknamedUser = async (userData) => {
+    return api.put(`users/${user.value.id}/update-nicknamed-user`, {...userData})
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          return {status: 'success'}
+        } else {
+          return {status: 'error', message: data.error?.message}
+        }
+      })
+  }
+
+  const deleteNicknamedUser = async () => {
+    return api.remove(`users/${user.value.id}/delete-nicknamed-user`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          return {status: 'success'}
+        } else {
+          return {status: 'error', message: data.error?.message}
+        }
+      })
+  }
+
   const logout = async () => {
     token.value = ''
     user.value = null
@@ -111,11 +136,14 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     user,
     userData,
+    isNicknamedOnlyUser,
     login,
     register,
     registerByNickname,
     getUser,
     updateUser,
+    updateNicknamedUser,
+    deleteNicknamedUser,
     logout,
   }
 });
