@@ -196,7 +196,7 @@ const clearTopListStore = () => {
 
 const initTopScores = () => {
   if (filter.value !== 'world') {
-    searchStr.value = user.value[filter.value];
+    searchStr.value = filter.value === 'institution' ?  user.value[filter.value].name : user.value[filter.value];
     initAutocompleteInput();
     return;
   }
