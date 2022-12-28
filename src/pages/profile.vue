@@ -77,6 +77,7 @@
         placeholder="Your school/university/college"
         v-model:value="profileData.institution.name"
         @focus="initAutocompleteInputs"
+        @input="setCourseInputValid"
         clear-button
       />
 
@@ -263,7 +264,7 @@ const updateCity = () => {
 
 const setCourseInputValid = (e) => {
   if (e.target.value) {
-    showCourseErrorMsg.value = !Boolean(profileData.institution);
+    showCourseErrorMsg.value = !Boolean(profileData.institution.name);
     return;
   }
 
