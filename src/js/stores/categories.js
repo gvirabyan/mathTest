@@ -33,19 +33,21 @@ export const useCategoryStore = defineStore('category', () => {
     api.get('categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user')
       .then(res => res.json())
       .then(data => {
-      categories.value = data.data;
-    })
+        categories.value = data.data;
+      });
   };
 
   const getCategory = async (categoryID) => {
-    api.get(`categories/${categoryID}?fields=name&populate=answer&populate=questions`).then(res => res.json()).then(data => {
-      category.value = {
-        id: data?.data?.id,
-        name: data?.data?.attributes?.name,
-        questions_amount: data?.data?.attributes?.questions?.data?.length
-      } || [];
-      categoryAnswersStore.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
-    })
+    api.get(`categories/${categoryID}?fields=name&populate=answer&populate=questions`)
+      .then(res => res.json())
+      .then(data => {
+        category.value = {
+          id: data?.data?.id,
+          name: data?.data?.attributes?.name,
+          questions_amount: data?.data?.attributes?.questions?.data?.length
+        } || [];
+        categoryAnswersStore.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
+      });
   };
 
   const getLastCategory = async () => {
