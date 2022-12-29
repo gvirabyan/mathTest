@@ -16,10 +16,11 @@
 
       <f7-input
         v-if="filter !== 'world'"
-        class="py-12 autocomplete"
+        class="py-12"
         :class="{ 'autocomplete': isAutocomplete }"
         type="text"
         :placeholder="`Enter ${title} name`"
+        clear-button
         @input="clearTopListStore"
         @input:clear="clearTopListStore"
         v-model:value="searchStr"
@@ -60,6 +61,7 @@
         </f7-list-item>
 
         <f7-list-item
+          v-if="myScore"
           class="my-score-fixed"
         >
           <template #before-title>
@@ -102,6 +104,7 @@ const noResults = ref(false);
 const showPreloader = ref(false);
 const allowInfinite = ref(true);
 const searchStr = useDebouncedRef('', 2000, true);
+const searchIdStr = useDebouncedRef('', 2000, true);
 
 const filter = computed(() => props.f7route.params.filterName);
 const title = computed(() => {
@@ -122,15 +125,21 @@ const myScore = computed(() => {
   const myResult = topList.value.find(t => t.id === user.value.id);
   const myResultIndex = topList.value.findIndex(t => t.id === user.value.id);
 
-  return {
-    index: myResultIndex + 1,
-    nickname: myResult.nickname,
-    username: myResult.username,
-    points: myResult.points,
+  if (myResult) {
+    return {
+      index: myResultIndex + 1,
+      nickname: myResult.nickname,
+      username: myResult.username,
+      points: myResult.points,
+    }
   }
 });
 
 const initAutocompleteInput = () => {
+  if (filter.value === 'course') {
+    return;
+  }
+
   const autocomplete = new google.maps.places.Autocomplete(
     document.querySelector(`.autocomplete input`),
   );
@@ -150,7 +159,11 @@ const initAutocompleteInput = () => {
   autocomplete.addListener("place_changed", () => {
     const place = autocomplete.getPlace();
 
-    searchStr.value = place.name
+    searchStr.value = place.name;
+
+    if (filter.value === 'institution') {
+      searchIdStr.value = place.place_id;
+    }
   });
 }
 
@@ -178,7 +191,7 @@ const loadMore = () => {
   }
 
   setTimeout(() => {
-    getTopScores(filter.value, searchStr.value || '', page.value, false)
+    getTopScores(filter.value, searchIdStr.value || '', page.value, false)
       .then(() => {
         allowInfinite.value = true;
       });
@@ -197,6 +210,8 @@ const clearTopListStore = () => {
 const initTopScores = () => {
   if (filter.value !== 'world') {
     searchStr.value = filter.value === 'institution' ?  user.value[filter.value].name : user.value[filter.value];
+    searchIdStr.value = filter.value === 'institution' ? user.value.institution.place_id : '';
+
     initAutocompleteInput();
     return;
   }
@@ -208,7 +223,15 @@ const initTopScores = () => {
 }
 
 watch(searchStr, val => {
-  val && getTopScores(filter.value, val, page.value);
+  if (filter.value !== 'institution' && val) {
+    getTopScores(filter.value, val, page.value);
+  }
+});
+
+watch(searchIdStr, val => {
+  if (val) {
+    getTopScores(filter.value, val, page.value);
+  }
 });
 </script>
 
