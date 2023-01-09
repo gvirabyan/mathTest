@@ -44,6 +44,7 @@
 <script setup>
 import {reactive} from 'vue';
 import { useAuthStore } from '@/js/stores/auth';
+import {f7} from 'framework7-vue';
 
 const props = defineProps({
   f7route: Object,
@@ -51,8 +52,8 @@ const props = defineProps({
 });
 
 const userData = reactive({
-  identifier: null,
-  password: null
+  identifier: "",
+  password: ""
 })
 
 const { login } = useAuthStore();
@@ -62,8 +63,10 @@ const startLogin = () => {
     if (resp.status === 'success') {
       props.f7router.navigate('/dashboard/')
     } else {
-      alert(resp.message);
-      console.error(resp.message);
+      f7.toast.show({
+        text: resp.message,
+        closeButton: true
+      });
     }
   })
 }
