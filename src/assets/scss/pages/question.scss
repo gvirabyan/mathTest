@@ -1,4 +1,9 @@
 .hg-question-page {
+  .page-content {
+    .block-title {
+      white-space: pre-line;
+    }
+  }
   .hg-wrong-answer {
     border: 1px solid red;
   }
