@@ -1,13 +1,26 @@
 {
-  "cwd": "C:\\xampp\\htdocs\\framework7-app",
+  "cwd": "/home/sasha-jarvi/projects/my-projects/f7-test",
   "type": [
-    "web"
+    "cordova"
   ],
   "name": "Math App",
+  "pkg": "io.framework7.math-app",
   "framework": "vue",
   "template": "single-view",
   "cssPreProcessor": "scss",
   "bundler": "vite",
+  "cordova": {
+    "folder": "cordova",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": [
+      "cordova-plugin-statusbar",
+      "cordova-plugin-keyboard",
+      "cordova-plugin-splashscreen"
+    ]
+  },
   "theming": {
     "customColor": false,
     "color": "#007aff",
