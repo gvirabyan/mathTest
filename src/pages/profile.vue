@@ -42,7 +42,7 @@
         type="text"
         v-model:value="dateStr"
         placeholder="Your birth date"
-        readonly
+        :readonly="isCalendarOpened"
         @focus="isCalendarOpened = true"
       />
 
