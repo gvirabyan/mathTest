@@ -28,7 +28,6 @@ const f7params = {
 
 const addGmapsScript = () => { // dynamic adding of google map script on app creation
   const gmapsScriptId = 'gm-script';
-  const moduleScript = document.getElementById('module');
   const gmapsScriptIsAdded = !!document.getElementById(gmapsScriptId);
   const gmapsScript = document.createElement('script');
 
@@ -38,8 +37,8 @@ const addGmapsScript = () => { // dynamic adding of google map script on app cre
 
   gmapsScript.setAttribute('async', '');
   gmapsScript.setAttribute('id', 'gm-script');
-  gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?libraries=places&key=${import.meta.env.VITE_GOOGLE_API_KEY}&callback=Function.prototype`);
-  moduleScript.before(gmapsScript);
+  gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_API_KEY}&callback=Function.prototype&libraries=places`);
+  document.head.appendChild(gmapsScript);
 };
 
 onMounted(() => {
