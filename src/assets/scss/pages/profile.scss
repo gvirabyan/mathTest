@@ -26,16 +26,16 @@
 .calendar-sheet {
   height: auto;
 
-  :deep(.vc-container) {
+  .vc-container {
     width: 100%;
     border: none;
   }
 
-  :deep(.vc-popover-content-wrapper) {
+  .vc-popover-content-wrapper {
     width: 100%;
   }
 
-  :deep(.vc-nav-items) {
+  .vc-nav-items {
     justify-items: center;
   }
 }
