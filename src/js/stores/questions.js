@@ -19,7 +19,7 @@ export const useQuestionsStore = defineStore('questions',() => {
   const getQuestions = (categoryID) => {
     let idsFilter = ''
 
-    if (answeredQuestions.value) {
+    if (answeredQuestions.value.length) {
       idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`
     }
 

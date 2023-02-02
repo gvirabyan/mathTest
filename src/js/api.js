@@ -11,21 +11,21 @@ const defaultOptions = () => {
   return options
 }
 
-const get = (url) => fetch(`http://localhost:1337/api/${url}`, defaultOptions());
+const get = (url) => fetch(`${import.meta.env.VITE_API_URL}${url}`, defaultOptions());
 
-const post = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
+const post = (url, body) => fetch(`${import.meta.env.VITE_API_URL}${url}`, {
   ...defaultOptions(),
   method: "POST",
   body: JSON.stringify(body)
 });
 
-const put = (url, body) => fetch(`http://localhost:1337/api/${url}`, {
+const put = (url, body) => fetch(`${import.meta.env.VITE_API_URL}${url}`, {
   ...defaultOptions(),
   method: "PUT",
   body: JSON.stringify(body)
 });
 
-const remove = (url) => fetch(`http://localhost:1337/api/${url}`, {
+const remove = (url) => fetch(`${import.meta.env.VITE_API_URL}${url}`, {
   ...defaultOptions(),
   method: "DELETE",
 })

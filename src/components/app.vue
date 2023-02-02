@@ -38,15 +38,15 @@ const addGmapsScript = () => { // dynamic adding of google map script on app cre
 
   gmapsScript.setAttribute('async', '');
   gmapsScript.setAttribute('id', 'gm-script');
-  gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?libraries=places&key=${import.meta.env.VITE_GOOGLE_API_KEY}`);
+  gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?libraries=places&key=${import.meta.env.VITE_GOOGLE_API_KEY}&callback=Function.prototype`);
   moduleScript.before(gmapsScript);
 };
-
-addGmapsScript();
 
 onMounted(() => {
   f7ready(() => {
     // Call F7 APIs here
   });
+
+  addGmapsScript();
 });
 </script>
