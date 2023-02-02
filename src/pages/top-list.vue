@@ -11,7 +11,7 @@
 
     <f7-block>
       <template v-if="needToUpdateInfo">
-        <p><i class="mb-8">Please update your {{ title }} information to see your position</i></p>
+        <p><i class="mb-8">Please update your {{ infoToUpdate }} information to see your position</i></p>
       </template>
 
       <f7-input
@@ -118,7 +118,21 @@ const title = computed(() => {
 
   return titleObj[filter.value];
 });
-const needToUpdateInfo = computed(() => filter.value !== 'world' && Boolean(user[filter]));
+const emptyInstitutionFilledCourse = computed(() => filter.value === 'course' && !user.value.institution);
+const infoToUpdate = computed(() => {
+  if (emptyInstitutionFilledCourse.value) {
+    return 'School/University/College';
+  }
+
+  return title.value;
+})
+const needToUpdateInfo = computed(() => {
+  if (emptyInstitutionFilledCourse.value) {
+    return true;
+  }
+
+  return filter.value !== 'world' && Boolean(user[filter.value])
+});
 const isAutocomplete = computed(() => ['country', 'city', 'institution'].includes(filter.value));
 const page = computed(() => topListMeta?.value?.page + 1 || 1);
 const myScore = computed(() => {
@@ -208,9 +222,13 @@ const clearTopListStore = () => {
 }
 
 const initTopScores = () => {
+  if (emptyInstitutionFilledCourse.value) {
+    return;
+  }
+
   if (filter.value !== 'world') {
-    searchStr.value = filter.value === 'institution' ?  user.value[filter.value].name : user.value[filter.value];
-    searchIdStr.value = filter.value === 'institution' ? user.value.institution.place_id : '';
+    searchStr.value = filter.value === 'institution' ?  user.value[filter.value]?.name : user.value[filter.value];
+    searchIdStr.value = filter.value === 'institution' ? user.value.institution?.place_id : '';
 
     initAutocompleteInput();
     return;
