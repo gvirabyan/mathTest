@@ -1,6 +1,7 @@
 // Import Vue
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+// import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 // Import Framework7
 import Framework7 from 'framework7/lite-bundle';
@@ -32,4 +33,9 @@ registerComponents(app);
 
 // Mount the app
 app.use(pinia);
+// app.use(VueGoogleMaps, {
+//   load: {
+//     key: 'AIzaSyCD7Qcig2DhVVp5nNahOZuJJOjnyvIExks',
+//   }
+// });
 app.mount('#app');
