@@ -25,13 +25,14 @@ export const useCategoryAnswerStore = defineStore('category-answer',() => {
   const createRandomData = (data, answer) => {
     const strData = data.map(item => typeof item === 'string' ? item : String(item));
     const uniqueStrData = [...new Set(strData)];
-    const shuffledData = [...uniqueStrData].sort(() => 0.5 - Math.random());
+    const shuffled = [...uniqueStrData].sort(() => 0.5 - Math.random());
+    const randomData = shuffled.length > 3 ? shuffled.slice(0, 3) : shuffled
 
-    if (!shuffledData.includes(answer)) {
-      shuffledData.push(answer);
+    if (!randomData.includes(answer)) {
+      randomData.push(answer);
     }
 
-    return [...shuffledData].sort(() => 0.5 - Math.random());
+    return [...randomData].sort(() => 0.5 - Math.random());
   }
 
   const updateUserAnsweredQuestions =  async (answer) => {
