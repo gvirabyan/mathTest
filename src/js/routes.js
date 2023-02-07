@@ -103,6 +103,12 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: '/settings/update-password',
+    name: 'Update password',
+    asyncComponent: () => import('../pages/update-password.vue'),
+    beforeEnter: checkAuth,
+  },
+  {
     path: '/settings/terms',
     name: 'Terms of services',
     asyncComponent: () => import('../pages/terms.vue'),
