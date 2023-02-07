@@ -4,7 +4,7 @@
     <f7-block-title>Settings</f7-block-title>
 
     <f7-list class="settings-list">
-      <f7-list-item v-for="({ href, title }, index) in settingsItems" :key="`menu-item_${index + 1}`">
+      <f7-list-item v-for="({ href, title }, index) in settingsItemsFiltered" :key="`menu-item_${index + 1}`">
         <f7-link panel-close :href="`/settings/${href}/`">{{ title }}</f7-link>
       </f7-list-item>
 
@@ -70,10 +70,10 @@
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue';
+import {reactive, ref, computed} from 'vue';
 import {storeToRefs} from 'pinia';
-import {useAuthStore} from '@/js/stores/auth';
 import {f7} from 'framework7-vue';
+import {useAuthStore} from '@/js/stores/auth';
 
 const props = defineProps({
   f7router: Object
@@ -81,28 +81,39 @@ const props = defineProps({
 
 const settingsItems = [
   {
+    href: 'update-password',
+    title: 'Update password',
+    showForNicknamedOnly: false
+  },
+  {
     href: 'terms',
-    title: 'Terms of services'
+    title: 'Terms of services',
+    showForNicknamedOnly: true
   },
   {
     href: 'privacy',
-    title: 'Privacy'
+    title: 'Privacy',
+    showForNicknamedOnly: true
   },
   {
     href: 'imprint',
-    title: 'Imprint'
+    title: 'Imprint',
+    showForNicknamedOnly: true
   },
   {
     href: 'licenses',
-    title: 'Software licenses'
+    title: 'Software licenses',
+    showForNicknamedOnly: true
   },
   {
     href: 'release-notes',
-    title: 'Release notes'
+    title: 'Release notes',
+    showForNicknamedOnly: true
   },
   {
     href: 'feedback',
-    title: 'Write a review'
+    title: 'Write a review',
+    showForNicknamedOnly: true
   }
 ];
 
@@ -115,7 +126,9 @@ const nicknamedUserData = reactive({
   email: '',
   password: '',
   confirmPassword: ''
-})
+});
+
+const settingsItemsFiltered = computed(() => isNicknamedOnlyUser.value ? settingsItems.filter(s => s.showForNicknamedOnly) : settingsItems);
 
 const logoutHandler = () => {
   if (isNicknamedOnlyUser.value) {
