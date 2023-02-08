@@ -8,6 +8,7 @@ export const useTopList = defineStore('topList', () => {
 
   const topList = ref([]);
   const topListMeta = ref(null);
+  const myStats = ref(null);
 
   const getTopList = (filter = '', value = '', page = 1) => {
     let url;
@@ -31,9 +32,19 @@ export const useTopList = defineStore('topList', () => {
       })
   }
 
+  const getMyStats = () => {
+    return  api.get(`get-stats/${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        myStats.value = data;
+      })
+  }
+
   return {
     topList,
     topListMeta,
-    getTopList
+    myStats,
+    getTopList,
+    getMyStats
   }
 })
