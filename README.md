@@ -1,5 +1,22 @@
 # F7-Test
 
+## How to build
+
+Steps for building of .apk file for tests (instruction for the first time, the next time you need only to run npm run build-cordova-android command)
+
+1. Install `cordova` package globally using this command: `npm install -g cordova`
+2. Install JDK ans set environment variables: [Windows](https://www.makeuseof.com/windows-android-studio-setup/) [Linux](https://www.makeuseof.com/windows-android-studio-setup/) [MacOS](https://www.makeuseof.com/windows-android-studio-setup/)
+3. Install Android Studio : https://developer.android.com/studio
+4. Set `ANDROID_HOME` and `Path` Variables: [Windows](https://www.makeuseof.com/windows-android-studio-setup/) [Linux](https://www.makeuseof.com/windows-android-studio-setup/) [MacOS](https://www.makeuseof.com/windows-android-studio-setup/)
+5. Install Gradle: https://gradle.org/install/
+6. Open the project (e.g. `f7-math`) and go to `cordova` folder
+7. Create folder `www` in `cordova` folder
+8. Run `cordova platform add android` inside `cordova` folder
+9. Go back to main folder
+10. Run `npm run build-cordova-android`
+
+Now you should find app-debug.apk in cordova/platforms/android/app/build/outputs/apk/debug/ folder.
+
 ## Framework7 CLI Options
 
 Framework7 app created with following options:
