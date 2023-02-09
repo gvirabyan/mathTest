@@ -17,24 +17,24 @@
 <script setup>
 const linksList = [
   {
-    title: 'World',
-    filter: 'world',
+    title: "World",
+    filter: "world",
   },
   {
-    title: 'Country',
-    filter: 'country',
+    title: "Country",
+    filter: "country",
   },
   {
-    title: 'City',
-    filter: 'city',
+    title: "City",
+    filter: "city",
   },
   {
-    title: 'School/University/College',
-    filter: 'institution',
+    title: "School/University/College",
+    filter: "institution",
   },
   {
-    title: 'Class/Course',
-    filter: 'course',
-  }
+    title: "Class/Course",
+    filter: "course",
+  },
 ];
 </script>

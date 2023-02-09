@@ -1,9 +1,9 @@
-import {ref, computed} from 'vue';
-import { defineStore } from 'pinia';
-import api from '@/js/api';
-import {useAuthStore} from '@/js/stores/auth';
+import { ref, computed } from "vue";
+import { defineStore } from "pinia";
+import api from "@/js/api";
+import { useAuthStore } from "@/js/stores/auth";
 
-export const useQuestionsStore = defineStore('questions',() => {
+export const useQuestionsStore = defineStore("questions", () => {
   const questions = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
@@ -16,48 +16,53 @@ export const useQuestionsStore = defineStore('questions',() => {
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
 
-  const getQuestions = (categoryID) => {
-    let idsFilter = ''
+  const getQuestions = categoryID => {
+    let idsFilter = "";
 
     if (answeredQuestions.value.length) {
-      idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`
+      idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`;
     }
 
     if (meta.value) {
       if (meta.value.pagination.page === meta.value.pagination.pageCount) {
         return;
       } else {
-        api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
+        api
+          .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
           .then(res => res.json())
           .then(data => {
             let result = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
             questions.value = [...questions.value, ...result];
             question.value = questions.value[questionIndex.value];
             meta.value = data?.meta;
-          })
+          });
       }
     } else {
-      api.get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
+      api
+        .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
         .then(res => res.json())
         .then(data => {
           questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
           question.value = questions.value[questionIndex.value];
           meta.value = data?.meta;
-        })
+        });
     }
   };
 
-  const getAnsweredQuestions = async (categoryID) => {
-    const questionsIds = []
-    await api.get(`user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[limit]=-1`)
+  const getAnsweredQuestions = async categoryID => {
+    const questionsIds = [];
+    await api
+      .get(
+        `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[limit]=-1`,
+      )
       .then(res => res.json())
       .then(data => {
         data?.data.forEach(answer => {
-          questionsIds.push(answer?.attributes?.question?.data?.id)
-        })
-    })
+          questionsIds.push(answer?.attributes?.question?.data?.id);
+        });
+      });
 
-    answeredQuestions.value = questionsIds
+    answeredQuestions.value = questionsIds;
   };
 
   const getNextQuestion = () => {
@@ -66,9 +71,12 @@ export const useQuestionsStore = defineStore('questions',() => {
   };
 
   const getAnsweredQuestionsCount = async () => {
-    api.get(`answered-questions`).then(res => res.json()).then(data => {
-      answeredQuestionsCount.value = data.result
-    })
+    api
+      .get(`answered-questions`)
+      .then(res => res.json())
+      .then(data => {
+        answeredQuestionsCount.value = data.result;
+      });
   };
 
   return {
@@ -83,6 +91,6 @@ export const useQuestionsStore = defineStore('questions',() => {
     getQuestions,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
-    getNextQuestion
-  }
-})
+    getNextQuestion,
+  };
+});

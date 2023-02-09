@@ -10,20 +10,19 @@
       </f7-row>
 
       <f7-row class="hg-actions-btns-content">
-        <f7-button class="button button-outline button-round button-raised hg-default-btn-width"
-                href="/login/"
-        >Sign In</f7-button>
+        <f7-button class="button button-outline button-round button-raised hg-default-btn-width" href="/login/"
+          >Sign In</f7-button
+        >
 
-        <f7-button class="button button-outline button-round button-raised hg-default-btn-width"
-                href="/register/"
-        >Sign Up</f7-button>
+        <f7-button class="button button-outline button-round button-raised hg-default-btn-width" href="/register/"
+          >Sign Up</f7-button
+        >
       </f7-row>
     </f7-block>
   </f7-page>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style lang="scss">
 @import "../assets/scss/pages/home";

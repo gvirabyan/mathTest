@@ -6,10 +6,10 @@
     <f7-block v-if="isLoading">
       <f7-row v-for="i in 3" :key="`skeleton_${i}`" class="mb-8">
         <f7-col width="75">
-          <f7-skeleton-block effect="wave"/>
+          <f7-skeleton-block effect="wave" />
         </f7-col>
         <f7-col width="25">
-          <f7-skeleton-block effect="wave"/>
+          <f7-skeleton-block effect="wave" />
         </f7-col>
       </f7-row>
     </f7-block>
@@ -22,77 +22,79 @@
 
       <f7-block-title>My points</f7-block-title>
       <f7-block>
-      <p>{{ myStats?.points }}</p>
-    </f7-block>
+        <p>{{ myStats?.points }}</p>
+      </f7-block>
 
       <f7-block-title>My rankings</f7-block-title>
       <f7-block>
-      <f7-list>
-        <f7-list-item title="World">
-          <template #after>
-            <strong>{{ myStats.rankings.world }}</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="Country">
-          <template #after>
-            <strong>{{ myStats.rankings.country || '—' }}</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="City">
-          <template #after>
-            <strong>{{ myStats.rankings.city || '—' }}</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="School/University/College">
-          <template #after>
-            <strong>{{ myStats.rankings.institution || '—' }}</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="Class/Course">
-          <template #after>
-            <strong>{{ myStats.rankings.course || '—' }}</strong>
-          </template>
-        </f7-list-item>
-      </f7-list>
-    </f7-block>
+        <f7-list>
+          <f7-list-item title="World">
+            <template #after>
+              <strong>{{ myStats.rankings.world }}</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="Country">
+            <template #after>
+              <strong>{{ myStats.rankings.country || "—" }}</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="City">
+            <template #after>
+              <strong>{{ myStats.rankings.city || "—" }}</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="School/University/College">
+            <template #after>
+              <strong>{{ myStats.rankings.institution || "—" }}</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="Class/Course">
+            <template #after>
+              <strong>{{ myStats.rankings.course || "—" }}</strong>
+            </template>
+          </f7-list-item>
+        </f7-list>
+      </f7-block>
 
       <f7-block>
         <p v-if="!myStats.rankings.country">Please update your country information to see your rank in your country</p>
         <p v-if="!myStats.rankings.city">Please update your city information to see your rank in your city</p>
-        <p v-if="!myStats.rankings.institution">Please update your institution information to see your rank in your institution</p>
+        <p v-if="!myStats.rankings.institution">
+          Please update your institution information to see your rank in your institution
+        </p>
         <p v-if="!myStats.rankings.course">Please update your course information to see your rank in your course</p>
       </f7-block>
 
       <f7-block-title>My answers</f7-block-title>
       <f7-block>
-      <f7-list>
-        <f7-list-item title="Correct">
-          <template #after>
-            <strong>{{ myStats.answers.correct }}/{{ myStats.answers.count }} ({{ correctAnswersPercent }}%)</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="Wrong">
-          <template #after>
-            <strong>{{ myStats.answers.wrong }}/{{ myStats.answers.count }} ({{ wrongAnswersPercent }}%)</strong>
-          </template>
-        </f7-list-item>
-        <f7-list-item title="Skipped">
-          <template #after>
-            <strong>{{ myStats.answers.skipped }}/{{ myStats.answers.count }} ({{ skippedAnswersPercent }}%)</strong>
-          </template>
-        </f7-list-item>
-      </f7-list>
-    </f7-block>
+        <f7-list>
+          <f7-list-item title="Correct">
+            <template #after>
+              <strong>{{ myStats.answers.correct }}/{{ myStats.answers.count }} ({{ correctAnswersPercent }}%)</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="Wrong">
+            <template #after>
+              <strong>{{ myStats.answers.wrong }}/{{ myStats.answers.count }} ({{ wrongAnswersPercent }}%)</strong>
+            </template>
+          </f7-list-item>
+          <f7-list-item title="Skipped">
+            <template #after>
+              <strong>{{ myStats.answers.skipped }}/{{ myStats.answers.count }} ({{ skippedAnswersPercent }}%)</strong>
+            </template>
+          </f7-list-item>
+        </f7-list>
+      </f7-block>
     </template>
   </f7-page>
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
-import {storeToRefs} from 'pinia';
-import {useTopList} from '@/js/stores/top-list';
-import delay from '@/js/helpers/delay';
-import pluralizeWord from '@/js/utils/pluralize-word';
+import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useTopList } from "@/js/stores/top-list";
+import delay from "@/js/helpers/delay";
+import pluralizeWord from "@/js/utils/pluralize-word";
 
 const { myStats } = storeToRefs(useTopList());
 const { getMyStats } = useTopList();
@@ -105,14 +107,17 @@ const howLongStr = computed(() => {
   const days = myStats.value?.howMuchTime.days;
 
   if (years) {
-    return `${years} ${pluralizeWord(years, 'year')}, ${months} ${pluralizeWord(months, 'month')}, ${days} ${pluralizeWord(days, 'day')}`
+    return `${years} ${pluralizeWord(years, "year")}, ${months} ${pluralizeWord(
+      months,
+      "month",
+    )}, ${days} ${pluralizeWord(days, "day")}`;
   }
 
   if (months) {
-    return `${months} ${pluralizeWord(months, 'month')}, ${days} ${pluralizeWord(days, 'day')}`
+    return `${months} ${pluralizeWord(months, "month")}, ${days} ${pluralizeWord(days, "day")}`;
   }
 
-  return `${days} ${pluralizeWord(days, 'day')}`
+  return `${days} ${pluralizeWord(days, "day")}`;
 });
 
 const correctAnswersPercent = computed(() => getAnswersPercent(myStats.value.answers.correct));
@@ -126,15 +131,13 @@ const getMyStatsHandler = async () => {
   await getMyStats();
 
   isLoading.value = false;
-}
+};
 
 const getAnswersPercent = answers => {
-  return Math.round(answers / myStats.value.answers.count * 100);
-}
+  return Math.round((answers / myStats.value.answers.count) * 100);
+};
 
 getMyStatsHandler();
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

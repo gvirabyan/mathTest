@@ -9,21 +9,22 @@
     </f7-navbar>
 
     <!-- Page content-->
-    <active-categories-popup/>
+    <active-categories-popup />
 
     <div class="block hg-statistics-content">
       <div class="row">
         <div v-if="isLoading" class="col-100 hg-statistic-item hg-last-category-content">
           <div class="card card-content card-content-padding">
             <f7-skeleton-block effect="wave" height="28px">
-              <f7-skeleton-text/>
+              <f7-skeleton-text />
             </f7-skeleton-block>
           </div>
         </div>
 
-        <a class="col-100 hg-statistic-item hg-last-category-content"
-           :href="`categories/${lastCategoryData?.lastCategory.id}/questions`"
-           v-else-if="lastCategoryData?.lastCategory"
+        <a
+          v-else-if="lastCategoryData?.lastCategory"
+          class="col-100 hg-statistic-item hg-last-category-content"
+          :href="`categories/${lastCategoryData?.lastCategory.id}/questions`"
         >
           <div class="card card-content card-content-padding">
             <div class="hg-body-content">
@@ -31,7 +32,11 @@
               <span class="hg-content-value">{{ lastCategoryData?.lastCategory.name }}</span>
             </div>
 
-            <div class="hg-content-title">Last Category (<b class="hg-questions-answers-details">{{ lastCategoryData?.answeredQuestions }}/{{ lastCategoryData?.totalQuestions }}</b>)</div>
+            <div class="hg-content-title">
+              Last Category (<b class="hg-questions-answers-details"
+                >{{ lastCategoryData?.answeredQuestions }}/{{ lastCategoryData?.totalQuestions }}</b
+              >)
+            </div>
           </div>
         </a>
 
@@ -44,8 +49,8 @@
               </template>
 
               <div v-else class="hg-skeleton-wrapper">
-                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
-                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="28px" height="28px" />
+                <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
             <div class="hg-content-title">Answered Questions</div>
@@ -60,8 +65,8 @@
                 <span class="hg-content-value">{{ user?.points }}</span>
               </template>
               <div v-else class="hg-skeleton-wrapper">
-                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
-                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="28px" height="28px" />
+                <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
             <div class="hg-content-title">Experience Points</div>
@@ -76,8 +81,8 @@
                 <span class="hg-content-value">{{ pastCategoriesData?.length }}</span>
               </template>
               <div v-else class="hg-skeleton-wrapper">
-                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
-                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="28px" height="28px" />
+                <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
             <div class="hg-content-title">Past Categories</div>
@@ -93,8 +98,8 @@
               </template>
 
               <div v-else class="hg-skeleton-wrapper">
-                <f7-skeleton-block effect="wave" width="28px" height="28px"/>
-                <f7-skeleton-block effect="wave" width="56px" height="28px"/>
+                <f7-skeleton-block effect="wave" width="28px" height="28px" />
+                <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
             <div class="hg-content-title">Categories List</div>
@@ -106,26 +111,26 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
-import {storeToRefs} from 'pinia';
-import {useAuthStore} from '@/js/stores/auth';
-import {useCategoryStore} from '@/js/stores/categories';
-import {useQuestionsStore} from '@/js/stores/questions';
-import delay from '@/js/helpers/delay';
-import ActiveCategoriesPopup from '../components/active-categories-popup.vue';
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/js/stores/auth";
+import { useCategoryStore } from "@/js/stores/categories";
+import { useQuestionsStore } from "@/js/stores/questions";
+import delay from "@/js/helpers/delay";
+import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 const questionsStore = useQuestionsStore();
 
-const {user} = storeToRefs(authStore);
-const {categories, lastCategoryData, pastCategoriesData} = storeToRefs(categoryStore);
-const {answeredQuestionsCount} = storeToRefs(questionsStore);
+const { user } = storeToRefs(authStore);
+const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
+const { answeredQuestionsCount } = storeToRefs(questionsStore);
 const isLoading = ref(false);
 
-const {getUser} = authStore;
-const {getCategories, getLastCategory, getPastCategories} = categoryStore;
-const {getAnsweredQuestionsCount} = questionsStore;
+const { getUser } = authStore;
+const { getCategories, getLastCategory, getPastCategories } = categoryStore;
+const { getAnsweredQuestionsCount } = questionsStore;
 
 const getAllData = async () => {
   isLoading.value = true;
@@ -140,7 +145,7 @@ const getAllData = async () => {
     getCategories(),
   ]).then(() => {
     isLoading.value = false;
-  })
+  });
 };
 </script>
 
