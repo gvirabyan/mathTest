@@ -1,5 +1,5 @@
-const pluralizeWord = (count, noun, suffix = 's') => {
-  return `${noun}${count !== 1 ? suffix : ''}`
-}
+const pluralizeWord = (count, noun, suffix = "s") => {
+  return `${noun}${count !== 1 ? suffix : ""}`;
+};
 
-export default pluralizeWord
+export default pluralizeWord;

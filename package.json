@@ -13,7 +13,9 @@
     "build-cordova-ios": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova build ios",
     "cordova-ios": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova run ios",
     "build-cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova build android",
-    "cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova run android"
+    "cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova run android",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier --write src/**/*.{vue,js}"
   },
   "browserslist": [
     "IOS >= 13",
@@ -40,10 +42,15 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/compiler-sfc": "^3.2.45",
     "cross-env": "^7.0.3",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-vue": "^9.9.0",
     "postcss-preset-env": "^8.0.1",
+    "prettier": "^2.8.4",
     "rollup": "^3.12.0",
     "sass": "^1.57.1",
     "vite": "^4.0.4",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-html": "^3.2.0"
   }
 }

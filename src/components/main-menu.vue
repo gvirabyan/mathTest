@@ -9,28 +9,28 @@
 <script setup>
 const menuItems = [
   {
-    href: 'profile',
-    title: 'Profile'
+    href: "profile",
+    title: "Profile",
   },
   {
-    href: 'my-stats',
-    title: 'My Stats'
+    href: "my-stats",
+    title: "My Stats",
   },
   {
-    href: 'categories',
-    title: 'Categories'
+    href: "categories",
+    title: "Categories",
   },
   {
-    href: 'top-lists',
-    title: 'Top Lists'
+    href: "top-lists",
+    title: "Top Lists",
   },
   {
-    href: 'about',
-    title: 'About'
+    href: "about",
+    title: "About",
   },
   {
-    href: 'settings',
-    title: 'Settings'
+    href: "settings",
+    title: "Settings",
   },
 ];
 </script>

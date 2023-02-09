@@ -5,38 +5,38 @@
 
     <f7-list class="profile-form" inline-labels no-hairlines-md>
       <f7-list-input
+        v-model:value="updatePasswordData.newPassword"
         label="New password"
         type="password"
         placeholder="New password"
         clear-button
-        v-model:value="updatePasswordData.newPassword"
       />
 
       <f7-list-input
+        v-model:value="updatePasswordData.confirmNewPassword"
         label="Confirm new password"
         type="password"
         placeholder="Confirm new password"
-        v-model:value="updatePasswordData.confirmNewPassword"
         clear-button
       />
     </f7-list>
 
     <f7-block>
-      <f7-button color="blue" fill @click="updatePasswordHandler" :disabled="disableSubmit">Update</f7-button>
+      <f7-button color="blue" fill :disabled="disableSubmit" @click="updatePasswordHandler">Update</f7-button>
     </f7-block>
   </f7-page>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import { f7 } from 'framework7-vue';
-import {useAuthStore} from '@/js/stores/auth';
+import { ref, reactive } from "vue";
+import { f7 } from "framework7-vue";
+import { useAuthStore } from "@/js/stores/auth";
 
 const { updateUser } = useAuthStore();
 
 const updatePasswordData = reactive({
-  newPassword: '',
-  confirmNewPassword: ''
+  newPassword: "",
+  confirmNewPassword: "",
 });
 const disableSubmit = ref(false);
 
@@ -44,7 +44,7 @@ const validatePasswordUpdate = () => {
   if (!updatePasswordData.newPassword || !updatePasswordData.confirmNewPassword) {
     f7.toast.show({
       text: "Fill all the fields",
-      closeButton: true
+      closeButton: true,
     });
 
     return false;
@@ -53,7 +53,7 @@ const validatePasswordUpdate = () => {
   if (updatePasswordData.newPassword.length < 6 || updatePasswordData.confirmNewPassword.length < 6) {
     f7.toast.show({
       text: "Passwords should contain at least 6 signs",
-      closeButton: true
+      closeButton: true,
     });
 
     return false;
@@ -62,14 +62,14 @@ const validatePasswordUpdate = () => {
   if (updatePasswordData.newPassword !== updatePasswordData.confirmNewPassword) {
     f7.toast.show({
       text: "Passwords do not match",
-      closeButton: true
+      closeButton: true,
     });
 
     return false;
   }
 
   return true;
-}
+};
 
 const updatePasswordHandler = () => {
   if (validatePasswordUpdate()) {
@@ -77,10 +77,10 @@ const updatePasswordHandler = () => {
 
     updateUser({ password: updatePasswordData.newPassword })
       .then(res => {
-        if (res.status === 'success') {
+        if (res.status === "success") {
           f7.toast.show({
-            text: 'Password has been changed',
-            closeButton: true
+            text: "Password has been changed",
+            closeButton: true,
           });
 
           return;
@@ -88,14 +88,12 @@ const updatePasswordHandler = () => {
 
         f7.toast.show({
           text: res.message,
-          closeButton: true
+          closeButton: true,
         });
       })
-      .finally(() => disableSubmit.value = false)
+      .finally(() => (disableSubmit.value = false));
   }
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
