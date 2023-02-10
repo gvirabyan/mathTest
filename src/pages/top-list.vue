@@ -45,7 +45,7 @@
 
       <f7-list v-else-if="topList.length" class="top-list">
         <f7-list-item
-          v-for="({ id, nickname, username, points }, index) in topList"
+          v-for="({ id, username, points }, index) in topList"
           :key="`list-item_${index + 1}`"
           :class="{ 'my-score': id === user.id, last: index === topList.length - 1 }"
         >
@@ -54,7 +54,7 @@
           </template>
 
           <template #title>
-            {{ nickname || username }}
+            {{ username }}
           </template>
 
           <template #after>
@@ -68,7 +68,7 @@
           </template>
 
           <template #title>
-            {{ myScore.nickname || myScore.username }}
+            {{ myScore.username }}
           </template>
 
           <template #after>
@@ -144,8 +144,7 @@ const myScore = computed(() => {
 
   return {
     index: myResultIndex + 1,
-    nickname: myResult.nickname,
-    username: myResult.username,
+    nickname: myResult.username,
     points: myResult.points,
   };
 });

@@ -23,7 +23,7 @@
       />
 
       <f7-list-input
-        v-model:value="profileData.nickname"
+        v-model:value="profileData.username"
         label="Nickname"
         type="text"
         placeholder="Your nickname"
@@ -141,7 +141,7 @@ const profileData = reactive({
   email: "",
   name: "",
   surname: "",
-  nickname: "",
+  username: "",
   dateOfBirth: new Date().setFullYear(new Date().getFullYear() - 10),
   country: "",
   city: "",
