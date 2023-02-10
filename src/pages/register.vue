@@ -14,9 +14,9 @@
     <f7-list form>
       <template v-if="registerMode === 'credentials'">
         <f7-list-input
-          v-model:value="userData.nickname"
+          v-model:value="userData.username"
           type="text"
-          name="nickname"
+          name="username"
           placeholder="Nickname"
         ></f7-list-input>
 
@@ -39,9 +39,9 @@
 
       <template v-else-if="registerMode === 'nickname'">
         <f7-list-input
-          v-model:value="userData.nickname"
+          v-model:value="userData.username"
           type="text"
-          name="nickname"
+          name="username"
           placeholder="Nickname"
         ></f7-list-input>
       </template>
@@ -70,7 +70,7 @@ const props = defineProps({
 });
 
 const userData = reactive({
-  nickname: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -83,7 +83,7 @@ const registerMode = ref("credentials");
 const startRegister = () => {
   if (registerMode.value === "nickname") {
     registerByNickname({
-      nickname: userData.nickname,
+      username: userData.username,
     }).then(resp => {
       if (resp.status === "success") {
         props.f7router.navigate("/dashboard/");
@@ -101,8 +101,7 @@ const startRegister = () => {
 
   if (userData.password === userData.confirmPassword) {
     register({
-      nickname: userData.nickname,
-      username: userData.email,
+      username: userData.username,
       email: userData.email,
       password: userData.password,
     }).then(resp => {

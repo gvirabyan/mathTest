@@ -9,7 +9,9 @@ export const useAuthStore = defineStore("auth", () => {
 
   // getters
   const userData = computed(() => user.value);
-  const isNicknamedOnlyUser = computed(() => user.value && user.value.nickname && !user.value.email);
+  const isNicknamedOnlyUser = computed(() => {
+    return user.value && user.value?.username && !user.value?.email;
+  });
 
   // actions
   const login = async userData => {
