@@ -33,36 +33,39 @@
               <strong>{{ myStats.rankings.world }}</strong>
             </template>
           </f7-list-item>
-          <f7-list-item title="Country">
+          <f7-list-item v-if="!myStats.rankings.country">
+            Please update your country information to see your rank in your country
+          </f7-list-item>
+          <f7-list-item v-else title="Country">
             <template #after>
-              <strong>{{ myStats.rankings.country || "—" }}</strong>
+              <strong>{{ myStats.rankings.country }}</strong>
             </template>
           </f7-list-item>
-          <f7-list-item title="City">
+          <f7-list-item v-if="!myStats.rankings.city">
+            Please update your city information to see your rank in your country
+          </f7-list-item>
+          <f7-list-item v-else title="City">
             <template #after>
-              <strong>{{ myStats.rankings.city || "—" }}</strong>
+              <strong>{{ myStats.rankings.city }}</strong>
             </template>
           </f7-list-item>
-          <f7-list-item title="School/University/College">
+          <f7-list-item v-if="!myStats.rankings.institution">
+            Please update your school/university/college information to see your rank in your country
+          </f7-list-item>
+          <f7-list-item v-else title="School/University/College">
             <template #after>
-              <strong>{{ myStats.rankings.institution || "—" }}</strong>
+              <strong>{{ myStats.rankings.institution }}</strong>
             </template>
           </f7-list-item>
-          <f7-list-item title="Class/Course">
+          <f7-list-item v-if="!myStats.rankings.course">
+            Please update your class/course information to see your rank in your country
+          </f7-list-item>
+          <f7-list-item v-else title="Class/Course">
             <template #after>
-              <strong>{{ myStats.rankings.course || "—" }}</strong>
+              <strong>{{ myStats.rankings.course }}</strong>
             </template>
           </f7-list-item>
         </f7-list>
-      </f7-block>
-
-      <f7-block>
-        <p v-if="!myStats.rankings.country">Please update your country information to see your rank in your country</p>
-        <p v-if="!myStats.rankings.city">Please update your city information to see your rank in your city</p>
-        <p v-if="!myStats.rankings.institution">
-          Please update your institution information to see your rank in your institution
-        </p>
-        <p v-if="!myStats.rankings.course">Please update your course information to see your rank in your course</p>
       </f7-block>
 
       <f7-block-title>My answers</f7-block-title>
@@ -134,6 +137,10 @@ const getMyStatsHandler = async () => {
 };
 
 const getAnswersPercent = answers => {
+  if (!answers) {
+    return 0;
+  }
+
   return Math.round((answers / myStats.value.answers.count) * 100);
 };
 
