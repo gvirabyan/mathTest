@@ -34,7 +34,7 @@
             </template>
           </f7-list-item>
           <f7-list-item v-if="!myStats.rankings.country">
-            Please update your country information to see your rank in your country
+            <p class="m-0">Please <f7-link href="/profile/">update</f7-link> your country information to see your rank in your country</p>
           </f7-list-item>
           <f7-list-item v-else title="Country">
             <template #after>
@@ -42,7 +42,7 @@
             </template>
           </f7-list-item>
           <f7-list-item v-if="!myStats.rankings.city">
-            Please update your city information to see your rank in your country
+            <p class="m-0">Please <f7-link href="/profile/">update</f7-link> your city information to see your rank in your country</p>
           </f7-list-item>
           <f7-list-item v-else title="City">
             <template #after>
@@ -50,7 +50,7 @@
             </template>
           </f7-list-item>
           <f7-list-item v-if="!myStats.rankings.institution">
-            Please update your school/university/college information to see your rank in your country
+            <p class="m-0">Please <f7-link href="/profile/">update</f7-link> your school/university/college information to see your rank in your country</p>
           </f7-list-item>
           <f7-list-item v-else title="School/University/College">
             <template #after>
@@ -58,7 +58,7 @@
             </template>
           </f7-list-item>
           <f7-list-item v-if="!myStats.rankings.course">
-            Please update your class/course information to see your rank in your country
+            <p class="m-0">Please <f7-link href="/profile/">update</f7-link> your class/course information to see your rank in your country</p>
           </f7-list-item>
           <f7-list-item v-else title="Class/Course">
             <template #after>
