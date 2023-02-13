@@ -4,7 +4,7 @@
     <f7-block-title>My Stats</f7-block-title>
 
     <f7-block v-if="isLoading">
-      <f7-row v-for="i in 3" :key="`skeleton_${i}`" class="mb-8">
+      <f7-row v-for="i in 4" :key="`skeleton_${i}`" class="mb-8">
         <f7-col width="75">
           <f7-skeleton-block effect="wave" />
         </f7-col>
