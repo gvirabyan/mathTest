@@ -67,6 +67,18 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: "/player-vs-machine/",
+    name: "PlayerVsMachine",
+    asyncComponent: () => import("../pages/player-vs-machine.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: "/player-vs-machine-questions/:modeID/",
+    name: "PlayerVsMachineQuiz",
+    asyncComponent: () => import("../pages/player-vs-machine-quiz.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
     path: "/categories/:categoryID/questions",
     name: "Question",
     asyncComponent: () => import("../pages/question.vue"),

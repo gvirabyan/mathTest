@@ -32,6 +32,11 @@ export const useCategoryStore = defineStore("category", () => {
     });
   });
   const categoryData = computed(() => category.value);
+  const finishedCategories = computed(() =>
+    categoriesData.value.filter(
+      c => c.user_answers_amount && c.questions_amount && c.user_answers_amount === c.questions_amount,
+    ),
+  );
 
   const getCategories = async () => {
     api
@@ -84,6 +89,7 @@ export const useCategoryStore = defineStore("category", () => {
     category,
     categoriesData,
     categoryData,
+    finishedCategories,
     getCategories,
     getCategory,
     getLastCategory,
