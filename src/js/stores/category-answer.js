@@ -21,14 +21,14 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
       return result.length > 1 ? result : createRandomData(data, answer);
     }
 
-    return createRandomData(data, answer);
+    return createRandomData(data, answer, 3);
   };
 
-  const createRandomData = (data, answer) => {
+  const createRandomData = (data, answer, limit = null) => {
     const strData = data.map(item => (typeof item === "string" ? item : String(item)));
     const uniqueStrData = [...new Set(strData)];
     const shuffled = [...uniqueStrData].sort(() => 0.5 - Math.random());
-    const randomData = shuffled.length > 3 ? shuffled.slice(0, 3) : shuffled;
+    const randomData = limit ? shuffled.slice(0, limit) : shuffled;
 
     if (!randomData.includes(answer)) {
       randomData.push(answer);
