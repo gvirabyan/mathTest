@@ -3,10 +3,12 @@ module.exports = {
     node: true,
   },
   extends: ["eslint:recommended", "plugin:vue/vue3-recommended", "prettier"],
+  plugins: ["vue", "prettier"],
   rules: {
     // override/add rules settings here, such as:
+    "prettier/prettier": "warn",
     "no-unused-vars": [
-      "error",
+      "warn",
       {
         args: "none",
       },

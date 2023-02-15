@@ -1,14 +1,21 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
+import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 export const useQuestionsStore = defineStore("questions", () => {
+  const categoryAnswersStore = useCategoryAnswerStore();
+
   const questions = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
   const answeredQuestions = ref([]);
   const answeredQuestionsCount = ref(null);
+  const answeredQuizQuestions = ref(
+    localStorage.getItem("answeredQuizQuestions") ? JSON.parse(localStorage.getItem("answeredQuizQuestions")) : [],
+  );
+  const quizMode = ref(null);
   const meta = ref(null);
 
   const auth = useAuthStore();
@@ -49,6 +56,23 @@ export const useQuestionsStore = defineStore("questions", () => {
     }
   };
 
+  const getQuizQuestions = async (limit, categories) => {
+    const categoriesIds = categories.join();
+    let idsFilter = "";
+
+    if (answeredQuizQuestions.value.length) {
+      idsFilter = `answeredQuizQuestions.value.join()`;
+    }
+
+    await api
+      .get(`quiz-questions?categories=${categoriesIds}&excludedQuestions=${idsFilter}&limit=${limit}`)
+      .then(res => res.json())
+      .then(data => {
+        questions.value = data.questions;
+        categoryAnswersStore.categoryAnswers = data.categories_answers;
+      });
+  };
+
   const getAnsweredQuestions = async categoryID => {
     const questionsIds = [];
     await api
@@ -79,9 +103,28 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
   };
 
+  const setQuizMode = mode => {
+    quizMode.value = mode;
+  };
+
+  const clearAnsweredQuizQuestions = () => {
+    answeredQuizQuestions.value = [];
+  };
+
+  watch(answeredQuizQuestions, val => {
+    if (!val) {
+      localStorage.removeItem("answeredQuizQuestions");
+      return;
+    }
+
+    localStorage.setItem("answeredQuizQuestions", val);
+  });
+
   return {
     questions,
     question,
+    answeredQuizQuestions,
+    quizMode,
     meta,
     questionIndex,
     answeredQuestions,
@@ -89,8 +132,10 @@ export const useQuestionsStore = defineStore("questions", () => {
     questionsData,
     questionData,
     getQuestions,
+    getQuizQuestions,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
     getNextQuestion,
+    setQuizMode,
   };
 });

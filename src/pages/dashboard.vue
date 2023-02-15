@@ -102,12 +102,13 @@
                 <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
+
             <div class="hg-content-title">Categories List</div>
           </div>
         </a>
 
         <a
-          v-if="finishedCategories.length"
+          v-if="pastCategoriesData.length"
           class="col-50 hg-statistic-item hg-categories-list-content"
           href="/player-vs-machine/"
         >
@@ -120,9 +121,11 @@
 
               <div v-else class="hg-skeleton-wrapper">
                 <f7-skeleton-block effect="wave" width="28px" height="28px" />
+
                 <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
+
             <div class="hg-content-title">Player vs. Machine</div>
           </div>
         </a>
@@ -145,7 +148,7 @@ const categoryStore = useCategoryStore();
 const questionsStore = useQuestionsStore();
 
 const { user } = storeToRefs(authStore);
-const { categories, lastCategoryData, pastCategoriesData, finishedCategories } = storeToRefs(categoryStore);
+const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
 const { answeredQuestionsCount } = storeToRefs(questionsStore);
 const isLoading = ref(false);
 

@@ -7,13 +7,17 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
   const questionStore = useQuestionsStore();
   const categoryAnswers = ref([]);
 
-  const answersData = computed(() =>
-    getAnswersList(
+  const answersData = computed(() => {
+    if (!categoryAnswers.value.length) {
+      return null;
+    }
+
+    return getAnswersList(
       categoryAnswers.value,
       questionStore.question?.attributes?.wrong_answers,
       questionStore.question?.attributes?.answer,
-    ),
-  );
+    );
+  });
 
   const getAnswersList = (data, wrongAnswers, answer) => {
     if (wrongAnswers && wrongAnswers.length) {
