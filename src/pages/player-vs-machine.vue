@@ -11,27 +11,36 @@
 </template>
 
 <script setup>
-import { useQuestionsStore } from "@/js/stores/questions";
+import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 
 const props = defineProps({
   f7router: Object,
 });
 
-const { setQuizMode } = useQuestionsStore();
+const { setQuizMode } = useQuizStore();
 
 const gameModes = [
   {
     id: 1,
-    questions: quizModes.MODE_1,
+    questions: quizModes.QUESTIONS_MODE_1,
+    winPoints: quizModes.QUESTIONS_MODE_1,
+    drawPoints: quizModes.DRAW_POINTS_MODE_1,
+    losePoints: quizModes.LOSE_POINTS_MODE_1,
   },
   {
     id: 2,
-    questions: quizModes.MODE_2,
+    questions: quizModes.QUESTIONS_MODE_2,
+    winPoints: quizModes.QUESTIONS_MODE_2,
+    drawPoints: quizModes.DRAW_POINTS_MODE_2,
+    losePoints: quizModes.LOSE_POINTS_MODE_2,
   },
   {
     id: 3,
-    questions: quizModes.MODE_3,
+    questions: quizModes.QUESTIONS_MODE_3,
+    winPoints: quizModes.QUESTIONS_MODE_3,
+    drawPoints: quizModes.DRAW_POINTS_MODE_3,
+    losePoints: quizModes.LOSE_POINTS_MODE_3,
   },
 ];
 
