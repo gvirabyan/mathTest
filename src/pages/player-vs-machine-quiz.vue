@@ -14,7 +14,6 @@
         <div class="title">Player vs. Machine</div>
       </div>
     </div>
-    <!--    <f7-navbar title="Player vs. Machine" back-link="Back" @click:back="breakQuiz" />-->
 
     <f7-block> Your: {{ userScore }} / Phone: {{ machineScore }} </f7-block>
     <f7-block> Question {{ currentQuizQuestionNumber }} / {{ quizQuestionsLength }} </f7-block>
@@ -85,17 +84,18 @@ const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, upda
 
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
+const endQuizAlert = ref(null);
 
 const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
 const allQuizQuestionAnswered = computed(
-  () => quizQuestions?.value && quizQuestionsLength?.value === answeredQuizQuestions.value?.length,
+  () => quizQuestions?.value.length && quizQuestionsLength?.value === answeredQuizQuestions.value?.length,
 );
 
 const chooseQuizAnswer = (answer, index) => {
   chosenQuizAnswer.value = typeof answer === "string" ? answer : String(answer);
   chosenQuizAnswerIndex.value = index;
 
-  const status = chosenQuizAnswer.value === answer ? "correct" : "wrong";
+  const status = quizQuestion.value.answer === answer ? "correct" : "wrong";
 
   updateScore(status, quizQuestion.value.machine_answer);
 };
@@ -134,7 +134,7 @@ const endQuiz = () => {
     lose: "You have lost",
   };
 
-  f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
+  endQuizAlert.value = f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
     const pointsObject = {
       win: user.value.points + quizMode.value.winPoints,
       draw: user.value.points + quizMode.value.drawPoints,
@@ -145,8 +145,11 @@ const endQuiz = () => {
       f7.toast.show({
         text: "Your points were updated",
         closeButton: true,
+        closeTimeout: 1500,
         on: {
           close: () => {
+            useQuizStore().$reset();
+            endQuizAlert.value = null;
             props.f7router.navigate("/dashboard/");
           },
         },
@@ -156,9 +159,10 @@ const endQuiz = () => {
 };
 
 const breakQuiz = () => {
-  f7.dialog.confirm("Your progress will be lost and you will use this quiz. Are you sure?", "Warning", () => {
+  f7.dialog.confirm("Your progress will be lost and you will lose this quiz. Are you sure?", "Warning", () => {
     updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
-      props.f7router.back();
+      useQuizStore().$reset();
+      props.f7router.navigate("/player-vs-machine/");
     });
   });
 };

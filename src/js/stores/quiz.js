@@ -63,13 +63,8 @@ export const useQuizStore = defineStore("quiz", () => {
   };
 
   const updateScore = (userAnswerStatus, machineAnswerStatus) => {
-    if (userAnswerStatus === "correct") {
-      userScore.value++;
-    }
-
-    if (machineAnswerStatus === "correct") {
-      machineScore.value++;
-    }
+    userScore.value = userAnswerStatus === "correct" ? userScore.value + 1 : userScore.value;
+    machineScore.value = machineAnswerStatus === "correct" ? machineScore.value + 1 : machineScore.value;
   };
 
   const clearAnsweredQuizQuestions = () => {
