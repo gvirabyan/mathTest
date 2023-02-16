@@ -1,19 +1,25 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useQuestionsStore } from "@/js/stores/questions";
+import { useQuizStore } from "@/js/stores/quiz";
 import api from "@/js/api";
 
 export const useCategoryAnswerStore = defineStore("category-answer", () => {
   const questionStore = useQuestionsStore();
+  const quizStore = useQuizStore();
+
   const categoryAnswers = ref([]);
 
-  const answersData = computed(() =>
-    getAnswersList(
-      categoryAnswers.value,
-      questionStore.question?.attributes?.wrong_answers,
-      questionStore.question?.attributes?.answer,
-    ),
-  );
+  const answersData = computed(() => {
+    const wrongAnswers = questionStore.question?.attributes?.wrong_answers || quizStore.quizQuestion?.wrong_answers;
+    const answer = questionStore.question?.attributes?.answer || quizStore.quizQuestion?.answer;
+
+    if (!categoryAnswers.value.length) {
+      return null;
+    }
+
+    return getAnswersList(categoryAnswers.value, wrongAnswers, answer);
+  });
 
   const getAnswersList = (data, wrongAnswers, answer) => {
     if (wrongAnswers && wrongAnswers.length) {

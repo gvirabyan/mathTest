@@ -102,7 +102,31 @@
                 <f7-skeleton-block effect="wave" width="56px" height="28px" />
               </div>
             </div>
+
             <div class="hg-content-title">Categories List</div>
+          </div>
+        </a>
+
+        <a
+          v-if="pastCategoriesData.length"
+          class="col-50 hg-statistic-item hg-categories-list-content"
+          href="/player-vs-machine/"
+        >
+          <div class="card card-content card-content-padding">
+            <div class="hg-body-content">
+              <template v-if="!isLoading">
+                <i class="f7-icons hg-content-icon">device_phone_portrait</i>
+                <span class="hg-content-value">Play</span>
+              </template>
+
+              <div v-else class="hg-skeleton-wrapper">
+                <f7-skeleton-block effect="wave" width="28px" height="28px" />
+
+                <f7-skeleton-block effect="wave" width="56px" height="28px" />
+              </div>
+            </div>
+
+            <div class="hg-content-title">Player vs. Machine</div>
           </div>
         </a>
       </div>
@@ -136,16 +160,9 @@ const getAllData = async () => {
   isLoading.value = true;
 
   await delay();
+  await Promise.all([getUser(), getLastCategory(), getPastCategories(), getAnsweredQuestionsCount(), getCategories()]);
 
-  await Promise.all([
-    getUser(),
-    getLastCategory(),
-    getPastCategories(),
-    getAnsweredQuestionsCount(),
-    getCategories(),
-  ]).then(() => {
-    isLoading.value = false;
-  });
+  isLoading.value = false;
 };
 </script>
 

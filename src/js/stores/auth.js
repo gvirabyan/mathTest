@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const getUser = async () => {
     return api
-      .get(`users/${user.value.id}?populate[0]=institution`)
+      .get(`users/${user.value.id}?populate=institution&populate=user_answers`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
