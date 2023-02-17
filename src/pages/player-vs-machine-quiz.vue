@@ -159,12 +159,16 @@ const endQuiz = () => {
 };
 
 const breakQuiz = () => {
-  f7.dialog.confirm("Your progress will be lost and you will lose this quiz. Are you sure?", "Warning", () => {
-    updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
-      useQuizStore().$reset();
-      props.f7router.navigate("/player-vs-machine/");
-    });
-  });
+  f7.dialog.confirm(
+    `Your progress will be lost and you will lose ${Math.abs(quizMode.value.losePoints)} points. Are you sure?`,
+    "Warning",
+    () => {
+      updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
+        useQuizStore().$reset();
+        props.f7router.navigate("/dashboard/");
+      });
+    },
+  );
 };
 
 watch(allQuizQuestionAnswered, val => {

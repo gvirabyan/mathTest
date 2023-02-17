@@ -162,20 +162,20 @@ const disableSubmit = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const openCalendar = () => {
-  isCalendarOpened.value = true
-}
+  isCalendarOpened.value = true;
+};
 
 const closeCalendar = () => {
-  isCalendarOpened.value = false
-}
+  isCalendarOpened.value = false;
+};
 
 const openDropdown = () => {
-  isCoursesDropdown.value = true
-}
+  isCoursesDropdown.value = true;
+};
 
 const closeDropdown = () => {
-  isCoursesDropdown.value = false
-}
+  isCoursesDropdown.value = false;
+};
 
 const editProfile = () => {
   if (showCourseErrorMsg.value) {
