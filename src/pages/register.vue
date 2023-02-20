@@ -35,6 +35,8 @@
           name="password"
           placeholder="Confirm password"
         ></f7-list-input>
+
+        <f7-list-item v-model:checked="rememberUser" checkbox title="Remember me" name="remember"></f7-list-item>
       </template>
 
       <template v-else-if="registerMode === 'nickname'">
@@ -79,6 +81,7 @@ const userData = reactive({
 const { register, registerByNickname } = useAuthStore();
 
 const registerMode = ref("credentials");
+const rememberUser = ref(false);
 
 const startRegister = () => {
   if (registerMode.value === "nickname") {
@@ -100,11 +103,14 @@ const startRegister = () => {
   }
 
   if (userData.password === userData.confirmPassword) {
-    register({
-      username: userData.username,
-      email: userData.email,
-      password: userData.password,
-    }).then(resp => {
+    register(
+      {
+        username: userData.username,
+        email: userData.email,
+        password: userData.password,
+      },
+      rememberUser.value,
+    ).then(resp => {
       if (resp.status === "success") {
         props.f7router.navigate("/dashboard/");
         return;
