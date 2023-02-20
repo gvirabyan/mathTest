@@ -1,4 +1,4 @@
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 
@@ -6,6 +6,11 @@ export const useAuthStore = defineStore("auth", () => {
   // state properties
   const token = ref(localStorage.getItem("user") || "");
   const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
+  const suggestedCredentials = reactive(
+    localStorage.getItem("suggestedCredentials")
+      ? JSON.parse(localStorage.getItem("suggestedCredentials"))
+      : { suggestedLogin: "", suggestedPassword: "" },
+  );
 
   // getters
   const userData = computed(() => user.value);
@@ -14,7 +19,7 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   // actions
-  const login = async userData => {
+  const login = async (userData, rememberUser = false) => {
     return api
       .post("auth/local?populate[0]=institution", userData)
       .then(res => res.json())
@@ -23,6 +28,14 @@ export const useAuthStore = defineStore("auth", () => {
           token.value = data?.jwt;
           user.value = data?.user;
 
+          if (rememberUser) {
+            suggestedCredentials.suggestedLogin = userData.identifier;
+            suggestedCredentials.suggestedPassword = userData.password;
+          } else {
+            suggestedCredentials.suggestedLogin = "";
+            suggestedCredentials.suggestedPassword = "";
+          }
+
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };
@@ -30,7 +43,7 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
-  const register = async userData => {
+  const register = async (userData, rememberUser = false) => {
     return api
       .post("auth/local/register", userData)
       .then(res => res.json())
@@ -38,6 +51,14 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           token.value = data?.jwt;
           user.value = data?.user;
+
+          if (rememberUser) {
+            suggestedCredentials.suggestedLogin = userData.email;
+            suggestedCredentials.suggestedPassword = userData.password;
+          } else {
+            suggestedCredentials.suggestedLogin = "";
+            suggestedCredentials.suggestedPassword = "";
+          }
 
           return { status: "success" };
         } else {
@@ -143,9 +164,25 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.setItem("user", JSON.stringify(val));
   });
 
+  watch(
+    () => suggestedCredentials,
+    val => {
+      console.log(val);
+
+      if (!val.suggestedLogin && !val.suggestedPassword) {
+        localStorage.removeItem("suggestedCredentials");
+        return;
+      }
+
+      localStorage.setItem("suggestedCredentials", JSON.stringify(val));
+    },
+    { deep: true },
+  );
+
   return {
     token,
     user,
+    suggestedCredentials,
     userData,
     isNicknamedOnlyUser,
     login,

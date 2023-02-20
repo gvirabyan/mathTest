@@ -16,6 +16,8 @@
         placeholder="Your password"
       ></f7-list-input>
 
+      <f7-list-item v-model:checked="rememberUser" checkbox title="Remember me" name="remember"></f7-list-item>
+
       <f7-block>
         <f7-row class="justify-content-end">
           <f7-link href="/forgot-password">Forgot password?</f7-link>
@@ -38,9 +40,10 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { f7 } from "framework7-vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   f7route: Object,
@@ -52,10 +55,13 @@ const userData = reactive({
   password: "",
 });
 
+const { suggestedCredentials } = storeToRefs(useAuthStore());
+const rememberUser = ref(false);
+
 const { login } = useAuthStore();
 
 const startLogin = () => {
-  login(userData).then(resp => {
+  login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
       props.f7router.navigate("/dashboard/");
     } else {
@@ -66,4 +72,7 @@ const startLogin = () => {
     }
   });
 };
+
+userData.identifier = suggestedCredentials.value.suggestedLogin;
+userData.password = suggestedCredentials.value.suggestedPassword;
 </script>
