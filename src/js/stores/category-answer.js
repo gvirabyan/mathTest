@@ -14,10 +14,6 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
     const wrongAnswers = questionStore.question?.attributes?.wrong_answers || quizStore.quizQuestion?.wrong_answers;
     const answer = questionStore.question?.attributes?.answer || quizStore.quizQuestion?.answer;
 
-    if (!categoryAnswers.value.length) {
-      return null;
-    }
-
     return getAnswersList(categoryAnswers.value, wrongAnswers, answer);
   });
 
@@ -27,7 +23,7 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
       return result.length > 1 ? result : createRandomData(data, answer);
     }
 
-    return createRandomData(data, answer, 3);
+    return data.length ? createRandomData(data, answer, 3) : null;
   };
 
   const createRandomData = (data, answer, limit = null) => {
