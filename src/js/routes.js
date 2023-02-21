@@ -6,10 +6,10 @@ function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
 
-  if (["Register", "Login", "Home"].includes(to.name) && token && user) {
+  if (["Register", "Login", "ForgotPassword", "ResetPassword", "Home"].includes(to.name) && token && user) {
     reject();
     this.navigate("/dashboard/");
-  } else if (!["Register", "Login", "Home"].includes(to.name) && (!token || !user)) {
+  } else if (!["Register", "Login", "ForgotPassword", "ResetPassword", "Home"].includes(to.name) && (!token || !user)) {
     reject();
     this.navigate("/login/");
   } else {
@@ -52,6 +52,18 @@ const routes = [
     path: "/register/",
     name: "Register",
     asyncComponent: () => import("../pages/register.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: "/forgot-password/",
+    name: "ForgotPassword",
+    asyncComponent: () => import("../pages/forgot-password.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: "/reset-password/",
+    name: "ResetPassword",
+    asyncComponent: () => import("../pages/reset-password.vue"),
     beforeEnter: checkAuth,
   },
   {

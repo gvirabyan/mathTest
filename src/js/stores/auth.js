@@ -83,6 +83,35 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
+  const forgotPassword = async email => {
+    return api
+      .post("auth/forgot-password", { email })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
+  };
+
+  const resetPassword = async resetPasswordData => {
+    return api
+      .post("auth/reset-password", resetPasswordData)
+      .then(res => res.json())
+      .then(data => {
+        token.value = data?.jwt;
+        user.value = data?.user;
+
+        if (!data.error) {
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
+  };
+
   const getUser = async () => {
     return api
       .get(`users/${user.value.id}?populate=institution&populate=user_answers`)
@@ -167,8 +196,6 @@ export const useAuthStore = defineStore("auth", () => {
   watch(
     () => suggestedCredentials,
     val => {
-      console.log(val);
-
       if (!val.suggestedLogin && !val.suggestedPassword) {
         localStorage.removeItem("suggestedCredentials");
         return;
@@ -188,6 +215,8 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     register,
     registerByNickname,
+    forgotPassword,
+    resetPassword,
     getUser,
     updateUser,
     updateNicknamedUser,
