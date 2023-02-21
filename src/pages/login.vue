@@ -20,7 +20,7 @@
 
       <f7-block>
         <f7-row class="justify-content-end">
-          <f7-link href="/forgot-password">Forgot password?</f7-link>
+          <f7-link href="/forgot-password/">Forgot password?</f7-link>
         </f7-row>
       </f7-block>
     </f7-list>
