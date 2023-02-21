@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-question-page" name="question">
-    <f7-navbar back-link="Back" @click:back="clearQuestionStore">
+    <f7-navbar back-link="Back" @click:back="clearStores">
       <template v-if="isLoading" #title> Loading... </template>
 
       <template v-else #title>
@@ -179,8 +179,9 @@ const clearChosenData = () => {
   chosenAnswerIndex.value = null;
 };
 
-const clearQuestionStore = () => {
+const clearStores = () => {
   questionStore.$reset();
+  categoryAnswerStore.$reset();
 };
 
 watch(

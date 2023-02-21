@@ -81,8 +81,6 @@ const getCategoriesHandler = async () => {
     isLoading.value = false;
   });
 };
-
-// getCategoriesHandler();
 </script>
 
 <style lang="scss">
