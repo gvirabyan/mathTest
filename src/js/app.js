@@ -32,8 +32,8 @@ pinia.use(resetStore);
 registerComponents(app);
 
 function onMathJaxReady() {
-    const el = document.getElementById("elementId");
-    renderByMathjax(el);
+  const el = document.getElementById("elementId");
+  renderByMathjax(el);
 }
 
 initMathJax({}, onMathJaxReady);

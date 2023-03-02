@@ -30,6 +30,14 @@
         <f7-button class="button button-fill button-round button-raised button-large" @click="startLogin"
           >Sign In</f7-button
         >
+        <a
+          href="http://localhost:1337/api/connect/facebook"
+          class="mt-8 button button-fill button-round button-raised button-large external"
+          ><i class="f7-icons mr-8">logo_facebook</i> Continue with Facebook</a
+        >
+        <a href="#" class="mt-8 button button-fill button-round button-raised button-large"
+          ><i class="f7-icons mr-8">logo_google</i> Continue with Google</a
+        >
 
         <f7-block-footer> <br /><a href="/register/">Sign Up</a> if you don't have an account yet </f7-block-footer>
 
