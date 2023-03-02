@@ -8,8 +8,8 @@
       </template>
     </f7-navbar>
 
-    <div v-if="question">
-      <f7-block-title>{{ question.attributes?.question }}</f7-block-title>
+    <div v-if="question" id="elementId">
+      <f7-block-title><math-jax :latex="'\\sf' + question.attributes?.question"></math-jax></f7-block-title>
       <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
 
       <f7-list>

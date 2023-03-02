@@ -18,6 +18,7 @@ import "../css/app.scss";
 // Import App Component
 import App from "../components/app.vue";
 import resetStore from "@/js/stores/plugins/reset-store";
+import MathJax, { initMathJax, renderByMathjax } from "mathjax-vue3";
 
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
@@ -30,6 +31,13 @@ pinia.use(resetStore);
 // Register Framework7 Vue components
 registerComponents(app);
 
+function onMathJaxReady() {
+    const el = document.getElementById("elementId");
+    renderByMathjax(el);
+}
+
+initMathJax({}, onMathJaxReady);
 // Mount the app
 app.use(pinia);
+app.use(MathJax);
 app.mount("#app");
