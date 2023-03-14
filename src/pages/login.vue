@@ -9,7 +9,7 @@
         name="email"
         :error-message-force="!!error.identifier"
         :error-message="error.identifier"
-        placeholder="Your email"
+        placeholder="E-mail"
       ></f7-list-input>
 
       <f7-list-input
@@ -18,7 +18,7 @@
         name="password"
         :error-message-force="!!error.password"
         :error-message="error.password"
-        placeholder="Your password"
+        placeholder="Password"
       >
         <template v-slot:media>
           <div @click="showPassword = !showPassword" class="eye-icons">
@@ -166,8 +166,11 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+:root {
+  --f7-list-item-border-color: #212121;
+}
 .hg-login-page {
-  .page-content {
+   .page-content {
     &.login-screen-content {
       margin-top: 0 !important;
       margin-bottom: 0 !important;
@@ -248,27 +251,27 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       }
       .item-input {
         padding-right: 14px;
-        &.item-input-focused {
-          &:not(.item-input-outline){
-            .item-input-wrap{
-              &:after {
-                transform: unset !important;
-                height: 1px !important;
-                background: #212121 !important;
-              }
-            }
-          }
-        }
-
-        &:not(.item-input-outline){
-          .item-input-wrap{
-            &:after {
-              transform: unset;
-              height: 1px !important;
-              background: #212121 !important;
-            }
-          }
-        }
+        //&.item-input-focused {
+        //  &:not(.item-input-outline){
+        //    .item-input-wrap{
+        //      &:after {
+        //        transform: unset !important;
+        //        height: 1px !important;
+        //        background: #212121 !important;
+        //      }
+        //    }
+        //  }
+        //}
+        //
+        //&:not(.item-input-outline){
+        //  .item-input-wrap{
+        //    &:after {
+        //      transform: unset;
+        //      height: 1px !important;
+        //      background: #212121 !important;
+        //    }
+        //  }
+        //}
       }
 
       .eye-icons {
