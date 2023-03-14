@@ -247,6 +247,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
         }
       }
       .item-input {
+        padding-right: 14px;
         &.item-input-focused {
           &:not(.item-input-outline){
             .item-input-wrap{
