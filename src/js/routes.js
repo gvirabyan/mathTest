@@ -6,10 +6,17 @@ function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
 
-  if (["Register", "Login", "ForgotPassword", "ResetPassword", "Home"].includes(to.name) && token && user) {
+  if (
+    ["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
+    token &&
+    user
+  ) {
     reject();
     this.navigate("/dashboard/");
-  } else if (!["Register", "Login", "ForgotPassword", "ResetPassword", "Home"].includes(to.name) && (!token || !user)) {
+  } else if (
+    !["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
+    (!token || !user)
+  ) {
     reject();
     this.navigate("/login/");
   } else {
@@ -52,6 +59,12 @@ const routes = [
     path: "/register/",
     name: "Register",
     asyncComponent: () => import("../pages/register.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
+    path: "/connect/:provider/redirect/",
+    name: "ProviderLoginRedirect",
+    asyncComponent: () => import("../pages/provider-login-redirect.vue"),
     beforeEnter: checkAuth,
   },
   {

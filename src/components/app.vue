@@ -15,9 +15,10 @@
 </template>
 <script setup>
 import { onMounted } from "vue";
-import { f7ready } from "framework7-vue";
+import { f7, f7ready } from "framework7-vue";
 import routes from "../js/routes.js";
 import MainMenu from "./main-menu.vue";
+import cordovaApp from "@/js/cordova-app";
 
 const f7params = {
   name: "Math App", // App name
@@ -48,7 +49,7 @@ const addGmapsScript = () => {
 
 onMounted(() => {
   f7ready(() => {
-    // Call F7 APIs here
+    cordovaApp.init(f7);
   });
 
   addGmapsScript();

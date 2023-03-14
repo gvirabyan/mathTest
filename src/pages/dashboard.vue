@@ -164,6 +164,8 @@ const getAllData = async () => {
 
   isLoading.value = false;
 };
+
+console.log("boop");
 </script>
 
 <style lang="scss">

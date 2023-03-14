@@ -16,7 +16,7 @@
         placeholder="Your password"
       ></f7-list-input>
 
-      <f7-list-item v-model:checked="rememberUser" checkbox title="Remember me" name="remember"></f7-list-item>
+      <f7-list-item v-model:checked="rememberUser" checkbox title="Remember me" name="remember" />
 
       <f7-block>
         <f7-row class="justify-content-end">
@@ -30,14 +30,8 @@
         <f7-button class="button button-fill button-round button-raised button-large" @click="startLogin"
           >Sign In</f7-button
         >
-        <a
-          href="http://localhost:1337/api/connect/facebook"
-          class="mt-8 button button-fill button-round button-raised button-large external"
-          ><i class="f7-icons mr-8">logo_facebook</i> Continue with Facebook</a
-        >
-        <a href="#" class="mt-8 button button-fill button-round button-raised button-large"
-          ><i class="f7-icons mr-8">logo_google</i> Continue with Google</a
-        >
+
+        <a :href="`${backendUrl}connect/facebook`" class="link external"> Facebook </a>
 
         <f7-block-footer> <br /><a href="/register/">Sign Up</a> if you don't have an account yet </f7-block-footer>
 
@@ -49,14 +43,16 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { useAuthStore } from "@/js/stores/auth";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/js/stores/auth";
 
 const props = defineProps({
   f7route: Object,
   f7router: Object,
 });
+
+const backendUrl = import.meta.env.VITE_API_URL;
 
 const userData = reactive({
   identifier: "",
@@ -79,6 +75,11 @@ const startLogin = () => {
       });
     }
   });
+};
+
+const startFbLogin = async () => {
+  const res = await fetch(`${backendUrl}connect/facebook`);
+  console.log(res);
 };
 
 userData.identifier = suggestedCredentials.value.suggestedLogin;
