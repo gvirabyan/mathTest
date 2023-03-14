@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-login-page" login-screen>
-    <img class="hg-login-points" src="@/assets/images/points.png" >
+<!--    <img class="hg-login-points" src="@/assets/images/points.png" >-->
     <f7-list form>
       <f7-login-screen-title>Sign In</f7-login-screen-title>
       <f7-list-input
@@ -53,15 +53,25 @@
       <f7-list-item-radio name="myRadioGroup" value="option1" title="Option 1"></f7-list-item-radio>
       <f7-list-item-radio v-model:checked="rememberUser" checkbox title="Remember me" name="remember"></f7-list-item-radio>
 
-      <f7-block>
-        <f7-row class="justify-content-end">
+      <f7-block class="f7-forgot-password">
+        <f7-row class="justify-content-between">
+          <div @click="remember = !remember" class="radio-block">
+            <div class="radio-round">
+              <div v-if="remember" class="radio-circle" />
+            </div>
+            <span class="radio-text">Remember me</span>
+          </div>
           <f7-link href="/forgot-password/">Forgot password?</f7-link>
         </f7-row>
       </f7-block>
       <f7-block>
         <f7-button
-            class="button button-fill  button-raised button-large"
-            fill  @click="startLogin" :disabled="btnDisabled"
+          :class="{
+            'button button-raised button-large': true,
+            'button-fill': !btnDisabled,
+            'button-disabled-fill': btnDisabled,
+          }"
+          @click="startLogin"
         >
           Sign In
         </f7-button>
@@ -76,8 +86,10 @@
       </f7-block>
 
       <f7-block class="f7-content-btn">
-        <f7-button class="f7-btn">Google</f7-button>
-        <f7-button class="f7-btn btn-tiktok">TikTok</f7-button>
+        <f7-row class="justify-content-space-between">
+          <f7-button class="f7-btn">Google</f7-button>
+          <f7-button class="f7-btn btn-tiktok">TikTok</f7-button>
+        </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-btn">
@@ -124,6 +136,8 @@ const { login } = useAuthStore();
 
 const btnDisabled = computed(() => userData.password && userData.identifier ? false : true)
 
+const remember = ref(false)
+
 const startLogin = () => {
   login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
@@ -155,8 +169,8 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 .hg-login-page {
   .page-content {
     &.login-screen-content {
-      margin-top: 0px !important;
-      margin-bottom: 0px !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
       display: flex;
       flex-direction: column;
       height: 100vh !important;
@@ -164,20 +178,69 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       position: relative;
       color: #212121;
       font-family: 'Rubik';
-      .hg-login-points {
-        position: absolute;
-        top: 6px;
-        right: 0;
-      }
       .login-screen-title {
+        max-width: unset;
         font-weight: 400;
-        margin: 70px 0 42px 0;
+        font-size: 32px;
+        margin: 0;
+        padding: 62px 0 32px 0;
+        background-position: right;
+        background-repeat: no-repeat;
+        margin: 0 -14px;
+        background-image: url("../assets/images/points.png");
       }
       .list {
+        max-width: unset;
+        margin: 0;
+        .item-input-with-error-message {
+          padding-bottom: 0px;
+          .item-input-error-message {
+            margin-top: 10px;
+          }
+        }
         .item-media {
           min-width: 0;
           + .item-inner {
             margin-left: 0;
+          }
+        }
+        .item-inner {
+          min-height: 70px;
+          padding-top: 0;
+        }
+        .f7-forgot-password {
+          max-width: unset;
+          margin: 24px 0 54px 0;
+          .link {
+            font-size: 14px;
+          }
+          .radio-block {
+            display: flex;
+            align-items: center;
+            .radio-round {
+              width: 8px;
+              height: 8px;
+              border: 1px solid #212121;
+              border-radius: 100%;
+              padding: 4px;
+              .radio-circle {
+                width: 8px;
+                height: 8px;
+                border-radius: 100%;
+                background: #212121;
+              }
+            }
+            .radio-text {
+              font-size: 14px;
+              margin-left: 8px;
+            }
+          }
+        }
+        input {
+          padding-bottom: 10px;
+          &::placeholder {
+            color: #212121;
+            opacity: 0.5;
           }
         }
       }
@@ -192,24 +255,31 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       }
       .eye-icons {
         position: absolute;
-        bottom: 10px;
+        top: 0px;
         z-index: 999;
-        right: 16px;
-        .icon-show {
-          position: relative;
-          bottom: 2px;
-        }
+        padding-right: 14px;
+        right: 0;
       }
       .link {
         color: #212121;
       }
-      .button-fill {
-        background-color: #8419FF;
+      .button {
+        padding: 12px;
+        border-radius: 6px;
+        height: unset !important;
+        line-height: unset;
+        text-transform: unset;
+        font-size: 20px;
+        color: white;
+        &.button-fill {
+          background-color: #8419FF;
+        }
+        &.button-disabled-fill {
+          background-color: #E6D1FF;
+        }
       }
       .f7-btn {
         border: 1px solid #212121;
-        border-radius: 6px;
-        padding: 15px;
         width: 100%;
         font-size: 16px;
         font-weight: normal;
@@ -219,7 +289,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
         }
       }
       .f7-content-title {
-        margin: 10px;
+        margin: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -233,11 +303,6 @@ userData.password = suggestedCredentials.value.suggestedPassword;
           height: 1px;
         }
       }
-      .f7-content-btn {
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-      }
       .f7-content-footer {
         margin: 20px;
         p {
@@ -250,6 +315,15 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       }
       .f7-footer {
         margin-top: auto;
+        .block {
+          max-width: unset;
+          &.f7-content-btn {
+            margin: 10px 0;
+          }
+          .row {
+            flex-wrap: nowrap;
+          }
+        }
       }
     }
   }
