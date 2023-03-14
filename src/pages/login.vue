@@ -204,10 +204,12 @@ userData.password = suggestedCredentials.value.suggestedPassword;
             margin-left: 0;
           }
         }
-        .item-inner {
-          min-height: 70px;
-          padding-top: 0;
+        ul {
+          li {
+            min-height: 70px;
+          }
         }
+
         .f7-forgot-password {
           max-width: unset;
           margin: 24px 0 54px 0;
@@ -244,18 +246,33 @@ userData.password = suggestedCredentials.value.suggestedPassword;
           }
         }
       }
-      .item-input-focused {
+      .item-input {
+        &.item-input-focused {
+          &:not(.item-input-outline){
+            .item-input-wrap{
+              &:after {
+                transform: unset !important;
+                height: 1px !important;
+                background: #212121 !important;
+              }
+            }
+          }
+        }
+
         &:not(.item-input-outline){
           .item-input-wrap{
             &:after {
-              background: #8419FF !important;
+              transform: unset;
+              height: 1px !important;
+              background: #212121 !important;
             }
           }
         }
       }
+
       .eye-icons {
         position: absolute;
-        top: 0px;
+        top: 7px;
         z-index: 999;
         padding-right: 14px;
         right: 0;
