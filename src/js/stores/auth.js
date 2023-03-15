@@ -25,8 +25,7 @@ export const useAuthStore = defineStore("auth", () => {
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
-          token.value = data?.jwt;
-          user.value = data?.user;
+          storeJwtAndUser(data);
 
           if (rememberUser) {
             suggestedCredentials.suggestedLogin = userData.identifier;
@@ -43,14 +42,27 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
+  const loginViaProvider = async (provider, accessToken) => {
+    return fetch(`auth/${provider}/callback${accessToken}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          storeJwtAndUser(data);
+
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
+  };
+
   const register = async (userData, rememberUser = false) => {
     return api
       .post("auth/local/register", userData)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
-          token.value = data?.jwt;
-          user.value = data?.user;
+          storeJwtAndUser(data);
 
           if (rememberUser) {
             suggestedCredentials.suggestedLogin = userData.email;
@@ -73,8 +85,7 @@ export const useAuthStore = defineStore("auth", () => {
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
-          token.value = data?.jwt;
-          user.value = data?.user;
+          storeJwtAndUser(data);
 
           return { status: "success" };
         } else {
@@ -101,8 +112,7 @@ export const useAuthStore = defineStore("auth", () => {
       .post("auth/reset-password", resetPasswordData)
       .then(res => res.json())
       .then(data => {
-        token.value = data?.jwt;
-        user.value = data?.user;
+        storeJwtAndUser(data);
 
         if (!data.error) {
           return { status: "success" };
@@ -168,6 +178,11 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
+  const storeJwtAndUser = data => {
+    token.value = data?.jwt;
+    user.value = data?.user;
+  };
+
   const logout = async () => {
     token.value = "";
     user.value = null;
@@ -213,6 +228,7 @@ export const useAuthStore = defineStore("auth", () => {
     userData,
     isNicknamedOnlyUser,
     login,
+    loginViaProvider,
     register,
     registerByNickname,
     forgotPassword,
@@ -221,6 +237,7 @@ export const useAuthStore = defineStore("auth", () => {
     updateUser,
     updateNicknamedUser,
     deleteNicknamedUser,
+    storeJwtAndUser,
     logout,
   };
 });

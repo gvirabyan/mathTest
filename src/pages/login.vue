@@ -52,7 +52,7 @@ const props = defineProps({
   f7router: Object,
 });
 
-const backendUrl = import.meta.env.VITE_API_URL;
+const backendUrl = import.meta.env.VITE_NGROCK_URL;
 
 const userData = reactive({
   identifier: "",
@@ -75,11 +75,6 @@ const startLogin = () => {
       });
     }
   });
-};
-
-const startFbLogin = async () => {
-  const res = await fetch(`${backendUrl}connect/facebook`);
-  console.log(res);
 };
 
 userData.identifier = suggestedCredentials.value.suggestedLogin;

@@ -23,15 +23,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   f7router: Object,
 });
 
 const search = ref(window.location.search || null);
-
-console.log(window.location);
 
 watch(
   search,
