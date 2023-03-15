@@ -1,15 +1,42 @@
 .hg-categories-page {
   .list {
     .item-content {
+      padding: 0 24px !important;
       min-height: 60px;
+      &.after {
+
+      }
+      .item-inner {
+        padding-right: 0 !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        &::before {
+          display: none;
+        }
+        .item-title {
+          white-space: unset;
+          .text-clamp {
+            span {
+              font-size: 18px;
+              font-family: Rubik;
+              font-weight: 500;
+            }
+          }
+          & > p {
+            margin: 0;
+          }
+        }
+      }
+
+
+      .item-after {
+        p {
+          font-family: Rubik;
+          font-weight: 500;
+          color: #8419FF;
+        }
+      }
     }
 
-    .item-title {
-      white-space: unset;
-
-       & > p {
-         margin: 0;
-       }
-    }
   }
 }
