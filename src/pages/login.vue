@@ -71,12 +71,15 @@
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
           <f7-button class="f7-btn">Google</f7-button>
-          <f7-button class="f7-btn btn-tiktok">TikTok</f7-button>
+          <f7-button class="f7-btn">Facebook</f7-button>
         </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-btn">
-        <f7-button class="f7-btn">Apple</f7-button>
+        <f7-row class="justify-content-space-between">
+          <f7-button class="f7-btn">TikTok</f7-button>
+          <f7-button class="f7-btn">Apple</f7-button>
+        </f7-row>
       </f7-block>
       <f7-block class="f7-content-footer">
         <p>Don’t have an account?
@@ -191,90 +194,93 @@ userData.password = suggestedCredentials.value.suggestedPassword;
   }
 }
 .hg-login-page {
- .page-content {
-  &.login-screen-content {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    display: flex;
-    flex-direction: column;
-    height: 100vh !important;
-    padding: 0 30px;
-    position: relative;
-    color: #212121;
-    font-family: 'Rubik';
-    .login-screen-title {
-      max-width: unset;
-      font-weight: 400;
-      font-size: 32px;
-      margin: 0;
-      padding: 62px 0 32px 0;
-      background-position: right;
-      background-repeat: no-repeat;
-      margin: 0 -14px;
-      background-image: url("../assets/images/points.png");
-    }
-    .list {
-      max-width: unset;
-      margin: 0;
-      .item-input-with-error-message {
-        padding-bottom: 0px;
-        .item-input-error-message {
-          margin-top: 10px;
-        }
-      }
-      .item-media {
-        min-width: 0;
-        + .item-inner {
-          margin-left: 0;
-        }
-      }
-      ul {
-        li {
-          //min-height: 70px;
-        }
-      }
-    }
-    .block {
-      padding: 0 !important;
-      &.f7-forgot-password {
+  .page-content {
+    &.login-screen-content {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      display: flex;
+      flex-direction: column;
+      height: 100vh !important;
+      padding: 0 30px;
+      position: relative;
+      color: #212121;
+      font-family: 'Rubik';
+      .login-screen-title {
         max-width: unset;
-        margin: -6px 0 54px 0 !important;
-        .link {
-          font-size: 14px;
+        font-weight: 400;
+        font-size: 32px;
+        margin: 0;
+        padding: 62px 0 32px 0;
+        background-position: right;
+        background-repeat: no-repeat;
+        margin: 0 -14px;
+        background-image: url("../assets/images/points.png");
+      }
+      .list {
+        max-width: unset;
+        margin: 0;
+        .item-input-with-error-message {
+          padding-bottom: 0px;
+          .item-input-error-message {
+            margin-top: 10px;
+          }
         }
-        .radio-block {
-          display: flex;
-          align-items: center;
-          .radio-round {
-            width: 8px;
-            height: 8px;
-            border: 1px solid #212121;
-            border-radius: 100%;
-            padding: 4px;
-            .radio-circle {
+        .item-media {
+          min-width: 0;
+          + .item-inner {
+            margin-left: 0;
+          }
+        }
+      }
+      .block {
+        padding: 0 !important;
+        &.f7-forgot-password {
+          max-width: unset;
+          margin: -6px 0 54px 0 !important;
+          .link {
+            font-size: 14px;
+          }
+          .radio-block {
+            display: flex;
+            align-items: center;
+            .radio-round {
               width: 8px;
               height: 8px;
+              border: 1px solid #212121;
               border-radius: 100%;
-              background: #212121;
+              padding: 4px;
+              .radio-circle {
+                width: 8px;
+                height: 8px;
+                border-radius: 100%;
+                background: #212121;
+              }
             }
-          }
-          .radio-text {
-            font-size: 14px;
-            margin-left: 8px;
+            .radio-text {
+              font-size: 14px;
+              margin-left: 8px;
+            }
           }
         }
       }
-    }
-
-    input {
-      &::placeholder {
-        color: #212121;
-        opacity: 0.5;
+      input {
+        &::placeholder {
+          color: #212121;
+          opacity: 0.5;
+        }
       }
-    }
-    }
-    .item-input {
-      &.item-input-focused {
+      .item-input {
+        &.item-input-focused {
+          &:not(.item-input-outline){
+            .item-input-wrap{
+              &:after {
+                transform: unset !important;
+                height: 1px !important;
+                background: #212121 !important;
+              }
+            }
+          }
+        }
         &:not(.item-input-outline){
           .item-input-wrap{
             &:after {
@@ -285,85 +291,77 @@ userData.password = suggestedCredentials.value.suggestedPassword;
           }
         }
       }
-      &:not(.item-input-outline){
-        .item-input-wrap{
-          &:after {
-            transform: unset !important;
-            height: 1px !important;
-            background: #212121 !important;
+
+      .eye-icons {
+        position: absolute;
+        top: -1px;
+        z-index: 999;
+        right: 0;
+      }
+      .link {
+        color: #212121;
+      }
+      .button {
+        padding: 12px;
+        border-radius: 6px;
+        height: unset !important;
+        line-height: unset;
+        text-transform: unset;
+        font-size: 20px;
+        color: white;
+        &.button-fill {
+          background-color: #8419FF;
+        }
+        &.button-disabled-fill {
+          background-color: #E6D1FF;
+        }
+      }
+      .f7-btn {
+        border: 1px solid #212121;
+        width: 100%;
+        font-size: 16px;
+        font-weight: normal;
+        color: #212121;
+        &.btn-tiktok {
+          margin-left: 10px;
+        }
+      }
+      .f7-content-title {
+        margin: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .f7-content-title-text {
+          font-size: 14px;
+          margin: 0 10px;
+        }
+        .f7-line {
+          background: #212121;
+          width: 40px;
+          height: 1px;
+        }
+      }
+      .f7-content-footer {
+        margin: 20px;
+        p {
+          text-align: center;
+          a {
+            color: #212121;
+            font-weight: 700;
           }
         }
       }
-    }
-
-    .eye-icons {
-      position: absolute;
-      top: -1px;
-      z-index: 999;
-      right: 0;
-    }
-    .link {
-      color: #212121;
-    }
-    .button {
-      padding: 12px;
-      border-radius: 6px;
-      height: unset !important;
-      line-height: unset;
-      text-transform: unset;
-      font-size: 20px;
-      color: white;
-      &.button-fill {
-        background-color: #8419FF;
-      }
-      &.button-disabled-fill {
-        background-color: #E6D1FF;
-      }
-    }
-    .f7-btn {
-      border: 1px solid #212121;
-      width: 100%;
-      font-size: 16px;
-      font-weight: normal;
-      color: #212121;
-      &.btn-tiktok {
-        margin-left: 10px;
-      }
-    }
-    .f7-content-title {
-      margin: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .f7-content-title-text {
-        font-size: 14px;
-        margin: 0 10px;
-      }
-      .f7-line {
-        background: #212121;
-        width: 40px;
-        height: 1px;
-      }
-    }
-    .f7-content-footer {
-      margin: 20px;
-      p {
-        text-align: center;
-        a {
-          color: #212121;
-          font-weight: 700;
-        }
-      }
-    }
-    .f7-footer {
-      margin-top: auto !important;
-      .block {
-        max-width: unset;
-        &.f7-content-btn {
-          margin: 10px 0;
-        }
-        .row {
-          flex-wrap: nowrap;
+      .f7-footer {
+        margin-top: auto !important;
+        .block {
+          max-width: unset;
+          &.f7-content-btn {
+            margin: 10px 0;
+            &>.justify-content-space-between {
+              flex-wrap: nowrap;
+              gap: 10px
+            }
+          }
         }
       }
     }
