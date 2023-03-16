@@ -1,18 +1,100 @@
 .hg-question-page {
   .page-content {
+    background: #fff !important;
     .block-title {
+      font-family: Rubik;
+      color: #212121;
       white-space: pre-line;
     }
+    .block-header {
+      margin: 50px 0 20px 0;
+      font-family: Rubik;
+      font-size: 20px;
+      color: #212121;
+    }
+  }
+  .questions-content {
+    height: calc(100vh - 90px);
+    .list {
+      padding: 0 16px !important;
+      ul {
+        &:before {
+          display: none;
+        }
+        &:after {
+          display: none;
+        }
+        li {
+          border: 1.5px solid #F0EBF5;
+          border-radius: 8px;
+          margin-bottom: 16px;
+          .item-content {
+            padding-right: 16px !important;
+            .item-inner {
+              &:after {
+                display: none;
+              }
+            }
+            i {
+              display: none;
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  .hg-selected-answer {
+    color: #fff !important;
+    background: #8419FF;
   }
   .hg-wrong-answer {
-    border: 1px solid red;
+    color: #fff !important;
+    background: #FF0000;
   }
   .hg-correct-answer {
-    border: 1px solid green;
+    color: #fff !important;
+    background: #2EE56B;
   }
   .hg-actions-btns-content {
+    padding: 0 16px;
     display: flex;
-    justify-content: center;
+    .row {
+      width: 100%;
+      flex-wrap: nowrap !important;
+    }
+    .button {
+      padding: 20px 0;
+      text-transform: revert !important;
+      &.button-skip {
+        min-width: 130px;
+        opacity: 0.5;
+        border: 1px solid #212121 !important;
+        color: #212121 !important;
+        width: unset;
+        padding-right: 26px;
+        padding-left: 26px;
+      }
+      &.button-submit {
+        width: 100% !important;
+        margin-left: 14px;
+        color: #fff !important;
+        background-color: #FFC700 !important;
+        background-repeat: no-repeat;
+        background-position: right;
+        background-image: url("../assets/images/pointsBtns.png");
+      }
+      &.button-next {
+        width: 100% !important;
+        margin-left: 14px;
+        color: #fff !important;
+        background-color: #FFC700 !important;
+        background-repeat: no-repeat;
+        background-position: right;
+        background-image: url("../assets/images/pointsBtns.png");
+      }
+    }
   }
 }
 
