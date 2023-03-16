@@ -14,6 +14,8 @@ const props = defineProps({
   f7router: Object,
 });
 
+alert("foobar");
+
 const { loginViaProvider } = useAuthStore();
 const text = ref("Loading");
 
