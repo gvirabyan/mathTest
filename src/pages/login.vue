@@ -103,7 +103,7 @@ const props = defineProps({
   f7router: Object,
 });
 
-const backendUrl = import.meta.env.VITE_NGROCK_URL;
+const backendUrl = import.meta.env.VITE_API_URL;
 
 const userData = reactive({
   identifier: "",
