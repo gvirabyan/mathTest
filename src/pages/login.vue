@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-login-page" login-screen>
-<!--    <img class="hg-login-points" src="@/assets/images/points.png" >-->
+    <!--    <img class="hg-login-points" src="@/assets/images/points.png" >-->
     <f7-list form>
       <f7-login-screen-title>Sign In</f7-login-screen-title>
       <f7-list-input
@@ -24,21 +24,20 @@
         :error-message="error.password"
         placeholder="Password"
       >
-        <template v-slot:media>
-          <div @click="showPassword = !showPassword" class="eye-icons">
-            <img v-if="showPassword" src="@/assets/icons/eye.svg" >
-            <img v-else src="@/assets/icons/eyeline.svg" >
+        <template #media>
+          <div class="eye-icons" @click="showPassword = !showPassword">
+            <img v-if="showPassword" src="@/assets/icons/eye.svg" alt="eye" />
+            <img v-else src="@/assets/icons/eyeline.svg" alt="eyeline" />
           </div>
         </template>
-
       </f7-list-input>
 
-      <f7-list-item-radio name="myRadioGroup" value="option1" title="Option 1"></f7-list-item-radio>
-      <f7-list-item-radio v-model:checked="rememberUser" checkbox title="Remember me" name="remember"></f7-list-item-radio>
+      <!--      <f7-list-item radio name="myRadioGroup" value="option1" title="Option 1"></f7-list-item>-->
+      <!--      <f7-list-item v-model:checked="rememberUser" radio checkbox title="Remember me" name="remember"></f7-list-item>-->
 
       <f7-block class="f7-forgot-password">
         <f7-row class="justify-content-between">
-          <div @click="remember = !remember" class="radio-block">
+          <div class="radio-block" @click="remember = !remember">
             <div class="radio-round">
               <div v-if="remember" class="radio-circle" />
             </div>
@@ -63,15 +62,15 @@
 
     <f7-list class="f7-footer">
       <f7-block class="f7-content-title">
-      <div class="f7-line" />
-      <p class="f7-content-title-text">Sign In using</p>
-      <div class="f7-line" />
+        <div class="f7-line" />
+        <p class="f7-content-title-text">Sign In using</p>
+        <div class="f7-line" />
       </f7-block>
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
           <f7-button class="f7-btn">Google</f7-button>
-          <f7-button class="f7-btn">Facebook</f7-button>
+          <f7-button :href="`${backendUrl}connect/facebook`" class="f7-btn" external>Facebook</f7-button>
         </f7-row>
       </f7-block>
 
@@ -82,10 +81,9 @@
         </f7-row>
       </f7-block>
       <f7-block class="f7-content-footer">
-        <p>Don’t have an account?
-          <a href="/register/">
-            Sign Up
-          </a>
+        <p>
+          Don’t have an account?
+          <a href="/register/"> Sign Up </a>
         </p>
       </f7-block>
     </f7-list>
@@ -93,17 +91,19 @@
 </template>
 
 <script setup>
-import {ref, reactive, computed} from "vue";
-import { useAuthStore } from "@/js/stores/auth";
+import { ref, reactive, computed } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/js/stores/auth";
 
-const showPassword = ref(false)
+const showPassword = ref(false);
 
 const props = defineProps({
   f7route: Object,
   f7router: Object,
 });
+
+const backendUrl = import.meta.env.VITE_NGROCK_URL;
 
 const userData = reactive({
   identifier: "",
@@ -116,40 +116,39 @@ const error = reactive({
 });
 
 const inputStyle = reactive({
-  padding: '0px',
-  fontFamily: 'Rubik',
-  fontSize: '16px',
-  height: 'unset',
-  position: 'relative'
-})
+  padding: "0px",
+  fontFamily: "Rubik",
+  fontSize: "16px",
+  height: "unset",
+  position: "relative",
+});
 
 const { suggestedCredentials } = storeToRefs(useAuthStore());
 const rememberUser = ref(false);
 
 const { login } = useAuthStore();
 
-const btnDisabled = computed(() => userData.password && userData.identifier ? false : true)
+const btnDisabled = computed(() => !(userData.password && userData.identifier));
 
-const remember = ref(false)
+const remember = ref(false);
 
 const startLogin = () => {
   login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
       props.f7router.navigate("/dashboard/");
     } else {
-      error.identifier = ''
-      error.password = ''
-      if(resp.error.details.errors) {
+      error.identifier = "";
+      error.password = "";
+      if (resp.error.details.errors) {
         resp.error.details.errors.forEach(err => {
-          error[err.path[0]] = err.message
-        })
+          error[err.path[0]] = err.message;
+        });
       } else {
         f7.toast.show({
           text: resp.error.message,
           closeButton: true,
         });
       }
-
     }
   });
 };
@@ -173,7 +172,6 @@ userData.password = suggestedCredentials.value.suggestedPassword;
   .item-input-wrap {
     height: 68px;
     &.item-input-focused {
-
     }
     &:after {
       content: "";
@@ -204,7 +202,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       padding: 0 30px;
       position: relative;
       color: #212121;
-      font-family: 'Rubik';
+      font-family: "Rubik", sans-serif;
       .login-screen-title {
         max-width: unset;
         font-weight: 400;
@@ -220,7 +218,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
         max-width: unset;
         margin: 0;
         .item-input-with-error-message {
-          padding-bottom: 0px;
+          padding-bottom: 0;
           .item-input-error-message {
             margin-top: 10px;
           }
@@ -271,8 +269,8 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       }
       .item-input {
         &.item-input-focused {
-          &:not(.item-input-outline){
-            .item-input-wrap{
+          &:not(.item-input-outline) {
+            .item-input-wrap {
               &:after {
                 transform: unset !important;
                 height: 1px !important;
@@ -281,8 +279,8 @@ userData.password = suggestedCredentials.value.suggestedPassword;
             }
           }
         }
-        &:not(.item-input-outline){
-          .item-input-wrap{
+        &:not(.item-input-outline) {
+          .item-input-wrap {
             &:after {
               transform: unset !important;
               height: 1px !important;
@@ -310,10 +308,10 @@ userData.password = suggestedCredentials.value.suggestedPassword;
         font-size: 20px;
         color: white;
         &.button-fill {
-          background-color: #8419FF;
+          background-color: #8419ff;
         }
         &.button-disabled-fill {
-          background-color: #E6D1FF;
+          background-color: #e6d1ff;
         }
       }
       .f7-btn {
@@ -357,9 +355,9 @@ userData.password = suggestedCredentials.value.suggestedPassword;
           max-width: unset;
           &.f7-content-btn {
             margin: 10px 0;
-            &>.justify-content-space-between {
+            & > .justify-content-space-between {
               flex-wrap: nowrap;
-              gap: 10px
+              gap: 10px;
             }
           }
         }
@@ -367,6 +365,4 @@ userData.password = suggestedCredentials.value.suggestedPassword;
     }
   }
 }
-
-
 </style>
