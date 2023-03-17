@@ -104,7 +104,7 @@ const props = defineProps({
   f7router: Object,
 });
 
-const backendUrl = import.meta.env.VITE_API_URL;
+const { loginViaProvider } = useAuthStore();
 
 const userData = reactive({
   identifier: "",
@@ -155,8 +155,48 @@ const startLogin = () => {
 };
 
 const fbLoginHandler = async function () {
-  let login_response = await fbHandler.login();
-  console.log(login_response);
+  await fbHandler.login().then(response => {
+    if (response.authResponse) {
+      loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
+        if (resp.status === "success") {
+          props.f7router.navigate("/dashboard/");
+          return;
+        }
+
+        f7.toast.show({
+          text: resp.error.message,
+          closeButton: true,
+        });
+      });
+      // Now you can redirect the user or do an AJAX request to
+      // a PHP script that grabs the signed request from the cookie.
+    } else {
+      alert("User cancelled login or did not fully authorize.");
+    }
+  });
+};
+
+const logInWithFacebook = async () => {
+  window.FB.login(function (response) {
+    if (response.authResponse) {
+      loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
+        if (resp.status === "success") {
+          props.f7router.navigate("/dashboard/");
+          return;
+        }
+
+        f7.toast.show({
+          text: resp.error.message,
+          closeButton: true,
+        });
+      });
+      // Now you can redirect the user or do an AJAX request to
+      // a PHP script that grabs the signed request from the cookie.
+    } else {
+      alert("User cancelled login or did not fully authorize.");
+    }
+  });
+  return false;
 };
 
 userData.identifier = suggestedCredentials.value.suggestedLogin;
