@@ -27,7 +27,11 @@
           radio
           @change="chooseAnswer(answer, index)"
         >
-          <math-jax :latex="'\\sf' + answer"></math-jax>
+          <f7-col>
+            <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+            <math-jax :latex="'\\sf' + answer"></math-jax>
+          </f7-col>
+
         </f7-list-item>
       </f7-list>
 
@@ -74,7 +78,7 @@
         </f7-skeleton-block>
       </f7-block-title>
 
-      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
+<!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
 
       <f7-list inset>
         <f7-list-item v-for="i in 4" :key="`skeleton_${i}`">
@@ -141,6 +145,11 @@ const getAllQuestionData = async () => {
 
   isLoading.value = false;
 };
+
+const getLetterByIndex = (index) => {
+  const letterCode = 'a'.charCodeAt(0) + index;
+  return String.fromCharCode(letterCode);
+}
 
 const chooseAnswer = (answer, index) => {
   chosenAnswer.value = typeof answer === "string" ? answer : String(answer);

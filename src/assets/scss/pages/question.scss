@@ -16,6 +16,8 @@
   .questions-content {
     height: calc(100vh - 90px);
     .list {
+      height: calc(100vh - 231px);
+      overflow: auto;
       padding: 0 16px !important;
       ul {
         &:before {
@@ -33,6 +35,14 @@
             .item-inner {
               &:after {
                 display: none;
+              }
+              .col {
+                .list-number {
+                  font-family: Rubik;
+                  color: #212121;
+                  opacity: 0.4;
+                  margin-right: 6px;
+                }
               }
             }
             i {
