@@ -43,7 +43,8 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const loginViaProvider = async (provider, accessToken) => {
-    return fetch(`auth/${provider}/callback${accessToken}`)
+    return api
+      .get(`auth/${provider}/callback${accessToken}`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
