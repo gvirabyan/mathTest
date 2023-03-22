@@ -9,8 +9,7 @@
     </f7-navbar>
 
     <div v-if="question" id="elementId" class="questions-content">
-      <f7-block-title><math-jax :latex="'\\sf' + question.attributes?.question"></math-jax></f7-block-title>
-      <!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
+      <f7-block-title><math-jax :latex="'\\sf' + question?.question"></math-jax></f7-block-title>
 
       <f7-list>
         <f7-list-item
@@ -18,8 +17,8 @@
           :key="answer.id"
           :class="{
             'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
-            'hg-correct-answer': sentAnswer && question.attributes?.answer === answer,
-            'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
+            'hg-correct-answer': sentAnswer && question?.answer === answer,
+            'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
           }"
           :checked="chosenAnswer === answer"
           :disabled="!!sentAnswer"
@@ -104,7 +103,7 @@ const { question, meta, answeredQuestions } = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
 const { getCategory } = categoryStore;
-const { getQuestions, getAnsweredQuestions, getNextQuestion } = questionStore;
+const { getQuestions, getNextQuestion } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
 const isLoading = ref(false);
@@ -121,11 +120,8 @@ const getAllQuestionData = async () => {
   isLoading.value = true;
 
   await delay();
-
   await getCategory(props.f7route.params.categoryID);
-  await getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
-    getQuestions(props.f7route.params.categoryID);
-  });
+  await getQuestions(props.f7route.params.categoryID);
 
   isLoading.value = false;
 };
@@ -143,7 +139,7 @@ const chooseAnswer = (answer, index) => {
 const sendAnswer = () => {
   isSending.value = true;
 
-  let status = question.value.attributes.answer === chosenAnswer.value ? "correct" : "wrong";
+  let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
@@ -213,6 +209,7 @@ watch(
   val => {
     if (
       meta.value &&
+      meta.value.pagination &&
       val.length === meta.value.pagination.page * meta.value.pagination.pageSize &&
       meta.value.pagination.page < meta.value.pagination.pageCount
     ) {

@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
@@ -9,7 +9,9 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questionIndex = ref(0);
   const answeredQuestions = ref([]);
   const answeredQuestionsCount = ref(null);
-  const meta = ref(null);
+  const meta = reactive({
+    pagination: null,
+  });
 
   const auth = useAuthStore();
 
@@ -17,34 +19,30 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questionData = computed(() => question.value);
 
   const getQuestions = categoryID => {
-    let idsFilter = "";
-
-    if (answeredQuestions.value.length) {
-      idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`;
-    }
-
-    if (meta.value) {
-      if (meta.value.pagination.page === meta.value.pagination.pageCount) {
+    if (meta.pagination) {
+      if (meta.pagination.page === meta.pagination.pageCount) {
         return;
       } else {
         api
-          .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
+          .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
           .then(res => res.json())
           .then(data => {
-            let result = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
+            const rawData = data?.data?.attributes?.results;
+            let result = rawData ? [...rawData].sort(() => 0.5 - Math.random()) : [];
             questions.value = [...questions.value, ...result];
             question.value = questions.value[questionIndex.value];
-            meta.value = data?.meta;
+            meta.pagination = data?.data?.attributes?.pagination;
           });
       }
     } else {
       api
-        .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
+        .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
         .then(res => res.json())
         .then(data => {
-          questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
+          const rawData = data?.data?.attributes?.results;
+          questions.value = rawData ? [...rawData].sort(() => 0.5 - Math.random()) : [];
           question.value = questions.value[questionIndex.value];
-          meta.value = data?.meta;
+          meta.pagination = data?.data?.attributes?.pagination;
         });
     }
   };
