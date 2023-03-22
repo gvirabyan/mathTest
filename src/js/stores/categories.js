@@ -16,18 +16,23 @@ export const useCategoryStore = defineStore("category", () => {
   const categoriesData = computed(() => {
     return categories.value.map(c => {
       const questionsArr = c.attributes.questions.data;
+
       const userAnswersArr = questionsArr
-        .map(q =>
-          q.attributes.user_answers.data.filter(
+        .map(q => {
+          if (!q.attributes.user_answers.data.length) {
+            return [];
+          }
+
+          return q.attributes.user_answers.data.filter(
             d => d.attributes.users_permissions_user.data?.id === authStore.user?.id,
-          ),
-        )
-        .filter(arr => arr.length);
+          );
+        })
+        .flat();
 
       return {
         ...c,
         questions_amount: questionsArr.length,
-        user_answers_amount: userAnswersArr.length,
+        user_answers_amount: userAnswersArr.length > questionsArr.length ? questionsArr.length : userAnswersArr.length,
       };
     });
   });
