@@ -74,13 +74,13 @@
       </f7-list>
     </div>
 
-    <f7-block v-else-if="allQuestionsAnswered">You have answered all questions</f7-block>
+    <f7-block v-else-if="questionsAreOver">You have answered all questions</f7-block>
   </f7-page>
 </template>
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
@@ -99,7 +99,7 @@ const categoryAnswerStore = useCategoryAnswerStore();
 
 const { user } = storeToRefs(authStore);
 const { category } = storeToRefs(categoryStore);
-const { question, meta, answeredQuestions } = storeToRefs(questionStore);
+const { questions, question, questionIndex, questionsAreOver } = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
 const { getCategory } = categoryStore;
@@ -112,15 +112,20 @@ const chosenAnswer = ref(null);
 const chosenAnswerIndex = ref(null);
 const sentAnswer = ref(false);
 
-const allQuestionsAnswered = computed(
-  () => category.value.questions_amount !== null && category.value.questions_amount === answeredQuestions.value.length,
-);
-
 const getAllQuestionData = async () => {
   isLoading.value = true;
 
   await delay();
   await getCategory(props.f7route.params.categoryID);
+  await getQuestions(props.f7route.params.categoryID);
+
+  isLoading.value = false;
+};
+
+const getQuestionsHandler = async () => {
+  isLoading.value = true;
+
+  await delay();
   await getQuestions(props.f7route.params.categoryID);
 
   isLoading.value = false;
@@ -204,20 +209,13 @@ const clearStores = () => {
   categoryAnswerStore.$reset();
 };
 
-watch(
-  () => answeredQuestions.value,
-  val => {
-    if (
-      meta.value &&
-      meta.value.pagination &&
-      val.length === meta.value.pagination.page * meta.value.pagination.pageSize &&
-      meta.value.pagination.page < meta.value.pagination.pageCount
-    ) {
-      getQuestions(props.f7route.params.categoryID);
-    }
-  },
-  { deep: true },
-);
+watch(questionIndex, val => {
+  if (!questions.value.length || val < questions.value.length) {
+    return;
+  }
+
+  getQuestionsHandler(props.f7route.params.categoryID);
+});
 
 getAllQuestionData();
 </script>

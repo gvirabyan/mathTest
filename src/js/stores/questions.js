@@ -1,4 +1,4 @@
-import { ref, computed, reactive } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
@@ -7,44 +7,31 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questions = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
+  const questionsAreLoaded = ref(false);
   const answeredQuestions = ref([]);
   const answeredQuestionsCount = ref(null);
-  const meta = reactive({
-    pagination: null,
-  });
 
   const auth = useAuthStore();
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
+  const questionsAreOver = computed(() => !questions.value.length && questionsAreLoaded.value);
 
   const getQuestions = categoryID => {
-    if (meta.pagination) {
-      if (meta.pagination.page === meta.pagination.pageCount) {
-        return;
-      } else {
-        api
-          .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
-          .then(res => res.json())
-          .then(data => {
-            const rawData = data?.data?.attributes?.results;
-            let result = rawData ? [...rawData].sort(() => 0.5 - Math.random()) : [];
-            questions.value = [...questions.value, ...result];
-            question.value = questions.value[questionIndex.value];
-            meta.pagination = data?.data?.attributes?.pagination;
-          });
-      }
-    } else {
-      api
-        .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
-        .then(res => res.json())
-        .then(data => {
-          const rawData = data?.data?.attributes?.results;
-          questions.value = rawData ? [...rawData].sort(() => 0.5 - Math.random()) : [];
-          question.value = questions.value[questionIndex.value];
-          meta.pagination = data?.data?.attributes?.pagination;
-        });
-    }
+    questionsAreLoaded.value = false;
+
+    return api
+      .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
+      .then(res => res.json())
+      .then(data => {
+        const resData = data?.data?.attributes?.results;
+
+        questionsAreLoaded.value = true;
+        questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
+        questionIndex.value = 0;
+        question.value = questions.value[questionIndex.value];
+        answeredQuestions.value = [];
+      });
   };
 
   const getAnsweredQuestions = async categoryID => {
@@ -80,12 +67,13 @@ export const useQuestionsStore = defineStore("questions", () => {
   return {
     questions,
     question,
-    meta,
     questionIndex,
+    questionsAreLoaded,
     answeredQuestions,
     answeredQuestionsCount,
     questionsData,
     questionData,
+    questionsAreOver,
     getQuestions,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,

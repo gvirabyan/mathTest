@@ -76,10 +76,9 @@ const getCategoriesHandler = async () => {
   isLoading.value = true;
 
   await delay(1500);
+  await getCategories();
 
-  await getCategories().then(() => {
-    isLoading.value = false;
-  });
+  isLoading.value = false;
 };
 </script>
 
