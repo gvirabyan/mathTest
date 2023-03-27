@@ -182,6 +182,12 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: "/settings/send-reports",
+    name: "Send reports",
+    asyncComponent: () => import("../pages/send-reports.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
     path: "/start/",
     asyncComponent: () => import("../pages/start.vue"),
   },

@@ -1,6 +1,5 @@
 <template>
   <f7-page class="hg-login-page" login-screen>
-    <!--    <img class="hg-login-points" src="@/assets/images/points.png" >-->
     <f7-list form>
       <f7-login-screen-title>Sign In</f7-login-screen-title>
       <f7-list-input
@@ -32,9 +31,6 @@
         </template>
       </f7-list-input>
 
-      <!--      <f7-list-item radio name="myRadioGroup" value="option1" title="Option 1"></f7-list-item>-->
-      <!--      <f7-list-item v-model:checked="rememberUser" radio checkbox title="Remember me" name="remember"></f7-list-item>-->
-
       <f7-block class="f7-forgot-password">
         <f7-row class="justify-content-between">
           <div class="radio-block" @click="remember = !remember">
@@ -46,6 +42,7 @@
           <f7-link href="/forgot-password/">Forgot password?</f7-link>
         </f7-row>
       </f7-block>
+
       <f7-block>
         <f7-button
           :class="{
@@ -80,6 +77,7 @@
           <f7-button class="f7-btn">Apple</f7-button>
         </f7-row>
       </f7-block>
+
       <f7-block class="f7-content-footer">
         <p>
           Don’t have an account?
@@ -104,7 +102,11 @@ const props = defineProps({
   f7router: Object,
 });
 
-const { loginViaProvider } = useAuthStore();
+const { suggestedCredentials } = storeToRefs(useAuthStore());
+const { login, loginViaProvider } = useAuthStore();
+
+const rememberUser = ref(false);
+const remember = ref(false);
 
 const userData = reactive({
   identifier: "",
@@ -124,14 +126,7 @@ const inputStyle = reactive({
   position: "relative",
 });
 
-const { suggestedCredentials } = storeToRefs(useAuthStore());
-const rememberUser = ref(false);
-
-const { login } = useAuthStore();
-
 const btnDisabled = computed(() => !(userData.password && userData.identifier));
-
-const remember = ref(false);
 
 const startLogin = () => {
   login(userData, rememberUser.value).then(resp => {
@@ -168,35 +163,10 @@ const fbLoginHandler = async function () {
           closeButton: true,
         });
       });
-      // Now you can redirect the user or do an AJAX request to
-      // a PHP script that grabs the signed request from the cookie.
     } else {
       alert("User cancelled login or did not fully authorize.");
     }
   });
-};
-
-const logInWithFacebook = async () => {
-  window.FB.login(function (response) {
-    if (response.authResponse) {
-      loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
-        if (resp.status === "success") {
-          props.f7router.navigate("/dashboard/");
-          return;
-        }
-
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
-      });
-      // Now you can redirect the user or do an AJAX request to
-      // a PHP script that grabs the signed request from the cookie.
-    } else {
-      alert("User cancelled login or did not fully authorize.");
-    }
-  });
-  return false;
 };
 
 userData.identifier = suggestedCredentials.value.suggestedLogin;
@@ -204,6 +174,10 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/mixins/form-button.scss";
+@import "@/assets/scss/mixins/form-content.scss";
+@import "@/assets/scss/mixins/form-title.scss";
+
 .custom-list-input {
   .item-content {
     padding: 0 !important;
@@ -247,25 +221,10 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 .hg-login-page {
   .page-content {
     &.login-screen-content {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-      display: flex;
-      flex-direction: column;
-      height: 100vh !important;
-      padding: 0 30px;
-      position: relative;
-      color: #212121;
-      font-family: "Rubik", sans-serif;
+      @include form-content;
 
       .login-screen-title {
-        max-width: unset;
-        font-weight: 400;
-        font-size: 32px;
-        margin: 0;
-        padding: 62px 0 32px 0;
-        background-position: right;
-        background-repeat: no-repeat;
-        margin: 0 -14px;
+        @include form-title;
         background-image: url("../assets/images/points.png");
       }
 
@@ -371,21 +330,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
       }
 
       .button {
-        padding: 12px;
-        border-radius: 6px;
-        height: unset !important;
-        line-height: unset;
-        text-transform: unset;
-        font-size: 20px;
-        color: white;
-
-        &.button-fill {
-          background-color: #8419ff;
-        }
-
-        &.button-disabled-fill {
-          background-color: #e6d1ff;
-        }
+        @include form-button;
       }
 
       .f7-btn {

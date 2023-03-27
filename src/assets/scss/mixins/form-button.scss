@@ -1,0 +1,17 @@
+@mixin form-button {
+  padding: 12px;
+  border-radius: 6px;
+  height: unset !important;
+  line-height: unset;
+  text-transform: unset;
+  font-size: 20px;
+  color: white;
+
+  &.button-fill {
+    background-color: #8419ff;
+  }
+
+  &.button-disabled-fill {
+    background-color: #e6d1ff;
+  }
+}
