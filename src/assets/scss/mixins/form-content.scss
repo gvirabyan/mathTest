@@ -1,0 +1,11 @@
+@mixin form-content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100vh !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 30px;
+  color: #212121;
+  font-family: "Rubik", sans-serif;
+}
