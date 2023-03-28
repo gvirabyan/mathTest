@@ -10,7 +10,7 @@
   }
   .navbar-inner {
     .left {
-      margin-right: 17px;
+      margin-right: 16px;
       .back {
         i {
           margin-top: 7px;
@@ -54,6 +54,19 @@
 }
 
 .hg-question-page {
+  .circles {
+    max-width:100%;
+    display: flex;
+    overflow: hidden;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    //-webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    border-bottom: 1.5px solid #F0EBF5;
+    gap: 16px;
+    margin: 12px 24px 0 24px;
+  }
   .page-content {
     background: #fff !important;
     .block-title {
@@ -69,10 +82,13 @@
     }
   }
   .questions-content {
+    .block-title {
+      margin: 28px 24px;
+    }
     .list {
       height: calc(100vh - 231px);
       overflow: auto;
-      padding: 0 16px !important;
+      padding: 0 24px !important;
       ul {
         &:before {
           display: none;
