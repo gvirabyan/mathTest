@@ -1,4 +1,72 @@
+.navbar {
+  .navbar-bg {
+    background: #fff;
+    &:before {
+      display: none;
+    }
+    &:after {
+      display: none;
+    }
+  }
+  .navbar-inner {
+    .left {
+      margin-right: 16px;
+      .back {
+        i {
+          margin-top: 7px;
+          &:after {
+            content: 'chevron_left_ios';
+            color: #212121;
+            font-size: 13px !important;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+            text-align: center;
+            display: block;
+            width: 100%;
+            height: 100%;
+          }
+          &:before {
+            display: none !important;
+          }
+        }
+        span {
+          display: none;
+        }
+      }
+    }
+    .title {
+      font-family: Poppins !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      position: unset !important;
+      margin-left: 0 !important;
+      margin-right: auto !important;
+    }
+  }
+}
+
 .hg-question-page {
+  .circles {
+    max-width:100%;
+    display: flex;
+    overflow: hidden;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    //-webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    border-bottom: 1.5px solid #F0EBF5;
+    gap: 16px;
+    margin: 12px 24px 0 24px;
+  }
   .page-content {
     background: #fff !important;
     .block-title {
@@ -14,11 +82,13 @@
     }
   }
   .questions-content {
-    height: calc(100vh - 90px);
+    .block-title {
+      margin: 28px 24px;
+    }
     .list {
       height: calc(100vh - 231px);
       overflow: auto;
-      padding: 0 16px !important;
+      padding: 0 24px !important;
       ul {
         &:before {
           display: none;

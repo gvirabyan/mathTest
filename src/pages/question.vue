@@ -8,6 +8,15 @@
       </template>
     </f7-navbar>
 
+    <div class="circles">
+      <Circle
+        v-for="point in getPoints"
+        :key="point.point"
+        :point="point.point"
+        :status="checkStatus(point.id, point.answer)"
+      />
+    </div>
+
     <div v-if="question" id="elementId" class="questions-content">
       <f7-block-title><math-jax :latex="'\\sf' + question?.question"></math-jax></f7-block-title>
 
@@ -80,13 +89,14 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { ref, watch } from "vue";
+import {computed, ref, watch} from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
+import Circle from "@/components/Circle.vue"
 
 const props = defineProps({
   f7route: Object,
@@ -105,6 +115,21 @@ const { answersData } = storeToRefs(categoryAnswerStore);
 const { getCategory } = categoryStore;
 const { getQuestions, getNextQuestion } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
+
+const getPoints = computed(() => {
+  return questions.value ? questions.value.map((q, i) => {
+    return {
+      id: q.id,
+      answer: q.answer,
+      point: i + 1
+    }
+  }) : []
+})
+
+const checkStatus =  (id, answer) => {
+  const staticQuestion = questions.value.find(q => q.id == id)
+  return staticQuestion && staticQuestion.wrong_answers  ? staticQuestion.wrong_answers.includes(staticQuestion.answer) ? 'false' : 'true' : 'normal'
+}
 
 const isLoading = ref(false);
 const isSending = ref(false);
