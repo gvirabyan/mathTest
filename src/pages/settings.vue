@@ -28,6 +28,7 @@
             <f7-link popup-close>Close</f7-link>
           </f7-nav-right>
         </f7-navbar>
+
         <f7-block>
           <p>
             Please provide your email and password to be able to login back later. Otherwise, your account and all
@@ -111,6 +112,11 @@ const settingsItems = [
   {
     href: "feedback",
     title: "Write a review",
+    showForNicknamedOnly: true,
+  },
+  {
+    href: "send-reports",
+    title: "Send reports",
     showForNicknamedOnly: true,
   },
 ];

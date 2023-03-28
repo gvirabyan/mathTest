@@ -7,46 +7,31 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questions = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
+  const questionsAreLoaded = ref(false);
   const answeredQuestions = ref([]);
   const answeredQuestionsCount = ref(null);
-  const meta = ref(null);
 
   const auth = useAuthStore();
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
+  const questionsAreOver = computed(() => !questions.value.length && questionsAreLoaded.value);
 
   const getQuestions = categoryID => {
-    let idsFilter = "";
+    questionsAreLoaded.value = false;
 
-    if (answeredQuestions.value.length) {
-      idsFilter = `&filters[id][$notIn]=${answeredQuestions.value.join()}`;
-    }
+    return api
+      .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
+      .then(res => res.json())
+      .then(data => {
+        const resData = data?.data?.attributes?.results;
 
-    if (meta.value) {
-      if (meta.value.pagination.page === meta.value.pagination.pageCount) {
-        return;
-      } else {
-        api
-          .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
-          .then(res => res.json())
-          .then(data => {
-            let result = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
-            questions.value = [...questions.value, ...result];
-            question.value = questions.value[questionIndex.value];
-            meta.value = data?.meta;
-          });
-      }
-    } else {
-      api
-        .get(`questions?filters[category][id][$eq]=${categoryID}${idsFilter}&pagination[page]=1`)
-        .then(res => res.json())
-        .then(data => {
-          questions.value = data?.data ? [...data?.data].sort(() => 0.5 - Math.random()) : [];
-          question.value = questions.value[questionIndex.value];
-          meta.value = data?.meta;
-        });
-    }
+        questionsAreLoaded.value = true;
+        questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
+        questionIndex.value = 0;
+        question.value = questions.value[questionIndex.value];
+        answeredQuestions.value = [];
+      });
   };
 
   const getAnsweredQuestions = async categoryID => {
@@ -82,12 +67,13 @@ export const useQuestionsStore = defineStore("questions", () => {
   return {
     questions,
     question,
-    meta,
     questionIndex,
+    questionsAreLoaded,
     answeredQuestions,
     answeredQuestionsCount,
     questionsData,
     questionData,
+    questionsAreOver,
     getQuestions,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,

@@ -11,8 +11,8 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
   const categoryAnswers = ref([]);
 
   const answersData = computed(() => {
-    const wrongAnswers = questionStore.question?.attributes?.wrong_answers || quizStore.quizQuestion?.wrong_answers;
-    const answer = questionStore.question?.attributes?.answer || quizStore.quizQuestion?.answer;
+    const wrongAnswers = questionStore.question?.wrong_answers || quizStore.quizQuestion?.wrong_answers;
+    const answer = questionStore.question?.answer || quizStore.quizQuestion?.answer;
 
     return getAnswersList(categoryAnswers.value, wrongAnswers, answer);
   });

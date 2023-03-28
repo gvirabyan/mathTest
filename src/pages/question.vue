@@ -9,8 +9,7 @@
     </f7-navbar>
 
     <div v-if="question" id="elementId" class="questions-content">
-      <f7-block-title><math-jax :latex="'\\sf' + question.attributes?.question"></math-jax></f7-block-title>
-<!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
+      <f7-block-title><math-jax :latex="'\\sf' + question?.question"></math-jax></f7-block-title>
 
       <f7-list>
         <f7-list-item
@@ -18,8 +17,8 @@
           :key="answer.id"
           :class="{
             'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
-            'hg-correct-answer': sentAnswer && question.attributes?.answer === answer,
-            'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question.attributes?.answer !== answer,
+            'hg-correct-answer': sentAnswer && question?.answer === answer,
+            'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
           }"
           :checked="chosenAnswer === answer"
           :disabled="!!sentAnswer"
@@ -31,43 +30,27 @@
             <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
             <math-jax :latex="'\\sf' + answer"></math-jax>
           </f7-col>
-
         </f7-list-item>
       </f7-list>
 
       <div class="hg-actions-btns-content">
-        <f7-row  v-if="!sentAnswer">
-          <f7-button
-              class="button button-large button-skip"
-              :disabled="isSending"
-              @click="skip"
-          >
+        <f7-row v-if="!sentAnswer">
+          <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
             überspringen
           </f7-button>
-          <f7-button
-              class="button button-large button-submit"
-              @click="sendAnswear"
-          >
-            abgeben
-          </f7-button>
+          <f7-button class="button button-large button-submit" @click="sendAnswer"> abgeben </f7-button>
         </f7-row>
 
-        <f7-button
-          v-else
-          class="button button-large button-next"
-          @click="next"
-        >
-          nächstes
-        </f7-button>
-<!--        <button-->
-<!--          v-if="!chosenAnswer"-->
-<!--          class="button button-outline hg-default-btn-width"-->
-<!--          :disabled="isSending"-->
-<!--          @click="next"-->
-<!--        >-->
-<!--          Submit-->
-<!--        </button>-->
-<!--        <button v-else class="button button-fill hg-default-btn-width" :disabled="isSending" @click="next">Next</button>-->
+        <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
+        <!--        <button-->
+        <!--          v-if="!chosenAnswer"-->
+        <!--          class="button button-outline hg-default-btn-width"-->
+        <!--          :disabled="isSending"-->
+        <!--          @click="next"-->
+        <!--        >-->
+        <!--          Submit-->
+        <!--        </button>-->
+        <!--        <button v-else class="button button-fill hg-default-btn-width" :disabled="isSending" @click="next">Next</button>-->
       </div>
     </div>
 
@@ -78,7 +61,7 @@
         </f7-skeleton-block>
       </f7-block-title>
 
-<!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
+      <!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
 
       <f7-list inset>
         <f7-list-item v-for="i in 4" :key="`skeleton_${i}`">
@@ -91,13 +74,13 @@
       </f7-list>
     </div>
 
-    <f7-block v-else-if="allQuestionsAnswered">You have answered all questions</f7-block>
+    <f7-block v-else-if="questionsAreOver">You have answered all questions</f7-block>
   </f7-page>
 </template>
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
@@ -116,50 +99,52 @@ const categoryAnswerStore = useCategoryAnswerStore();
 
 const { user } = storeToRefs(authStore);
 const { category } = storeToRefs(categoryStore);
-const { question, meta, answeredQuestions } = storeToRefs(questionStore);
+const { questions, question, questionIndex, questionsAreOver } = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
 const { getCategory } = categoryStore;
-const { getQuestions, getAnsweredQuestions, getNextQuestion } = questionStore;
+const { getQuestions, getNextQuestion } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
 const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
 const chosenAnswerIndex = ref(null);
-const sentAnswer = ref(false)
-
-const allQuestionsAnswered = computed(
-  () => category.value.questions_amount !== null && category.value.questions_amount === answeredQuestions.value.length,
-);
+const sentAnswer = ref(false);
 
 const getAllQuestionData = async () => {
   isLoading.value = true;
 
   await delay();
-
   await getCategory(props.f7route.params.categoryID);
-  await getAnsweredQuestions(props.f7route.params.categoryID).then(() => {
-    getQuestions(props.f7route.params.categoryID);
-  });
+  await getQuestions(props.f7route.params.categoryID);
 
   isLoading.value = false;
 };
 
-const getLetterByIndex = (index) => {
-  const letterCode = 'a'.charCodeAt(0) + index;
+const getQuestionsHandler = async () => {
+  isLoading.value = true;
+
+  await delay();
+  await getQuestions(props.f7route.params.categoryID);
+
+  isLoading.value = false;
+};
+
+const getLetterByIndex = index => {
+  const letterCode = "a".charCodeAt(0) + index;
   return String.fromCharCode(letterCode);
-}
+};
 
 const chooseAnswer = (answer, index) => {
   chosenAnswer.value = typeof answer === "string" ? answer : String(answer);
   chosenAnswerIndex.value = index;
 };
 
-const sendAnswear = () => {
+const sendAnswer = () => {
   isSending.value = true;
 
-  let status = question.value.attributes.answer === chosenAnswer.value ? "correct" : "wrong";
+  let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
@@ -169,7 +154,7 @@ const sendAnswear = () => {
     status,
   }).then(resp => {
     isSending.value = false;
-    sentAnswer.value = true
+    sentAnswer.value = true;
 
     if (resp.status !== "success") {
       clearChosenData();
@@ -180,7 +165,7 @@ const sendAnswear = () => {
       });
     }
   });
-}
+};
 
 const skip = () => {
   isSending.value = true;
@@ -214,27 +199,23 @@ const next = () => {
 const clearChosenData = () => {
   chosenAnswer.value = null;
   chosenAnswerIndex.value = null;
-  sentAnswer.value = false
+  sentAnswer.value = false;
 };
 
 const clearStores = () => {
+  if (isSending.value) return;
+
   questionStore.$reset();
   categoryAnswerStore.$reset();
 };
 
-watch(
-  () => answeredQuestions.value,
-  val => {
-    if (
-      meta.value &&
-      val.length === meta.value.pagination.page * meta.value.pagination.pageSize &&
-      meta.value.pagination.page < meta.value.pagination.pageCount
-    ) {
-      getQuestions(props.f7route.params.categoryID);
-    }
-  },
-  { deep: true },
-);
+watch(questionIndex, val => {
+  if (!questions.value.length || val < questions.value.length) {
+    return;
+  }
+
+  getQuestionsHandler(props.f7route.params.categoryID);
+});
 
 getAllQuestionData();
 </script>
