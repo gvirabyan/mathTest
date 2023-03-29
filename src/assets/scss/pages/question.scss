@@ -86,7 +86,7 @@
       margin: 28px 24px;
     }
     .list {
-      height: calc(100vh - 231px);
+      height: calc(100vh - 300px);
       overflow: auto;
       padding: 0 24px !important;
       ul {
@@ -128,26 +128,14 @@
   .hg-selected-answer {
     color: #fff !important;
     background: #8419FF;
-    .list-number {
-      color: #fff !important;
-      opacity: 1 !important;
-    }
   }
   .hg-wrong-answer {
     color: #fff !important;
     background: #FF0000;
-    .list-number {
-      color: #fff !important;
-      opacity: 1 !important;
-    }
   }
   .hg-correct-answer {
     color: #fff !important;
     background: #2EE56B;
-    .list-number {
-      color: #fff !important;
-      opacity: 1 !important;
-    }
   }
   .hg-actions-btns-content {
     padding: 0 16px;

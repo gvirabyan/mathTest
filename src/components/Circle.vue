@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="`circle ${status}`"
+      :class="`circle ${status}`"
   >
     {{point}}
   </div>
@@ -30,11 +30,11 @@ const props = defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
-  &.normal {
+  &.skip, &.normal {
     color: #89838F;
     border: 2px solid #F0EBF5;
   }
-  &.skip, &.active {
+  &.active {
     color: white;
     background: #212121;
   }
