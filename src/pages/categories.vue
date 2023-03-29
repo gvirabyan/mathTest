@@ -1,10 +1,10 @@
 <template>
-  <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesHandler">
-    <topbar>
+  <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
+    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass">
       <template #title>Topics</template>
       <template #subtitle>Today's Goal</template>
       <template #subtitle-data>20 questions</template>
-    </topbar>
+    </top-bar>
     <!--    <f7-navbar title="Categories" back-link="Back" />-->
 
     <template v-if="!isLoading">
@@ -54,13 +54,13 @@ import TextClamp from "vue3-text-clamp";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
-import Topbar from "@/components/topbar.vue";
+import TopBar from "@/components/topbar.vue";
 
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { categoriesData } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
-const { getCategories } = categoriesStore;
+const { getCategoriesByCategoryClass } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
 const isLoading = ref(false);
@@ -74,6 +74,10 @@ const filteredCategories = computed(() => {
   return categoriesData.value.filter(c => c.attributes.name.toLowerCase().includes(searchStr.value.toLowerCase()));
 });
 
+const classesTabs = computed(() =>
+  categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} classes` })),
+);
+
 const getAfterText = category => {
   if (!category.questions_amount) {
     return "";
@@ -82,12 +86,16 @@ const getAfterText = category => {
   return `${category.user_answers_amount}/${category.questions_amount}`;
 };
 
-const getCategoriesHandler = async () => {
+const getCategoriesClassesHandler = async () => {
+  categoriesStore.$reset();
+  await getCategoryClasses();
+};
+
+const getCategoriesByClass = async id => {
   isLoading.value = true;
 
-  await delay(1500);
-  await getCategories();
-  await getCategoryClasses();
+  await delay();
+  await getCategoriesByCategoryClass(id);
 
   isLoading.value = false;
 };

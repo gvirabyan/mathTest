@@ -49,6 +49,17 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
+  const getCategoriesByCategoryClass = async categoryID => {
+    api
+      .get(
+        `categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user&populate[3]=category_class&filters[category_class][id][$eq]=${categoryID}`,
+      )
+      .then(res => res.json())
+      .then(data => {
+        categories.value = data.data;
+      });
+  };
+
   const getCategory = async categoryID => {
     api
       .get(`categories/${categoryID}?fields=name&populate=answer&populate=questions`)
@@ -90,6 +101,7 @@ export const useCategoryStore = defineStore("category", () => {
     categoriesData,
     categoryData,
     getCategories,
+    getCategoriesByCategoryClass,
     getCategory,
     getLastCategory,
     getPastCategories,
