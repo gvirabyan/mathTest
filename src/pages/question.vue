@@ -49,9 +49,9 @@
           </f7-button>
           <f7-button
             :class="{
-              'button button-large' : true,
-              'button-submit' : true,
-              'btn-disable' : !chosenAnswer
+              'button button-large': true,
+              'button-submit': true,
+              'btn-disable': !chosenAnswer,
             }"
             @click="sendAnswer"
           >
@@ -98,14 +98,14 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import {computed, ref, watch} from "vue";
+import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
-import Circle from "@/components/Circle.vue"
+import Circle from "@/components/circle.vue";
 
 const props = defineProps({
   f7route: Object,
@@ -126,19 +126,25 @@ const { getQuestions, getNextQuestion } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
 const getPoints = computed(() => {
-  return questions.value ? questions.value.map((q, i) => {
-    return {
-      id: q.id,
-      answer: q.answer,
-      point: i + 1
-    }
-  }) : []
-})
+  return questions.value
+    ? questions.value.map((q, i) => {
+        return {
+          id: q.id,
+          answer: q.answer,
+          point: i + 1,
+        };
+      })
+    : [];
+});
 
-const checkStatus =  (id, answer) => {
-  const staticQuestion = questions.value.find(q => q.id == id)
-  return staticQuestion && staticQuestion.wrong_answers  ? staticQuestion.wrong_answers.includes(staticQuestion.answer) ? 'false' : 'true' : 'normal'
-}
+const checkStatus = (id, answer) => {
+  const staticQuestion = questions.value.find(q => q.id == id);
+  return staticQuestion && staticQuestion.wrong_answers
+    ? staticQuestion.wrong_answers.includes(staticQuestion.answer)
+      ? "false"
+      : "true"
+    : "normal";
+};
 
 const isLoading = ref(false);
 const isSending = ref(false);
@@ -176,7 +182,7 @@ const chooseAnswer = (answer, index) => {
 };
 
 const sendAnswer = () => {
-  if(chosenAnswer.value) {
+  if (chosenAnswer.value) {
     isSending.value = true;
     let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
