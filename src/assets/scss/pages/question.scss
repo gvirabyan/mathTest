@@ -174,6 +174,9 @@
         background-position: right;
         background-image: url("../assets/images/pointsBtns.png");
       }
+      &.btn-disable {
+        opacity: .5;
+      }
     }
   }
 }

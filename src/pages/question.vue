@@ -47,7 +47,16 @@
           <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
             überspringen
           </f7-button>
-          <f7-button class="button button-large button-submit" @click="sendAnswer"> abgeben </f7-button>
+          <f7-button
+            :class="{
+              'button button-large' : true,
+              'button-submit' : true,
+              'btn-disable' : !chosenAnswer
+            }"
+            @click="sendAnswer"
+          >
+            abgeben
+          </f7-button>
         </f7-row>
 
         <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
@@ -167,29 +176,30 @@ const chooseAnswer = (answer, index) => {
 };
 
 const sendAnswer = () => {
-  isSending.value = true;
+  if(chosenAnswer.value) {
+    isSending.value = true;
+    let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
-  let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
+    updateUserAnsweredQuestions({
+      users_permissions_user: user.value.id,
+      question: question.value.id,
+      category: category.value.id,
+      answer: chosenAnswer.value,
+      status,
+    }).then(resp => {
+      isSending.value = false;
+      sentAnswer.value = true;
 
-  updateUserAnsweredQuestions({
-    users_permissions_user: user.value.id,
-    question: question.value.id,
-    category: category.value.id,
-    answer: chosenAnswer.value,
-    status,
-  }).then(resp => {
-    isSending.value = false;
-    sentAnswer.value = true;
+      if (resp.status !== "success") {
+        clearChosenData();
 
-    if (resp.status !== "success") {
-      clearChosenData();
-
-      f7.toast.show({
-        text: resp.message,
-        closeButton: true,
-      });
-    }
-  });
+        f7.toast.show({
+          text: resp.message,
+          closeButton: true,
+        });
+      }
+    });
+  }
 };
 
 const skip = () => {
