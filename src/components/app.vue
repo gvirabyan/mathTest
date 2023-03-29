@@ -8,18 +8,18 @@
         <main-menu />
       </f7-page>
     </f7-panel>
-
     <!-- Your main view, should have "view-main" class -->
-    <f7-view main class="safe-areas" url="/"></f7-view>
+    <f7-view v-if="loaded" main class="safe-areas" url="/"></f7-view>
+    <Loading v-else />
   </f7-app>
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { f7, f7ready } from "framework7-vue";
 import routes from "../js/routes.js";
 import MainMenu from "./main-menu.vue";
 import cordovaApp from "@/js/cordova-app";
-
+import Loading from '@/components/loading.vue'
 const f7params = {
   name: "Math App", // App name
   theme: "auto", // Automatic theme detection
@@ -47,13 +47,23 @@ const addGmapsScript = () => {
   document.head.appendChild(gmapsScript);
 };
 
+const loaded = ref(false);
+
 onMounted(() => {
   f7ready(() => {
     cordovaApp.init(f7);
   });
-
+  setTimeout(() => {
+    loaded.value = true
+  }, 7000)
   addGmapsScript();
 });
+
 </script>
 
-<style></style>
+<style>
+.loading-page {
+  padding: 20px;
+  background: #212121;
+}
+</style>
