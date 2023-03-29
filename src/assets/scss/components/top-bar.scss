@@ -1,0 +1,33 @@
+.top-bar {
+  height: 152px;
+  padding: 36px 24px 0 28px;
+  font-family: 'Rubik', sans-serif;
+  background: #8419FF url("@/assets/images/points-2.png") no-repeat right top 6px;
+  box-sizing: border-box;
+}
+
+.top-bar-title {
+  margin: 0;
+  color: #fff;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 32px;
+}
+
+.top-bar-subtitle-wrapper {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.top-bar-subtitle {
+  color: #d8b3ff;
+  font-weight: 400;
+}
+
+.top-bar-subtitle-data {
+  color: #ffc700;
+  font-weight: 500;
+}
