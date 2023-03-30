@@ -44,6 +44,8 @@
         </f7-list-item>
       </f7-list>
     </template>
+
+    <bottom-menu :current-path="props.f7route.path" />
   </f7-page>
 </template>
 
@@ -55,6 +57,11 @@ import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
+import BottomMenu from "@/components/bottom-menu.vue";
+
+const props = defineProps({
+  f7route: Object,
+});
 
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
