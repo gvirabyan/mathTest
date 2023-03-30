@@ -10,7 +10,9 @@
       <h3 class="medium-title">Improve your skills</h3>
       <h2 class="big-title">Be the first in the World</h2>
     </div>
-    <f7-button class="button" href="/login/"> Start playing </f7-button>
+    <div class="footer">
+      <f7-button class="button" href="/login/"> Start playing </f7-button>
+    </div>
   </f7-page>
 </template>
 

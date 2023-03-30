@@ -2,25 +2,28 @@
   background: #212121;
   height: 100vh;
   position: relative;
-  padding: 0 24px;
   .welcome-message {
     margin: 0;
     text-align: center;
-    font-family: "Rubik", sans-serif;
-    font-size: 61px;
+    font-family: "Rubik";
+    font-size: 24vw;
+    font-weight: 300;
     color: #fff;
     opacity: 0.06;
   }
   .points-left {
     position: absolute;
+    z-index: auto;
+    width: 60vw;
     top: 0;
-    left: 0;
+    left: -24px;
   }
   .titles-block {
     position: absolute;
+    padding: 0 24px;
+    width: -webkit-fill-available;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     .small-title {
       text-align: center;
       color: #D8B2FF;
@@ -49,17 +52,25 @@
       color: #fff;
     }
   }
-  .button {
+  .footer {
     position: absolute;
     bottom: 30px;
-    font-family: 'Rubik';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    color: #fff;
-    height: 56px;
-    width: 100%;
-    background: #8419FF;
-    border-radius: 6px;
+    padding: 0 24px;
+    display: block;
+    width: -webkit-fill-available;
+    .button {
+      padding: 16px;
+      height: unset !important;
+      line-height: unset;
+      text-transform: unset;
+      font-size: 20px;
+      color: #fff;
+      background-color: #8419FF;
+      border-radius: 6px;
+      background-repeat: no-repeat;
+      background-position: right;
+      background-image: url("../assets/images/pointsBtns.png");
+    }
   }
+
 }

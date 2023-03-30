@@ -22,11 +22,13 @@
   position: relative;
   .points-left {
     position: absolute;
+    width: 60vw;
     bottom: 0;
     left: 0;
   }
   .points-right {
     position: absolute;
+    width: 60vw;
     top: 0;
     right: 0;
   }
