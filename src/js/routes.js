@@ -1,11 +1,11 @@
 import HomePage from "../pages/home.vue";
+import LoadingPage from "../components/loading.vue";
 import Dashboard from "../pages/dashboard.vue";
 import RequestAndLoad from "../pages/request-and-load.vue";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
-
   if (
     ["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
     token &&
