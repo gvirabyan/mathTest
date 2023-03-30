@@ -229,6 +229,8 @@ const removeParentEmailHandler = async id => {
 @import "@/assets/scss/mixins/form-title.scss";
 
 .hg-reports-page {
+  background: var(--f7-login-screen-content-bg-color);
+
   .page-content {
     @include form-content;
     justify-content: center;
@@ -269,6 +271,12 @@ const removeParentEmailHandler = async id => {
       }
     }
 
+    .custom-list-input {
+      .item-input-wrap {
+        height: 68px;
+      }
+    }
+
     .item-input {
       padding: 0;
 
@@ -295,8 +303,15 @@ const removeParentEmailHandler = async id => {
       }
 
       .item-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         padding-right: 0;
       }
+    }
+
+    .block {
+      max-width: var(--f7-login-screen-blocks-max-width);
     }
 
     .button {
