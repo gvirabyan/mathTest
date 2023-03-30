@@ -9,7 +9,7 @@
       src="@/assets/images/pointsLeft.png"
     >
     <div class="loading-block">
-      <img width="50" src="@/assets/images/merged.gif">
+      <img width="50" src="@/assets/gifs/gray.gif">
       <f7-block-title> <span class="special-word">Mathe </span> App </f7-block-title>
     </div>
   </div>
