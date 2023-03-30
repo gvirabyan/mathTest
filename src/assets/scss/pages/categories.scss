@@ -1,20 +1,29 @@
 .hg-categories-page {
+  .page-content {
+    padding-top: 0;
+  }
+
   .list {
     .item-content {
       padding: 0 24px !important;
       min-height: 60px;
+
       &.after {
 
       }
+
       .item-inner {
         padding-right: 0 !important;
         padding-top: 1px !important;
         padding-bottom: 1px !important;
+
         &::before {
           display: none;
         }
+
         .item-title {
           white-space: unset;
+
           .text-clamp {
             span {
               font-size: 18px;
@@ -22,6 +31,7 @@
               font-weight: 500;
             }
           }
+
           & > p {
             margin: 0;
           }
