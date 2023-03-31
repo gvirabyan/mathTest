@@ -75,7 +75,7 @@ export const useAuthStore = defineStore("auth", () => {
 
           return { status: "success" };
         } else {
-          return { status: "error", message: data.error?.message };
+            return { status: "error", error: data.error };
         }
       });
   };
@@ -90,7 +90,7 @@ export const useAuthStore = defineStore("auth", () => {
 
           return { status: "success" };
         } else {
-          return { status: "error", message: data.error?.message };
+          return { status: "error", message: data.error };
         }
       });
   };

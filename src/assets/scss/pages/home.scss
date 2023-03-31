@@ -1,9 +1,69 @@
 .hg-home-page {
-  .hg-welcome-message {
-    margin: auto;
+  background: #212121;
+  height: 100vh;
+  position: relative;
+  .welcome-message {
+    margin: 0;
+    text-align: center;
+    font-family: "Rubik";
+    font-size: 24vw;
+    font-weight: 300;
+    color: #fff;
+    opacity: 0.06;
+  }
+  .points-left {
+    position: absolute;
+    z-index: auto;
+    width: 60vw;
+    top: 0;
+    left: -24px;
+  }
+  .titles-block {
+    position: absolute;
+    padding: 0 24px;
+    font-family: 'Rubik';
+    text-align: center;
+    width: -webkit-fill-available;
+    top: 50%;
+    transform: translateY(-50%);
+    .small-title {
+      color: #D8B3FF;
+      opacity: 0.6;
+      font-weight: 400;
+      font-size: 20px;
+    }
+    .medium-title {
+      margin: 20px;
+      font-weight: 400;
+      font-size: 28px;
+      color: #F1E5FF;
+      opacity: 0.8;
+    }
+    .big-title {
+      font-weight: 400;
+      font-size: 30px;
+      color: #fff;
+    }
+  }
+  .footer {
+    position: absolute;
+    bottom: 30px;
+    padding: 0 24px;
+    display: block;
+    width: -webkit-fill-available;
+    .button {
+      padding: 16px;
+      height: unset !important;
+      line-height: unset;
+      text-transform: unset;
+      font-size: 20px;
+      color: #fff;
+      background-color: #8419FF;
+      border-radius: 6px;
+      background-repeat: no-repeat;
+      background-position: right;
+      background-image: url("../assets/images/pointsBtns.png");
+    }
   }
 
-  .hg-actions-btns-content {
-    margin-top: 70px;
-  }
 }

@@ -1,21 +1,27 @@
 .hg-categories-page {
+  background-color: #fff;
+
   .page-content {
     padding-top: 0;
   }
 
   .list {
+    margin-top: 10px;
+
+    ul::before,
+    ul::after {
+      display: none;
+    }
+
     .item-content {
       padding: 0 24px !important;
       min-height: 60px;
-
-      &.after {
-
-      }
 
       .item-inner {
         padding-right: 0 !important;
         padding-top: 1px !important;
         padding-bottom: 1px !important;
+        font-family: Rubik, sans-serif;
 
         &::before {
           display: none;
@@ -27,7 +33,6 @@
           .text-clamp {
             span {
               font-size: 18px;
-              font-family: Rubik;
               font-weight: 500;
             }
           }
@@ -41,9 +46,10 @@
 
       .item-after {
         p {
-          font-family: Rubik;
-          font-weight: 500;
           color: #8419FF;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
         }
       }
     }

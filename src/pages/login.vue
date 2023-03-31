@@ -179,6 +179,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 @import "@/assets/scss/mixins/form-title.scss";
 
 .custom-list-input {
+  height: 68px;
   .item-content {
     padding: 0 !important;
   }
