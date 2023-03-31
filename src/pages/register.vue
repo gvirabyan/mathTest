@@ -128,7 +128,7 @@
 
       <f7-block class="f7-content-footer">
         <p>
-          Don’t have an account?
+          Already have an account?
           <a href="/login/"> Sign in </a>
         </p>
       </f7-block>
