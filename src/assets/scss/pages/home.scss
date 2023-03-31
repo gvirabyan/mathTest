@@ -21,32 +21,25 @@
   .titles-block {
     position: absolute;
     padding: 0 24px;
+    font-family: 'Rubik';
+    text-align: center;
     width: -webkit-fill-available;
     top: 50%;
     transform: translateY(-50%);
     .small-title {
-      text-align: center;
-      color: #D8B2FF;
+      color: #D8B3FF;
       opacity: 0.6;
-      font-family: 'Rubik';
-      font-style: normal;
       font-weight: 400;
       font-size: 20px;
     }
     .medium-title {
       margin: 20px;
-      text-align: center;
-      font-family: 'Rubik';
-      font-style: normal;
       font-weight: 400;
       font-size: 28px;
       color: #F1E5FF;
       opacity: 0.8;
     }
     .big-title {
-      text-align: center;
-      font-family: 'Rubik';
-      font-style: normal;
       font-weight: 400;
       font-size: 30px;
       color: #fff;
