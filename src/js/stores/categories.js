@@ -50,6 +50,8 @@ export const useCategoryStore = defineStore("category", () => {
   };
 
   const getCategoriesByCategoryClass = async categoryID => {
+    categories.value = [];
+
     api
       .get(
         `categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user&populate[3]=category_class&filters[category_class][id][$eq]=${categoryID}`,

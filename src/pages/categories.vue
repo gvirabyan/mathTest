@@ -5,20 +5,11 @@
       <template #subtitle>Today's Goal</template>
       <template #subtitle-data>20 questions</template>
     </top-bar>
-    <!--    <f7-navbar title="Categories" back-link="Back" />-->
 
     <template v-if="!isLoading">
       <f7-list no-hairlines-md>
-        <f7-list-input
-          v-model:value="searchStr"
-          label="Search by category"
-          type="text"
-          placeholder="Enter a category name"
-          clear-button
-        />
-
         <f7-list-item
-          v-for="category in filteredCategories"
+          v-for="category in categoriesData"
           :key="category.id"
           :link="`/categories/${category.id}/questions/`"
         >
@@ -64,15 +55,6 @@ const { getCategoriesByCategoryClass } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
 const isLoading = ref(false);
-const searchStr = ref("");
-
-const filteredCategories = computed(() => {
-  if (!searchStr.value) {
-    return categoriesData.value;
-  }
-
-  return categoriesData.value.filter(c => c.attributes.name.toLowerCase().includes(searchStr.value.toLowerCase()));
-});
 
 const classesTabs = computed(() =>
   categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} classes` })),
