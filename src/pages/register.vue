@@ -4,7 +4,7 @@
 
     <f7-block inset>
       <f7-segmented raised>
-        <p
+        <f7-button
             :class="{
             'active-segment': registerMode === 'credentials'
           }"
@@ -12,9 +12,9 @@
             @click="registerMode = 'credentials'"
         >
           Registration
-        </p
+        </f7-button
         >
-        <p
+        <f7-button
             :class="{
             'active-segment': registerMode === 'nickname'
           }"
@@ -22,7 +22,7 @@
             @click="registerMode = 'nickname'"
         >
           Only nickname
-        </p>
+        </f7-button>
       </f7-segmented>
     </f7-block>
 
@@ -150,18 +150,17 @@ const userData = reactive({
   username: "",
   email: "",
   password: "",
-  confirmPassword: "",
 });
 
 const showPassword = ref(false);
 
-const inputStyle = reactive({
+const inputStyle = {
   padding: "0px",
   fontFamily: "Rubik",
   fontSize: "16px",
   height: "unset",
   position: "relative",
-});
+};
 
 const error = reactive({
   email: "",
@@ -223,7 +222,7 @@ const startRegister = () => {
       return;
     }
     else {
-      error.message = ""
+      error.message = "";
       error.email = "";
       error.password = "";
       error.username = "";
@@ -303,7 +302,8 @@ const startRegister = () => {
       }
       .segmented-raised {
         box-shadow: unset;
-        p {
+        .button {
+          all: unset;
           font-family: 'Open Sans';
           font-style: normal;
           font-weight: 400;

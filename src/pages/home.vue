@@ -17,27 +17,9 @@
 </template>
 
 <script setup>
-import {ref, watch} from "vue";
-
 const props = defineProps({
   f7router: Object,
 });
-
-const search = ref(window.location.search || null);
-
-watch(
-    search,
-    val => {
-      if (!val) {
-        return;
-      }
-
-      const provider = window.location.pathname.split("/")[2];
-
-      props.f7router.navigate({name: "ProviderLoginRedirect", params: {provider}});
-    },
-    {immediate: true},
-);
 </script>
 
 <style lang="scss">
