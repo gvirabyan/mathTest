@@ -351,7 +351,6 @@ const startRegister = () => {
           z-index: 10;
           display: flex;
           align-items: center;
-          margin-top: -28px;
           .radio-round {
             width: 8px;
             height: 8px;
