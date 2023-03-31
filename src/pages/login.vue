@@ -131,7 +131,7 @@ const btnDisabled = computed(() => !(userData.password && userData.identifier));
 const startLogin = () => {
   login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
-      props.f7router.navigate("/dashboard/");
+      props.f7router.navigate("/activity/");
     } else {
       error.identifier = "";
       error.password = "";
@@ -154,7 +154,7 @@ const fbLoginHandler = async function () {
     if (response.authResponse) {
       loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
         if (resp.status === "success") {
-          props.f7router.navigate("/dashboard/");
+          props.f7router.navigate("/activity/");
           return;
         }
 

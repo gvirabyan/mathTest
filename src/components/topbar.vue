@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 
 const props = defineProps({
   tabs: {
@@ -116,10 +116,6 @@ watch(
 
 onMounted(() => {
   topBarTabs.value.addEventListener("scroll", handleTabsScroll);
-});
-
-onUnmounted(() => {
-  topBarTabs.value.removeEventListener("scroll", handleTabsScroll);
 });
 
 if (props.tabs.length) {

@@ -36,7 +36,7 @@
       </f7-list>
     </template>
 
-    <bottom-menu :current-path="props.f7route.path" />
+    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
@@ -50,7 +50,7 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 
-const props = defineProps({
+defineProps({
   f7route: Object,
 });
 
@@ -91,5 +91,5 @@ const getCategoriesByClass = async id => {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/categories";
+@import "../assets/scss/pages/topics";
 </style>

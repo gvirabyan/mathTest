@@ -187,7 +187,7 @@ const startRegister = () => {
       username: userData.username,
     }).then(resp => {
       if (resp.status === "success") {
-        props.f7router.navigate("/dashboard/");
+        props.f7router.navigate("/activity/");
         return;
       }
       else {
@@ -218,7 +218,7 @@ const startRegister = () => {
       rememberUser.value,
   ).then(resp => {
     if (resp.status === "success") {
-      props.f7router.navigate("/dashboard/");
+      props.f7router.navigate("/activity/");
       return;
     }
     else {

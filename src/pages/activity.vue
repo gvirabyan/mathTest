@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <bottom-menu :current-path="props.f7route.path" />
+    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
@@ -146,7 +146,7 @@ import delay from "@/js/helpers/delay";
 import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 
-const props = defineProps({
+defineProps({
   f7route: Object,
 });
 
@@ -174,5 +174,5 @@ const getAllData = async () => {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/dashboard";
+@import "../assets/scss/pages/activity";
 </style>

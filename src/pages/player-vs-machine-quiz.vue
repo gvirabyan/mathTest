@@ -150,7 +150,7 @@ const endQuiz = () => {
           close: () => {
             useQuizStore().$reset();
             endQuizAlert.value = null;
-            props.f7router.navigate("/dashboard/");
+            props.f7router.navigate("/activity/");
           },
         },
       });
@@ -165,7 +165,7 @@ const breakQuiz = () => {
     () => {
       updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
         useQuizStore().$reset();
-        props.f7router.navigate("/dashboard/");
+        props.f7router.navigate("/activity/");
       });
     },
   );
