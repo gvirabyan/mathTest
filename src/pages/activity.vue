@@ -131,6 +131,8 @@
         </a>
       </div>
     </div>
+
+    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
@@ -142,6 +144,11 @@ import { useCategoryStore } from "@/js/stores/categories";
 import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
+import BottomMenu from "@/components/bottom-menu.vue";
+
+defineProps({
+  f7route: Object,
+});
 
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
@@ -167,5 +174,5 @@ const getAllData = async () => {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/dashboard";
+@import "../assets/scss/pages/activity";
 </style>

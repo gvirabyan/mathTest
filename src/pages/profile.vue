@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="profile">
+  <f7-page class="hg-profile-content" name="profile">
     <f7-navbar title="Profile" back-link="Back"></f7-navbar>
     <f7-block-title>Profile</f7-block-title>
 
@@ -116,6 +116,8 @@
         <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" />
       </f7-sheet>
     </f7-list>
+
+    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
@@ -128,6 +130,7 @@ import { useCoursesStore } from "@/js/stores/courses";
 import { getCountryCode } from "@/js/helpers/country-name-to-iso";
 import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
 import { DatePicker } from "v-calendar";
+import BottomMenu from "@/components/bottom-menu.vue";
 import "v-calendar/dist/style.css";
 
 const authStore = useAuthStore();
@@ -136,6 +139,10 @@ const { user } = storeToRefs(authStore);
 const { courses } = storeToRefs(coursesStore);
 const { updateUser } = authStore;
 const { getCourses } = coursesStore;
+
+defineProps({
+  f7route: Object,
+});
 
 const profileData = reactive({
   email: "",

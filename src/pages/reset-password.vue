@@ -68,7 +68,7 @@ const resetPasswordHandler = async () => {
 
   await resetPassword(resetPasswordData).then(res => {
     if (res.status === "success") {
-      props.f7router.navigate("/dashboard/");
+      props.f7router.navigate("/activity/");
 
       return;
     }

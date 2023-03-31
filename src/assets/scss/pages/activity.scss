@@ -5,7 +5,14 @@
     }
   }
 
+  .page-content {
+    display: flex;
+    flex-direction: column;
+  }
+
   .hg-statistics-content {
+    flex: 1;
+
     .hg-statistic-item {
       .card {
         margin-top: 0;

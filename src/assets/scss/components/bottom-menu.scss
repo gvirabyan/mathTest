@@ -1,0 +1,48 @@
+.hg-bottom-menu {
+  position: sticky;
+  height: auto;
+  padding: 10px 32px 20px;
+  font-family: 'Rubik', sans-serif;
+  background-color: #fff;
+  backdrop-filter: none;
+  box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 24px 24px 0 0;
+
+  &::before, &::after {
+    display: none;
+  }
+
+  .toolbar-inner {
+    position: relative;
+
+    .link {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: auto;
+      padding: 0;
+
+      &.active {
+        .link-title {
+          color: #8419ff;
+        }
+      }
+
+      &::before {
+        display: none;
+      }
+
+      .icon-container {
+        width: 32px;
+        height: 32px;
+        text-align: center;
+      }
+
+      .link-title {
+        color: #89838f;
+        font-size: 14px;
+        line-height: 16px;
+      }
+    }
+  }
+}

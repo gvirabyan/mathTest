@@ -1,18 +1,19 @@
 import HomePage from "../pages/home.vue";
+import Activity from "../pages/activity.vue";
 import LoadingPage from "../components/loading.vue";
-import Dashboard from "../pages/dashboard.vue";
 import RequestAndLoad from "../pages/request-and-load.vue";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
+
   if (
     ["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
     token &&
     user
   ) {
     reject();
-    this.navigate("/dashboard/");
+    this.navigate("/activity/");
   } else if (
     !["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
     (!token || !user)
@@ -32,8 +33,8 @@ const routes = [
       const user = localStorage.getItem("user");
       if (token && user) {
         resolve({
-          name: "Dashboard",
-          component: Dashboard,
+          name: "Activity",
+          component: Activity,
         });
       } else {
         resolve({
@@ -62,12 +63,6 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
-    path: "/connect/:provider/redirect/",
-    name: "ProviderLoginRedirect",
-    asyncComponent: () => import("../pages/provider-login-redirect.vue"),
-    beforeEnter: checkAuth,
-  },
-  {
     path: "/forgot-password/",
     name: "ForgotPassword",
     asyncComponent: () => import("../pages/forgot-password.vue"),
@@ -80,21 +75,21 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
-    path: "/dashboard/",
-    name: "Dashboard",
-    component: Dashboard,
+    path: "/activity/",
+    name: "Activity",
+    component: Activity,
     beforeEnter: checkAuth,
   },
   {
-    path: "/categories/",
-    name: "Categories",
-    asyncComponent: () => import("../pages/categories.vue"),
+    path: "/topics/",
+    name: "Topics",
+    asyncComponent: () => import("../pages/topics.vue"),
     beforeEnter: checkAuth,
   },
   {
-    path: "/player-vs-machine/",
-    name: "PlayerVsMachine",
-    asyncComponent: () => import("../pages/player-vs-machine.vue"),
+    path: "/practice/",
+    name: "Practice",
+    asyncComponent: () => import("../pages/practice.vue"),
     beforeEnter: checkAuth,
   },
   {
