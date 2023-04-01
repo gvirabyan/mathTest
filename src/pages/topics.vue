@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
-    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass">
+    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass" @show-popup="togglePopup">
       <template #title>Topics</template>
       <template #subtitle>Today's Goal</template>
       <template #subtitle-data>20 questions</template>
@@ -37,6 +37,29 @@
     </template>
 
     <bottom-menu :current-path="f7route.path" />
+
+    <f7-popup class="search-popup" :opened="isSearchPopup">
+      <f7-page>
+        <div class="close-btn-wrapper display-flex justify-content-end">
+          <f7-button class="close-btn" @click="togglePopup">
+            <img src="@/assets/icons/close.svg" alt="Close popup" />
+          </f7-button>
+        </div>
+
+        <h2 class="title">Search</h2>
+
+        <div class="input-wrapper">
+          <f7-input v-model:value="searchStr" type="text" placeholder="Enter the keyword" />
+          <img class="input-icon" src="@/assets/icons/arrow-right.svg" alt="" />
+        </div>
+
+        <div class="keywords">
+          <div v-for="(keyword, index) in keywords" :key="`keyword_${index + 1}`" class="keyword">
+            {{ keyword }}
+          </div>
+        </div>
+      </f7-page>
+    </f7-popup>
   </f7-page>
 </template>
 
@@ -61,7 +84,11 @@ const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategoriesByCategoryClass } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
+const keywords = ["Razionale zahlen", "Multipliziren", "Kommazahlen", "Prozent", "Rationale", "Dividieren"];
+
 const isLoading = ref(false);
+const isSearchPopup = ref(false);
+const searchStr = ref("");
 
 const classesTabs = computed(() =>
   categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} classes` })),
@@ -87,6 +114,10 @@ const getCategoriesByClass = async id => {
   await getCategoriesByCategoryClass(id);
 
   isLoading.value = false;
+};
+
+const togglePopup = () => {
+  isSearchPopup.value = !isSearchPopup.value;
 };
 </script>
 

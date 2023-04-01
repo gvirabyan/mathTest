@@ -1,3 +1,5 @@
+@import "@/assets/scss/mixins/search-popup.scss";
+
 .hg-categories-page {
   background-color: #fff;
 
@@ -56,6 +58,9 @@
         }
       }
     }
-
   }
+}
+
+.search-popup {
+  @include search-popup;
 }
