@@ -128,6 +128,10 @@
   .hg-selected-answer {
     color: #fff !important;
     background: #8419FF;
+    .list-number {
+      color: #fff !important;
+      opacity: 1 !important;
+    }
   }
   .hg-wrong-answer {
     color: #fff !important;
@@ -136,6 +140,10 @@
   .hg-correct-answer {
     color: #fff !important;
     background: #2EE56B;
+    .list-number {
+      color: #fff !important;
+      opacity: 1 !important;
+    }
   }
   .hg-actions-btns-content {
     padding: 0 16px;
