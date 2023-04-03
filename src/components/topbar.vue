@@ -61,7 +61,6 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-
 const props = defineProps({
   tabs: {
     type: Array,
