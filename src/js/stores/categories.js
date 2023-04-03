@@ -15,15 +15,7 @@ export const useCategoryStore = defineStore("category", () => {
   const categoryAnswersStore = useCategoryAnswerStore();
 
   const categoriesData = computed(() => categories.value.map(c => createCategoriesDataEntry(c)));
-  const searchedCategoriesData = computed(() =>
-    searchedCategories.value
-      .map(c => createCategoriesDataEntry(c))
-      .sort((a, b) => {
-        const aClass = a.attributes.category_class.data.attributes.name[0];
-        const bClass = b.attributes.category_class.data.attributes.name[0];
-        return aClass - bClass;
-      }),
-  );
+  const searchedCategoriesData = computed(() => searchedCategories.value.map(c => createCategoriesDataEntry(c)));
   const categoryData = computed(() => category.value);
 
   const getCategories = async searchStr => {
