@@ -50,7 +50,7 @@
 
         <div class="input-wrapper">
           <f7-input v-model:value="searchStr" type="text" placeholder="Enter the keyword" />
-          <img class="input-icon" src="@/assets/icons/arrow-right.svg" alt="" />
+          <!--          <img class="input-icon" src="@/assets/icons/arrow-right.svg" alt="" />-->
         </div>
 
         <div v-if="!searchStr" class="keywords">
@@ -72,9 +72,6 @@
             @click="goToQuestions(category.id)"
           >
             <template #title>
-              <span class="classes-subtitle"
-                >{{ category.attributes.category_class.data.attributes.name }} classes</span
-              >
               <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
             </template>
 
