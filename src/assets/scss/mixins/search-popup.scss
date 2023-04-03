@@ -37,9 +37,9 @@
     }
 
     .input {
+      border-bottom: 1px solid #E4E4E4;
       &::after {
-        background-color: #E4E4E4;
-        transform: none;
+        display: none;
       }
     }
 
@@ -57,12 +57,18 @@
     }
 
     .keyword {
+      all: unset;
       padding: 10px;
       font-weight: 500;
       font-size: 12px;
       line-height: 14px;
-      background: #F1E5FF;
+      background-color: #f1e5ff;
       border-radius: 6px;
+      transition: background-color 0.3s ease-in-out;
+
+      &.active {
+        background: #d8b3ff;
+      }
     }
   }
 }
