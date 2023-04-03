@@ -19,7 +19,7 @@ import { f7, f7ready } from "framework7-vue";
 import routes from "../js/routes.js";
 import MainMenu from "./main-menu.vue";
 import cordovaApp from "@/js/cordova-app";
-import Loading from '@/components/loading.vue'
+import Loading from "@/components/loading.vue";
 const f7params = {
   name: "Math App", // App name
   theme: "auto", // Automatic theme detection
@@ -54,11 +54,10 @@ onMounted(() => {
     cordovaApp.init(f7);
   });
   setTimeout(() => {
-    loaded.value = true
-  }, 7000)
+    loaded.value = true;
+  }, 7000);
   addGmapsScript();
 });
-
 </script>
 
 <style>

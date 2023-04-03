@@ -1,6 +1,6 @@
-import { ref, customRef } from "vue";
+import { customRef, ref } from "vue";
 
-const debounce = (fn, delay = 0, immediate = false) => {
+const debounce = (fn, delay = 1000, immediate = false) => {
   let timeout;
   return (...args) => {
     if (immediate && !timeout) fn(...args);
@@ -14,7 +14,7 @@ const debounce = (fn, delay = 0, immediate = false) => {
 
 const useDebouncedRef = (initialValue, delay, immediate) => {
   const state = ref(initialValue);
-  const debouncedRef = customRef((track, trigger) => ({
+  return customRef((track, trigger) => ({
     get() {
       track();
       return state.value;
@@ -28,8 +28,6 @@ const useDebouncedRef = (initialValue, delay, immediate) => {
       immediate,
     ),
   }));
-
-  return debouncedRef;
 };
 
 export default useDebouncedRef;

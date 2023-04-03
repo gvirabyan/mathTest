@@ -1,3 +1,5 @@
+@import "@/assets/scss/mixins/search-popup.scss";
+
 .hg-categories-page {
   background-color: #fff;
 
@@ -56,6 +58,41 @@
         }
       }
     }
+  }
+}
 
+.search-popup {
+  @include search-popup;
+
+  .list {
+    .item-content {
+      padding: 0;
+    }
+
+    .item-inner {
+      align-items: flex-end;
+    }
+
+    .item-title {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 22px;
+
+      .classes-subtitle {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+      }
+    }
+
+    .item-after {
+      p {
+        margin: 0;
+        color: #8419ff;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <f7-page class="hg-practice-page" name="player-vs-machine">
     <top-bar :tabs="practiceTabs">
-      <template #title>Topics</template>
+      <template #title>Practice</template>
       <template #subtitle>Today's Goal</template>
       <template #subtitle-data>20 questions</template>
     </top-bar>

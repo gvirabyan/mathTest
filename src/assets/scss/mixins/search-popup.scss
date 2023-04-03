@@ -1,0 +1,74 @@
+@mixin search-popup {
+  font-family: Rubik, sans-serif;
+
+  .page-content {
+    padding: 24px;
+    background-color: #fff;
+
+    .close-btn-wrapper {
+      margin-bottom: 34px;
+    }
+
+    .close-btn {
+      all: unset;
+      display: grid;
+      place-items: center;
+      width: 12px;
+      height: 12px;
+    }
+
+    .title {
+      margin: 0 auto 30px;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+
+      .input-icon {
+        position: absolute;
+        top: 5px;
+        right: 0;
+      }
+    }
+
+    .input {
+      border-bottom: 1px solid #E4E4E4;
+      &::after {
+        display: none;
+      }
+    }
+
+    input {
+      padding-bottom: 8px;
+      color: rgba(#212121, 0.5);
+      font-size: 14px;
+      line-height: 17px;
+    }
+
+    .keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .keyword {
+      all: unset;
+      padding: 10px;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 14px;
+      background-color: #f1e5ff;
+      border-radius: 6px;
+      transition: background-color 0.3s ease-in-out;
+
+      &.active {
+        background: #d8b3ff;
+      }
+    }
+  }
+}
