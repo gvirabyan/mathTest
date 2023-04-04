@@ -15,7 +15,11 @@
       <template #subtitle-data>20 questions</template>
     </top-bar>
 
-    <component :is="currentActivityComponent" />
+    <main class="activity-tab-content">
+      <Transition name="fade">
+        <component :is="currentActivityComponent" />
+      </Transition>
+    </main>
 
     <!--    <active-categories-popup />-->
 
@@ -152,12 +156,15 @@ import { useAuthStore } from "@/js/stores/auth";
 // import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
+import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import MyStatus from "@/components/activity-my-status.vue";
-import TopBar from "@/components/topbar.vue";
 
-const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
-const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
+import TopList from "@/components/activity-my-toplist.vue";
+import MyAnswers from "@/components/activity-my-answers.vue";
+
+// const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
+// const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 defineProps({
   f7route: {
@@ -221,4 +228,14 @@ const getAllData = async () => {
 
 <style lang="scss">
 @import "../assets/scss/pages/activity";
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
