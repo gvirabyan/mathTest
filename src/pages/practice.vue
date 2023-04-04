@@ -23,8 +23,8 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import TopBar from "@/components/topbar.vue";
 
 const props = defineProps({
-  f7router: Object,
-  f7route: Object,
+  f7router: { type: Object, default: () => {} },
+  f7route: { type: Object, default: () => {} },
 });
 
 const { setQuizMode } = useQuizStore();

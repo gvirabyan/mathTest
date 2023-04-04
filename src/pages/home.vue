@@ -1,21 +1,27 @@
 <template>
-  <f7-page class-name="hg-home-page" name="home">
-    <h1 className="welcome-message">Welcome</h1>
-    <img className="points-left" src="@/assets/images/pointsLeft.png" />
-    <div className="titles-block">
-      <h4 className="small-title">Play the games</h4>
-      <h3 className="medium-title">Improve your skills</h3>
-      <h2 className="big-title">Be the first in the World</h2>
+  <f7-page class="hg-home-page" name="home">
+    <h1 class="welcome-message">Welcome</h1>
+
+    <img class="points-left" src="@/assets/images/pointsLeft.png" alt="points left" />
+
+    <div class="titles-block">
+      <h4 class="small-title">Play the games</h4>
+      <h3 class="medium-title">Improve your skills</h3>
+      <h2 class="big-title">Be the first in the World</h2>
     </div>
-    <div className="footer">
+
+    <div class="footer">
       <f7-button class="button" href="/register/"> Start playing</f7-button>
     </div>
   </f7-page>
 </template>
 
 <script setup>
-const props = defineProps({
-  f7router: Object,
+defineProps({
+  f7router: {
+    type: Object,
+    default: () => {},
+  },
 });
 </script>
 
