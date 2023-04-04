@@ -146,10 +146,10 @@
 
 <script setup>
 import { ref, defineAsyncComponent, markRaw } from "vue";
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import { useCategoryStore } from "@/js/stores/categories";
-import { useQuestionsStore } from "@/js/stores/questions";
+// import { useCategoryStore } from "@/js/stores/categories";
+// import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
@@ -167,10 +167,10 @@ defineProps({
 });
 
 const authStore = useAuthStore();
-const categoryStore = useCategoryStore();
-const questionsStore = useQuestionsStore();
+// const categoryStore = useCategoryStore();
+// const questionsStore = useQuestionsStore();
 
-// const { user } = storeToRefs(authStore);
+const { user } = storeToRefs(authStore);
 // const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
 
@@ -196,8 +196,8 @@ const isLoading = ref(false);
 const currentActivityComponent = ref(null);
 
 const { getUser } = authStore;
-const { getCategories, getLastCategory, getPastCategories } = categoryStore;
-const { getAnsweredQuestionsCount } = questionsStore;
+// const { getCategories, getLastCategory, getPastCategories } = categoryStore;
+// const { getAnsweredQuestionsCount } = questionsStore;
 
 const setActiveComponent = id => {
   currentActivityComponent.value = activityTabs.value.find(t => t.id === id).component;
@@ -207,7 +207,13 @@ const getAllData = async () => {
   isLoading.value = true;
 
   await delay();
-  await Promise.all([getUser(), getLastCategory(), getPastCategories(), getAnsweredQuestionsCount(), getCategories()]);
+  await Promise.all([
+    getUser(),
+    // getLastCategory(),
+    // getPastCategories(),
+    // getAnsweredQuestionsCount(),
+    // getCategories()
+  ]);
 
   isLoading.value = false;
 };
