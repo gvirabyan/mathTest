@@ -1,6 +1,10 @@
 <template>
   <div class="single-list">
-    <div class="back-block">
+    <div
+      :class="{
+        'back-block': true,
+        'small-height': smallHeight
+      }">
       <f7-row
         @click="goBack"
         class="display-inline-flex align-items-center">
@@ -8,54 +12,64 @@
         <p>Back to the Top List</p>
       </f7-row>
     </div>
+    <div
+      :class="{
+        'scroll-page' : smallHeight,
+      }">
+      <f7-block v-if="category">
+        <f7-row class="justify-content-space-between">
+          <f7-block-title>
+            {{category.title}}
+          </f7-block-title>
+          <p v-if="category.place" class="place-txt">
+            {{category.place}}
+            place
+          </p>
+        </f7-row>
 
-    <f7-block v-if="category">
-      <f7-row class="justify-content-space-between">
-        <f7-block-title>
-          {{category.title}}
-        </f7-block-title>
-        <p v-if="category.place" class="place-txt">
-          {{category.place}}
-          place
-        </p>
-      </f7-row>
+        <f7-row class="justify-content-space-between">
+          <p v-if="category.place" class="from-txt">
+            {{category.from}}
+          </p>
+          <p
+              v-else
+              class="update-txt"
+          >
+            Please <a @click.stop href="/profile/">update</a> information to see your rank
+          </p>
+          <p class="place-txt">
+            {{ category.points }}
+          </p>
+        </f7-row>
+      </f7-block>
 
-      <f7-row class="justify-content-space-between">
-        <p v-if="category.place" class="from-txt">
-          {{category.from}}
-        </p>
-        <p
-            v-else
-            class="update-txt"
-        >
-          Please <a @click.stop href="/profile/">update</a> information to see your rank
-        </p>
-        <p class="place-txt">
-          {{ category.points }}
-        </p>
-      </f7-row>
-    </f7-block>
-
-    <f7-list v-if="topList.length" class="top-list">
-      <f7-list-item
-          v-for="({ id, username, points }, index) in topList"
-          :key="`list-item_${index + 1}`"
-          :class="{ 'my-score': id === user.id, last: index === topList.length - 1 }"
+      <f7-list
+        v-if="topList.length"
+       :class="{
+          'top-list': true,
+          'list-scroll': !smallHeight,
+        }"
       >
-        <template #before-title>
-          <span class="inline-block number mr-8">{{ `${index + 1}.` }}</span>
-        </template>
+        <f7-list-item
+            v-for="({ id, username, points }, index) in topList"
+            :key="`list-item_${index + 1}`"
+            :class="{ 'my-score': id === user.id, last: index === topList.length - 1 }"
+        >
+          <template #before-title>
+            <span class="inline-block number mr-8">{{ `${index + 1}.` }}</span>
+          </template>
 
-        <template #title>
-          <span class="inline-block name">{{ username }}</span>
+          <template #title>
+            <span class="inline-block name">{{ username }}</span>
 
-        </template>
+          </template>
 
-        <template #after>
-          <span class="points">{{ points }}</span>
-        </template>
-      </f7-list-item>
-    </f7-list>
+          <template #after>
+            <span class="points">{{ points }}</span>
+          </template>
+        </f7-list-item>
+      </f7-list>
+    </div>
   </div>
 </template>
 
@@ -64,7 +78,7 @@
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
 import { storeToRefs } from "pinia";
-import {watch} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 const props = defineProps({
   category: {
     type: Object
@@ -72,15 +86,31 @@ const props = defineProps({
 })
 const emit = defineEmits(['empty-category']);
 
+onMounted(() => {
+  onOrientationChange();
+  window.addEventListener('orientationchange', onOrientationChange);
+})
+
+onUnmounted(() => {
+  window.removeEventListener('orientationchange', onOrientationChange);
+})
+
+const smallHeight = ref(false)
+
+const onOrientationChange = () => {
+  if(window.screen.height < 501) {
+    smallHeight.value = true;
+  }
+}
+
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const topListStore = useTopList();
-const { topList } = storeToRefs(topListStore);
+const topList = computed( () => topListStore.topList);
 const { getTopList } = topListStore;
 watch(
   () => props.category,
   async (category) => {
-    console.log(topList.value, 3693)
     if(category) {
       if(category.key === 'world') {
         await getTopList(category.key, "");
@@ -90,16 +120,6 @@ watch(
         await getTopList(category.key, user.value[category.key]);
       }
     }
-  },
-  {
-    deep: true,
-    immediate: true
-  }
-)
-watch(
-  () => topList.value,
-  async (v) => {
-    console.log(v, 2356)
   },
   {
     deep: true,
@@ -117,6 +137,9 @@ const goBack = () => {
   .back-block {
     padding-top: 30px;
     opacity: 0.5;
+    &.small-height {
+      padding-top: 15px;
+    }
     p {
       all: unset;
       margin-left: 10px;
@@ -136,6 +159,7 @@ const goBack = () => {
     border-radius: 8px;
     .block-title {
       all: unset;
+      line-height: 17px;
       font-family: 'Rubik';
       font-style: normal;
       font-weight: 500;
@@ -175,6 +199,9 @@ const goBack = () => {
       color: #8419ff;
     }
     .from-txt {
+      margin-bottom: 0;
+      margin-top: 10px;
+      line-height: 12px;
       font-family: 'Rubik';
       font-style: normal;
       font-weight: 400;
@@ -185,6 +212,14 @@ const goBack = () => {
   }
   .top-list {
     margin-top: 10px;
+    &.list-scroll {
+      ul {
+        overflow: auto;
+        margin-right: -24px;
+        padding-right: 24px;
+        height: calc(100vh - 418px);
+      }
+    }
     ul {
       &::before {
         display: none;
@@ -230,6 +265,15 @@ const goBack = () => {
           }
         }
       }
+    }
+  }
+  .scroll-page {
+    overflow: auto;
+    margin-right: -24px;
+    padding-right: 24px;
+    height: calc(100vh - 235px);
+    .block {
+      margin: 10px 0;
     }
   }
 }

@@ -1,11 +1,8 @@
 <template>
   <f7-page name="top-lists" class="top-lists">
   <top-bar :tabs="navbarLinks" >
-    <template #title>Activity</template>
-    <template #subtitle>Today's Goal</template>
     <template #subtitle-data>20 questions</template>
   </top-bar>
-
     <div v-if="category === null" class="blocks">
       <f7-block
         v-for="(list, index) in linksList"
@@ -53,7 +50,8 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import TopBar from "@/components/topbar.vue";
 import TopListSingle from "@/components/TopListSingle.vue";
 import { useTopList } from "@/js/stores/top-list";
-import {ref, watch, onMounted, reactive} from "vue";
+import {ref, watch, reactive, onMounted} from "vue";
+
 const navbarLinks = [
   {
     id: 'status',
@@ -137,6 +135,7 @@ const emptyCategory = () => {
   topListStore.emptyTopList();
   category.value =  null
 }
+
 </script>
 
 <style lang="scss">
@@ -173,6 +172,7 @@ const emptyCategory = () => {
         }
         .block-title {
           all: unset;
+          line-height: 17px;
           font-family: 'Rubik';
           font-style: normal;
           font-weight: 500;
@@ -212,10 +212,13 @@ const emptyCategory = () => {
           color: #8419ff;
         }
         .from-txt {
+          margin-bottom: 0;
+          margin-top: 10px;
           font-family: 'Rubik';
           font-style: normal;
           font-weight: 400;
           font-size: 10px;
+          line-height: 12px;
           color: #212121;
           opacity: 0.9;
         }
