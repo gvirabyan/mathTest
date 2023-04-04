@@ -11,7 +11,7 @@ export const useTopList = defineStore("topList", () => {
   const myStats = ref(null);
 
   const emptyTopList = () => {
-    topList.value = []
+    topList.value = [];
   };
 
   const getTopList = (filter = "", value = "") => {
@@ -23,13 +23,13 @@ export const useTopList = defineStore("topList", () => {
     } else {
       url = `get-points?filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     }
-    topList.value = []
+    topList.value = [];
 
     return api
       .get(url)
       .then(res => res.json())
-      .then(({ results, pagination }) => {
-        topList.value.push(...results);
+      .then(data => {
+        topList.value.push(...data);
       });
   };
 
@@ -46,7 +46,7 @@ export const useTopList = defineStore("topList", () => {
     return api
       .get(`get-rankings`)
       .then(res => res.json())
-      .then(({rankings}) => rankings);
+      .then(({ rankings }) => rankings);
   };
 
   return {
