@@ -1,5 +1,5 @@
 <template>
-  <div class="top-bar">
+  <div class="top-bar" position="top">
     <div class="display-flex justify-content-space-between">
       <h1 class="top-bar-title"><slot name="title"></slot></h1>
 

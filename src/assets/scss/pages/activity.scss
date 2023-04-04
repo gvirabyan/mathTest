@@ -1,11 +1,12 @@
 .hg-dashboard-content {
+  background-color: #fff;
   .list {
     .item-content {
       height: 60px;
     }
   }
-
   .page-content {
+    overflow: unset;
     display: flex;
     flex-direction: column;
   }
