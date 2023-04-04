@@ -27,7 +27,7 @@
             v-else
             class="update-txt"
           >
-            Please <a @click.stop href="/profile/">update</a> information to see your rank
+            Please <a @click.stop href="/profile/">update</a> your {{list.fieldName}}
           </p>
           <p class="points-txt">
             {{list.points}}
@@ -48,9 +48,11 @@
 <script setup>
 import BottomMenu from "@/components/bottom-menu.vue";
 import TopBar from "@/components/topbar.vue";
-import TopListSingle from "@/components/TopListSingle.vue";
+import TopListSingle from "@/components/top-list-single.vue";
 import { useTopList } from "@/js/stores/top-list";
+import { useAuthStore } from "@/js/stores/auth";
 import {ref, watch, reactive, onMounted} from "vue";
+import {storeToRefs} from "pinia/dist/pinia";
 
 const navbarLinks = [
   {
@@ -71,6 +73,10 @@ defineProps({
   f7route: Object,
 });
 
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
 const category = ref(null);
 
 const topListStore = useTopList();
@@ -84,27 +90,27 @@ onMounted(async() => {
 const linksList = reactive([
   {
     title: "In your Class",
-    text: 'Last update: 2023-03-18 11:43',
+    fieldName: 'class',
     key: 'course'
   },
   {
     title: "In your School",
-    text: 'Last update: 2023-03-18 11:43',
+    fieldName: 'school',
     key: 'institution'
   },
   {
     title: "In your City",
-    text: 'Last update: 2023-03-18 11:43',
+    fieldName: 'city',
     key: 'city'
   },
   {
     title: "In your Country",
-    text: 'Last update: 2023-03-18 11:43',
+    fieldName: 'country',
     key: 'country'
   },
   {
     title: "In World",
-    text: 'Last update: 2023-03-18 11:43',
+    fieldName: 'world',
     key: 'world'
   },
 ]);
@@ -128,7 +134,11 @@ watch(
 )
 
 const chooseList = (title) => {
-  category.value =  linksList.find( l => l.title === title)
+  let chosen = linksList.find( l => l.title === title)
+  if(user.value[chosen.key] || chosen.key === 'world') {
+    category.value =  chosen
+  }
+
 }
 
 const emptyCategory = () => {

@@ -21,21 +21,15 @@
           <f7-block-title>
             {{category.title}}
           </f7-block-title>
-          <p v-if="category.place" class="place-txt">
+          <p class="place-txt">
             {{category.place}}
             place
           </p>
         </f7-row>
 
         <f7-row class="justify-content-space-between">
-          <p v-if="category.place" class="from-txt">
+          <p  class="from-txt">
             {{category.from}}
-          </p>
-          <p
-              v-else
-              class="update-txt"
-          >
-            Please <a @click.stop href="/profile/">update</a> information to see your rank
           </p>
           <p class="place-txt">
             {{ category.points }}

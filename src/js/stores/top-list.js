@@ -14,14 +14,14 @@ export const useTopList = defineStore("topList", () => {
     topList.value = []
   };
 
-  const getTopList = (filter = "", value = "", page = 1) => {
+  const getTopList = (filter = "", value = "") => {
     let url;
     if (filter === "world") {
-      url = `get-points?sort=points:desc&pagination[page]=${page}&pagination[pageSize]=100`;
+      url = `get-points?sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     } else if (filter === "course") {
-      url = `get-points?filters[institution]=${user.institution.place_id}&filters[${filter}]=${value}&sort=points:desc&pagination[page]=${page}&pagination[pageSize]=100`;
+      url = `get-points?filters[institution]=${user.institution.place_id}&filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     } else {
-      url = `get-points?filters[${filter}]=${value}&sort=points:desc&pagination[page]=${page}&pagination[pageSize]=100`;
+      url = `get-points?filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     }
     topList.value = []
 
