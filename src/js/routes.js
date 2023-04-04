@@ -1,7 +1,6 @@
 import HomePage from "../pages/home.vue";
 import Activity from "../pages/activity.vue";
-import LoadingPage from "../components/loading.vue";
-import RequestAndLoad from "../pages/request-and-load.vue";
+// import LoadingPage from "../components/loading.vue";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
@@ -183,68 +182,8 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
-    path: "/start/",
-    asyncComponent: () => import("../pages/start.vue"),
-  },
-  {
     path: "/about/",
     asyncComponent: () => import("../pages/about.vue"),
-  },
-  {
-    path: "/form/",
-    asyncComponent: () => import("../pages/form.vue"),
-  },
-  {
-    path: "/dynamic-route/blog/:blogId/post/:postId/",
-    asyncComponent: () => import("../pages/dynamic-route.vue"),
-  },
-  {
-    path: "/request-and-load/user/:userId/",
-    async: function ({ router, to, resolve }) {
-      // App instance
-      const app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // User ID from request
-      // eslint-disable-next-line no-unused-vars
-      const userId = to.params.userId;
-
-      // Simulate Ajax Request
-      setTimeout(function () {
-        // We got user data from request
-        const user = {
-          firstName: "Vladimir",
-          lastName: "Kharlampidi",
-          about: "Hello, i am creator of Framework7! Hope you like it!",
-          links: [
-            {
-              title: "Framework7 Website",
-              url: "http://framework7.io",
-            },
-            {
-              title: "Framework7 Forum",
-              url: "http://forum.framework7.io",
-            },
-          ],
-        };
-        // Hide Preloader
-        app.preloader.hide();
-
-        // Resolve route to load page
-        resolve(
-          {
-            component: RequestAndLoad,
-          },
-          {
-            props: {
-              user: user,
-            },
-          },
-        );
-      }, 1000);
-    },
   },
   {
     path: "(.*)",
