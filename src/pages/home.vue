@@ -1,10 +1,7 @@
 <template>
-  <f7-page className="hg-home-page" name="home">
+  <f7-page class-name="hg-home-page" name="home">
     <h1 className="welcome-message">Welcome</h1>
-    <img
-        className="points-left"
-        src="@/assets/images/pointsLeft.png"
-    >
+    <img className="points-left" src="@/assets/images/pointsLeft.png" />
     <div className="titles-block">
       <h4 className="small-title">Play the games</h4>
       <h3 className="medium-title">Improve your skills</h3>

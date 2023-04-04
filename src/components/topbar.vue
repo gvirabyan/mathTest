@@ -4,7 +4,7 @@
       <h1 class="top-bar-title"><slot name="title"></slot></h1>
 
       <div class="top-bar-button-wrapper">
-        <f7-button class="top-bar-btn">
+        <f7-button class="top-bar-btn" @click="emit('show-popup')">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 16L20 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path
@@ -68,7 +68,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["tab-selected"]);
+const emit = defineEmits(["tab-selected", "show-popup"]);
 
 const tabsResult = ref(props.tabs);
 const topBarTabs = ref(null);

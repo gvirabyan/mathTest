@@ -75,7 +75,7 @@ export const useAuthStore = defineStore("auth", () => {
 
           return { status: "success" };
         } else {
-            return { status: "error", error: data.error };
+          return { status: "error", error: data.error };
         }
       });
   };

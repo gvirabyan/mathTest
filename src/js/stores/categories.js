@@ -6,6 +6,7 @@ import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 export const useCategoryStore = defineStore("category", () => {
   const categories = ref([]);
+  const searchedCategories = ref([]);
   const category = ref({});
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
@@ -13,39 +14,29 @@ export const useCategoryStore = defineStore("category", () => {
   const authStore = useAuthStore();
   const categoryAnswersStore = useCategoryAnswerStore();
 
-  const categoriesData = computed(() => {
-    return categories.value.map(c => {
-      const questionsArr = c.attributes.questions.data;
-
-      const userAnswersArr = questionsArr
-        .map(q => {
-          if (!q.attributes.user_answers.data.length) {
-            return [];
-          }
-
-          return q.attributes.user_answers.data.filter(
-            d => d.attributes.users_permissions_user.data?.id === authStore.user?.id,
-          );
-        })
-        .flat();
-
-      return {
-        ...c,
-        questions_amount: questionsArr.length,
-        user_answers_amount: userAnswersArr.length > questionsArr.length ? questionsArr.length : userAnswersArr.length,
-      };
-    });
-  });
+  const categoriesData = computed(() => categories.value.map(c => createCategoriesDataEntry(c)));
+  const searchedCategoriesData = computed(() => searchedCategories.value.map(c => createCategoriesDataEntry(c)));
   const categoryData = computed(() => category.value);
 
-  const getCategories = async () => {
+  const getCategories = async searchStr => {
+    if (searchStr && searchedCategories.value.length) {
+      searchedCategories.value = [];
+    }
+
+    const url = searchStr
+      ? `categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user&populate[3]=category_class&filters[name][$containsi]=${searchStr}`
+      : "categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user";
+
     api
-      .get(
-        "categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user",
-      )
+      .get(url)
       .then(res => res.json())
       .then(data => {
-        categories.value = data.data;
+        if (searchStr) {
+          searchedCategories.value = data?.data;
+          return;
+        }
+
+        categories.value = data?.data;
       });
   };
 
@@ -95,17 +86,46 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
+  const createCategoriesDataEntry = category => {
+    const questionsArr = category.attributes.questions.data;
+
+    const userAnswersArr = questionsArr
+      .map(q => {
+        if (!q.attributes.user_answers.data.length) {
+          return [];
+        }
+
+        return q.attributes.user_answers.data.filter(
+          d => d.attributes.users_permissions_user.data?.id === authStore.user?.id,
+        );
+      })
+      .flat();
+
+    return {
+      ...category,
+      questions_amount: questionsArr.length,
+      user_answers_amount: userAnswersArr.length > questionsArr.length ? questionsArr.length : userAnswersArr.length,
+    };
+  };
+
+  const clearSearchedCategories = () => {
+    searchedCategories.value = [];
+  };
+
   return {
     categories,
+    searchedCategories,
     lastCategoryData,
     pastCategoriesData,
     category,
     categoriesData,
+    searchedCategoriesData,
     categoryData,
     getCategories,
     getCategoriesByCategoryClass,
     getCategory,
     getLastCategory,
     getPastCategories,
+    clearSearchedCategories,
   };
 });
