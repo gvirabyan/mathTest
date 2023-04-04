@@ -191,6 +191,9 @@ const emptyCategory = () => {
           color: #212121;
         }
         .update-txt {
+          margin-bottom: 0;
+          margin-top: 10px;
+          line-height: 14px;
           font-family: 'Rubik';
           font-style: normal;
           font-weight: 300;
