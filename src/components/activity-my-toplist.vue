@@ -1,10 +1,10 @@
 <template>
   <div
-    name="top-lists"
     :class="{
-      'top-lists': true,
       'scroll-list': category === null,
     }"
+    class="top-lists"
+    name="top-lists"
   >
     <div v-if="category === null" class="blocks">
       <f7-block
@@ -43,12 +43,13 @@ import { ref, watch, reactive, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
-import delay from "@/js/helpers/delay";
 import TopListSingle from "@/components/top-list-single.vue";
-import { value } from "dom7";
 
 defineProps({
-  f7route: { type: Object, default: () => {} },
+  f7route: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const authStore = useAuthStore();
@@ -59,6 +60,7 @@ const category = ref(null);
 const topListStore = useTopList();
 
 const rankings = ref(null);
+const isLoading = ref(false);
 
 onMounted(async () => {
   rankings.value = await topListStore.getRankings();
@@ -124,100 +126,5 @@ const emptyCategory = () => {
 </script>
 
 <style lang="scss">
-.top-lists {
-  background: #fff;
-  padding: 0;
-  flex: 1;
-  &.scroll-list {
-    overflow: auto;
-  }
-  .blocks {
-    //height: calc(100vh - 246px);
-    padding: 10px 24px 0 24px;
-    .block {
-      background: rgba(216, 179, 255, 0.2);
-      padding: 24px 20px;
-      margin: 20px 0;
-      border-radius: 8px;
-      &.menu-item_1 {
-        background: rgba(241, 229, 255, 0.2);
-      }
-      &.menu-item_2 {
-        background: rgba(228, 228, 228, 0.2);
-      }
-      &.menu-item_3 {
-        background: rgba(241, 229, 255, 0.2);
-      }
-      &.menu-item_4 {
-        background: rgba(216, 179, 255, 0.2);
-      }
-      &.menu-item_5 {
-        background: rgba(241, 229, 255, 0.2);
-      }
-      .block-title {
-        all: unset;
-        line-height: 17px;
-        font-family: "Rubik";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        align-items: center;
-        color: #212121;
-      }
-      .update-txt {
-        margin-bottom: 0;
-        margin-top: 10px;
-        line-height: 14px;
-        font-family: "Rubik";
-        font-style: normal;
-        font-weight: 300;
-        font-size: 10px;
-        color: #212121;
-        opacity: 0.9;
-        a {
-          color: inherit;
-          opacity: inherit;
-          text-decoration: revert;
-          text-underline: #212121;
-          font-weight: bold;
-        }
-      }
-      .place-txt {
-        margin: 0;
-        font-family: "Rubik";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        color: #8419ff;
-      }
-      .points-txt {
-        margin: 0;
-        font-family: "Rubik";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        color: #8419ff;
-      }
-      .from-txt {
-        margin-bottom: 0;
-        margin-top: 10px;
-        font-family: "Rubik";
-        font-style: normal;
-        font-weight: 400;
-        font-size: 10px;
-        line-height: 12px;
-        color: #212121;
-        opacity: 0.9;
-      }
-    }
-  }
-  //}
-  //.menu {
-  //  position: fixed;
-  //  bottom: 0;
-  //  .toolbar {
-  //    width: 100vw;
-  //  }
-  //}
-}
+@import "@/assets/scss/components/activity-my-toplist.scss";
 </style>

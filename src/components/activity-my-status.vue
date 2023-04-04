@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-tab-content">My Status</div>
+  <div class="my-status">My Status</div>
 </template>
 
 <script setup>
@@ -10,8 +10,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss">
-.activity-tab-content {
-  flex: 1;
-}
-</style>
+<style lang="scss"></style>

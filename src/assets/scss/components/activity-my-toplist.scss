@@ -1,0 +1,100 @@
+.top-lists {
+  background: #fff;
+  padding: 0;
+
+  &.scroll-list {
+    overflow: auto;
+  }
+
+  .blocks {
+    .block {
+      background: rgba(216, 179, 255, 0.2);
+      padding: 24px 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+
+      &.menu-item_1 {
+        margin-top: 0;
+        background: rgba(241, 229, 255, 0.2);
+      }
+
+      &.menu-item_2 {
+        background: rgba(228, 228, 228, 0.2);
+      }
+
+      &.menu-item_3 {
+        background: rgba(241, 229, 255, 0.2);
+      }
+
+      &.menu-item_4 {
+        background: rgba(216, 179, 255, 0.2);
+      }
+
+      &.menu-item_5 {
+        margin-bottom: 0;
+        background: rgba(241, 229, 255, 0.2);
+      }
+
+      .block-title {
+        all: unset;
+        line-height: 17px;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        align-items: center;
+        color: #212121;
+      }
+
+      .update-txt {
+        margin-bottom: 0;
+        margin-top: 10px;
+        line-height: 14px;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 10px;
+        color: #212121;
+        opacity: 0.9;
+
+        a {
+          color: inherit;
+          opacity: inherit;
+          text-decoration: revert;
+          text-underline: #212121;
+          font-weight: bold;
+        }
+      }
+
+      .place-txt {
+        margin: 0;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        color: #8419ff;
+      }
+
+      .points-txt {
+        margin: 0;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        color: #8419ff;
+      }
+
+      .from-txt {
+        margin-bottom: 0;
+        margin-top: 10px;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+        color: #212121;
+        opacity: 0.9;
+      }
+    }
+  }
+}

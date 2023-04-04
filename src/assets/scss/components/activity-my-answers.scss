@@ -1,0 +1,24 @@
+.my-answers {
+  padding-bottom: 26px;
+  text-align: center;
+
+  .title {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+  }
+
+  .last-update-info {
+    margin-top: 9px;
+    margin-bottom: 20px;
+    color: rgba(#212121, 0.9);
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+}
