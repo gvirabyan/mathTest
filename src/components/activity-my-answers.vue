@@ -6,16 +6,51 @@
 
     <div class="stats">
       <custom-gauge
-        v-for="(item, i) in customGaugeData"
-        :key="`gauge_${i + 1}`"
         :width="customGaugeOptions.width"
         :height="customGaugeOptions.height"
         :radius="customGaugeOptions.radius"
         :stroke-width="customGaugeOptions.strokeWidth"
-        :color="item.color"
-        ><template #percent>{{ item.percent }}</template>
-        <template #amount>{{ item.amount }}</template>
-        <template #info>{{ item.info }}</template></custom-gauge
+        color="#8419FF"
+        :percent="answersPercent"
+        ><template #percent>{{ answersPercent }}</template>
+        <template #amount>{{ answersStats.questions_left_count }}</template>
+        <template #info>of {{ answersStats.questions_count }} questions left</template></custom-gauge
+      >
+
+      <custom-gauge
+        :width="customGaugeOptions.width"
+        :height="customGaugeOptions.height"
+        :radius="customGaugeOptions.radius"
+        :stroke-width="customGaugeOptions.strokeWidth"
+        color="#2EE56B"
+        :percent="correctAnswersPercent"
+        ><template #percent>{{ correctAnswersPercent }}</template>
+        <template #amount>{{ answersStats.correct_answers }}</template>
+        <template #info>correct answers</template></custom-gauge
+      >
+
+      <custom-gauge
+        :width="customGaugeOptions.width"
+        :height="customGaugeOptions.height"
+        :radius="customGaugeOptions.radius"
+        :stroke-width="customGaugeOptions.strokeWidth"
+        color="#FF0000"
+        :percent="answersPercent"
+        ><template #percent>{{ wrongAnswersPercent }}</template>
+        <template #amount>{{ answersStats.wrong_answers }}</template>
+        <template #info>wrong answers</template></custom-gauge
+      >
+
+      <custom-gauge
+        :width="customGaugeOptions.width"
+        :height="customGaugeOptions.height"
+        :radius="customGaugeOptions.radius"
+        :stroke-width="customGaugeOptions.strokeWidth"
+        color="#89838F"
+        :percent="skippedAnswers"
+        ><template #percent>{{ skippedAnswers }}</template>
+        <template #amount>{{ answersStats.skipped_answers }}</template>
+        <template #info>skipped answers</template></custom-gauge
       >
     </div>
   </div>
@@ -50,37 +85,6 @@ const wrongAnswersPercent = computed(() =>
   Math.round((answersStats.value.wrong_answers / answersStats.value.answers_count) * 100),
 );
 const skippedAnswers = computed(() => 100 - correctAnswersPercent.value - wrongAnswersPercent.value);
-
-const customGaugeData = computed(() => [
-  {
-    ...customGaugeOptions,
-    color: "#8419FF",
-    percent: answersPercent.value,
-    amount: answersStats.value.questions_left_count,
-    info: `of ${answersStats.value.questions_count} questions left`,
-  },
-  {
-    ...customGaugeOptions,
-    color: "#2EE56B",
-    percent: correctAnswersPercent.value,
-    amount: answersStats.value.correct_answers,
-    info: "correct answers",
-  },
-  {
-    ...customGaugeOptions,
-    color: "#FF0000",
-    percent: wrongAnswersPercent.value,
-    amount: answersStats.value.wrong_answers,
-    info: "wrong answers",
-  },
-  {
-    ...customGaugeOptions,
-    color: "#89838F",
-    percent: skippedAnswers.value,
-    amount: answersStats.value.skipped_answers,
-    info: "skipped answers",
-  },
-]);
 
 getAnswersStats();
 </script>
