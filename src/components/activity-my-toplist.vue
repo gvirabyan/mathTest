@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, watch, reactive, onMounted } from "vue";
+import {ref, watch, reactive, onMounted, onUnmounted} from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
@@ -65,6 +65,10 @@ const isLoading = ref(false);
 onMounted(async () => {
   rankings.value = await topListStore.getRankings();
 });
+
+onUnmounted(()=> {
+  alert(7)
+})
 
 const linksList = reactive([
   {

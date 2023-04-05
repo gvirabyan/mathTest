@@ -94,6 +94,8 @@ const smallHeight = ref(false)
 const onOrientationChange = () => {
   if(window.screen.height < 501) {
     smallHeight.value = true;
+  } else {
+    smallHeight.value = false;
   }
 }
 
@@ -127,13 +129,13 @@ const goBack = () => {
 
 <style lang="scss">
 .single-list {
-  padding: 0 24px;
+  //padding: 0 24px;
   .back-block {
-    padding-top: 30px;
+    //padding-top: 30px;
     opacity: 0.5;
-    &.small-height {
-      padding-top: 15px;
-    }
+    //&.small-height {
+    //  padding-top: 15px;
+    //}
     p {
       all: unset;
       margin-left: 10px;
@@ -205,7 +207,7 @@ const goBack = () => {
     }
   }
   .top-list {
-    margin-top: 10px;
+    margin: 0;
     &.list-scroll {
       ul {
         overflow: auto;
@@ -265,7 +267,7 @@ const goBack = () => {
     overflow: auto;
     margin-right: -24px;
     padding-right: 24px;
-    height: calc(100vh - 235px);
+    height: calc(100vh - 305px);
     .block {
       margin: 10px 0;
     }
