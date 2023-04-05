@@ -220,6 +220,9 @@ const goBack = () => {
       &::before {
         display: none;
       }
+      &::after {
+        display: none;
+      }
       .item-content {
         padding-left: 0;
         .item-inner {
