@@ -66,10 +66,6 @@ onMounted(async () => {
   rankings.value = await topListStore.getRankings();
 });
 
-onUnmounted(()=> {
-  alert(7)
-})
-
 const linksList = reactive([
   {
     title: "In your Class",
