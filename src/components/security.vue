@@ -3,18 +3,18 @@
     <f7-list form>
 
       <f7-list-input
-          v-model:value="userData.password"
+          v-model:value="userData.oldPassword"
           :type="showOldPassword ? 'text' : 'password'"
           name="password"
           :input-style="inputStyle"
           class="custom-list-input"
-          :error-message-force="!!error.password"
-          :error-message="error.password"
+          :error-message-force="!!error.oldPassword"
+          :error-message="error.oldPassword"
           label="Your password"
       >
         <template #media>
           <div class="eye-icons" @click="showOldPassword = !showOldPassword">
-            <img v-if="showPassword" src="@/assets/icons/eye.svg" alt="eye" />
+            <img v-if="showOldPassword" src="@/assets/icons/eye.svg" alt="eye" />
             <img v-else src="@/assets/icons/eyeline.svg" alt="eyeline" />
           </div>
         </template>
@@ -24,7 +24,6 @@
           v-model:value="userData.password"
           :type="showPassword ? 'text' : 'password'"
           name="password"
-          :input-style="inputStyle"
           class="custom-list-input"
           :error-message-force="!!error.password"
           :error-message="error.password"
@@ -39,13 +38,12 @@
       </f7-list-input>
 
       <f7-list-input
-          v-model:value="userData.showConfirmPassword"
+          v-model:value="userData.newPassword"
           :type="showConfirmPassword ? 'text' : 'password'"
           name="password"
-          :input-style="inputStyle"
           class="custom-list-input"
-          :error-message-force="!!error.password"
-          :error-message="error.password"
+          :error-message-force="!!error.newPassword"
+          :error-message="error.newPassword"
           label="Confirm new password"
       >
         <template #media>
@@ -75,89 +73,30 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { f7 } from "framework7-vue";
-import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import fbHandler from "@/js/handlers/fb-handler";
 
 const showPassword = ref(false);
 const showOldPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-const props = defineProps({
-  f7route: Object,
-  f7router: Object,
-});
-
-const { suggestedCredentials } = storeToRefs(useAuthStore());
-const { login, loginViaProvider } = useAuthStore();
-
-const rememberUser = ref(false);
-const remember = ref(false);
-
 const userData = reactive({
-  identifier: "",
+  oldPassword: "",
   password: "",
-});
+  NewPassword: ""
+})
 
 const error = reactive({
-  identifier: "",
+  oldPassword: "",
   password: "",
-});
+  NewPassword: ""
+})
 
-const inputStyle = reactive({
-  padding: "0px",
-  fontFamily: "Rubik",
-  fontSize: "16px",
-  height: "unset",
-  position: "relative",
-});
-
-const btnDisabled = computed(() => !(userData.password && userData.identifier));
+const btnDisabled = computed(() => !(userData.oldPassword && userData.password && userData.newPassword));
 
 const startLogin = () => {
-  login(userData, rememberUser.value).then(resp => {
-    if (resp.status === "success") {
-      props.f7router.navigate("/activity/");
-    } else {
-      error.identifier = "";
-      error.password = "";
-      if (resp.error.details.errors) {
-        resp.error.details.errors.forEach(err => {
-          error[err.path[0]] = err.message;
-        });
-      } else {
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
-      }
-    }
-  });
+
 };
 
-const fbLoginHandler = async function () {
-  await fbHandler.login().then(response => {
-    if (response.authResponse) {
-      loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
-        if (resp.status === "success") {
-          props.f7router.navigate("/activity/");
-          return;
-        }
-
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
-      });
-    } else {
-      alert("User cancelled login or did not fully authorize.");
-    }
-  });
-};
-
-userData.identifier = suggestedCredentials.value.suggestedLogin;
-userData.password = suggestedCredentials.value.suggestedPassword;
 </script>
 
 <style lang="scss">

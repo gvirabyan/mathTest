@@ -11,7 +11,7 @@
       .item-inner {
         margin: 0;
         input {
-          height: 36px;
+          height: 36px !important;
         }
         padding: 0 !important;
         &:after {
@@ -39,7 +39,7 @@
           display: block;
           position: absolute;
           transform: unset !important;
-          bottom: 17px !important;
+          bottom: 9px !important;
           width: 100% !important;
           height: 1px !important;
           background: #212121 !important;
@@ -92,13 +92,14 @@
           }
         }
         .item-media {
+          min-width: 0 !important;
           width: 0;
         }
       }
 
       .eye-icons {
         position: absolute;
-        top: -1px;
+        top: 20px;
         z-index: 40;
         right: 0;
       }
