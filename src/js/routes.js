@@ -110,6 +110,12 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
+    path: "/profile2/",
+    name: "Profile2",
+    asyncComponent: () => import("../pages/profile2.vue"),
+    beforeEnter: checkAuth,
+  },
+  {
     path: "/my-stats/",
     name: "MyStats",
     asyncComponent: () => import("../pages/my-stats.vue"),
