@@ -108,6 +108,23 @@ const routes = [
     name: "Profile",
     asyncComponent: () => import("../pages/profile.vue"),
     beforeEnter: checkAuth,
+    detailRoutes: [
+      {
+        path: "/profile/about-us/",
+        asyncComponent: () => import("../pages/about-us.vue"),
+      },
+      {
+        path: "/profile/security/",
+        asyncComponent: () => import("../pages/security.vue"),
+        beforeLeave: function ({ resolve, reject }) {
+          resolve();
+        }
+      },
+      {
+        path: "/profile/account/",
+        asyncComponent: () => import("../pages/account.vue"),
+      }
+    ],
   },
   {
     path: "/profile2/",

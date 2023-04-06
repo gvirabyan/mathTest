@@ -12,6 +12,13 @@ export const useAuthStore = defineStore("auth", () => {
       : { suggestedLogin: "", suggestedPassword: "" },
   );
 
+  // for security page
+  const checkPassSave = ref(false);
+  const passwords = ref({
+      Password: '',
+      confirmPassword: ''
+  })
+
   // getters
   const userData = computed(() => user.value);
   const isNicknamedOnlyUser = computed(() => {
@@ -228,6 +235,8 @@ export const useAuthStore = defineStore("auth", () => {
     suggestedCredentials,
     userData,
     isNicknamedOnlyUser,
+    passwords,
+    checkPassSave,
     login,
     loginViaProvider,
     register,

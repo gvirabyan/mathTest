@@ -112,7 +112,18 @@
       width: 100%;
       margin: 0 -24px;
       z-index: 50;
-      padding: 10px 24px 30px 24px;
+      padding: 10px 24px 0px 24px;
+      .error-message {
+        min-height: 12px;
+        margin: 10px 0;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        text-align: center;
+        color: #FF0000;
+      }
       .button-save {
         margin-top: auto;
         width: 100% !important;
@@ -121,6 +132,9 @@
         background-repeat: no-repeat;
         background-position: right;
         background-image: url("../../images/pointsBtns.png");
+        &.button-disabled-fill {
+          opacity: 0.5;
+        }
       }
     }
 

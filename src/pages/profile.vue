@@ -1,31 +1,30 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <!-- Top Navbar -->
-    <!--    <f7-navbar :sliding="false">-->
-    <!--      <f7-nav-left>-->
-    <!--        <f7-link icon-ios="f7:menu" icon-md="material:menu" panel-open="left" />-->
-    <!--      </f7-nav-left>-->
-    <!--      <f7-nav-title sliding>Math</f7-nav-title>-->
-    <!--    </f7-navbar>-->
-
-    <!-- Page content-->
+  <f7-page-master class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="profileTabs" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
+<!--    <div class="view"></div>-->
+<!--    <main class="profile-tab-content">-->
+<!--      <Transition name="fade">-->
+<!--&lt;!&ndash;        <router-view :f7router="$f7router"></router-view>&ndash;&gt;-->
+<!--&lt;!&ndash;        <f7-view />&ndash;&gt;-->
+<!--&lt;!&ndash;        <f7-view class="safe-areas" url="/profile/"></f7-view>&ndash;&gt;-->
+<!--      </Transition>-->
+<!--    </main>-->
 
-    <main class="profile-tab-content">
-      <Transition name="fade">
-        <component :is="currentActivityComponent" />
-      </Transition>
-    </main>
-
+    <success-message-popup
+      v-if="successPopup"
+      @close="successPopup = false"
+      :title="successPopup"
+    />
+<!--    <leave-page-popup />-->
     <bottom-menu :current-path="f7route.path" />
-  </f7-page>
+  </f7-page-master>
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, markRaw } from "vue";
+import { ref, markRaw, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 // import { useCategoryStore } from "@/js/stores/categories";
@@ -34,19 +33,15 @@ import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-
-import Account from "@/components/account.vue";
-import Security from "@/components/security.vue";
-import AboutUs from "@/components/about-us.vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import LeavePagePopup from "@/components/leave-page-popup.vue"
 
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
-defineProps({
-  f7route: {
-    type: Object,
-    default: () => {},
-  },
+const props = defineProps({
+  f7router: Object,
+  f7route: Object
 });
 
 const authStore = useAuthStore();
@@ -61,29 +56,33 @@ const profileTabs = ref([
   {
     id: 1,
     name: "Account",
-    component: markRaw(Account),
+    path: "/profile/account/",
+    // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
-    component: markRaw(Security),
+    path: "/profile/security/",
+    // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
-    component: markRaw(AboutUs),
+    path: "/profile/about-us/",
+    // component: markRaw(AboutUs),
   },
 ]);
 
 const isLoading = ref(false);
-const currentActivityComponent = ref(null);
 
 const { getUser } = authStore;
 // const { getCategories, getLastCategory, getPastCategories } = categoryStore;
 // const { getAnsweredQuestionsCount } = questionsStore;
 
+const successPopup = ref(false)
+
 const setProfileComponent = id => {
-  currentActivityComponent.value = profileTabs.value.find(t => t.id === id).component;
+  props.f7router.navigate('/profile/account/')
 };
 
 const getAllData = async () => {
@@ -100,6 +99,7 @@ const getAllData = async () => {
 
   isLoading.value = false;
 };
+
 </script>
 
 <style lang="scss">
