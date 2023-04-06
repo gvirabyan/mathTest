@@ -16,8 +16,8 @@
             :percent="answersPercent"
             ><template #percent>{{ answersPercent }}</template>
             <template #amount>{{ answersStats.questions_left_count }}</template>
-            <template #info>of {{ answersStats.questions_count }} questions left</template></custom-gauge
-          >
+            <template #info>of {{ answersStats.questions_count }} questions left</template>
+          </custom-gauge>
 
           <custom-gauge
             :width="customGaugeOptions.width"
@@ -28,8 +28,8 @@
             :percent="correctAnswersPercent"
             ><template #percent>{{ correctAnswersPercent }}</template>
             <template #amount>{{ answersStats.correct_answers }}</template>
-            <template #info>correct answers</template></custom-gauge
-          >
+            <template #info>correct answers</template>
+          </custom-gauge>
 
           <custom-gauge
             :width="customGaugeOptions.width"
@@ -37,11 +37,11 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#FF0000"
-            :percent="answersPercent"
+            :percent="wrongAnswersPercent"
             ><template #percent>{{ wrongAnswersPercent }}</template>
             <template #amount>{{ answersStats.wrong_answers }}</template>
-            <template #info>wrong answers</template></custom-gauge
-          >
+            <template #info>wrong answers</template>
+          </custom-gauge>
 
           <custom-gauge
             :width="customGaugeOptions.width"
@@ -49,11 +49,11 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#89838F"
-            :percent="skippedAnswers"
-            ><template #percent>{{ skippedAnswers }}</template>
+            :percent="skippedAnswersPercent"
+            ><template #percent>{{ skippedAnswersPercent }}</template>
             <template #amount>{{ answersStats.skipped_answers }}</template>
-            <template #info>skipped answers</template></custom-gauge
-          >
+            <template #info>skipped answers</template>
+          </custom-gauge>
         </div>
       </div>
     </transition>
@@ -96,7 +96,7 @@ const correctAnswersPercent = computed(() =>
 const wrongAnswersPercent = computed(() =>
   Math.round((answersStats.value.wrong_answers / answersStats.value.answers_count) * 100),
 );
-const skippedAnswers = computed(() => 100 - correctAnswersPercent.value - wrongAnswersPercent.value);
+const skippedAnswersPercent = computed(() => 100 - correctAnswersPercent.value - wrongAnswersPercent.value);
 
 const getAnswersStatsHandler = async () => {
   isLoading.value = true;
