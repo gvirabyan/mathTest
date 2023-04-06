@@ -64,10 +64,10 @@
   </f7-page>
 
   <teleport to=".hg-question-page">
-    <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup" @popup:close="closeAndNavigate('/')">
+    <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup">
       <f7-page>
         <div class="width-100 display-flex justify-content-flex-end">
-          <f7-button class="close-btn" popup-close>
+          <f7-button class="close-btn" @click="closeAndNavigate('topics')">
             <img src="@/assets/icons/close.svg" alt="Close popup" />
           </f7-button>
         </div>
@@ -262,12 +262,13 @@ const clearStores = () => {
 
   questionStore.$reset();
   categoryAnswerStore.$reset();
+  clearCategory();
 };
 
 const closeAndNavigate = href => {
   clearCategory();
   isAllAnsweredPopup.value = false;
-  href === "/" ? props.f7router.navigate(`${href}`) : props.f7router.navigate(`/${href}/`);
+  href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
 
 watch(questionIndex, val => {
@@ -278,14 +279,10 @@ watch(questionIndex, val => {
   getQuestionsHandler(props.f7route.params.categoryID);
 });
 
-watch(
-  questionsAreOver,
-  async val => {
-    isAllAnsweredPopup.value = !!val;
-    await getAnsweredQuestions(props.f7route.params.categoryID);
-  },
-  { immediate: true },
-);
+watch(questionsAreOver, async val => {
+  isAllAnsweredPopup.value = !!val;
+  await getAnsweredQuestions(props.f7route.params.categoryID);
+});
 
 getAllQuestionData();
 </script>
