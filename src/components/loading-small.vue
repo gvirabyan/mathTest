@@ -1,7 +1,7 @@
 <template>
   <div class="loading-container">
     <div class="loading-block">
-      <img width="60" height="60" src="@/assets/gifs/violet.gif" alt="" />
+      <img width="101" height="87" src="@/assets/gifs/violet.gif" alt="Loading..." />
     </div>
   </div>
 </template>
