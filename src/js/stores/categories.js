@@ -112,6 +112,10 @@ export const useCategoryStore = defineStore("category", () => {
     searchedCategories.value = [];
   };
 
+  const clearCategory = () => {
+    category.value = {};
+  };
+
   return {
     categories,
     searchedCategories,
@@ -127,5 +131,6 @@ export const useCategoryStore = defineStore("category", () => {
     getLastCategory,
     getPastCategories,
     clearSearchedCategories,
+    clearCategory,
   };
 });

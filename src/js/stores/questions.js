@@ -9,6 +9,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questionIndex = ref(0);
   const questionsAreLoaded = ref(false);
   const answeredQuestions = ref([]);
+  const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
 
   const auth = useAuthStore();
@@ -42,6 +43,7 @@ export const useQuestionsStore = defineStore("questions", () => {
       )
       .then(res => res.json())
       .then(data => {
+        answeredQuestionsData.value = data?.data;
         data?.data.forEach(answer => {
           questionsIds.push(answer?.attributes?.question?.data?.id);
         });
@@ -70,6 +72,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     questionIndex,
     questionsAreLoaded,
     answeredQuestions,
+    answeredQuestionsData,
     answeredQuestionsCount,
     questionsData,
     questionData,

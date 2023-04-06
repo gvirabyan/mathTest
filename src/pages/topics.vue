@@ -24,17 +24,18 @@
       </f7-list>
     </template>
 
-    <template v-else>
-      <f7-list no-hairlines-md inset>
-        <f7-list-item v-for="i in 3" :key="`skeleton_${i}`">
-          <template #root>
-            <f7-skeleton-block effect="wave">
-              <f7-skeleton-text />
-            </f7-skeleton-block>
-          </template>
-        </f7-list-item>
-      </f7-list>
-    </template>
+    <!--    <template v-else>-->
+    <!--      <f7-list no-hairlines-md inset>-->
+    <!--        <f7-list-item v-for="i in 3" :key="`skeleton_${i}`">-->
+    <!--          <template #root>-->
+    <!--            <f7-skeleton-block effect="wave">-->
+    <!--              <f7-skeleton-text />-->
+    <!--            </f7-skeleton-block>-->
+    <!--          </template>-->
+    <!--        </f7-list-item>-->
+    <!--      </f7-list>-->
+    <!--    </template>-->
+    <loading-small v-else />
 
     <bottom-menu :current-path="f7route.path" />
 
@@ -50,7 +51,6 @@
 
         <div class="input-wrapper">
           <f7-input v-model:value="searchStr" type="text" placeholder="Enter the keyword" />
-          <!--          <img class="input-icon" src="@/assets/icons/arrow-right.svg" alt="" />-->
         </div>
 
         <div v-if="!searchStr" class="keywords">
@@ -95,10 +95,11 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import useDebouncedRef from "@/js/composables/use-debounced-ref";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const props = defineProps({
-  f7router: Object,
-  f7route: Object,
+  f7router: { type: Object, default: () => {} },
+  f7route: { type: Object, default: () => {} },
 });
 
 const categoriesStore = useCategoryStore();
