@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import {ref, watch, reactive, onMounted, onUnmounted} from "vue";
+import { ref, watch, reactive, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";

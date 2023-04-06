@@ -8,4 +8,10 @@
 
 <script setup></script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.loading-container {
+  display: grid;
+  place-items: center;
+  flex: 1;
+}
+</style>

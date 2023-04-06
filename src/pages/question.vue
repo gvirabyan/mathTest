@@ -48,11 +48,8 @@
             überspringen
           </f7-button>
           <f7-button
-            :class="{
-              'button button-large': true,
-              'button-submit': true,
-              'btn-disable': !chosenAnswer,
-            }"
+            class="button button-large button-submit"
+            :class="{ 'btn-disable': !chosenAnswer }"
             @click="sendAnswer"
           >
             abgeben
@@ -60,55 +57,69 @@
         </f7-row>
 
         <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
-        <!--        <button-->
-        <!--          v-if="!chosenAnswer"-->
-        <!--          class="button button-outline hg-default-btn-width"-->
-        <!--          :disabled="isSending"-->
-        <!--          @click="next"-->
-        <!--        >-->
-        <!--          Submit-->
-        <!--        </button>-->
-        <!--        <button v-else class="button button-fill hg-default-btn-width" :disabled="isSending" @click="next">Next</button>-->
       </div>
     </div>
 
-    <div v-else-if="isLoading">
-      <f7-block-title>
-        <f7-skeleton-block effect="wave">
-          <f7-skeleton-text />
-        </f7-skeleton-block>
-      </f7-block-title>
-
-      <!--      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>-->
-
-      <f7-list inset>
-        <f7-list-item v-for="i in 4" :key="`skeleton_${i}`">
-          <template #root>
-            <f7-skeleton-block effect="wave">
-              <f7-skeleton-text />
-            </f7-skeleton-block>
-          </template>
-        </f7-list-item>
-      </f7-list>
-    </div>
-
-    <f7-block v-else-if="questionsAreOver">You have answered all questions</f7-block>
+    <loading-small v-else-if="isLoading" />
   </f7-page>
+
+  <teleport to=".hg-question-page">
+    <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup" @popup:close="closeAndNavigate('topics')">
+      <f7-page>
+        <div class="width-100 display-flex justify-content-flex-end">
+          <f7-button class="close-btn" popup-close>
+            <img src="@/assets/icons/close.svg" alt="Close popup" />
+          </f7-button>
+        </div>
+
+        <div class="content">
+          <h2 class="title"><span>Mathe</span>App</h2>
+
+          <f7-block>
+            <f7-row class="justify-content-space-between align-items-center">
+              <f7-block-title> Your score on this topic </f7-block-title>
+              <p class="place-txt">{{ correctAnswers.length }} {{ pluralizeWord(correctAnswers.length, "point") }}</p>
+            </f7-row>
+
+            <f7-row class="justify-content-space-between align-items-center">
+              <p class="from-txt">
+                {{ correctAnswers.length }}/{{ category.questions_amount }} right answered
+                {{ pluralizeWord(correctAnswers.length, "question") }}
+              </p>
+            </f7-row>
+          </f7-block>
+
+          <f7-button class="footer-button" @click="closeAndNavigate('practice')">Start Practice</f7-button>
+        </div>
+
+        <img width="51" height="50" src="@/assets/images/points-violet.svg" alt="" />
+      </f7-page>
+    </f7-popup>
+  </teleport>
 </template>
 
 <script setup>
-import { f7 } from "framework7-vue";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
+import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const props = defineProps({
-  f7route: Object,
+  f7router: {
+    type: Object,
+    default: () => {},
+  },
+  f7route: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const authStore = useAuthStore();
@@ -118,12 +129,19 @@ const categoryAnswerStore = useCategoryAnswerStore();
 
 const { user } = storeToRefs(authStore);
 const { category } = storeToRefs(categoryStore);
-const { questions, question, questionIndex, questionsAreOver } = storeToRefs(questionStore);
+const { questions, question, answeredQuestionsData, questionIndex, questionsAreOver } = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
-const { getCategory } = categoryStore;
-const { getQuestions, getNextQuestion } = questionStore;
+const { getCategory, clearCategory } = categoryStore;
+const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
+
+const isLoading = ref(false);
+const isSending = ref(false);
+const chosenAnswer = ref(null);
+const chosenAnswerIndex = ref(null);
+const sentAnswer = ref(false);
+const isAllAnsweredPopup = ref(false);
 
 const getPoints = computed(() => {
   return questions.value
@@ -137,21 +155,16 @@ const getPoints = computed(() => {
     : [];
 });
 
+const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
+
 const checkStatus = (id, answer) => {
-  const staticQuestion = questions.value.find(q => q.id == id);
+  const staticQuestion = questions.value.find(q => q.id === id);
   return staticQuestion && staticQuestion.wrong_answers
     ? staticQuestion.wrong_answers.includes(staticQuestion.answer)
       ? "false"
       : "true"
     : "normal";
 };
-
-const isLoading = ref(false);
-const isSending = ref(false);
-const chosenAnswer = ref(null);
-const chosenAnswerIndex = ref(null);
-const sentAnswer = ref(false);
-
 const getAllQuestionData = async () => {
   isLoading.value = true;
 
@@ -250,6 +263,12 @@ const clearStores = () => {
   categoryAnswerStore.$reset();
 };
 
+const closeAndNavigate = href => {
+  isAllAnsweredPopup.value = false;
+  clearCategory();
+  props.f7router.navigate(`/${href}/`);
+};
+
 watch(questionIndex, val => {
   if (!questions.value.length || val < questions.value.length) {
     return;
@@ -257,6 +276,16 @@ watch(questionIndex, val => {
 
   getQuestionsHandler(props.f7route.params.categoryID);
 });
+
+watch(
+  questionsAreOver,
+  async val => {
+    isAllAnsweredPopup.value = !!val;
+    const response = await getAnsweredQuestions(props.f7route.params.categoryID);
+    console.log(response);
+  },
+  { immediate: true },
+);
 
 getAllQuestionData();
 </script>

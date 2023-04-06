@@ -1,0 +1,13 @@
+@mixin footer-button {
+  padding: 16px;
+  height: unset !important;
+  line-height: unset;
+  text-transform: unset;
+  font-size: 20px;
+  color: #fff;
+  background-color: #8419FF;
+  border-radius: 6px;
+  background-repeat: no-repeat;
+  background-position: right;
+  background-image: url("../assets/images/pointsBtns.png");
+}
