@@ -183,7 +183,11 @@ const categoryStore = useCategoryStore();
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
 
 const { getUser } = authStore;
-const { getCategories, getLastCategory, getPastCategories } = categoryStore;
+const {
+  // getCategories,
+  // getLastCategory,
+  getPastCategories,
+} = categoryStore;
 // const { getAnsweredQuestionsCount } = questionsStore;
 
 const activityTabs = ref([
