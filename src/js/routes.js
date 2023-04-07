@@ -1,6 +1,5 @@
 import HomePage from "../pages/home.vue";
 import Activity from "../pages/activity.vue";
-// import LoadingPage from "../components/loading.vue";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
@@ -44,7 +43,7 @@ const routes = [
     },
   },
   {
-    path: "/home",
+    path: "/home/",
     name: "Home",
     component: HomePage,
     beforeEnter: checkAuth,

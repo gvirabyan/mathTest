@@ -64,10 +64,10 @@
   </f7-page>
 
   <teleport to=".hg-question-page">
-    <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup" @popup:close="closeAndNavigate('topics')">
+    <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup">
       <f7-page>
         <div class="width-100 display-flex justify-content-flex-end">
-          <f7-button class="close-btn" popup-close>
+          <f7-button class="close-btn" @click="closeAndNavigate('topics')">
             <img src="@/assets/icons/close.svg" alt="Close popup" />
           </f7-button>
         </div>
@@ -92,7 +92,9 @@
           <f7-button class="footer-button" @click="closeAndNavigate('practice')">Start Practice</f7-button>
         </div>
 
-        <img width="51" height="50" src="@/assets/images/points-violet.svg" alt="" />
+        <f7-link @click="closeAndNavigate('/')">
+          <img width="51" height="50" src="@/assets/images/points-violet.svg" alt="" />
+        </f7-link>
       </f7-page>
     </f7-popup>
   </teleport>
@@ -156,7 +158,6 @@ const getPoints = computed(() => {
 });
 
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
-
 const checkStatus = (id, answer) => {
   const staticQuestion = questions.value.find(q => q.id === id);
   return staticQuestion && staticQuestion.wrong_answers
@@ -261,12 +262,13 @@ const clearStores = () => {
 
   questionStore.$reset();
   categoryAnswerStore.$reset();
+  clearCategory();
 };
 
 const closeAndNavigate = href => {
-  isAllAnsweredPopup.value = false;
   clearCategory();
-  props.f7router.navigate(`/${href}/`);
+  isAllAnsweredPopup.value = false;
+  href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
 
 watch(questionIndex, val => {
@@ -277,15 +279,10 @@ watch(questionIndex, val => {
   getQuestionsHandler(props.f7route.params.categoryID);
 });
 
-watch(
-  questionsAreOver,
-  async val => {
-    isAllAnsweredPopup.value = !!val;
-    const response = await getAnsweredQuestions(props.f7route.params.categoryID);
-    console.log(response);
-  },
-  { immediate: true },
-);
+watch(questionsAreOver, async val => {
+  isAllAnsweredPopup.value = !!val;
+  await getAnsweredQuestions(props.f7route.params.categoryID);
+});
 
 getAllQuestionData();
 </script>
