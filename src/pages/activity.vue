@@ -149,8 +149,8 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, markRaw } from "vue";
-import { storeToRefs } from "pinia";
+import { ref, markRaw } from "vue";
+// import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 // import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
@@ -162,6 +162,7 @@ import MyStatus from "@/components/activity-my-status.vue";
 
 import TopList from "@/components/activity-my-toplist.vue";
 import MyAnswers from "@/components/activity-my-answers.vue";
+import { useCategoryStore } from "@/js/stores/categories";
 
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
@@ -174,12 +175,16 @@ defineProps({
 });
 
 const authStore = useAuthStore();
-// const categoryStore = useCategoryStore();
+const categoryStore = useCategoryStore();
 // const questionsStore = useQuestionsStore();
 
-const { user } = storeToRefs(authStore);
+// const { user } = storeToRefs(authStore);
 // const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
+
+const { getUser } = authStore;
+const { getCategories, getLastCategory, getPastCategories } = categoryStore;
+// const { getAnsweredQuestionsCount } = questionsStore;
 
 const activityTabs = ref([
   {
@@ -202,10 +207,6 @@ const activityTabs = ref([
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
 
-const { getUser } = authStore;
-// const { getCategories, getLastCategory, getPastCategories } = categoryStore;
-// const { getAnsweredQuestionsCount } = questionsStore;
-
 const setActiveComponent = id => {
   currentActivityComponent.value = activityTabs.value.find(t => t.id === id).component;
 };
@@ -217,7 +218,7 @@ const getAllData = async () => {
   await Promise.all([
     getUser(),
     // getLastCategory(),
-    // getPastCategories(),
+    getPastCategories(),
     // getAnsweredQuestionsCount(),
     // getCategories()
   ]);

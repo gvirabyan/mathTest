@@ -1,9 +1,11 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
+import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 export const useQuizStore = defineStore("quiz", () => {
+  const category = useCategoryStore();
   const categoryAnswersStore = useCategoryAnswerStore();
 
   const quizQuestions = ref(
@@ -23,7 +25,7 @@ export const useQuizStore = defineStore("quiz", () => {
       : answeredQuizQuestions.value.length + 1,
   );
 
-  const getQuizQuestions = async (limit, categories) => {
+  const getQuizQuestions = async limit => {
     if (quizQuestions.value.length) {
       quizQuestions.value = quizQuestions.value.filter(q => !answeredQuizQuestions.value.includes(q.id));
       quizQuestionIndex.value = 0;
@@ -31,15 +33,20 @@ export const useQuizStore = defineStore("quiz", () => {
       return;
     }
 
-    const categoriesIds = categories.join();
+    const categoriesIds = category.pastCategoriesIds.join();
+
     let idsFilter = "";
 
     if (answeredQuizQuestions.value.length) {
       idsFilter = answeredQuizQuestions.value.join();
     }
 
+    const url = idsFilter
+      ? `quiz-questions?categories=${categoriesIds}&excludedQuestions=${idsFilter}&limit=${limit}`
+      : `quiz-questions?categories=${categoriesIds}&limit=${limit}`;
+
     await api
-      .get(`quiz-questions?categories=${categoriesIds}&excludedQuestions=${idsFilter}&limit=${limit}`)
+      .get(url)
       .then(res => res.json())
       .then(data => {
         quizQuestions.value = data.questions;
