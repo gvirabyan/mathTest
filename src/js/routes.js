@@ -1,5 +1,7 @@
 import HomePage from "../pages/home.vue";
 import Activity from "../pages/activity.vue";
+import {useAuthStore} from "./stores/auth";
+import {storeToRefs} from "pinia/dist/pinia";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
@@ -20,6 +22,22 @@ function checkAuth({ to, from, resolve, reject }) {
     this.navigate("/login/");
   } else {
     resolve();
+  }
+}
+
+function checkSecurity({ to, from, resolve, reject }) {
+  const store = useAuthStore()
+  const { passwords } = store;
+  const { changeSecurityPath } = store;
+  const { securityLeavePopup } = storeToRefs(store);
+  const { securityPath } = storeToRefs(store);
+  console.log(passwords.confirmNewPassword, passwords.newPassword, 666)
+  if(passwords.confirmNewPassword || passwords.newPassword) {
+    changeSecurityPath(to.path)
+    securityLeavePopup.value = true
+    reject();
+  } else {
+    resolve()
   }
 }
 
@@ -103,27 +121,20 @@ const routes = [
     beforeEnter: checkAuth,
   },
   {
-    path: "/profile/",
-    name: "Profile",
-    asyncComponent: () => import("../pages/profile.vue"),
+    path: "/profile/about-us/",
     beforeEnter: checkAuth,
-    detailRoutes: [
-      {
-        path: "/profile/about-us/",
-        asyncComponent: () => import("../pages/about-us.vue"),
-      },
-      {
-        path: "/profile/security/",
-        asyncComponent: () => import("../pages/security.vue"),
-        beforeLeave: function ({ resolve, reject }) {
-          resolve();
-        }
-      },
-      {
-        path: "/profile/account/",
-        asyncComponent: () => import("../pages/account.vue"),
-      }
-    ],
+    asyncComponent: () => import("../pages/about-us.vue"),
+  },
+  {
+    path: "/profile/security/",
+    asyncComponent: () => import("../pages/security.vue"),
+    beforeEnter: checkAuth,
+    beforeLeave: checkSecurity,
+  },
+  {
+    path: "/profile/account/",
+    beforeEnter: checkAuth,
+    asyncComponent: () => import("../pages/account.vue"),
   },
   {
     path: "/profile2/",

@@ -14,10 +14,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   // for security page
   const checkPassSave = ref(false);
+  const securityLeavePopup = ref(false)
+  const securityPath = ref('');
   const passwords = ref({
-      Password: '',
-      confirmPassword: ''
+      newPassword: '',
+      confirmNewPassword: ''
   })
+
 
   // getters
   const userData = computed(() => user.value);
@@ -26,6 +29,15 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   // actions
+  // for security page
+  const changeSecurityPath = (data) => {
+    securityPath.value = data
+  };
+
+  const changePasswords = (data) => {
+    passwords.value = data
+  };
+
   const login = async (userData, rememberUser = false) => {
     return api
       .post("auth/local?populate[0]=institution", userData)
@@ -237,6 +249,10 @@ export const useAuthStore = defineStore("auth", () => {
     isNicknamedOnlyUser,
     passwords,
     checkPassSave,
+    securityLeavePopup,
+    securityPath,
+    changePasswords,
+    changeSecurityPath,
     login,
     loginViaProvider,
     register,
