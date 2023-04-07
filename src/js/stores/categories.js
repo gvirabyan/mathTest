@@ -17,6 +17,7 @@ export const useCategoryStore = defineStore("category", () => {
   const categoriesData = computed(() => categories.value.map(c => createCategoriesDataEntry(c)));
   const searchedCategoriesData = computed(() => searchedCategories.value.map(c => createCategoriesDataEntry(c)));
   const categoryData = computed(() => category.value);
+  const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
 
   const getCategories = async searchStr => {
     if (searchStr && searchedCategories.value.length) {
@@ -124,6 +125,7 @@ export const useCategoryStore = defineStore("category", () => {
     category,
     categoriesData,
     searchedCategoriesData,
+    pastCategoriesIds,
     categoryData,
     getCategories,
     getCategoriesByCategoryClass,

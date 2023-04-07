@@ -2,7 +2,7 @@
   <f7-page
     class="hg-question-page"
     name="player-vs-machine"
-    @page:beforein="getQuizQuestions(quizMode.questions, pastCategoriesIds)"
+    @page:beforein="getQuizQuestionsHandler(quizMode.questions)"
   >
     <div class="navbar">
       <div class="navbar-inner">
@@ -15,58 +15,64 @@
       </div>
     </div>
 
-    <f7-block> Your: {{ userScore }} / Phone: {{ machineScore }} </f7-block>
-    <f7-block> Question {{ currentQuizQuestionNumber }} / {{ quizQuestionsLength }} </f7-block>
+    <template v-if="!isLoading">
+      <f7-block> Your: {{ userScore }} / Phone: {{ machineScore }} </f7-block>
+      <f7-block> Question {{ currentQuizQuestionNumber }} / {{ quizQuestionsLength }} </f7-block>
 
-    <f7-block v-if="quizQuestion">
-      <f7-block-title>{{ quizQuestion?.question }}</f7-block-title>
-      <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
+      <f7-block v-if="quizQuestion">
+        <f7-block-title>{{ quizQuestion?.question }}</f7-block-title>
+        <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
 
-      <f7-list>
-        <f7-list-item
-          v-for="(answer, index) in answersData"
-          :key="answer.id"
-          :class="{
-            'hg-wrong-answer': chosenQuizAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
-            'hg-correct-answer': chosenQuizAnswer && quizQuestion?.answer === answer,
-          }"
-          :disabled="!!chosenQuizAnswer"
-          :title="answer"
-          :checked="chosenQuizAnswer === answer"
-          radio-icon="end"
-          name="demo-radio-end"
-          radio
-          @change="chooseQuizAnswer(answer, index)"
-        ></f7-list-item>
-      </f7-list>
+        <f7-list>
+          <f7-list-item
+            v-for="(answer, index) in answersData"
+            :key="answer.id"
+            :class="{
+              'hg-wrong-answer': chosenQuizAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+              'hg-correct-answer': chosenQuizAnswer && quizQuestion?.answer === answer,
+            }"
+            :disabled="!!chosenQuizAnswer"
+            :title="answer"
+            :checked="chosenQuizAnswer === answer"
+            radio-icon="end"
+            name="demo-radio-end"
+            radio
+            @change="chooseQuizAnswer(answer, index)"
+          ></f7-list-item>
+        </f7-list>
 
-      <div class="hg-actions-btns-content">
-        <button v-if="!chosenQuizAnswer" class="button button-outline hg-default-btn-width" @click="skip">Skip</button>
+        <div class="hg-actions-btns-content">
+          <button v-if="!chosenQuizAnswer" class="button button-outline hg-default-btn-width" @click="skip">
+            Skip
+          </button>
 
-        <button v-else class="button button-fill hg-default-btn-width" @click="next">Next</button>
-      </div>
-    </f7-block>
+          <button v-else class="button button-fill hg-default-btn-width" @click="next">Next</button>
+        </div>
+      </f7-block>
 
-    <f7-block v-else-if="allQuizQuestionAnswered">You have answered all questions</f7-block>
+      <f7-block v-else-if="allQuizQuestionAnswered">You have answered all questions</f7-block>
+    </template>
+
+    <loading-small v-else />
   </f7-page>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
-import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
-import { f7 } from "framework7-vue";
+import delay from "@/js/helpers/delay";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const props = defineProps({
-  f7router: Object,
-  f7route: Object,
+  f7router: { type: Object, default: () => {} },
+  f7route: { type: Object, default: () => {} },
 });
 
 const { user } = storeToRefs(useAuthStore());
-const { pastCategoriesData } = storeToRefs(useCategoryStore());
 const { answersData } = storeToRefs(useCategoryAnswerStore());
 const {
   quizQuestions,
@@ -78,18 +84,26 @@ const {
   machineScore,
   currentQuizQuestionNumber,
 } = storeToRefs(useQuizStore());
-
 const { updateUser } = useAuthStore();
 const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore } = useQuizStore();
 
+const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
 const endQuizAlert = ref(null);
 
-const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
 const allQuizQuestionAnswered = computed(
-  () => quizQuestions?.value.length && quizQuestionsLength?.value === answeredQuizQuestions.value?.length,
+  () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
+
+const getQuizQuestionsHandler = async limit => {
+  isLoading.value = true;
+
+  await delay();
+  await getQuizQuestions(limit, answeredQuizQuestions.value);
+
+  isLoading.value = false;
+};
 
 const chooseQuizAnswer = (answer, index) => {
   chosenQuizAnswer.value = typeof answer === "string" ? answer : String(answer);
@@ -150,7 +164,7 @@ const endQuiz = () => {
           close: () => {
             useQuizStore().$reset();
             endQuizAlert.value = null;
-            props.f7router.navigate("/activity/");
+            props.f7router.navigate("/");
           },
         },
       });
@@ -165,7 +179,7 @@ const breakQuiz = () => {
     () => {
       updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
         useQuizStore().$reset();
-        props.f7router.navigate("/activity/");
+        props.f7router.navigate("/");
       });
     },
   );
