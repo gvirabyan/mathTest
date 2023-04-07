@@ -78,7 +78,7 @@
           <f7-block>
             <f7-row class="justify-content-space-between align-items-center">
               <f7-block-title> Your score on this topic </f7-block-title>
-              <p class="place-txt">{{ correctAnswers.length }} {{ pluralizeWord(correctAnswers.length, "point") }}</p>
+              <p class="place-txt">{{ topicPoints }} {{ pluralizeWord(correctAnswers.length, "point") }}</p>
             </f7-row>
 
             <f7-row class="justify-content-space-between align-items-center">
@@ -158,6 +158,19 @@ const getPoints = computed(() => {
 });
 
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
+const topicPoints = computed(() => {
+  const statusesObj = {
+    correct: 3,
+    wrong: -2,
+    skipped: -1,
+  };
+
+  return answeredQuestionsData.value.reduce(
+    (accumulator, currValue) => accumulator + statusesObj[currValue.attributes.status],
+    0,
+  );
+});
+
 const checkStatus = (id, answer) => {
   const staticQuestion = questions.value.find(q => q.id === id);
   return staticQuestion && staticQuestion.wrong_answers
