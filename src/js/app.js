@@ -41,3 +41,5 @@ initMathJax({}, onMathJaxReady);
 app.use(pinia);
 app.use(MathJax);
 app.mount("#app");
+
+export default app;

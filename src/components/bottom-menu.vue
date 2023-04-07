@@ -182,7 +182,7 @@ const menuLinks = ref([
   },
   {
     name: "Profile",
-    href: "/profile/",
+    href: "/profile/account/",
   },
 ]);
 
