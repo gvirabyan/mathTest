@@ -33,6 +33,9 @@ export const useAuthStore = defineStore("auth", () => {
   const changeSecurityPath = (data) => {
     securityPath.value = data
   };
+  const changeSecurityLeavePopup = () => {
+    securityLeavePopup.value = !securityLeavePopup.value
+  };
 
   const changePasswords = (data) => {
     passwords.value = data
@@ -251,6 +254,7 @@ export const useAuthStore = defineStore("auth", () => {
     checkPassSave,
     securityLeavePopup,
     securityPath,
+    changeSecurityLeavePopup,
     changePasswords,
     changeSecurityPath,
     login,

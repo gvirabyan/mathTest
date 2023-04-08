@@ -31,7 +31,6 @@ function checkSecurity({ to, from, resolve, reject }) {
   const { changeSecurityPath } = store;
   const { securityLeavePopup } = storeToRefs(store);
   const { securityPath } = storeToRefs(store);
-  console.log(passwords.confirmNewPassword, passwords.newPassword, 666)
   if(passwords.confirmNewPassword || passwords.newPassword) {
     changeSecurityPath(to.path)
     securityLeavePopup.value = true

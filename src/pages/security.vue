@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-dashboard-content" name="dashboard">
-    <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent" :first-load-index="1">
+    <top-bar :tabs="profileTabs" :search="false" by-route="Security" @tab-selected="setProfileComponent" :first-load-index="1">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
@@ -65,7 +65,7 @@
       v-if="securityLeavePopup"
       @leave-changes="discardChanges"
       @save-changes="updatePasswordHandler"
-      @close="securityLeavePopup = !securityLeavePopup"
+      @close="closeLeavePopup"
     />
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
@@ -86,6 +86,7 @@ const authStore = useAuthStore();
 const { updateUser } = authStore;
 const { changePasswords } = authStore;
 const { changeSecurityPath } = authStore;
+const { changeSecurityLeavePopup } = authStore;
 const { securityPath } = storeToRefs(authStore);
 const { passwords } = storeToRefs(authStore);
 // const { successPopup } = storeToRefs(authStore);
@@ -140,12 +141,16 @@ const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
 };
 
-function closeSuccessPopup () {
+function closeSuccessPopup() {
   successPopup.value = false;
   if(securityPath.value) {
     props.f7router.navigate(securityPath.value);
     changeSecurityPath('');
   }
+}
+
+function closeLeavePopup() {
+  changeSecurityLeavePopup()
 }
 
 function discardChanges() {
@@ -187,7 +192,6 @@ const updatePasswordHandler = async () => {
     disableSubmit.value = true;
     await updateUser({ password: updatePasswordData.newPassword })
       .then(res => {
-        console.log(securityPath.value, 3256)
         if (res.status === "success") {
           localStorage.removeItem('passwords')
           successPopup.value = true;
@@ -200,6 +204,8 @@ const updatePasswordHandler = async () => {
         updatePasswordData.newPassword = '';
         disableSubmit.value = false;
       });
+  } else {
+    validatePasswordUpdate()
   }
   securityLeavePopup.value = false
 };
