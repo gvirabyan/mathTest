@@ -42,14 +42,13 @@
       <p class="top-bar-subtitle"><slot name="subtitle"></slot></p>
       <p class="top-bar-subtitle-data"><slot name="subtitle-data"></slot></p>
     </div>
-
     <div class="top-bar-tabs-wrapper" :class="{ shadow: showTabsShadow }">
       <div ref="topBarTabs" class="top-bar-tabs">
         <f7-button
           v-for="{ id, name, active } in tabsResult"
           :key="`top-bar-tab_${id}`"
           class="top-bar-tab"
-          :class="{ active: active }"
+          :class="{ active: byRoute ? name === byRoute : active }"
           @click="selectTab(id)"
         >
           {{ name }}
@@ -62,6 +61,7 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 const props = defineProps({
+  f7router: Object,
   tabs: {
     type: Array,
     default: () => [],
@@ -73,6 +73,10 @@ const props = defineProps({
   search: {
     type: Boolean,
     default: true
+  },
+  byRoute: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -110,7 +114,6 @@ const selectFirstTab = tabs => {
     .map((t, index) => {
       return { ...t, active: index === props.firstLoadIndex };
     });
-
   emit("tab-selected", tabsResult.value[props.firstLoadIndex].id);
 };
 
@@ -119,6 +122,10 @@ watch(
   value => {
     selectFirstTab(value);
   },
+  {
+    immediate: true,
+    deep: true
+  }
 );
 
 onMounted(() => {
