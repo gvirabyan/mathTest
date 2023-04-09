@@ -123,7 +123,6 @@ watch(
     selectFirstTab(value);
   },
   {
-    immediate: true,
     deep: true
   }
 );
