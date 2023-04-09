@@ -10,11 +10,11 @@
         <div class="profile-security">
           <f7-list form>
             <f7-list-input
-                v-model:value="updatePasswordData.newPassword"
-                :type="showPassword ? 'text' : 'password'"
-                name="password"
-                class="custom-list-input"
-                label="New password"
+              v-model:value="updatePasswordData.newPassword"
+              :type="showPassword ? 'text' : 'password'"
+              name="password"
+              class="custom-list-input"
+              label="New password"
             >
               <template #media>
                 <div class="eye-icons" @click="showPassword = !showPassword">
@@ -25,11 +25,11 @@
             </f7-list-input>
 
             <f7-list-input
-                v-model:value="updatePasswordData.confirmNewPassword"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                name="password"
-                class="custom-list-input"
-                label="Confirm new password"
+              v-model:value="updatePasswordData.confirmNewPassword"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              name="password"
+              class="custom-list-input"
+              label="Confirm new password"
             >
               <template #media>
                 <div class="eye-icons" @click="showConfirmPassword = !showConfirmPassword">
@@ -41,12 +41,12 @@
 
             <f7-block class="save-btn-block">
               <f7-button
-                  :class="{
-            'button-save button-large': true,
-            'button-fill': !disableSaveBtn,
-            'button-disabled-fill': disableSaveBtn,
-          }"
-                  @click="updatePasswordHandler"
+                :class="{
+                  'button-save button-large': true,
+                  'button-fill': !disableSaveBtn,
+                  'button-disabled-fill': disableSaveBtn,
+                }"
+                @click="updatePasswordHandler"
               >
                 Save
               </f7-button>

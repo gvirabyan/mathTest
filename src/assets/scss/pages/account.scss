@@ -1,4 +1,4 @@
-.profile-security {
+.profile-account {
   padding-bottom: 54px;
   .list {
     margin: 0px;
@@ -7,7 +7,6 @@
       .item-content {
         padding: 0 !important;
       }
-
       .item-inner {
         margin: 0;
         input {
@@ -41,7 +40,7 @@
           transform: unset !important;
           bottom: 9px !important;
           width: 100% !important;
-          height: 1px !important;
+          height: 0.9px !important;
           background: #212121 !important;
         }
 
@@ -75,7 +74,7 @@
             .item-input-wrap {
               &:after {
                 transform: unset !important;
-                height: 1px !important;
+                height: 0.9px !important;
                 background: #E4E4E4 !important;
               }
             }
@@ -86,7 +85,7 @@
           .item-input-wrap {
             &:after {
               transform: unset !important;
-              height: 1px !important;
+              height: 0.9px !important;
               background: #E4E4E4 !important;
             }
           }
@@ -102,6 +101,20 @@
         top: 20px;
         z-index: 40;
         right: 0;
+      }
+    }
+    .log-out-btn {
+      all: unset;
+      p {
+        margin-top: 9px;
+        margin-bottom: 34px;
+        text-align: center;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        color: #8419FF;
       }
     }
     .save-btn-block {
