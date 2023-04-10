@@ -311,6 +311,8 @@ watch(
 watch(
   () => profileData.institution,
   val => {
+    alert(7)
+    console.log(val, 36369)
     val.place_id && getCourses(val.place_id);
   },
   { deep: true },

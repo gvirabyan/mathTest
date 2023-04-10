@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
+  <f7-page class="hg-dashboard-content profile-account-page" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
@@ -10,7 +10,7 @@
         <div class="profile-account">
           <f7-list form>
             <f7-list-input
-              v-model:value="newPassword"
+              v-model:value="profileData.email"
               type="text"
               name="email"
               class="custom-list-input"
@@ -18,7 +18,7 @@
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.name"
               type="text"
               name="name"
               class="custom-list-input"
@@ -26,7 +26,7 @@
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.surname"
               type="text"
               name="surname"
               class="custom-list-input"
@@ -34,7 +34,7 @@
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.username"
               type="text"
               name="Nickname"
               class="custom-list-input"
@@ -42,39 +42,48 @@
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="dateStr"
               type="text"
               name="date"
               class="custom-list-input"
               label="Date of birth"
+              :readonly="isCalendarOpened"
+              @focus="openCalendar"
             />
-
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.country"
               type="text"
               name="country"
-              class="custom-list-input"
+              class="custom-list-input country-autocomplete"
               label="Country"
+              @focus="initAutocompleteInputs"
+              @input="updateCountry"
+              @input:clear="updateCountry"
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.city"
               type="text"
               name="city"
-              class="custom-list-input"
+              class="custom-list-input city-autocomplete"
               label="City"
+              @focus="initAutocompleteInputs"
+              @input="updateCity"
+              @input:clear="updateCity"
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.institution.name"
               type="text"
               name="education"
-              class="custom-list-input"
+              class="custom-list-input institution-autocomplete"
               label="Educational institution"
+              @focus="initAutocompleteInputs"
+              @input="setCourseInputValid"
             />
 
             <f7-list-input
-              v-model:value="confirmNewPassword"
+              v-model:value="profileData.course"
               type="text"
               name="class"
               class="custom-list-input"
@@ -94,7 +103,7 @@
                   'button-fill': !disableSaveBtn,
                   'button-disabled-fill': disableSaveBtn,
                 }"
-                @click="updatePasswordHandler"
+                @click="updateProfile"
               >
                 Save
               </f7-button>
@@ -105,10 +114,21 @@
       </Transition>
     </main>
 
+    <div v-if="isCalendarOpened" @click="closeCalendar" class="date-popup">
+      <date-picker @click.stop  v-model="profileData.dateOfBirth"  :max-date="new Date()" />
+    </div>
+
     <success-message-popup
         v-if="successPopup"
         @close="successPopup = false"
-        :title="successPopup"
+        :title="'Successfully updated'"
+    />
+
+    <leave-page-popup
+        v-if="accountLeavePopup"
+        @leave-changes="discardChanges"
+        @save-changes="updateProfile"
+        @close="closeLeavePopup"
     />
 
     <bottom-menu :current-path="f7route.path" />
@@ -160,9 +180,13 @@
 </template>
 
 <script setup>
-import {ref, markRaw, reactive} from "vue";
+import {ref, markRaw, reactive, watch, computed, onMounted} from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
+import { useCoursesStore } from "@/js/stores/courses";
+import { getCountryCode } from "@/js/helpers/country-name-to-iso";
+import { DatePicker } from "v-calendar";
+import "v-calendar/dist/style.css";
 // import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
@@ -170,6 +194,7 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import {f7} from "framework7-vue";
 
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
@@ -183,9 +208,15 @@ const props = defineProps({
 });
 
 const authStore = useAuthStore();
-
+const coursesStore = useCoursesStore();
+const { updateUser } = authStore;
+const { courses } = storeToRefs(coursesStore);
+const { getCourses } = coursesStore;
 const { user } = storeToRefs(authStore);
 const { isNicknamedOnlyUser } = storeToRefs(authStore);
+const dateStr = ref(null);
+const successPopup = ref(false)
+const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const profileTabs = ref([
   {
@@ -208,11 +239,215 @@ const profileTabs = ref([
   },
 ]);
 
+const profileData = reactive({
+  email: "",
+  name: "",
+  surname: "",
+  username: "",
+  dateOfBirth: new Date().setFullYear(new Date().getFullYear() - 10),
+  country: "",
+  city: "",
+  institution: {
+    name: "",
+    place_id: "",
+  },
+  course: "",
+});
+
+const errorMessage = ref('')
+
+watch(
+  () => profileData.institution,
+  val => {
+    val.place_id && getCourses(val.place_id);
+  },
+  { deep: true },
+);
+
+const initAutocompleteInputs = () => {
+  // remove all autocomplete dropdowns
+  const pacContainers = document.querySelectorAll(".pac-container");
+  pacContainers.forEach(c => c.remove());
+
+  // init autocomplete on inputs
+  const autocompleteClasses = ["country", "city", "institution"];
+
+  for (const elName of autocompleteClasses) {
+    // eslint-disable-next-line no-undef
+    const autocomplete = new google.maps.places.Autocomplete(document.querySelector(`.${elName}-autocomplete input`));
+
+    elName === "country" && autocomplete.setTypes(["country"]);
+    elName === "city" && autocomplete.setTypes(["(cities)"]);
+    elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
+
+    countryCode.value &&
+    autocomplete.setComponentRestrictions({
+      // restrict the country
+      country: countryCode.value,
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      const countryValue = place.address_components.filter(c => c.types.includes("country"))[0]?.long_name;
+      const cityValue = place.address_components.filter(c => c.types.includes("locality"))[0]?.long_name;
+
+      if (elName === "institution") {
+        profileData.institution.name = place.name;
+        profileData.institution.place_id = place.place_id;
+      } else {
+        profileData[elName] = place.name;
+      }
+
+      if (countryValue) {
+        profileData.country = countryValue;
+      }
+
+      if (cityValue) {
+        profileData.city = cityValue;
+      }
+    });
+  }
+};
+
+const updateProfile = () => {
+  errorMessage.value = ''
+  if (showCourseErrorMsg.value) {
+    errorMessage.value =  "Fill all of the inputs correctly"
+    return;
+  }
+
+  // disableSubmit.value = true;
+
+  updateUser(profileData)
+    .then(res => {
+      if (res.status === "success") {
+        successPopup.value = true;
+        return;
+      }
+      errorMessage.value = res.message
+    })
+    // .finally(() => (disableSubmit.value = false));
+  initAutocompleteInputs();
+};
+
+const accountLeavePopup = storeToRefs(authStore);
+const accountPath = storeToRefs(authStore);
+const { changeAccountLeavePopup } = authStore;
+
+function closeLeavePopup() {
+  changeAccountLeavePopup()
+}
+
+function discardChanges() {
+  if(accountPath.value) {
+    props.f7router.navigate(accountPath.value);
+    accountLeavePopup.value = false;
+    accountPath.value = '';
+  }
+}
+
+const updateCountry = () => {
+  profileData.city = "";
+  profileData.institution = {
+    name: "",
+    place_id: "",
+  };
+  profileData.course = "";
+};
+
+const updateCity = () => {
+  profileData.institution = {
+    name: "",
+    place_id: "",
+  };
+  profileData.course = "";
+};
+const showCourseErrorMsg = ref(false)
+const setCourseInputValid = e => {
+  if (e.target.value) {
+    showCourseErrorMsg.value = !profileData.institution.name;
+    return;
+  }
+
+  showCourseErrorMsg.value = false;
+};
+
+onMounted(() => {
+  // fill profile data with initial values
+  Object.keys(profileData).forEach(key => {
+    if (key === "institution") {
+      profileData.institution.name = user?.value[key] ? user?.value[key].name : "";
+      profileData.institution.place_id = user?.value[key] ? user?.value[key].place_id : "";
+    } else {
+      profileData[key] = user?.value[key] || null;
+    }
+  });
+
+  initAutocompleteInputs();
+});
+
+watch(countryCode, val => {
+  val && initAutocompleteInputs();
+});
+
+watch(
+  () => user.value,
+  val => {
+    setProfileDate(val.dateOfBirth)
+  },
+  {
+   deep: true
+  }
+);
+
+const isCalendarOpened = ref(false);
+
+const openCalendar = () => {
+  isCalendarOpened.value = true;
+};
+
+const closeCalendar = () => {
+  isCalendarOpened.value = false;
+};
+
+function setProfileDate(val) {
+  if (val && val instanceof Date) {
+    // date formatting
+    dateStr.value = val.toISOString().slice(0, 10).split("-").reverse().join("/");
+    isCalendarOpened.value = false;
+  } else if(val &&  typeof val === 'string' ) {
+    dateStr.value = val.slice(0, 10).split("-").reverse().join("/");
+  }
+}
+
+watch(
+  () => profileData.dateOfBirth,
+  val => {
+    if (val && val instanceof Date) {
+      // date formatting
+      dateStr.value = val.toISOString().slice(0, 10).split("-").reverse().join("/");
+      isCalendarOpened.value = false;
+    }
+  },
+  {
+    immediate: true
+  }
+);
+const checkAccountData = storeToRefs(authStore)
+watch(
+  () => profileData,
+  val => {
+    checkAccountData.value = true
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+);
+
 const isLoading = ref(false);
 
 const { logout, updateNicknamedUser, deleteNicknamedUser, getUser } = authStore;
-
-const successPopup = ref(false)
 
 const isPopupOpened = ref(false);
 
@@ -259,6 +494,7 @@ const nicknamedUserUpdate = () => {
   if (nicknamedUserData.password === nicknamedUserData.confirmPassword) {
     updateNicknamedUser(nicknamedUserData).then(resp => {
       if (resp.status === "success") {
+        checkAccountData.value = false
         isPopupOpened.value = false;
         logoutUser();
         return;

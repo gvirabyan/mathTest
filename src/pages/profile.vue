@@ -16,9 +16,9 @@
     </main>
 
     <success-message-popup
-        v-if="successPopup"
-        @close="successPopup = false"
-        :title="successPopup"
+      v-if="successPopup"
+      @close="successPopup = false"
+      :title="successPopup"
     />
 
     <bottom-menu :current-path="f7route.path" />
