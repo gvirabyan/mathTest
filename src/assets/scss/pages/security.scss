@@ -1,0 +1,143 @@
+.profile-security {
+  padding-bottom: 54px;
+  .list {
+    margin: 0px;
+    .custom-list-input {
+      height: 81px;
+      .item-content {
+        padding: 0 !important;
+      }
+
+      .item-inner {
+        margin: 0;
+        input {
+          height: 36px !important;
+        }
+        padding: 0 !important;
+        &:after {
+          display: none;
+          background: #212121 !important;
+        }
+        .item-label {
+          font-family: 'Rubik';
+          font-style: normal;
+          font-weight: 300;
+          font-size: 12px;
+          line-height: 14px;
+          color: #212121;
+        }
+      }
+
+      .item-input-wrap {
+        height: 68px;
+
+        &.item-input-focused {
+        }
+
+        &:after {
+          content: "";
+          display: block;
+          position: absolute;
+          transform: unset !important;
+          bottom: 9px !important;
+          width: 100% !important;
+          height: 1px !important;
+          background: #212121 !important;
+        }
+
+        .item-input-error-message {
+          position: relative !important;
+          top: 0;
+          margin-top: 20px !important;
+          margin-bottom: 0 !important;
+        }
+      }
+    }
+
+    ul {
+      &::before {
+        display: none;
+      }
+      &::after {
+        display: none;
+      }
+      .item-inner {
+        padding: 0 !important;
+
+        &:after {
+          display: none;
+        }
+      }
+      .item-input {
+
+        &.item-input-focused {
+          &:not(.item-input-outline) {
+            .item-input-wrap {
+              &:after {
+                transform: unset !important;
+                height: 1px !important;
+                background: #212121 !important;
+              }
+            }
+          }
+        }
+
+        &:not(.item-input-outline) {
+          .item-input-wrap {
+            &:after {
+              transform: unset !important;
+              height: 1px !important;
+              background: #212121 !important;
+            }
+          }
+        }
+        .item-media {
+          min-width: 0 !important;
+          width: 0;
+        }
+      }
+
+      .eye-icons {
+        position: absolute;
+        top: 20px;
+        z-index: 40;
+        right: 0;
+      }
+    }
+    .save-btn-block {
+      position: fixed;
+      background: #fff;
+      bottom: 74px;
+      display: block;
+      width: 100%;
+      margin: 0 -24px;
+      z-index: 50;
+      padding: 10px 24px 0px 24px;
+      .error-message {
+        min-height: 14px;
+        margin: 10px 0;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        text-align: center;
+        color: #FF0000;
+      }
+      .button-save {
+        margin-top: auto;
+        width: 100% !important;
+        color: #fff !important;
+        background-color: #FFC700 !important;
+        background-repeat: no-repeat;
+        background-position: right;
+        background-image: url("../../images/pointsBtns.png");
+        &.button-disabled-fill {
+          opacity: 0.5;
+        }
+      }
+    }
+
+  }
+
+}

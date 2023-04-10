@@ -1,54 +1,83 @@
-.hg-profile-content {
+.hg-dashboard-content {
+  background-color: #fff;
+  .list {
+    .item-content {
+      height: 60px;
+    }
+  }
   .page-content {
+    overflow: unset;
     display: flex;
     flex-direction: column;
 
-    .profile-form {
+    .profile-tab-content {
       flex: 1;
+      padding: 30px 24px;
+      overflow: auto;
+    }
+  }
 
-      input:read-only {
-        pointer-events: none;
-      }
+  .hg-statistics-content {
+    flex: 1;
 
-      .item-input-wrap {
-        padding-right: 24px;
-      }
+    .hg-statistic-item {
+      .card {
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 12px;
+        padding: 10px 12px 7px 12px;
 
-      .date-input {
-        &.disabled {
-          opacity: 1 !important;
+        .hg-body-content {
+          display: flex;
+          justify-content: space-between;
+
+          .hg-content-value {
+            float: right;
+            color: #4f4f4f;
+            font-size: 18px;
+            font-weight: 700;
+          }
+        }
+        .hg-content-title {
+          color: #6c6c6c;
+          text-align: right;
         }
       }
 
-      .courses-input .list {
-        position: absolute;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        z-index: 2;
+      &.hg-last-category-content {
+        .hg-content-icon {
+          color: #31caa0;
+        }
       }
-
-      .courses-input .list ul {
-        padding-left: 0;
-        box-shadow: 0 5px 12px 0 rgba(0,0,0,0.75);
+      &.hg-answered-questions-content {
+        .hg-content-icon {
+          color: #008eff;
+        }
       }
-    }
-
-    .calendar-sheet {
-      height: auto;
-
-      .vc-container {
-        width: 100%;
-        border: none;
+      &.hg-experience-points-content {
+        .hg-content-icon {
+          color: #bd00ff;
+        }
       }
-
-      .vc-popover-content-wrapper {
-        width: 100%;
+      &.hg-active-categories-content {
+        .hg-content-icon {
+          color: #31caa0;
+        }
       }
-
-      .vc-nav-items {
-        justify-items: center;
+      &.hg-categories-list-content {
+        .hg-content-icon {
+          color: #dc1212;
+        }
       }
     }
   }
+
+  .hg-skeleton-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
 }
+
+

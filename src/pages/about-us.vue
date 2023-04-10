@@ -1,17 +1,13 @@
 <template>
   <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" @tab-selected="setProfileComponent">
+    <top-bar :tabs="profileTabs" :search="false"  @tab-selected="setProfileComponent" :first-load-index="2">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
 
     <main class="profile-tab-content">
       <Transition name="fade">
-        <f7-view />
-        <!--        <component-->
-        <!--          @open-success-popup="(e) => successPopup = e"-->
-        <!--          :is="currentActivityComponent"-->
-        <!--        />-->
+        About us
       </Transition>
     </main>
 
@@ -40,11 +36,12 @@ import SuccessMessagePopup from "@/components/success-message-popup.vue"
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
-defineProps({
+const props = defineProps({
   f7route: {
     type: Object,
     default: () => {},
   },
+  f7router: Object
 });
 
 const authStore = useAuthStore();
@@ -59,17 +56,20 @@ const profileTabs = ref([
   {
     id: 1,
     name: "Account",
-    component: markRaw(Account),
+    path: '/profile/account/'
+    // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
-    component: markRaw(Security),
+    path: '/profile/security/'
+    // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
-    component: markRaw(AboutUs),
+    path: '/profile/about-us/'
+    // component: markRaw(AboutUs),
   },
 ]);
 
@@ -83,7 +83,7 @@ const { getUser } = authStore;
 const successPopup = ref(false)
 
 const setProfileComponent = id => {
-  currentActivityComponent.value = profileTabs.value.find(t => t.id === id).component;
+  props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
 };
 
 const getAllData = async () => {

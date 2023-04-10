@@ -31,8 +31,8 @@
           <p class="from-txt">
             {{ category.from }}
           </p>
-          <p class="place-txt">
-            {{ category.points }}
+          <p class="from-txt">
+            {{ userPoints }} points
           </p>
         </f7-row>
       </f7-block>
@@ -102,6 +102,9 @@ const { user } = storeToRefs(authStore);
 const topListStore = useTopList();
 const topList = computed(() => topListStore.topList);
 const { getTopList } = topListStore;
+
+const userPoints = computed(() => topList.value.find(list => list.id === user.value.id).points)
+
 watch(
   () => props.category,
   async category => {
