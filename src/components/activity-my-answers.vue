@@ -1,9 +1,9 @@
 <template>
   <div class="my-answers">
-    <h2 class="title">Summary</h2>
+    <transition v-if="!isLoading" name="activity-fade" mode="out-in" appear>
+      <div class="display-flex flex-direction-column align-items-center">
+        <h2 class="title">Summary</h2>
 
-    <transition v-if="!isLoading" name="answers-fade" mode="out-in" appear>
-      <div>
         <p class="last-update-info">Last update: {{ lastUpdate }}</p>
 
         <div class="stats">
@@ -111,24 +111,6 @@ getAnswersStatsHandler();
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/components/activity-tab";
 @import "@/assets/scss/components/activity-my-answers.scss";
-
-.answers-fade-enter-active,
-.answers-fade-leave-active {
-  transition: all 0.5s ease;
-}
-.answers-fade-enter-from,
-.answers-fade-leave-to {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
-.loader-fadeout-enter-active,
-.loader-fadeout-leave-active {
-  transition: all 0.5s ease-out;
-}
-.loader-fadeout-leave-to {
-  opacity: 1;
-  transform: scale(1);
-}
 </style>

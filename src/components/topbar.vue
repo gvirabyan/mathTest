@@ -1,5 +1,5 @@
 <template>
-  <div class="top-bar" position="top">
+  <div class="top-bar">
     <div class="display-flex justify-content-space-between">
       <h1 class="top-bar-title"><slot name="title"></slot></h1>
 
@@ -68,16 +68,16 @@ const props = defineProps({
   },
   firstLoadIndex: {
     type: Number,
-    default: 0
+    default: 0,
   },
   search: {
     type: Boolean,
-    default: true
+    default: true,
   },
   byRoute: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const emit = defineEmits(["tab-selected", "show-popup"]);
@@ -123,8 +123,8 @@ watch(
     selectFirstTab(value);
   },
   {
-    deep: true
-  }
+    deep: true,
+  },
 );
 
 onMounted(() => {

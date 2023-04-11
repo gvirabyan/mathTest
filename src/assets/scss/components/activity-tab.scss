@@ -1,0 +1,18 @@
+.activity-fade-enter-active,
+.activity-fade-leave-active {
+  transition: all 0.5s ease;
+}
+.activity-fade-enter-from,
+.activity-fade-leave-to {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.loader-fadeout-enter-active,
+.loader-fadeout-leave-active {
+  transition: all 0.5s ease-out;
+}
+.loader-fadeout-leave-to {
+  opacity: 1;
+  transform: scale(1);
+}

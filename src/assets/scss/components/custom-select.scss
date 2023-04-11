@@ -1,0 +1,62 @@
+.custom-select {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+  padding: 8px 0;
+  color: #212121;
+  border-bottom: 1px solid #e4e4e4;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    width: 9px;
+    height: 5px;
+    background: url("@/assets/icons/arrow-down-sm.svg") no-repeat center;
+    background-size: cover;
+    transform: translateY(-50%);
+  }
+
+  .selected {
+    border: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .items {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    left: 0;
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #e4e4e4;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 2;
+
+    &.select-hide {
+      display: none;
+    }
+
+    .item {
+      padding: 8px 0;
+      color: #212121;
+      font-size: 14px;
+      line-height: 17px;
+      border-radius: 5px;
+      user-select: none;
+
+      &.selected {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      &:hover {
+        background-color: #f1e5ff;
+      }
+    }
+  }
+}

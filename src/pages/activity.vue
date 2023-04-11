@@ -11,8 +11,8 @@
     <!-- Page content-->
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
       <template #title>Activity</template>
-      <template #subtitle>Today's Goal</template>
-      <template #subtitle-data>20 questions</template>
+      <template v-if="user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="activity-tab-content">
@@ -150,7 +150,7 @@
 
 <script setup>
 import { ref, markRaw } from "vue";
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 // import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
@@ -178,7 +178,7 @@ const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 // const questionsStore = useQuestionsStore();
 
-// const { user } = storeToRefs(authStore);
+const { user } = storeToRefs(authStore);
 // const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
 
