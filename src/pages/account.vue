@@ -119,16 +119,16 @@
     </div>
 
     <success-message-popup
-        v-if="successPopup"
-        @close="successPopup = false"
-        :title="'Successfully updated'"
+      v-if="successPopup"
+      @close="successPopup = false"
+      :title="'Successfully updated'"
     />
 
     <leave-page-popup
-        v-if="accountLeavePopup"
-        @leave-changes="discardChanges"
-        @save-changes="updateProfile"
-        @close="closeLeavePopup"
+      v-if="accountLeavePopup"
+      @leave-changes="discardChanges"
+      @save-changes="updateProfile"
+      @close="closeLeavePopup"
     />
 
     <bottom-menu :current-path="f7route.path" />
@@ -169,7 +169,6 @@
             placeholder="Confirm password"
           ></f7-list-input>
         </f7-list>
-
         <f7-block>
           <f7-button class="mb-8" fill color="blue" @click="nicknamedUserUpdate">Save and logout</f7-button>
           <f7-button fill color="red" @click="nicknamedUserLogout">Delete account</f7-button>
@@ -194,6 +193,7 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import LeavePagePopup from "@/components/leave-page-popup.vue"
 import {f7} from "framework7-vue";
 
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
@@ -214,6 +214,7 @@ const { courses } = storeToRefs(coursesStore);
 const { getCourses } = coursesStore;
 const { user } = storeToRefs(authStore);
 const { isNicknamedOnlyUser } = storeToRefs(authStore);
+const { changeCheckAccountData } = authStore;
 const dateStr = ref(null);
 const successPopup = ref(false)
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
@@ -260,6 +261,14 @@ watch(
   () => profileData.institution,
   val => {
     val.place_id && getCourses(val.place_id);
+  },
+  { deep: true },
+);
+
+watch(
+  () => profileData,
+  (val, prev) => {
+    console.log(val, prev, 55)
   },
   { deep: true },
 );
@@ -330,16 +339,16 @@ const updateProfile = () => {
   initAutocompleteInputs();
 };
 
-const accountLeavePopup = storeToRefs(authStore);
-const accountPath = storeToRefs(authStore);
-const { changeAccountLeavePopup } = authStore;
+const { accountLeavePopup } = storeToRefs(authStore);
+const { accountPath } = storeToRefs(authStore);
 
 function closeLeavePopup() {
-  changeAccountLeavePopup()
+  accountLeavePopup.value = false
 }
 
 function discardChanges() {
   if(accountPath.value) {
+
     props.f7router.navigate(accountPath.value);
     accountLeavePopup.value = false;
     accountPath.value = '';
@@ -433,11 +442,12 @@ watch(
     immediate: true
   }
 );
-const checkAccountData = storeToRefs(authStore)
+const { checkAccountData } = storeToRefs(authStore)
 watch(
   () => profileData,
   val => {
-    checkAccountData.value = true
+    // checkAccountData.value = true;
+    changeCheckAccountData(true)
   },
   {
     deep: true,

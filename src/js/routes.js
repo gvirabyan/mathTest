@@ -31,8 +31,8 @@ function checkSecurity({ to, from, resolve, reject }) {
   const { changeSecurityPath } = store;
   const { securityLeavePopup } = storeToRefs(store);
   if(passwords.confirmNewPassword || passwords.newPassword) {
-    changeSecurityPath(to.path)
     securityLeavePopup.value = true
+    changeSecurityPath(to.path)
     reject();
   } else {
     resolve()
@@ -41,9 +41,8 @@ function checkSecurity({ to, from, resolve, reject }) {
 
 function checkAccount({ to, from, resolve, reject }) {
   const store = useAuthStore()
-  const { passwords } = store;
   const { changeAccountPath } = store;
-  const { checkAccountData } = store;
+  const { checkAccountData } = storeToRefs(store);
   const { accountLeavePopup } = storeToRefs(store);
   if(checkAccountData.value) {
     changeAccountPath(to.path)
