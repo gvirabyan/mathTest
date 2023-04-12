@@ -1,20 +1,26 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" :search="false"  @tab-selected="setProfileComponent" :first-load-index="2">
+  <f7-page class="hg-dashboard-content about-us-page" name="dashboard" @page:beforein="getAllData">
+    <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent" :first-load-index="2">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
 
     <main class="profile-tab-content">
       <Transition name="fade">
-        About us
+        <f7-list>
+          <f7-list-item v-for="info in infos" :key="info.id" @click="setMode(info)">
+            <template #title>
+              {{ info.title }}
+            </template>
+          </f7-list-item>
+        </f7-list>
       </Transition>
     </main>
 
     <success-message-popup
-        v-if="successPopup"
-        @close="successPopup = false"
-        :title="successPopup"
+      v-if="successPopup"
+      @close="successPopup = false"
+      :title="successPopup"
     />
 
     <bottom-menu :current-path="f7route.path" />
@@ -22,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from "vue";
+import {ref, markRaw, reactive} from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 // import { useCategoryStore } from "@/js/stores/categories";
@@ -73,6 +79,27 @@ const profileTabs = ref([
   },
 ]);
 
+const infos = reactive([
+  {
+    title: "Terms of services",
+  },
+  {
+    title: "Privacy",
+  },
+  {
+    title: "Imprint",
+  },
+  {
+    title: "Software licenses",
+  },
+  {
+    title: "Release notes",
+  },
+  {
+    title: "Write a review",
+  }
+])
+
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
 
@@ -105,7 +132,7 @@ const getAllData = async () => {
 
 <style lang="scss">
 @import "../assets/scss/pages/profile";
-
+@import "../assets/scss/pages/about-us";
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;
