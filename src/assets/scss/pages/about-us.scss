@@ -1,0 +1,33 @@
+.about-us-page {
+  .list {
+    margin-top: -20px;
+    ul {
+      &:before {
+        display: none !important;
+      }
+      .item-content {
+        padding-left: 0;
+        padding-right: 0;
+        .item-inner {
+          height: 62px;
+          padding: 0;
+          display: unset;
+          .item-title {
+            margin-top: 20px;
+            .button {
+              all: unset;
+              .info-title {
+                all: unset;
+                font-family: 'Rubik';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 22px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

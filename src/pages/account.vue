@@ -71,6 +71,11 @@ const profileTabs = ref([
     path: '/profile/about-us/'
     // component: markRaw(AboutUs),
   },
+  {
+    id: 4,
+    name: "Send Reports",
+    path: '/profile/send-reports/'
+  },
 ]);
 
 const isLoading = ref(false);

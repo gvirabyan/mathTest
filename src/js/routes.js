@@ -121,19 +121,28 @@ const routes = [
   },
   {
     path: "/profile/about-us/",
+    name: 'AboutUs',
     beforeEnter: checkAuth,
     asyncComponent: () => import("../pages/about-us.vue"),
   },
   {
     path: "/profile/security/",
+    name: 'Security',
     asyncComponent: () => import("../pages/security.vue"),
     beforeEnter: checkAuth,
     beforeLeave: checkSecurity,
   },
   {
     path: "/profile/account/",
+    name: 'Account',
     beforeEnter: checkAuth,
     asyncComponent: () => import("../pages/account.vue"),
+  },
+  {
+    path: "/profile/send-reports",
+    name: "Send reports",
+    asyncComponent: () => import("../pages/send-reports.vue"),
+    beforeEnter: checkAuth,
   },
   {
     path: "/profile2/",
@@ -205,12 +214,6 @@ const routes = [
     path: "/settings/feedback",
     name: "Write a review",
     asyncComponent: () => import("../pages/feedback.vue"),
-    beforeEnter: checkAuth,
-  },
-  {
-    path: "/settings/send-reports",
-    name: "Send reports",
-    asyncComponent: () => import("../pages/send-reports.vue"),
     beforeEnter: checkAuth,
   },
   {
