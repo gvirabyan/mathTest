@@ -195,7 +195,6 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue"
 import LeavePagePopup from "@/components/leave-page-popup.vue"
 import {f7} from "framework7-vue";
-import {useGoogleApi} from "@/js/stores/google-api";
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
@@ -209,8 +208,6 @@ const props = defineProps({
 
 const authStore = useAuthStore();
 const coursesStore = useCoursesStore();
-const googleStore = useGoogleApi();
-const { getGoogleApiData } = googleStore
 const { updateUser } = authStore;
 const { courses } = storeToRefs(coursesStore);
 const { getCourses } = coursesStore;
@@ -383,8 +380,7 @@ const setCourseInputValid = e => {
   showCourseErrorMsg.value = false;
 };
 
-onMounted(async () => {
-  await getGoogleApiData()
+onMounted(() => {
   // fill profile data with initial values
   Object.keys(profileData).forEach(key => {
     if (key === "institution") {
@@ -557,5 +553,28 @@ const nicknamedUserLogout = () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.pac-container {
+  border: 1px solid #E4E4E4;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 8px;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  .pac-item {
+    padding: 8px;
+    border-top: none;
+    border-radius: 5px;
+    line-height: 16px;
+    &:hover {
+      background: #F1E5FF;
+    }
+    .pac-icon {
+      display: none;
+    }
+  }
 }
 </style>
