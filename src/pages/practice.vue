@@ -8,7 +8,12 @@
 
     <f7-list>
       <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
-        <template #title> {{ mode.questions }} Questions </template>
+        <template #title>
+          <f7-row class="justify-content-space-between align-items-center">
+            <p class="question">{{ mode.questions }} Questions </p>
+            <p class="points">{{mode.showPoints}}</p>
+          </f7-row>
+        </template>
       </f7-list-item>
     </f7-list>
 
@@ -36,6 +41,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_1,
     drawPoints: quizModes.DRAW_POINTS_MODE_1,
     losePoints: quizModes.LOSE_POINTS_MODE_1,
+    showPoints: '+10, +5, -2'
   },
   {
     id: 2,
@@ -43,6 +49,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_2,
     drawPoints: quizModes.DRAW_POINTS_MODE_2,
     losePoints: quizModes.LOSE_POINTS_MODE_2,
+    showPoints: '+20, +10, -4'
   },
   {
     id: 3,
@@ -50,6 +57,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_3,
     drawPoints: quizModes.DRAW_POINTS_MODE_3,
     losePoints: quizModes.LOSE_POINTS_MODE_3,
+    showPoints: '+30, +15, -6'
   },
 ];
 
