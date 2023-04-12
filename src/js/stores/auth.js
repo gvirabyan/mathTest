@@ -20,8 +20,8 @@ export const useAuthStore = defineStore("auth", () => {
   const accountLeavePopup = ref(false)
   const accountPath = ref('');
   const passwords = ref({
-      newPassword: '',
-      confirmNewPassword: ''
+    newPassword: '',
+    confirmNewPassword: ''
   })
 
 

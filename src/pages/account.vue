@@ -195,7 +195,7 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue"
 import LeavePagePopup from "@/components/leave-page-popup.vue"
 import {f7} from "framework7-vue";
-
+import {useGoogleApi} from "@/js/stores/google-api";
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
@@ -209,6 +209,8 @@ const props = defineProps({
 
 const authStore = useAuthStore();
 const coursesStore = useCoursesStore();
+const googleStore = useGoogleApi();
+const { getGoogleApiData } = googleStore
 const { updateUser } = authStore;
 const { courses } = storeToRefs(coursesStore);
 const { getCourses } = coursesStore;
@@ -381,7 +383,8 @@ const setCourseInputValid = e => {
   showCourseErrorMsg.value = false;
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await getGoogleApiData()
   // fill profile data with initial values
   Object.keys(profileData).forEach(key => {
     if (key === "institution") {
