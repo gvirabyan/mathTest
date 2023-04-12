@@ -89,6 +89,18 @@
               class="custom-list-input"
               label="Class/course"
             />
+            <div v-if="myCourses.length && !checkShowCourse && profileData.course.length" class="class-options">
+              <f7-button
+                v-for="course in myCourses"
+                :key="course"
+              >
+                <p
+                  @click="profileData.course = course"
+                  v-text="course"
+                />
+              </f7-button>
+
+            </div>
 
             <f7-button @click="logoutHandler" class="log-out-btn">
               <p>
@@ -206,6 +218,8 @@ const props = defineProps({
   f7router: Object
 });
 
+const myCourses = computed(() => courses.value.filter(v => v.includes(profileData.course) !== -1))
+const checkShowCourse = computed(() => !!courses.value.find( v => v === profileData.course))
 const authStore = useAuthStore();
 const coursesStore = useCoursesStore();
 const { updateUser } = authStore;
