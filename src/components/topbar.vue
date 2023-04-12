@@ -1,10 +1,10 @@
 <template>
   <div class="top-bar">
     <div class="display-flex justify-content-space-between">
-      <h1 class="top-bar-title"><slot name="title"></slot></h1>
+      <h1 class="top-bar-title"><slot name="title" /></h1>
 
       <div class="top-bar-button-wrapper">
-        <f7-button v-if="search" class="top-bar-btn" @click="emit('show-popup')">
+        <f7-button v-if="search" class="top-bar-btn" @click="emit('show-search-popup')">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 16L20 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path
@@ -17,7 +17,7 @@
           </svg>
         </f7-button>
 
-        <f7-button class="top-bar-btn">
+        <f7-button class="top-bar-btn" @click="toggleNotificationsPopup">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M18 9C18 10.6667 18 12.3333 18 14C18 16 18.6667 17.3333 20 18H4C5.33333 17.3333 6 16 6 14C6 12.3333 6 10.6667 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9Z"
@@ -39,9 +39,10 @@
     </div>
 
     <div class="top-bar-subtitle-wrapper">
-      <p class="top-bar-subtitle"><slot name="subtitle"></slot></p>
-      <p class="top-bar-subtitle-data"><slot name="subtitle-data"></slot></p>
+      <p class="top-bar-subtitle"><slot name="subtitle" /></p>
+      <p class="top-bar-subtitle-data"><slot name="subtitle-data" /></p>
     </div>
+
     <div class="top-bar-tabs-wrapper" :class="{ shadow: showTabsShadow }">
       <div ref="topBarTabs" class="top-bar-tabs">
         <f7-button
@@ -56,12 +57,23 @@
       </div>
     </div>
   </div>
+
+  <custom-popup
+    :is-opened-initial="showNotificationsPopup"
+    class="notifications"
+    @close-popup="toggleNotificationsPopup"
+  >
+    <notifications />
+  </custom-popup>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import CustomPopup from "@/components/custom-popup.vue";
+import Notifications from "@/components/notifications.vue";
+
 const props = defineProps({
-  f7router: Object,
+  f7router: { type: Object, default: () => {} },
   tabs: {
     type: Array,
     default: () => [],
@@ -80,11 +92,13 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["tab-selected", "show-popup"]);
+const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
 
 const tabsResult = ref(props.tabs);
 const topBarTabs = ref(null);
 const showTabsShadow = ref(true);
+const hasNotificationsPopup = ref(false);
+const showNotificationsPopup = ref(false);
 
 const handleTabsScroll = e => {
   const maxScrollLeftDistance = e.currentTarget.scrollWidth - e.currentTarget.clientWidth;
@@ -117,6 +131,10 @@ const selectFirstTab = tabs => {
   emit("tab-selected", tabsResult.value[props.firstLoadIndex].id);
 };
 
+const toggleNotificationsPopup = () => {
+  showNotificationsPopup.value = !showNotificationsPopup.value;
+};
+
 watch(
   () => props.tabs,
   value => {
@@ -129,6 +147,7 @@ watch(
 
 onMounted(() => {
   topBarTabs.value.addEventListener("scroll", handleTabsScroll);
+  hasNotificationsPopup.value = true;
 });
 
 if (props.tabs.length) {

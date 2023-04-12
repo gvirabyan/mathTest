@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
-    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass" @show-popup="togglePopup">
+    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass" @show-search-popup="toggleSearchPopup">
       <template #title>Topics</template>
       <template #subtitle>Today's Goal</template>
       <template #subtitle-data>20 questions</template>
@@ -24,17 +24,6 @@
       </f7-list>
     </template>
 
-    <!--    <template v-else>-->
-    <!--      <f7-list no-hairlines-md inset>-->
-    <!--        <f7-list-item v-for="i in 3" :key="`skeleton_${i}`">-->
-    <!--          <template #root>-->
-    <!--            <f7-skeleton-block effect="wave">-->
-    <!--              <f7-skeleton-text />-->
-    <!--            </f7-skeleton-block>-->
-    <!--          </template>-->
-    <!--        </f7-list-item>-->
-    <!--      </f7-list>-->
-    <!--    </template>-->
     <loading-small v-else />
 
     <bottom-menu :current-path="f7route.path" />
@@ -42,7 +31,7 @@
     <f7-popup class="search-popup" :opened="isSearchPopup">
       <f7-page>
         <div class="close-btn-wrapper display-flex justify-content-end">
-          <f7-button class="close-btn" @click="togglePopup">
+          <f7-button class="close-btn" @click="toggleSearchPopup">
             <img src="@/assets/icons/close.svg" alt="Close popup" />
           </f7-button>
         </div>
@@ -165,7 +154,7 @@ const getCategoriesByClass = async id => {
   isLoading.value = false;
 };
 
-const togglePopup = () => {
+const toggleSearchPopup = () => {
   if (isSearchPopup.value) {
     searchStr.value = "";
     keywords.value.forEach(k => (k.active = false));
@@ -181,7 +170,7 @@ const selectKeyword = index => {
 };
 
 const goToQuestions = categoryId => {
-  togglePopup();
+  toggleSearchPopup();
   props.f7router.navigate(`/categories/${categoryId}/questions/`);
 };
 

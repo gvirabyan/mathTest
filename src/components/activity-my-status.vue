@@ -8,13 +8,13 @@
           <custom-select :options="goalsOptions" :disabled="disableSelect" @input:selected="setGoalHandler" />
         </div>
 
-        <template v-if="userStatus.last_quiz">
+        <template v-if="userStatus.last_quiz && userStatus.last_quiz.lastCategory">
           <h2 class="title">Last quiz</h2>
 
           <f7-block class="last-quiz">
-            <h3 class="last-quiz-name">{{ userStatus.last_quiz.lastCategory.name }}</h3>
+            <h3 class="last-quiz-name">{{ userStatus.last_quiz?.lastCategory.name }}</h3>
             <p class="last-quiz-stats">
-              {{ userStatus.last_quiz.answeredQuestions }}/{{ userStatus.last_quiz.totalQuestions }}
+              {{ userStatus.last_quiz?.answeredQuestions }}/{{ userStatus.last_quiz?.totalQuestions }}
             </p>
           </f7-block>
         </template>
@@ -41,13 +41,13 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
+import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
-import LoadingSmall from "@/components/loading-small.vue";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
-import { f7 } from "framework7-vue";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const authStore = useAuthStore();
 const userStatsStore = useUserStats();

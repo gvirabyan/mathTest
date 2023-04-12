@@ -152,20 +152,15 @@
 import { ref, markRaw } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-// import { useCategoryStore } from "@/js/stores/categories";
+import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import MyStatus from "@/components/activity-my-status.vue";
-
 import TopList from "@/components/activity-my-toplist.vue";
 import MyAnswers from "@/components/activity-my-answers.vue";
-import { useCategoryStore } from "@/js/stores/categories";
-
-// const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
-// const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 defineProps({
   f7route: {
