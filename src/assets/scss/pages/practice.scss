@@ -2,10 +2,41 @@
   .page-content {
     display: flex;
     flex-direction: column;
-    padding: 0;
-
     .list {
+      margin: 0;
+      padding: 30px 24px;
       flex: 1;
+      .item-content {
+        padding-left: 0;
+        padding-right: 0;
+        .item-inner {
+          padding-top: 20px;
+          padding-bottom: 20px;
+          display: unset;
+          .item-title {
+            .row {
+              margin-top: 1px;
+              width: 100%;
+              .points {
+                all: unset;
+                font-family: 'Rubik';
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                color: #8419FF;
+              }
+              .question {
+                all: unset;
+                font-family: 'Rubik';
+                font-style: normal;
+                font-weight: 500;
+                font-size: 18px;
+                line-height: 22px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
