@@ -84,8 +84,9 @@ const {
   machineScore,
   currentQuizQuestionNumber,
 } = storeToRefs(useQuizStore());
-const { updateUser } = useAuthStore();
 const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore } = useQuizStore();
+
+const { updateUser } = useAuthStore();
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
@@ -148,18 +149,18 @@ const endQuiz = () => {
     lose: "You have lost",
   };
 
-  endQuizAlert.value = f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
-    const pointsObject = {
-      win: user.value.points + quizMode.value.winPoints,
-      draw: user.value.points + quizMode.value.drawPoints,
-      lose: user.value.points + quizMode.value.losePoints,
-    };
+  const pointsObject = {
+    win: user.value.points + quizMode.value.winPoints,
+    draw: user.value.points + quizMode.value.drawPoints,
+    lose: user.value.points + quizMode.value.losePoints,
+  };
 
+  endQuizAlert.value = f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
     updateUser({ points: pointsObject[result] }).then(() => {
       f7.toast.show({
         text: "Your points were updated",
         closeButton: true,
-        closeTimeout: 1500,
+        closeTimeout: 1000,
         on: {
           close: () => {
             useQuizStore().$reset();

@@ -11,8 +11,8 @@
     <!-- Page content-->
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
       <template #title>Activity</template>
-      <template #subtitle>Today's Goal</template>
-      <template #subtitle-data>20 questions</template>
+      <template v-if="user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="activity-tab-content">
@@ -150,22 +150,17 @@
 
 <script setup>
 import { ref, markRaw } from "vue";
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-// import { useCategoryStore } from "@/js/stores/categories";
+import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import MyStatus from "@/components/activity-my-status.vue";
-
 import TopList from "@/components/activity-my-toplist.vue";
 import MyAnswers from "@/components/activity-my-answers.vue";
-import { useCategoryStore } from "@/js/stores/categories";
-
-// const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
-// const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 defineProps({
   f7route: {
@@ -178,12 +173,16 @@ const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 // const questionsStore = useQuestionsStore();
 
-// const { user } = storeToRefs(authStore);
+const { user } = storeToRefs(authStore);
 // const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
 
 const { getUser } = authStore;
-const { getCategories, getLastCategory, getPastCategories } = categoryStore;
+const {
+  // getCategories,
+  // getLastCategory,
+  getPastCategories,
+} = categoryStore;
 // const { getAnsweredQuestionsCount } = questionsStore;
 
 const activityTabs = ref([

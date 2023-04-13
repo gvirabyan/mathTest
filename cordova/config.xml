@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.framework7.f7math" version="1.0.0">
+<widget id="io.framework7.matheapp" version="1.0.0">
     <name>Mathe App</name>
     <description>Mathe app for school</description>
     <author email="sahakyan.dev@gmail.com" href="https://cordova.apache.org">
@@ -37,6 +37,8 @@
         <splash src="res/screen/ios/Default@2x~ipad~comany.png" />
     </platform>
     <platform name="android">
+        <preference name="android-minSdkVersion" value="21" />
+        <preference name="AndroidXEnabled" value="true" />
         <preference name="SplashMaintainAspectRatio" value="true" />
         <preference name="SplashShowOnlyFirstTime" value="true" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen/android/splash-square.png" />
@@ -63,6 +65,5 @@
     <preference name="Allow3DTouchLinkPreview" value="false" />
     <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <preference name="AllowInlineMediaPlayback" value="true" />
-    <engine name="android" />
     <engine name="ios" />
 </widget>
