@@ -34,6 +34,9 @@ const cordovaApp = {
 
     // Handle Splash Screen
     cordovaApp.handleSplashScreen();
+
+    // eslint-disable-next-line no-undef
+    WonderPush.subscribeToNotifications();
   },
 };
 

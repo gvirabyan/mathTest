@@ -1,5 +1,5 @@
 {
-  "name": "io.framework7.f7math",
+  "name": "io.framework7.matheapp",
   "displayName": "Math App",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
@@ -13,11 +13,14 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^10.1.2",
+    "cordova-android": "^11.0.0",
     "cordova-ios": "^6.2.0",
+    "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-keyboard": "^1.2.0",
     "cordova-plugin-splashscreen": "^6.0.2",
-    "cordova-plugin-statusbar": "^3.0.0"
+    "cordova-plugin-statusbar": "^3.0.0",
+    "wonderpush-cordova-sdk": "^3.2.6",
+    "wonderpush-cordova-sdk-fcm": "^1.0.6"
   },
   "cordova": {
     "plugins": {
@@ -27,11 +30,21 @@
       "cordova-plugin-facebook-connect": {
         "APP_ID": "1233719074230188",
         "APP_NAME": "Math App"
+      },
+      "wonderpush-cordova-sdk": {
+        "CLIENT_ID": "7eb03e34e599e04a55aea05aa5cd208aa097cd7f",
+        "CLIENT_SECRET": "23974204f3b0a141d8e98602ecdda9d664846f6caab6adb3189c5354e57fc75f",
+        "LOGGING": "false",
+        "AUTO_INIT": "true",
+        "REQUIRES_USER_CONSENT": "false"
+      },
+      "wonderpush-cordova-sdk-fcm": {
+        "SENDER_ID": "991929394310"
       }
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "dependencies": {
