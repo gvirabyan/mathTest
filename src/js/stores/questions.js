@@ -11,6 +11,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   const answeredQuestions = ref([]);
   const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
+  const answeredQuestionsPoints = ref(0);
 
   const auth = useAuthStore();
 
@@ -39,11 +40,13 @@ export const useQuestionsStore = defineStore("questions", () => {
     const questionsIds = [];
     await api
       .get(
-        `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[limit]=-1`,
+        `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[limit]=200`,
       )
       .then(res => res.json())
       .then(data => {
         answeredQuestionsData.value = data?.data;
+        answeredQuestionsPoints.value = data?.topic_points;
+
         data?.data.forEach(answer => {
           questionsIds.push(answer?.attributes?.question?.data?.id);
         });
@@ -74,6 +77,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestions,
     answeredQuestionsData,
     answeredQuestionsCount,
+    answeredQuestionsPoints,
     questionsData,
     questionData,
     questionsAreOver,
