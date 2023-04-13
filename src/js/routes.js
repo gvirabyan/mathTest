@@ -41,7 +41,7 @@ function checkSecurity({ to, from, resolve, reject }) {
 
 function checkAccount({ to, from, resolve, reject }) {
   const store = useAuthStore()
-  const { changeAccountPath } = store;
+  const { changeAccountPath,  } = store;
   const { checkAccountData } = storeToRefs(store);
   const { accountLeavePopup } = storeToRefs(store);
   if(checkAccountData.value) {
@@ -134,20 +134,29 @@ const routes = [
   },
   {
     path: "/profile/about-us/",
+    name: 'AboutUs',
     beforeEnter: checkAuth,
     asyncComponent: () => import("../pages/about-us.vue"),
   },
   {
     path: "/profile/security/",
+    name: 'Security',
     asyncComponent: () => import("../pages/security.vue"),
     beforeEnter: checkAuth,
     beforeLeave: checkSecurity,
   },
   {
     path: "/profile/account/",
+    name: 'Account',
     asyncComponent: () => import("../pages/account.vue"),
     beforeEnter: checkAuth,
     beforeLeave: checkAccount,
+  },
+  {
+    path: "/profile/send-reports",
+    name: "Send reports",
+    asyncComponent: () => import("../pages/send-reports.vue"),
+    beforeEnter: checkAuth,
   },
   {
     path: "/profile2/",
@@ -219,12 +228,6 @@ const routes = [
     path: "/settings/feedback",
     name: "Write a review",
     asyncComponent: () => import("../pages/feedback.vue"),
-    beforeEnter: checkAuth,
-  },
-  {
-    path: "/settings/send-reports",
-    name: "Send reports",
-    asyncComponent: () => import("../pages/send-reports.vue"),
     beforeEnter: checkAuth,
   },
   {

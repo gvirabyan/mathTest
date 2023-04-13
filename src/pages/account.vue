@@ -82,58 +82,68 @@
               @input="setCourseInputValid"
             />
 
+<!--            <f7-list-input-->
+<!--              v-model:value="profileData.course"-->
+<!--              type="text"-->
+<!--              name="class"-->
+<!--              class="custom-list-input"-->
+<!--              label="Class/course"-->
+<!--            />-->
+<!--            <div-->
+<!--              v-if="myCourses.length && !checkShowCourse && profileData.course.length"-->
+<!--              class="class-options"-->
+<!--            >-->
+<!--              <f7-button v-for="course in myCourses" :key="course">-->
+<!--                <p @click="profileData.course = course" v-text="course" />-->
+<!--              </f7-button>-->
+<!--            </div>-->
             <f7-list-input
+              ref="coursesInput"
               v-model:value="profileData.course"
-              type="text"
-              name="class"
-              class="custom-list-input"
+              v-click-out-side="closeDropdown"
+              class="courses-input custom-list-input"
               label="Class/course"
-            />
-            <div v-if="myCourses.length && !checkShowCourse && profileData.course.length" class="class-options">
-              <f7-button
-                v-for="course in myCourses"
-                :key="course"
-              >
-                <p
-                  @click="profileData.course = course"
-                  v-text="course"
-                />
-              </f7-button>
+              type="text"
+              placeholder="Your class/course"
+              clear-button
+              error-message="Please fill your school/university/college before class/course"
+              :error-message-force="showCourseErrorMsg"
+              @input="setCourseInputValid"
+              @focus="openDropdown"
+            >
+              <template #root-end>
+                <f7-list v-if="courses && isCoursesDropdown" simple-list>
+                  <f7-list-item
+                    v-for="(course, index) in courses"
+                    :key="`course-item_${index + 1}`"
+                    :title="course"
+                    @click="selectCourse(course)"
+                  />
+                </f7-list>
+              </template>
+            </f7-list-input>
 
-            </div>
-
-            <f7-button @click="logoutHandler" class="log-out-btn">
-              <p>
-                Log Out
-              </p>
+            <f7-button class="log-out-btn" @click="logoutHandler">
+              <p>Log Out</p>
             </f7-button>
 
             <f7-block class="save-btn-block">
-              <f7-button
-                :class="{
-                  'button-save button-large': true,
-                  'button-fill': !disableSaveBtn,
-                  'button-disabled-fill': disableSaveBtn,
-                }"
-                @click="updateProfile"
-              >
-                Save
-              </f7-button>
-              <p class="error-message">{{errorMessage}}</p>
+              <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
+              <p class="error-message">{{ errorMessage }}</p>
             </f7-block>
           </f7-list>
         </div>
       </Transition>
     </main>
 
-    <div v-if="isCalendarOpened" @click="closeCalendar" class="date-popup">
-      <date-picker @click.stop  v-model="profileData.dateOfBirth"  :max-date="new Date()" />
+    <div v-if="isCalendarOpened" class="date-popup" @click="closeCalendar">
+      <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" @click.stop />
     </div>
 
     <success-message-popup
       v-if="successPopup"
-      @close="successPopup = false"
-      :title="'Successfully updated'"
+     :title="'Successfully updated'"
+      @close="closeSuccessPopup"
     />
 
     <leave-page-popup
@@ -191,7 +201,7 @@
 </template>
 
 <script setup>
-import {ref, markRaw, reactive, watch, computed, onMounted} from "vue";
+import { ref, markRaw, reactive, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCoursesStore } from "@/js/stores/courses";
@@ -204,9 +214,10 @@ import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue"
-import LeavePagePopup from "@/components/leave-page-popup.vue"
-import {f7} from "framework7-vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
+import LeavePagePopup from "@/components/leave-page-popup.vue";
+import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
+import { f7 } from "framework7-vue";
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
@@ -215,11 +226,24 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  f7router: Object
+  f7router: Object,
 });
 
-const myCourses = computed(() => courses.value.filter(v => v.includes(profileData.course) !== -1))
-const checkShowCourse = computed(() => !!courses.value.find( v => v === profileData.course))
+const isCoursesDropdown = ref(false);
+
+const openDropdown = () => {
+  isCoursesDropdown.value = true;
+};
+
+const closeDropdown = () => {
+  isCoursesDropdown.value = false;
+};
+
+const selectCourse = course => {
+  profileData.course = course;
+  isCoursesDropdown.value = false;
+};
+
 const authStore = useAuthStore();
 const coursesStore = useCoursesStore();
 const { updateUser } = authStore;
@@ -229,27 +253,32 @@ const { user } = storeToRefs(authStore);
 const { isNicknamedOnlyUser } = storeToRefs(authStore);
 const { changeCheckAccountData } = authStore;
 const dateStr = ref(null);
-const successPopup = ref(false)
+const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const profileTabs = ref([
   {
     id: 1,
     name: "Account",
-    path: '/profile/account/'
+    path: "/profile/account/",
     // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
-    path: '/profile/security/'
+    path: "/profile/security/",
     // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
-    path: '/profile/about-us/'
+    path: "/profile/about-us/",
     // component: markRaw(AboutUs),
+  },
+  {
+    id: 4,
+    name: "Send Reports",
+    path: "/profile/send-reports/",
   },
 ]);
 
@@ -268,20 +297,20 @@ const profileData = reactive({
   course: "",
 });
 
-const errorMessage = ref('')
+const checkOutSideClick = ref(true);
+watch(
+  () => profileData.course,
+  () => {
+    checkOutSideClick.value = true;
+  },
+);
+
+const errorMessage = ref("");
 
 watch(
   () => profileData.institution,
   val => {
     val.place_id && getCourses(val.place_id);
-  },
-  { deep: true },
-);
-
-watch(
-  () => profileData,
-  (val, prev) => {
-    console.log(val, prev, 55)
   },
   { deep: true },
 );
@@ -303,10 +332,10 @@ const initAutocompleteInputs = () => {
     elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
 
     countryCode.value &&
-    autocomplete.setComponentRestrictions({
-      // restrict the country
-      country: countryCode.value,
-    });
+      autocomplete.setComponentRestrictions({
+        // restrict the country
+        country: countryCode.value,
+      });
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
@@ -332,23 +361,23 @@ const initAutocompleteInputs = () => {
 };
 
 const updateProfile = () => {
-  errorMessage.value = ''
+  accountLeavePopup.value = false;
+  errorMessage.value = "";
   if (showCourseErrorMsg.value) {
-    errorMessage.value =  "Fill all of the inputs correctly"
+    errorMessage.value = "Fill all of the inputs correctly";
     return;
   }
 
   // disableSubmit.value = true;
 
-  updateUser(profileData)
-    .then(res => {
-      if (res.status === "success") {
-        successPopup.value = true;
-        return;
-      }
-      errorMessage.value = res.message
-    })
-    // .finally(() => (disableSubmit.value = false));
+  updateUser(profileData).then(res => {
+    if (res.status === "success") {
+      successPopup.value = true;
+      return;
+    }
+    errorMessage.value = res.message;
+  });
+  // .finally(() => (disableSubmit.value = false));
   initAutocompleteInputs();
 };
 
@@ -356,15 +385,15 @@ const { accountLeavePopup } = storeToRefs(authStore);
 const { accountPath } = storeToRefs(authStore);
 
 function closeLeavePopup() {
-  accountLeavePopup.value = false
+  accountLeavePopup.value = false;
 }
 
 function discardChanges() {
-  if(accountPath.value) {
-
-    props.f7router.navigate(accountPath.value);
+  if (accountPath.value) {
+    changeCheckAccountData(false);
     accountLeavePopup.value = false;
-    accountPath.value = '';
+    props.f7router.navigate(accountPath.value);
+    accountPath.value = "";
   }
 }
 
@@ -384,7 +413,7 @@ const updateCity = () => {
   };
   profileData.course = "";
 };
-const showCourseErrorMsg = ref(false)
+const showCourseErrorMsg = ref(false);
 const setCourseInputValid = e => {
   if (e.target.value) {
     showCourseErrorMsg.value = !profileData.institution.name;
@@ -408,6 +437,14 @@ onMounted(() => {
   initAutocompleteInputs();
 });
 
+function closeSuccessPopup() {
+  if(accountPath.value) {
+    changeCheckAccountData(false);
+    props.f7router.navigate(accountPath.value);
+  }
+  successPopup.value = false
+}
+
 watch(countryCode, val => {
   val && initAutocompleteInputs();
 });
@@ -415,11 +452,11 @@ watch(countryCode, val => {
 watch(
   () => user.value,
   val => {
-    setProfileDate(val.dateOfBirth)
+    setProfileDate(val.dateOfBirth);
   },
   {
-   deep: true
-  }
+    deep: true,
+  },
 );
 
 const isCalendarOpened = ref(false);
@@ -437,7 +474,7 @@ function setProfileDate(val) {
     // date formatting
     dateStr.value = val.toISOString().slice(0, 10).split("-").reverse().join("/");
     isCalendarOpened.value = false;
-  } else if(val &&  typeof val === 'string' ) {
+  } else if (val && typeof val === "string") {
     dateStr.value = val.slice(0, 10).split("-").reverse().join("/");
   }
 }
@@ -452,20 +489,22 @@ watch(
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 );
-const { checkAccountData } = storeToRefs(authStore)
+const { checkAccountData } = storeToRefs(authStore);
+let changeSecondTime = 0;
 watch(
   () => profileData,
   val => {
-    // checkAccountData.value = true;
-    changeCheckAccountData(true)
+    ++changeSecondTime;
+    if(changeSecondTime > 2) {
+      changeCheckAccountData(true);
+    }
   },
   {
     deep: true,
-    immediate: true
-  }
+  },
 );
 
 const isLoading = ref(false);
@@ -517,7 +556,7 @@ const nicknamedUserUpdate = () => {
   if (nicknamedUserData.password === nicknamedUserData.confirmPassword) {
     updateNicknamedUser(nicknamedUserData).then(resp => {
       if (resp.status === "success") {
-        checkAccountData.value = false
+        checkAccountData.value = false;
         isPopupOpened.value = false;
         logoutUser();
         return;
@@ -552,7 +591,6 @@ const nicknamedUserLogout = () => {
     // });
   });
 };
-
 </script>
 
 <style lang="scss">
@@ -569,7 +607,7 @@ const nicknamedUserLogout = () => {
   opacity: 0;
 }
 .pac-container {
-  border: 1px solid #E4E4E4;
+  border: 1px solid #e4e4e4;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.06);
   border-radius: 8px;
   margin-top: 10px;
@@ -584,7 +622,7 @@ const nicknamedUserLogout = () => {
     border-radius: 5px;
     line-height: 16px;
     &:hover {
-      background: #F1E5FF;
+      background: #f1e5ff;
     }
     .pac-icon {
       display: none;

@@ -187,7 +187,13 @@ const menuLinks = ref([
 ]);
 
 const menuLinksRes = computed(() => {
-  return menuLinks.value.map(link => ({ ...link, active: link.href === props.currentPath }));
+  return menuLinks.value.map(link => ({
+    ...link,
+    active:
+      link.name === "Profile"
+        ? link.href.split("e/")[0] === props.currentPath.split("e/")[0]
+        : link.href === props.currentPath,
+  }));
 });
 </script>
 
