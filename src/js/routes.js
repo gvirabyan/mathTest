@@ -30,10 +30,23 @@ function checkSecurity({ to, from, resolve, reject }) {
   const { passwords } = store;
   const { changeSecurityPath } = store;
   const { securityLeavePopup } = storeToRefs(store);
-  const { securityPath } = storeToRefs(store);
   if(passwords.confirmNewPassword || passwords.newPassword) {
-    changeSecurityPath(to.path)
     securityLeavePopup.value = true
+    changeSecurityPath(to.path)
+    reject();
+  } else {
+    resolve()
+  }
+}
+
+function checkAccount({ to, from, resolve, reject }) {
+  const store = useAuthStore()
+  const { changeAccountPath,  } = store;
+  const { checkAccountData } = storeToRefs(store);
+  const { accountLeavePopup } = storeToRefs(store);
+  if(checkAccountData.value) {
+    changeAccountPath(to.path)
+    accountLeavePopup.value = true
     reject();
   } else {
     resolve()
@@ -135,8 +148,9 @@ const routes = [
   {
     path: "/profile/account/",
     name: 'Account',
-    beforeEnter: checkAuth,
     asyncComponent: () => import("../pages/account.vue"),
+    beforeEnter: checkAuth,
+    beforeLeave: checkAccount,
   },
   {
     path: "/profile/send-reports",

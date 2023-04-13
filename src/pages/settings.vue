@@ -126,6 +126,7 @@ const { isNicknamedOnlyUser } = storeToRefs(authStore);
 const { logout, updateNicknamedUser, deleteNicknamedUser } = authStore;
 
 const isPopupOpened = ref(false);
+
 const nicknamedUserData = reactive({
   email: "",
   password: "",

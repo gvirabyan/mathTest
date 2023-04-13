@@ -1,8 +1,8 @@
 {
-  "name": "my-app",
+  "name": "mathe-app",
   "private": true,
   "version": "1.0.0",
-  "description": "My App",
+  "description": "Mathe App",
   "repository": "",
   "license": "UNLICENSED",
   "scripts": {

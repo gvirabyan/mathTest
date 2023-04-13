@@ -14,11 +14,14 @@ export const useAuthStore = defineStore("auth", () => {
 
   // for security page
   const checkPassSave = ref(false);
+  const checkAccountData = ref(false);
   const securityLeavePopup = ref(false)
   const securityPath = ref('');
+  const accountLeavePopup = ref(false)
+  const accountPath = ref('');
   const passwords = ref({
-      newPassword: '',
-      confirmNewPassword: ''
+    newPassword: '',
+    confirmNewPassword: ''
   })
 
 
@@ -36,6 +39,18 @@ export const useAuthStore = defineStore("auth", () => {
   const changeSecurityLeavePopup = () => {
     securityLeavePopup.value = !securityLeavePopup.value
   };
+
+  // for account page
+  const changeAccountPath = (data) => {
+    accountPath.value = data
+  };
+  const changeAccountLeavePopup = () => {
+    accountLeavePopup.value = !securityLeavePopup.value
+  };
+  const changeCheckAccountData = (value) => {
+    checkAccountData.value = value
+  };
+
 
   const changePasswords = (data) => {
     passwords.value = data
@@ -253,7 +268,13 @@ export const useAuthStore = defineStore("auth", () => {
     passwords,
     checkPassSave,
     securityLeavePopup,
+    accountLeavePopup,
+    accountPath,
+    checkAccountData,
     securityPath,
+    changeCheckAccountData,
+    changeAccountPath,
+    changeAccountLeavePopup,
     changeSecurityLeavePopup,
     changePasswords,
     changeSecurityPath,
