@@ -1,3 +1,132 @@
+.logout-popup {
+  .item-input-wrap {
+    input {
+      &:after {
+        display: none !important;
+      }
+    }
+  }
+  .logout-popup-header {
+    margin: 0;
+    position: relative;
+    .link {
+      &.x-icon {
+        all: unset;
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        z-index: 90;
+      }
+    }
+    .block-title {
+      margin: 0;
+      padding: 70px 0 0 0;
+      text-align: center;
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 22px;
+      color: #212121;
+    }
+  }
+  .list {
+    padding: 0 16px 120px 16px;
+    .custom-list-input {
+      height: 81px;
+      .item-content {
+        padding: 0 !important;
+      }
+      .item-inner {
+        margin: 0;
+        input {
+          height: 36px !important;
+        }
+        padding: 0 !important;
+        &:after {
+          display: none;
+          background: #212121 !important;
+        }
+        .item-label {
+          font-family: 'Rubik';
+          font-style: normal;
+          font-weight: 300;
+          font-size: 12px;
+          line-height: 14px;
+          color: #212121;
+        }
+      }
+
+      .item-input-wrap {
+        height: 58px;
+
+        &.item-input-focused {
+        }
+
+        &:after {
+          content: "";
+          display: block;
+          position: absolute;
+          transform: unset !important;
+          bottom: 9px !important;
+          width: 100% !important;
+          height: 0.9px !important;
+          background: #212121 !important;
+        }
+
+        .item-input-error-message {
+          position: relative !important;
+          top: 0;
+          margin-top: 20px !important;
+          margin-bottom: 0 !important;
+        }
+      }
+    }
+  }
+  .logout-popup-footer-block {
+    margin: 0;
+    height: 130px;
+    position: fixed;
+    background-color: #fff;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    .delete-btn {
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      height: unset;
+      padding: 10px;
+      line-height: 24px;
+      background: #212121;
+      opacity: 0.3;
+      border-radius: 6px;
+      color: #fff;
+      text-transform: none;
+    }
+    .save-btn {
+      font-family: 'Rubik';
+      height: unset;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 10px;
+      line-height: 24px;
+      background: #8419FF;
+      border-radius: 6px;
+      color: #fff;
+      text-transform: none;
+    }
+    .error-message {
+      color: red;
+      text-align: center;
+      font-size: 12px;
+      font-family: "Rubik";
+    }
+  }
+
+}
 .profile-account-page {
   .date-popup {
     position: fixed;

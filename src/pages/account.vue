@@ -81,22 +81,6 @@
               @focus="initAutocompleteInputs"
               @input="setCourseInputValid"
             />
-
-<!--            <f7-list-input-->
-<!--              v-model:value="profileData.course"-->
-<!--              type="text"-->
-<!--              name="class"-->
-<!--              class="custom-list-input"-->
-<!--              label="Class/course"-->
-<!--            />-->
-<!--            <div-->
-<!--              v-if="myCourses.length && !checkShowCourse && profileData.course.length"-->
-<!--              class="class-options"-->
-<!--            >-->
-<!--              <f7-button v-for="course in myCourses" :key="course">-->
-<!--                <p @click="profileData.course = course" v-text="course" />-->
-<!--              </f7-button>-->
-<!--            </div>-->
             <f7-list-input
               ref="coursesInput"
               v-model:value="profileData.course"
@@ -156,12 +140,17 @@
     <bottom-menu :current-path="f7route.path" />
     <f7-popup class="logout-popup" swipe-to-close :opened="isPopupOpened" @popup:closed="isPopupOpened = false">
       <f7-page>
-        <f7-navbar title="Logout Warning">
-          <f7-nav-right>
-            <f7-link popup-close>Close</f7-link>
-          </f7-nav-right>
-        </f7-navbar>
-
+<!--        <f7-navbar title="Logout Warning">-->
+<!--          <f7-nav-right>-->
+<!--            <f7-link popup-close>Close</f7-link>-->
+<!--          </f7-nav-right>-->
+<!--        </f7-navbar>-->
+        <f7-block class="logout-popup-header">
+          <f7-link class="x-icon" popup-close>
+            <img src="@/assets/icons/x.svg" >
+          </f7-link>
+          <f7-block-title>Logout Warning</f7-block-title>
+        </f7-block>
         <f7-block>
           <p>
             Please provide your email and password to be able to login back later. Otherwise, your account and all
@@ -172,28 +161,38 @@
         <f7-list no-hairlines form>
           <f7-list-input
             v-model:value="nicknamedUserData.email"
+            class="custom-list-input"
             type="text"
             name="email"
             placeholder="E-mail"
+            :error-message="nicknamedUserDataError.email"
+            :error-message-force="true"
           ></f7-list-input>
 
           <f7-list-input
             v-model:value="nicknamedUserData.password"
+            class="custom-list-input"
             type="password"
             name="password"
             placeholder="Password"
+            :error-message="nicknamedUserDataError.password"
+            :error-message-force="true"
           ></f7-list-input>
 
           <f7-list-input
             v-model:value="nicknamedUserData.confirmPassword"
+            class="custom-list-input"
             type="password"
             name="password"
             placeholder="Confirm password"
+            :error-message="nicknamedUserDataError.confirmPassword"
+            :error-message-force="true"
           ></f7-list-input>
         </f7-list>
-        <f7-block>
-          <f7-button class="mb-8" fill color="blue" @click="nicknamedUserUpdate">Save and logout</f7-button>
-          <f7-button fill color="red" @click="nicknamedUserLogout">Delete account</f7-button>
+        <f7-block class="logout-popup-footer-block">
+          <f7-button class="mb-8 save-btn" @click="nicknamedUserUpdate">Save and logout</f7-button>
+          <f7-button class="delete-btn" @click="nicknamedUserLogout">Delete account</f7-button>
+          <p class="error-message">{{ errMessageNicknamed }}</p>
         </f7-block>
       </f7-page>
     </f7-popup>
@@ -452,7 +451,10 @@ watch(countryCode, val => {
 watch(
   () => user.value,
   val => {
-    setProfileDate(val.dateOfBirth);
+    if(val && val.dateOfBirth) {
+      setProfileDate(val.dateOfBirth);
+    }
+
   },
   {
     deep: true,
@@ -552,7 +554,19 @@ const nicknamedUserData = reactive({
   confirmPassword: "",
 });
 
+const nicknamedUserDataError = reactive({
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
+const errMessageNicknamed = ref('');
+
 const nicknamedUserUpdate = () => {
+  errMessageNicknamed.value = ''
+  nicknamedUserDataError.email = ''
+  nicknamedUserDataError.password = ''
+  nicknamedUserDataError.confirmPassword = ''
   if (nicknamedUserData.password === nicknamedUserData.confirmPassword) {
     updateNicknamedUser(nicknamedUserData).then(resp => {
       if (resp.status === "success") {
@@ -561,11 +575,9 @@ const nicknamedUserUpdate = () => {
         logoutUser();
         return;
       }
-
-      // f7.toast.show({
-      //   text: resp.message,
-      //   closeButton: true,
-      // });
+      resp.details.errors.forEach((err) => {
+        nicknamedUserDataError[err.path[0]] = err.message
+      })
     });
 
     return;
@@ -575,6 +587,7 @@ const nicknamedUserUpdate = () => {
   //   text: "Password and password confirmation should match",
   //   closeButton: true,
   // });
+  errMessageNicknamed.value = 'Password and password confirmation should match';
 };
 
 const nicknamedUserLogout = () => {
