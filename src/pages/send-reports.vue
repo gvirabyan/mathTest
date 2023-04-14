@@ -231,27 +231,10 @@ const updateEmail = ref('');
 const openEditParentEmail = (id, email) => {
   updatePopup.value = id;
   updateEmail.value = email;
-  // f7.dialog.prompt(
-  //   "Please enter new email",
-  //   "Edit the parent's email",
-  //   function (value) {
-  //     editParentEmailHandler(id, value);
-  //   },
-  //   null,
-  //   email,
-  // );
 };
 
 const openRemoveParentEmail = id => {
   deletePopup.value = id;
-  // f7.dialog.confirm(
-  //   "Are you sure?",
-  //   "Remove the parent's email",
-  //   function () {
-  //     removeParentEmailHandler(id);
-  //   },
-  //   null,
-  // );
 };
 const errUpdateMsg = ref('');
 
@@ -264,7 +247,6 @@ const editParentEmailHandler = async (email) => {
 
   await editParentEmail(updatePopup.value, email).then(res => {
     if (res.status === "success") {
-      f7.dialog.close();
       updatePopup.value = false;
       successPopup.value = "You have successfully updated parent's email"
       return;

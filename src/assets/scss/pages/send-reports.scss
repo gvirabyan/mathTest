@@ -6,10 +6,7 @@
     overflow: auto;
     height: calc(100vh - 353px);
     ul {
-      &:before {
-        display: none;
-      }
-      &:after {
+      &:before, &:after {
         display: none;
       }
       .item-content {
@@ -33,10 +30,10 @@
         height: 60px;
         .item-inner {
           margin: 0;
+          padding: 0 !important;
           input {
             height: 36px !important;
           }
-          padding: 0 !important;
           &:after {
             display: none;
             background: #212121 !important;

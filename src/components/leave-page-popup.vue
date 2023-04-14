@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   title: {
     default: ` Are you sure you want <br> to leave this page?`
   },
