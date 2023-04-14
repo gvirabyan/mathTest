@@ -140,11 +140,6 @@
     <bottom-menu :current-path="f7route.path" />
     <f7-popup class="logout-popup" swipe-to-close :opened="isPopupOpened" @popup:closed="isPopupOpened = false">
       <f7-page>
-<!--        <f7-navbar title="Logout Warning">-->
-<!--          <f7-nav-right>-->
-<!--            <f7-link popup-close>Close</f7-link>-->
-<!--          </f7-nav-right>-->
-<!--        </f7-navbar>-->
         <f7-block class="logout-popup-header">
           <f7-link class="x-icon" popup-close>
             <img src="@/assets/icons/x.svg" >
@@ -582,11 +577,6 @@ const nicknamedUserUpdate = () => {
 
     return;
   }
-
-  // f7.toast.show({
-  //   text: "Password and password confirmation should match",
-  //   closeButton: true,
-  // });
   errMessageNicknamed.value = 'Password and password confirmation should match';
 };
 
