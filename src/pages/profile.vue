@@ -15,11 +15,7 @@
       </Transition>
     </main>
 
-    <success-message-popup
-      v-if="successPopup"
-      @close="successPopup = false"
-      :title="successPopup"
-    />
+    <success-message-popup v-if="successPopup" :title="successPopup" @close="successPopup = false" />
 
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
@@ -35,7 +31,7 @@ import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
 
 // const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 // const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
@@ -80,7 +76,7 @@ const { getUser } = authStore;
 // const { getCategories, getLastCategory, getPastCategories } = categoryStore;
 // const { getAnsweredQuestionsCount } = questionsStore;
 
-const successPopup = ref(false)
+const successPopup = ref(false);
 
 const setProfileComponent = id => {
   currentActivityComponent.value = profileTabs.value.find(t => t.id === id).component;
@@ -100,7 +96,6 @@ const getAllData = async () => {
 
   isLoading.value = false;
 };
-
 </script>
 
 <style lang="scss">

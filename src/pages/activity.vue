@@ -11,8 +11,8 @@
     <!-- Page content-->
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
       <template #title>Activity</template>
-      <template v-if="user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="activity-tab-content">
