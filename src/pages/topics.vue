@@ -2,8 +2,8 @@
   <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
     <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass" @show-search-popup="toggleSearchPopup">
       <template #title>Topics</template>
-      <template #subtitle>Today's Goal</template>
-      <template #subtitle-data>20 questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <template v-if="!isLoading">
@@ -78,21 +78,24 @@
 import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import TextClamp from "vue3-text-clamp";
+import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
-import TopBar from "@/components/topbar.vue";
-import BottomMenu from "@/components/bottom-menu.vue";
 import useDebouncedRef from "@/js/composables/use-debounced-ref";
 import LoadingSmall from "@/components/loading-small.vue";
+import TopBar from "@/components/topbar.vue";
+import BottomMenu from "@/components/bottom-menu.vue";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
 
+const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
+const { user } = storeToRefs(authStore);
 const { categoriesData, searchedCategoriesData } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;

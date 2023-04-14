@@ -1,42 +1,40 @@
 <template>
-  <div @click="$emit('close')" class="success-popup-background">
-    <f7-block @click.stop class="success-popup-body">
-      <img class="close-icon"
-          @click="$emit('close')"
-          src="@/assets/icons/x.svg"
-      >
-      <f7-block-title>
-        {{title}}
-      </f7-block-title>
-      <p v-if="text">
-        {{text}}
-      </p>
-      <f7-button @click="$emit('close')">Got it</f7-button>
+  <div class="success-popup-background" @click="emit('close')">
+    <f7-block class="success-popup-body" @click.stop>
+      <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
+      <f7-block-title>{{ title }}</f7-block-title>
+
+      <p v-if="text">{{ text }}</p>
+
+      <f7-button @click="emit('close')">Got it</f7-button>
     </f7-block>
   </div>
 </template>
 
 <script setup>
- const props = defineProps({
-   text: {
-     type: String,
-     default: ''
-   },
-   title: {
-     type: String,
-     default: ''
-   }
- })
+defineProps({
+  text: {
+    type: String,
+    default: "",
+  },
+  title: {
+    type: String,
+    default: "",
+  },
+});
 
+const emit = defineEmits(["close"]);
 </script>
 
 <style lang="scss" scoped>
 .success-popup-background {
   position: fixed;
+  top: 0;
   z-index: 95;
   height: 100vh;
   width: 100%;
   background: rgba(33, 33, 33, 0.7);
+
   .success-popup-body {
     padding: 30px;
     width: 342px;
@@ -49,7 +47,7 @@
     transform: translate(-50%, -50%);
     .block-title {
       margin: 0;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -67,9 +65,9 @@
       margin-top: 30px;
       padding: 10px;
       width: 100%;
-      background: #8419FF;
+      background: #8419ff;
       border-radius: 6px;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -77,7 +75,7 @@
       display: flex;
       align-items: center;
       text-align: center;
-      color: #FFFFFF;
+      color: #ffffff;
     }
   }
 }

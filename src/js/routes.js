@@ -1,7 +1,7 @@
 import HomePage from "../pages/home.vue";
 import Activity from "../pages/activity.vue";
-import {useAuthStore} from "./stores/auth";
-import {storeToRefs} from "pinia/dist/pinia";
+import { useAuthStore } from "./stores/auth";
+import { storeToRefs } from "pinia/dist/pinia";
 
 function checkAuth({ to, from, resolve, reject }) {
   const token = localStorage.getItem("token");
@@ -26,30 +26,30 @@ function checkAuth({ to, from, resolve, reject }) {
 }
 
 function checkSecurity({ to, from, resolve, reject }) {
-  const store = useAuthStore()
+  const store = useAuthStore();
   const { passwords } = store;
   const { changeSecurityPath } = store;
   const { securityLeavePopup } = storeToRefs(store);
-  if(passwords.confirmNewPassword || passwords.newPassword) {
-    securityLeavePopup.value = true
-    changeSecurityPath(to.path)
+  if (passwords.confirmNewPassword || passwords.newPassword) {
+    securityLeavePopup.value = true;
+    changeSecurityPath(to.path);
     reject();
   } else {
-    resolve()
+    resolve();
   }
 }
 
 function checkAccount({ to, from, resolve, reject }) {
-  const store = useAuthStore()
-  const { changeAccountPath,  } = store;
+  const store = useAuthStore();
+  const { changeAccountPath } = store;
   const { checkAccountData } = storeToRefs(store);
   const { accountLeavePopup } = storeToRefs(store);
-  if(checkAccountData.value) {
-    changeAccountPath(to.path)
-    accountLeavePopup.value = true
+  if (checkAccountData.value) {
+    changeAccountPath(to.path);
+    accountLeavePopup.value = true;
     reject();
   } else {
-    resolve()
+    resolve();
   }
 }
 
@@ -134,20 +134,20 @@ const routes = [
   },
   {
     path: "/profile/about-us/",
-    name: 'AboutUs',
+    name: "AboutUs",
     beforeEnter: checkAuth,
     asyncComponent: () => import("../pages/about-us.vue"),
   },
   {
     path: "/profile/security/",
-    name: 'Security',
+    name: "Security",
     asyncComponent: () => import("../pages/security.vue"),
     beforeEnter: checkAuth,
     beforeLeave: checkSecurity,
   },
   {
     path: "/profile/account/",
-    name: 'Account',
+    name: "Account",
     asyncComponent: () => import("../pages/account.vue"),
     beforeEnter: checkAuth,
     beforeLeave: checkAccount,

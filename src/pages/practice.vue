@@ -1,17 +1,17 @@
 <template>
-  <f7-page class="hg-practice-page" name="player-vs-machine">
+  <f7-page class="hg-practice-page" name="player-vs-machine" @page:beforein="getPastCategories">
     <top-bar :tabs="practiceTabs">
       <template #title>Practice</template>
-      <template #subtitle>Today's Goal</template>
-      <template #subtitle-data>20 questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <f7-list>
       <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
         <template #title>
           <f7-row class="justify-content-space-between align-items-center">
-            <p class="question">{{ mode.questions }} Questions </p>
-            <p class="points">{{mode.showPoints}}</p>
+            <p class="question">{{ mode.questions }} Questions</p>
+            <p class="points">{{ mode.showPoints }}</p>
           </f7-row>
         </template>
       </f7-list-item>
@@ -22,16 +22,21 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "@/js/stores/auth";
+import { useCategoryStore } from "@/js/stores/categories";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import BottomMenu from "@/components/bottom-menu.vue";
 import TopBar from "@/components/topbar.vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
 
+const { user } = storeToRefs(useAuthStore());
+const { getPastCategories } = useCategoryStore();
 const { setQuizMode } = useQuizStore();
 
 const gameModes = [
@@ -41,7 +46,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_1,
     drawPoints: quizModes.DRAW_POINTS_MODE_1,
     losePoints: quizModes.LOSE_POINTS_MODE_1,
-    showPoints: '+10, +5, -2'
+    showPoints: "+10, +5, -2",
   },
   {
     id: 2,
@@ -49,7 +54,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_2,
     drawPoints: quizModes.DRAW_POINTS_MODE_2,
     losePoints: quizModes.LOSE_POINTS_MODE_2,
-    showPoints: '+20, +10, -4'
+    showPoints: "+20, +10, -4",
   },
   {
     id: 3,
@@ -57,7 +62,7 @@ const gameModes = [
     winPoints: quizModes.QUESTIONS_MODE_3,
     drawPoints: quizModes.DRAW_POINTS_MODE_3,
     losePoints: quizModes.LOSE_POINTS_MODE_3,
-    showPoints: '+30, +15, -6'
+    showPoints: "+30, +15, -6",
   },
 ];
 

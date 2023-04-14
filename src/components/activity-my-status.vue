@@ -5,7 +5,12 @@
         <div class="goal-wrapper">
           <p>Set everyday goal</p>
 
-          <custom-select :options="goalsOptions" :disabled="disableSelect" @input:selected="setGoalHandler" />
+          <custom-select
+            :options="goalsOptions"
+            :default="questionsSelectDefault"
+            :disabled="disableSelect"
+            @input:selected="setGoalHandler"
+          />
         </div>
 
         <template v-if="userStatus.last_quiz && userStatus.last_quiz.lastCategory">
@@ -29,17 +34,39 @@
             You are in Math App <span class="value">{{ userStatus.time_in_app }}</span>
           </p>
         </f7-block>
+
+        <f7-block>
+          <custom-gauge
+            :width="customGaugeOptions.width"
+            :height="customGaugeOptions.height"
+            :radius="customGaugeOptions.radius"
+            :stroke-width="customGaugeOptions.strokeWidth"
+            color="#8419FF"
+            :percent="userStatus.past_categories_percent"
+            ><template #percent>{{ userStatus.past_categories_percent }}</template>
+            <template #amount>{{ userStatus.past_categories_count }}/{{ userStatus.categories_count }}</template>
+            <template #info>categories were answered</template>
+          </custom-gauge>
+        </f7-block>
       </div>
     </transition>
 
     <transition v-else name="loader-fadeout" mode="in-out">
       <loading-small />
     </transition>
+
+    <teleport v-if="showSelectGoalSuccess" to="#activity-page">
+      <success-message-popup
+        title="Success"
+        text="Your everyday goal has been set"
+        @close="showSelectGoalSuccess = false"
+      />
+    </teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -48,19 +75,34 @@ import delay from "@/js/helpers/delay";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import CustomGauge from "@/components/custom-gauge.vue";
+
+const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const authStore = useAuthStore();
 const userStatsStore = useUserStats();
 
+const { user } = storeToRefs(authStore);
 const { updateUser } = authStore;
 const { userStatus } = storeToRefs(userStatsStore);
 const { getUserStatus } = userStatsStore;
 
+const customGaugeOptions = {
+  width: 186,
+  height: 186,
+  radius: 93,
+  strokeWidth: 10,
+};
 const goalsOptions = ["10 questions", "20 questions", "30 questions", "40 questions"];
+
 const isLoading = ref(false);
 const disableSelect = ref(false);
+const showSelectGoalSuccess = ref(false);
 
 const lastUpdate = computed(() => timeAgo(new Date(userStatus.value.last_update)));
+const questionsSelectDefault = computed(() =>
+  user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
+);
 
 const setGoalHandler = async goal => {
   const goalValue = parseInt(goal);
@@ -68,10 +110,11 @@ const setGoalHandler = async goal => {
 
   await updateUser({ everyday_goal: goalValue }).then(res => {
     if (res.status === "success") {
-      f7.toast.show({
-        text: "Everyday goal has been set",
-        closeButton: true,
-      });
+      showSelectGoalSuccess.value = true;
+
+      setTimeout(() => {
+        showSelectGoalSuccess.value = false;
+      }, 1500);
 
       return;
     }

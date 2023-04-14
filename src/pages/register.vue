@@ -135,13 +135,12 @@
 </template>
 
 <script setup>
-import { f7 } from "framework7-vue";
 import { computed, reactive, ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
 
 const props = defineProps({
-  f7route: Object,
-  f7router: Object,
+  f7route: { type: Object, default: () => {} },
+  f7router: { type: Object, default: () => {} },
 });
 
 const userData = reactive({
@@ -187,8 +186,7 @@ const startRegister = () => {
       username: userData.username,
     }).then(resp => {
       if (resp.status === "success") {
-        props.f7router.navigate("/activity/");
-        return;
+        props.f7router.navigate("/");
       } else {
         error.message = "";
         error.email = "";
@@ -216,8 +214,7 @@ const startRegister = () => {
     rememberUser.value,
   ).then(resp => {
     if (resp.status === "success") {
-      props.f7router.navigate("/activity/");
-      return;
+      props.f7router.navigate("/");
     } else {
       error.message = "";
       error.email = "";
