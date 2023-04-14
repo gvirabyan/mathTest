@@ -3,18 +3,37 @@
     <f7-block @click.stop class="leave-popup-body">
       <img class="close-icon" @click="$emit('close')" src="@/assets/icons/x.svg" >
       <f7-block-title>
-        Are you sure you want <br> to leave this page?
+        <span v-html="title" />
       </f7-block-title>
-      <p>
-        If you leave this page your edited <br> information will be removed
-      </p>
+      <p v-html="text" />
       <f7-row>
-        <f7-button @click="$emit('leave-changes')" class="leave-btn">Leave</f7-button>
-        <f7-button @click="$emit('save-changes')" class="save-btn">Save</f7-button>
+        <f7-button @click="$emit('leave-changes')" class="leave-btn">
+          {{leaveBtn}}
+        </f7-button>
+        <f7-button @click="$emit('save-changes')" class="save-btn">
+          {{saveBtn}}
+        </f7-button>
       </f7-row>
     </f7-block>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  title: {
+    default: ` Are you sure you want <br> to leave this page?`
+  },
+  text: {
+    default: `If you leave this page your edited <br> information will be removed`
+  },
+  saveBtn: {
+    default: 'Save'
+  },
+  leaveBtn: {
+    default: 'Leave'
+  }
+})
+</script>
 
 <style lang="scss" scoped>
 .leave-popup-background {
