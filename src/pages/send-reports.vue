@@ -6,7 +6,7 @@
     </top-bar>
 
     <main class="profile-tab-content">
-      <Transition name="fade">
+      <Transition v-if="!isLoading" name="fade">
         <div class="send-reports-page">
           <div class="content">
             <f7-block v-if="!isLoading" class="emails-block"
@@ -18,11 +18,11 @@
                     <template #content>
                       <f7-button fill class="action-btn edit-action" @click="openEditParentEmail(id, email)"
                       >
-                        <f7-icon f7="pencil" />
+                        <img src="@/assets/icons/pencil.svg" >
                       </f7-button>
                       <f7-button fill class="action-btn delete-action" @click="openRemoveParentEmail(id)"
                       >
-                        <f7-icon f7="trash" />
+                        <img src="@/assets/icons/trash.svg" >
                       </f7-button>
                     </template>
                   </f7-list-item>
@@ -30,13 +30,6 @@
               </div>
 
               <p v-else>You did not saved any parents' emails yet</p>
-            </f7-block>
-
-            <f7-block v-else class="emails-block">
-              <f7-skeleton-block class="mb-4" effect="wave" />
-              <f7-skeleton-block class="mb-4" effect="wave" />
-              <f7-skeleton-block class="mb-4" effect="wave" />
-              <f7-skeleton-block class="mb-4" effect="wave" />
             </f7-block>
             <template v-if="parentsEmails.length < 4">
               <f7-list form>
@@ -92,6 +85,10 @@
           </f7-block>
         </div>
       </Transition>
+
+      <Transition v-else class="loading-reports" name="loader-fadeout" mode="in-out">
+        <loading-small />
+      </Transition>
     </main>
     <success-message-popup
       v-if="successPopup"
@@ -130,6 +127,7 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import UpdatePopup from "@/components/update-popup.vue";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const props = defineProps({
   f7route: {
