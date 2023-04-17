@@ -53,6 +53,7 @@ onMounted(() => {
   f7ready(() => {
     cordovaApp.init(f7);
   });
+
   setTimeout(() => {
     loaded.value = true;
   }, 7000);

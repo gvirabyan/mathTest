@@ -15,15 +15,14 @@ export const useAuthStore = defineStore("auth", () => {
   // for security page
   const checkPassSave = ref(false);
   const checkAccountData = ref(false);
-  const securityLeavePopup = ref(false)
-  const securityPath = ref('');
-  const accountLeavePopup = ref(false)
-  const accountPath = ref('');
+  const securityLeavePopup = ref(false);
+  const securityPath = ref("");
+  const accountLeavePopup = ref(false);
+  const accountPath = ref("");
   const passwords = ref({
-    newPassword: '',
-    confirmNewPassword: ''
-  })
-
+    newPassword: "",
+    confirmNewPassword: "",
+  });
 
   // getters
   const userData = computed(() => user.value);
@@ -33,27 +32,26 @@ export const useAuthStore = defineStore("auth", () => {
 
   // actions
   // for security page
-  const changeSecurityPath = (data) => {
-    securityPath.value = data
+  const changeSecurityPath = data => {
+    securityPath.value = data;
   };
   const changeSecurityLeavePopup = () => {
-    securityLeavePopup.value = !securityLeavePopup.value
+    securityLeavePopup.value = !securityLeavePopup.value;
   };
 
   // for account page
-  const changeAccountPath = (data) => {
-    accountPath.value = data
+  const changeAccountPath = data => {
+    accountPath.value = data;
   };
   const changeAccountLeavePopup = () => {
-    accountLeavePopup.value = !securityLeavePopup.value
+    accountLeavePopup.value = !securityLeavePopup.value;
   };
-  const changeCheckAccountData = (value) => {
-    checkAccountData.value = value
+  const changeCheckAccountData = value => {
+    checkAccountData.value = value;
   };
 
-
-  const changePasswords = (data) => {
-    passwords.value = data
+  const changePasswords = data => {
+    passwords.value = data;
   };
 
   const login = async (userData, rememberUser = false) => {
@@ -241,6 +239,10 @@ export const useAuthStore = defineStore("auth", () => {
     if (!val) {
       localStorage.removeItem("user");
       return;
+    }
+
+    if (!localStorage.getItem("questionsToGoal")) {
+      localStorage.setItem("questionsToGoal", val.everyday_goal);
     }
 
     localStorage.setItem("user", JSON.stringify(val));

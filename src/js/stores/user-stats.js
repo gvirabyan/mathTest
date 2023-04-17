@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 
-export const useUserStats = defineStore("userStats", () => {
+export const useUserStats = defineStore("user-stats", () => {
   const answersStats = reactive({
     questions_count: null,
     questions_left_count: null,

@@ -35,7 +35,7 @@
           </p>
         </f7-block>
 
-        <f7-block>
+        <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count">
           <custom-gauge
             :width="customGaugeOptions.width"
             :height="customGaugeOptions.height"
