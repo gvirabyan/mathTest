@@ -1,17 +1,17 @@
 <template>
-  <div @click="$emit('close')" class="leave-popup-background">
-    <f7-block @click.stop class="leave-popup-body">
-      <img class="close-icon" @click="$emit('close')" src="@/assets/icons/x.svg" >
+  <div class="leave-popup-background" @click="$emit('close')">
+    <f7-block class="leave-popup-body" @click.stop>
+      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
       <f7-block-title>
         <span v-html="title" />
       </f7-block-title>
       <p v-html="text" />
       <f7-row>
-        <f7-button @click="$emit('leave-changes')" class="leave-btn">
-          {{leaveBtn}}
+        <f7-button class="leave-btn" @click="$emit('leave-changes')">
+          {{ leaveBtn }}
         </f7-button>
-        <f7-button @click="$emit('save-changes')" class="save-btn">
-          {{saveBtn}}
+        <f7-button class="save-btn" @click="$emit('save-changes')">
+          {{ saveBtn }}
         </f7-button>
       </f7-row>
     </f7-block>
@@ -21,18 +21,18 @@
 <script setup>
 defineProps({
   title: {
-    default: ` Are you sure you want <br> to leave this page?`
+    default: ` Are you sure you want <br> to leave this page?`,
   },
   text: {
-    default: `If you leave this page your edited <br> information will be removed`
+    default: `If you leave this page your edited <br> information will be removed`,
   },
   saveBtn: {
-    default: 'Save'
+    default: "Save",
   },
   leaveBtn: {
-    default: 'Leave'
-  }
-})
+    default: "Leave",
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +54,7 @@ defineProps({
     transform: translate(-50%, -67%);
     .block-title {
       margin: 0;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -67,7 +67,7 @@ defineProps({
       width: 146px;
       height: 40px;
       border-radius: 6px;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 500;
       font-size: 16px !important;
@@ -78,11 +78,11 @@ defineProps({
         opacity: 0.3;
       }
       &.save-btn {
-        background: #8419FF;
+        background: #8419ff;
       }
     }
     p {
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 400;
       font-size: 14px;

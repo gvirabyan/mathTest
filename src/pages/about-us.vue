@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-dashboard-content about-us-page" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent" :first-load-index="2">
+    <top-bar :tabs="profileTabs" :search="false" :first-load-index="2" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
@@ -9,11 +9,11 @@
       <Transition name="fade">
         <f7-list>
           <f7-list-item v-for="info in infos" :key="info.title">
-            <template #title >
+            <template #title>
               <f7-button @click="changPopupAboutUs(info.popup)">
                 <f7-row class="justify-content-space-between align-items-center">
                   <p class="info-title">{{ info.title }}</p>
-                  <img src="@/assets/icons/arrow-right.svg" alt="">
+                  <img src="@/assets/icons/arrow-right.svg" alt="" />
                 </f7-row>
               </f7-button>
             </template>
@@ -22,18 +22,14 @@
       </Transition>
     </main>
 
-    <component
-      v-if="popupAboutUs"
-      @close="changPopupAboutUs(false)"
-      :is="getPopup"
-    />
+    <component :is="getPopup" v-if="popupAboutUs" @close="changPopupAboutUs(false)" />
 
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
 <script setup>
-import {ref, reactive, computed} from "vue";
+import { ref, reactive, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import delay from "@/js/helpers/delay";
@@ -50,7 +46,7 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  f7router: Object
+  f7router: Object,
 });
 
 const authStore = useAuthStore();
@@ -61,54 +57,54 @@ const profileTabs = ref([
   {
     id: 1,
     name: "Account",
-    path: '/profile/account/'
+    path: "/profile/account/",
     // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
-    path: '/profile/security/'
+    path: "/profile/security/",
     // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
-    path: '/profile/about-us/'
+    path: "/profile/about-us/",
     // component: markRaw(AboutUs),
   },
   {
     id: 4,
     name: "Send Reports",
-    path: '/profile/send-reports/'
+    path: "/profile/send-reports/",
   },
 ]);
 
 const infos = reactive([
   {
     title: "Terms of services",
-    popup: 'TermsPopup'
+    popup: "TermsPopup",
   },
   {
     title: "Privacy",
-    popup: 'PrivacyPopup'
+    popup: "PrivacyPopup",
   },
   {
     title: "Imprint",
-    popup: 'ImprintPopup'
+    popup: "ImprintPopup",
   },
   {
     title: "Software licenses",
-    popup: 'SoftwarePopup'
+    popup: "SoftwarePopup",
   },
   {
     title: "Release notes",
-    popup: 'ReleasePopup'
+    popup: "ReleasePopup",
   },
   {
     title: "Write a review",
-    popup: 'ReviewPopup'
-  }
-])
+    popup: "ReviewPopup",
+  },
+]);
 
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
@@ -125,25 +121,30 @@ const getAllData = async () => {
   isLoading.value = true;
 
   await delay();
-  await Promise.all([
-    getUser(),
-  ]);
+  await Promise.all([getUser()]);
 
   isLoading.value = false;
 };
 
-
 const popupAboutUs = ref(false);
-const changPopupAboutUs = (value) => {
-  popupAboutUs.value = value
-}
-const getPopup = computed(() => popupAboutUs.value === 'TermsPopup' ? TermsPopup :
-  popupAboutUs.value === 'PrivacyPopup' ? PrivacyPopup :
-  popupAboutUs.value === 'ImprintPopup' ? ImprintPopup :
-  popupAboutUs.value === 'SoftwarePopup' ? SoftwarePopup :
-  popupAboutUs.value === 'ReleasePopup' ? ReleasePopup :
-  popupAboutUs.value === 'ReviewPopup' ? ReviewPopup : false
-)
+const changPopupAboutUs = value => {
+  popupAboutUs.value = value;
+};
+const getPopup = computed(() =>
+  popupAboutUs.value === "TermsPopup"
+    ? TermsPopup
+    : popupAboutUs.value === "PrivacyPopup"
+    ? PrivacyPopup
+    : popupAboutUs.value === "ImprintPopup"
+    ? ImprintPopup
+    : popupAboutUs.value === "SoftwarePopup"
+    ? SoftwarePopup
+    : popupAboutUs.value === "ReleasePopup"
+    ? ReleasePopup
+    : popupAboutUs.value === "ReviewPopup"
+    ? ReviewPopup
+    : false,
+);
 </script>
 
 <style lang="scss">

@@ -32,7 +32,9 @@
           <p v-if="list.place" class="from-txt">
             {{ list.from }}
           </p>
-          <p v-else class="update-txt">Please <a href="/profile/account/" @click.stop>update</a> your {{ list.fieldName }}</p>
+          <p v-else class="update-txt">
+            Please <a href="/profile/account/" @click.stop>update</a> your {{ list.fieldName }}
+          </p>
           <p class="points-txt">
             {{ list.points }}
           </p>
