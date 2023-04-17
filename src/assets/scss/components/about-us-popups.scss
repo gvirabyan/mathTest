@@ -4,14 +4,17 @@
   width: 100%;
   z-index: 91;
   position: fixed;
+
   .x-icon {
     all: unset;
     position: absolute;
     top: 24px;
     right: 24px;
   }
+
   .block {
     margin-top: 70px;
+
     .block-title {
       all: unset;
       display: flex;

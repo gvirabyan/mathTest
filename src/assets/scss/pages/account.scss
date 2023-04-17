@@ -5,8 +5,10 @@
   margin: 0 !important;
   top: 0 !important;
   left: 0 !important;
+
   .page-content {
     background: #fff;
+
     .item-input-wrap {
       input {
         &:after {
@@ -14,9 +16,11 @@
         }
       }
     }
+
     .logout-popup-header {
       margin: 0;
       position: relative;
+
       .link {
         &.x-icon {
           all: unset;
@@ -26,6 +30,7 @@
           z-index: 90;
         }
       }
+
       .block-title {
         margin: 0;
         padding: 70px 0 0 0;
@@ -38,27 +43,36 @@
         color: #212121;
       }
     }
+
     .scrolling-box {
       height: calc(100vh - 223px);
       overflow: auto;
+
       .list {
         padding: 0 16px 30px 16px;
         margin: 0;
+
         .custom-list-input {
           height: 81px;
+
           .item-content {
             padding: 0 !important;
           }
+
           .item-inner {
             margin: 0;
+
             input {
               height: 36px !important;
             }
+
             padding: 0 !important;
+
             &:after {
               display: none;
               background: #212121 !important;
             }
+
             .item-label {
               font-family: 'Rubik';
               font-style: normal;
@@ -96,12 +110,14 @@
         }
       }
     }
+
     .logout-popup-footer-block {
       margin: 0;
       height: 130px;
       background-color: #fff;
       display: block;
       width: 100%;
+
       .delete-btn {
         font-family: 'Rubik';
         font-style: normal;
@@ -116,6 +132,7 @@
         color: #fff;
         text-transform: none;
       }
+
       .save-btn {
         font-family: 'Rubik';
         height: unset;
@@ -129,6 +146,7 @@
         color: #fff;
         text-transform: none;
       }
+
       .error-message {
         color: red;
         text-align: center;
@@ -139,6 +157,7 @@
   }
 
 }
+
 .profile-account-page {
   .date-popup {
     position: fixed;
@@ -147,6 +166,7 @@
     height: 100vh;
     width: 100%;
     background: rgba(33, 33, 33, 0.7);
+
     .vc-container {
       position: absolute;
       left: 50%;
@@ -154,28 +174,37 @@
       transform: translate(-50%, -50%);
     }
   }
+
   .profile-account {
     margin-bottom: -30px;
+
     .main-list {
       overflow-y: auto;
       margin: 0 -24px;
       padding: 0 24px;
       height: calc(100vh - 346px);
+
       .custom-list-input {
         height: 81px;
+
         .item-content {
           padding: 0 !important;
         }
+
         .item-inner {
           margin: 0;
+
           input {
             height: 36px !important;
           }
+
           padding: 0 !important;
+
           &:after {
             display: none;
             background: #212121 !important;
           }
+
           .item-label {
             font-family: 'Rubik';
             font-style: normal;
@@ -211,14 +240,18 @@
           }
         }
       }
+
       ul {
         padding: 0;
+
         &::before {
           display: none;
         }
+
         &::after {
           display: none;
         }
+
         .item-inner {
           padding: 0 !important;
 
@@ -226,6 +259,7 @@
             display: none;
           }
         }
+
         .item-input {
 
           &.item-input-focused {
@@ -249,6 +283,7 @@
               }
             }
           }
+
           .item-media {
             min-width: 0 !important;
             width: 0;
@@ -262,8 +297,10 @@
           right: 0;
         }
       }
+
       .log-out-btn {
         all: unset;
+
         p {
           margin-top: 8px;
           margin-bottom: 31px;
@@ -276,6 +313,7 @@
           color: #8419FF;
         }
       }
+
       .class-options {
         position: absolute;
         bottom: -10px;
@@ -287,12 +325,15 @@
         padding: 8px;
         max-height: 140px;
         overflow-y: auto;
+
         .button {
           all: unset;
+
           p {
             border-radius: 5px;
             margin: 0;
             padding: 8px;
+
             &:hover {
               background-color: #F1E5FF;
             }
@@ -301,7 +342,8 @@
 
       }
     }
-    .courses-list  {
+
+    .courses-list {
       display: block;
       width: calc(100vw - 48px);
       max-height: 150px;
@@ -313,6 +355,7 @@
       box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       background: #fff;
+
       .button {
         all: unset;
         display: block;
@@ -324,11 +367,13 @@
         line-height: 17px;
         color: #212121;
         border-radius: 5px;
+
         &:hover {
           background: #F1E5FF;
         }
       }
     }
+
     .save-btn-block {
       background: #fff;
       display: block;
@@ -336,6 +381,7 @@
       margin: 0;
       z-index: 50;
       padding: 0px;
+
       .error-message {
         min-height: 28px;
         margin: 5px 0 0 0;
@@ -347,6 +393,7 @@
         text-align: center;
         color: #FF0000;
       }
+
       .button-save {
         margin-top: auto;
         width: 100% !important;
@@ -355,6 +402,7 @@
         background-repeat: no-repeat;
         background-position: right;
         background-image: url("../../images/pointsBtns.png");
+
         &.button-disabled-fill {
           opacity: 0.5;
         }

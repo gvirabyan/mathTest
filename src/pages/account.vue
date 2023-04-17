@@ -99,15 +99,16 @@
             <f7-button class="log-out-btn" @click="logoutHandler">
               <p>Log Out</p>
             </f7-button>
-
           </f7-list>
           <f7-block class="save-btn-block">
             <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
             <p class="error-message">{{ errorMessage }}</p>
           </f7-block>
-          <div class="courses-list"
-            :style="{'top': topCoursesLists}"
-            v-if="courses && isCoursesDropdown && coursesCurrent.length">
+          <div
+            v-if="courses && isCoursesDropdown && coursesCurrent.length"
+            class="courses-list"
+            :style="{ top: topCoursesLists }"
+          >
             <f7-button
               v-for="(course, index) in coursesCurrent"
               :key="`course-item_${index + 1}`"
@@ -123,11 +124,7 @@
       <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" @click.stop />
     </div>
 
-    <success-message-popup
-        v-if="successPopup"
-        :title="'Successfully updated'"
-        @close="closeSuccessPopup"
-    />
+    <success-message-popup v-if="successPopup" :title="'Successfully updated'" @close="closeSuccessPopup" />
 
     <leave-page-popup
       v-if="accountLeavePopup"
@@ -141,7 +138,7 @@
       <f7-page>
         <f7-block class="logout-popup-header">
           <f7-link class="x-icon" popup-close>
-            <img src="@/assets/icons/x.svg" >
+            <img src="@/assets/icons/x.svg" />
           </f7-link>
           <f7-block-title>Logout Warning</f7-block-title>
         </f7-block>
@@ -154,33 +151,33 @@
           </f7-block>
           <f7-list no-hairlines form>
             <f7-list-input
-                v-model:value="nicknamedUserData.email"
-                class="custom-list-input"
-                type="text"
-                name="email"
-                placeholder="E-mail"
-                :error-message="nicknamedUserDataError.email"
-                :error-message-force="true"
+              v-model:value="nicknamedUserData.email"
+              class="custom-list-input"
+              type="text"
+              name="email"
+              placeholder="E-mail"
+              :error-message="nicknamedUserDataError.email"
+              :error-message-force="true"
             ></f7-list-input>
 
             <f7-list-input
-                v-model:value="nicknamedUserData.password"
-                class="custom-list-input"
-                type="password"
-                name="password"
-                placeholder="Password"
-                :error-message="nicknamedUserDataError.password"
-                :error-message-force="true"
+              v-model:value="nicknamedUserData.password"
+              class="custom-list-input"
+              type="password"
+              name="password"
+              placeholder="Password"
+              :error-message="nicknamedUserDataError.password"
+              :error-message-force="true"
             ></f7-list-input>
 
             <f7-list-input
-                v-model:value="nicknamedUserData.confirmPassword"
-                class="custom-list-input"
-                type="password"
-                name="password"
-                placeholder="Confirm password"
-                :error-message="nicknamedUserDataError.confirmPassword"
-                :error-message-force="true"
+              v-model:value="nicknamedUserData.confirmPassword"
+              class="custom-list-input"
+              type="password"
+              name="password"
+              placeholder="Confirm password"
+              :error-message="nicknamedUserDataError.confirmPassword"
+              :error-message-force="true"
             ></f7-list-input>
           </f7-list>
         </div>
@@ -224,9 +221,9 @@ const props = defineProps({
 });
 
 const isCoursesDropdown = ref(false);
-const topCoursesLists = ref(0)
+const topCoursesLists = ref(0);
 const openDropdown = () => {
-  topCoursesLists.value = `${document.getElementById('coursesInput').getBoundingClientRect().top + 53}px`;
+  topCoursesLists.value = `${document.getElementById("coursesInput").getBoundingClientRect().top + 53}px`;
   isCoursesDropdown.value = true;
 };
 
@@ -252,8 +249,8 @@ const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const coursesCurrent = computed(() => {
- return courses.value.filter(c => c.indexOf(profileData.course) !== -1)
-})
+  return courses.value.filter(c => c.indexOf(profileData.course) !== -1);
+});
 
 const profileTabs = ref([
   {
@@ -299,10 +296,10 @@ const profileData = reactive({
 const checkOutSideClick = ref(true);
 watch(
   () => profileData.course,
-  (v) => {
+  v => {
     checkOutSideClick.value = true;
     if (courses.value && courses.value.find(c => c === v)) {
-      isCoursesDropdown.value = false
+      isCoursesDropdown.value = false;
     }
   },
 );
@@ -335,10 +332,10 @@ const initAutocompleteInputs = () => {
     elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
 
     countryCode.value &&
-    autocomplete.setComponentRestrictions({
-      // restrict the country
-      country: countryCode.value,
-    });
+      autocomplete.setComponentRestrictions({
+        // restrict the country
+        country: countryCode.value,
+      });
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
@@ -442,11 +439,11 @@ onMounted(() => {
 });
 
 function closeSuccessPopup() {
-  if(accountPath.value) {
+  if (accountPath.value) {
     changeCheckAccountData(false);
     props.f7router.navigate(accountPath.value);
   }
-  successPopup.value = false
+  successPopup.value = false;
 }
 
 watch(countryCode, val => {
@@ -456,11 +453,10 @@ watch(countryCode, val => {
 watch(
   () => user.value,
   val => {
-    if(val && val.dateOfBirth) {
+    if (val && val.dateOfBirth) {
       setProfileDate(val.dateOfBirth);
     }
-
-    },
+  },
   {
     deep: true,
   },
@@ -505,7 +501,7 @@ watch(
   () => profileData,
   val => {
     ++changeSecondTime;
-    if(changeSecondTime > 2) {
+    if (changeSecondTime > 2) {
       changeCheckAccountData(true);
     }
   },
@@ -542,9 +538,7 @@ const getAllData = async () => {
   isLoading.value = true;
 
   await delay();
-  await Promise.all([
-    getUser(),
-  ]);
+  await Promise.all([getUser()]);
 
   isLoading.value = false;
 };
@@ -561,13 +555,13 @@ const nicknamedUserDataError = reactive({
   confirmPassword: "",
 });
 
-const errMessageNicknamed = ref('');
+const errMessageNicknamed = ref("");
 
 const nicknamedUserUpdate = () => {
-  errMessageNicknamed.value = ''
-  nicknamedUserDataError.email = ''
-  nicknamedUserDataError.password = ''
-  nicknamedUserDataError.confirmPassword = ''
+  errMessageNicknamed.value = "";
+  nicknamedUserDataError.email = "";
+  nicknamedUserDataError.password = "";
+  nicknamedUserDataError.confirmPassword = "";
   if (nicknamedUserData.password === nicknamedUserData.confirmPassword) {
     updateNicknamedUser(nicknamedUserData).then(resp => {
       if (resp.status === "success") {
@@ -576,14 +570,14 @@ const nicknamedUserUpdate = () => {
         logoutUser();
         return;
       }
-      resp.details.errors.forEach((err) => {
-        nicknamedUserDataError[err.path[0]] = err.message
-      })
+      resp.details.errors.forEach(err => {
+        nicknamedUserDataError[err.path[0]] = err.message;
+      });
     });
 
     return;
   }
-  errMessageNicknamed.value = 'Password and password confirmation should match';
+  errMessageNicknamed.value = "Password and password confirmation should match";
 };
 
 const nicknamedUserLogout = () => {
