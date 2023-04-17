@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard">
+  <f7-page class="hg-dashboard-content send-reports-dash" name="dashboard">
     <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent" :first-load-index="3">
       <template #title>Profile</template>
       <template #subtitle>Username</template>
@@ -276,11 +276,13 @@ const removeParentEmailHandler = async () => {
 @import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/send-reports";
 
-.loading-container {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%);
+.send-reports-dash {
+  .loading-container {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%);
+  }
 }
 
 .fade-enter-active,
