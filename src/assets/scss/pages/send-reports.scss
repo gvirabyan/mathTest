@@ -11,19 +11,22 @@
       }
       .item-content {
         padding: 0 !important;
+        .item-inner:after {
+          display: block !important;
+        }
         .delete-action {
+          position: absolute;
+          right: 0;
+          top: 12px;
           background: unset;
           margin-bottom: 10px;
-          i {
-            color: #FF0000;
-          }
         }
         .edit-action {
+          position: absolute;
+          right: 30px;
+          top: 12px;
           margin-bottom: 10px;
           background: unset;
-          i {
-            color: #FFC700;
-          }
         }
       }
       .custom-list-input {
@@ -35,7 +38,7 @@
             height: 36px !important;
           }
           &:after {
-            display: none;
+            display: none !important;
             background: #212121 !important;
           }
           .item-label {
