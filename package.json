@@ -24,7 +24,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{vue,js}": "npm run lint && npm run format"
+    "src/**/*.{vue,js}": ["npm run lint", "npm run format"]
   },
   "browserslist": [
     "IOS >= 13",
