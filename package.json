@@ -16,7 +16,7 @@
     "cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova run android",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "format": "prettier --write src/**/*.{vue,js}",
-    "configure-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\""
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
@@ -24,7 +24,10 @@
     }
   },
   "lint-staged": {
-    "*.{js,vue}": ["npm run lint", "npm run format"]
+    "*src/**/*.{vue,js}": [
+      "npm run lint",
+      "npm run format"
+    ]
   },
   "browserslist": [
     "IOS >= 13",
@@ -56,7 +59,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.9.0",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lint-staged": "^13.2.1",
     "postcss-preset-env": "^8.0.1",
     "prettier": "^2.8.4",

@@ -1,12 +1,9 @@
 <template>
-  <div @click="$emit('close')" class="update-popup-background">
-    <f7-block @click.stop class="update-popup-body">
-      <img class="close-icon"
-           @click="$emit('close')"
-           src="@/assets/icons/x.svg"
-      >
+  <div class="update-popup-background" @click="$emit('close')">
+    <f7-block class="update-popup-body" @click.stop>
+      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
       <f7-block-title>
-        {{title}}
+        {{ title }}
       </f7-block-title>
       <f7-list form>
         <f7-list-input
@@ -24,7 +21,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   inputValue: {
@@ -32,21 +29,18 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Please enter E-mail <br> to complete registration.'
+    default: "Please enter E-mail <br> to complete registration.",
   },
   error: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 
-const input = ref('')
-onMounted(
-  () => {
-    input.value = props.inputValue
-  }
-)
-
+const input = ref("");
+onMounted(() => {
+  input.value = props.inputValue;
+});
 </script>
 
 <style lang="scss">
@@ -71,7 +65,7 @@ onMounted(
       text-overflow: unset;
       white-space: unset;
       margin: 0;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -92,7 +86,7 @@ onMounted(
         .custom-list-input {
           height: 50px;
           .item-content {
-            padding-left: 0 ;
+            padding-left: 0;
           }
           .item-inner {
             margin: 0;
@@ -103,10 +97,10 @@ onMounted(
             padding: 0 !important;
             &:after {
               display: none;
-              background: #E4E4E4 !important;
+              background: #e4e4e4 !important;
             }
             .item-label {
-              font-family: 'Rubik';
+              font-family: "Rubik";
               font-style: normal;
               font-weight: 300;
               font-size: 12px;
@@ -128,7 +122,7 @@ onMounted(
               bottom: 24px !important;
               width: 100% !important;
               height: 0.9px !important;
-              background: #E4E4E4 !important;
+              background: #e4e4e4 !important;
             }
 
             .item-input-error-message {
@@ -152,9 +146,9 @@ onMounted(
       padding: 10px;
       margin-top: 6px;
       width: 100%;
-      background: #8419FF;
+      background: #8419ff;
       border-radius: 6px;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -162,7 +156,7 @@ onMounted(
       display: flex;
       align-items: center;
       text-align: center;
-      color: #FFFFFF;
+      color: #ffffff;
     }
   }
 }

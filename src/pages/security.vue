@@ -1,6 +1,12 @@
 <template>
   <f7-page class="hg-dashboard-content" name="dashboard">
-    <top-bar :tabs="profileTabs" :search="false" by-route="Security" @tab-selected="setProfileComponent" :first-load-index="1">
+    <top-bar
+      :tabs="profileTabs"
+      :search="false"
+      by-route="Security"
+      :first-load-index="1"
+      @tab-selected="setProfileComponent"
+    >
       <template #title>Profile</template>
       <template #subtitle>Username</template>
     </top-bar>
@@ -50,17 +56,13 @@
               >
                 Save
               </f7-button>
-              <p class="error-message">{{errorMessage}}</p>
+              <p class="error-message">{{ errorMessage }}</p>
             </f7-block>
           </f7-list>
         </div>
       </Transition>
     </main>
-    <success-message-popup
-      v-if="successPopup"
-      @close="closeSuccessPopup"
-      title="Password has been changed"
-    />
+    <success-message-popup v-if="successPopup" title="Password has been changed" @close="closeSuccessPopup" />
     <leave-page-popup
       v-if="securityLeavePopup"
       @leave-changes="discardChanges"
@@ -72,15 +74,15 @@
 </template>
 
 <script setup>
-import {ref, reactive, computed, watch} from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
-import {storeToRefs} from "pinia/dist/pinia";
+import { storeToRefs } from "pinia/dist/pinia";
 
 const authStore = useAuthStore();
 const { updateUser } = authStore;
@@ -94,8 +96,8 @@ const successPopup = ref(false);
 const { securityLeavePopup } = storeToRefs(authStore);
 
 const updatePasswordData = reactive({
-  newPassword: '',
-  confirmNewPassword: ''
+  newPassword: "",
+  confirmNewPassword: "",
 });
 
 // watch(
@@ -109,36 +111,36 @@ const updatePasswordData = reactive({
 //   }
 // )
 
-const emit  = defineEmits(['open-success-popup'])
+const emit = defineEmits(["open-success-popup"]);
 
 const props = defineProps({
   f7route: Object,
-  f7router: Object
-})
+  f7router: Object,
+});
 
 const profileTabs = ref([
   {
     id: 1,
     name: "Account",
-    path: '/profile/account/'
+    path: "/profile/account/",
     // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
-    path: '/profile/security/'
+    path: "/profile/security/",
     // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
-    path: '/profile/about-us/'
+    path: "/profile/about-us/",
     // component: markRaw(AboutUs),
   },
   {
     id: 4,
     name: "Send Reports",
-    path: '/profile/send-reports/'
+    path: "/profile/send-reports/",
   },
 ]);
 
@@ -148,36 +150,38 @@ const setProfileComponent = id => {
 
 function closeSuccessPopup() {
   successPopup.value = false;
-  if(securityPath.value) {
+  if (securityPath.value) {
     props.f7router.navigate(securityPath.value);
-    changeSecurityPath('');
+    changeSecurityPath("");
   }
 }
 
 function closeLeavePopup() {
-  changeSecurityLeavePopup()
+  changeSecurityLeavePopup();
 }
 
 function discardChanges() {
-  updatePasswordData.newPassword = '';
-  updatePasswordData.confirmNewPassword = '';
-  if(securityPath.value) {
+  updatePasswordData.newPassword = "";
+  updatePasswordData.confirmNewPassword = "";
+  if (securityPath.value) {
     props.f7router.navigate(securityPath.value);
     securityLeavePopup.value = false;
-    securityPath.value = '';
+    securityPath.value = "";
   }
 }
 
-const errorMessage = ref('');
+const errorMessage = ref("");
 const disableSubmit = ref(false);
 
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
-const disableSaveBtn = computed(() => !updatePasswordData.newPassword || !updatePasswordData.confirmNewPassword ? true : false)
+const disableSaveBtn = computed(() =>
+  !updatePasswordData.newPassword || !updatePasswordData.confirmNewPassword ? true : false,
+);
 
 const validatePasswordUpdate = () => {
-  errorMessage.value = '';
+  errorMessage.value = "";
 
   if (updatePasswordData.newPassword.length < 6 || updatePasswordData.confirmNewPassword.length < 6) {
     errorMessage.value = "Passwords should contain at least 6 signs";
@@ -198,33 +202,32 @@ const updatePasswordHandler = async () => {
     await updateUser({ password: updatePasswordData.newPassword })
       .then(res => {
         if (res.status === "success") {
-          localStorage.removeItem('passwords')
+          localStorage.removeItem("passwords");
           successPopup.value = true;
           return;
         }
-        errorMessage.value = res.message
+        errorMessage.value = res.message;
       })
       .finally(() => {
-        updatePasswordData.confirmNewPassword = '';
-        updatePasswordData.newPassword = '';
+        updatePasswordData.confirmNewPassword = "";
+        updatePasswordData.newPassword = "";
         disableSubmit.value = false;
       });
   } else {
-    validatePasswordUpdate()
+    validatePasswordUpdate();
   }
-  securityLeavePopup.value = false
+  securityLeavePopup.value = false;
 };
 
 watch(
   () => updatePasswordData,
-  (obj) => {
-    changePasswords(obj)
+  obj => {
+    changePasswords(obj);
   },
   {
-    deep: true
-  }
-)
-
+    deep: true,
+  },
+);
 </script>
 
 <style lang="scss">
