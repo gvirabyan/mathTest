@@ -1,15 +1,12 @@
 <template>
-  <div @click="$emit('close')" class="success-popup-background">
-    <f7-block @click.stop class="success-popup-body">
-      <img class="close-icon"
-          @click="$emit('close')"
-          src="@/assets/icons/x.svg"
-      >
+  <div class="success-popup-background" @click="$emit('close')">
+    <f7-block class="success-popup-body" @click.stop>
+      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
       <f7-block-title>
-        {{title}}
+        {{ title }}
       </f7-block-title>
       <p v-if="text">
-        {{text}}
+        {{ text }}
       </p>
       <f7-button @click="$emit('close')">Got it</f7-button>
     </f7-block>
@@ -17,17 +14,16 @@
 </template>
 
 <script setup>
- const props = defineProps({
-   text: {
-     type: String,
-     default: ''
-   },
-   title: {
-     type: String,
-     default: ''
-   }
- })
-
+const props = defineProps({
+  text: {
+    type: String,
+    default: "",
+  },
+  title: {
+    type: String,
+    default: "",
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -52,7 +48,7 @@
       text-overflow: unset;
       white-space: unset;
       margin: 0;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -70,9 +66,9 @@
       margin-top: 30px;
       padding: 10px;
       width: 100%;
-      background: #8419FF;
+      background: #8419ff;
       border-radius: 6px;
-      font-family: 'Rubik';
+      font-family: "Rubik";
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -80,7 +76,7 @@
       display: flex;
       align-items: center;
       text-align: center;
-      color: #FFFFFF;
+      color: #ffffff;
     }
   }
 }
