@@ -183,6 +183,7 @@
             :error-message-force="true"
           ></f7-list-input>
         </f7-list>
+
         <f7-block class="logout-popup-footer-block">
           <f7-button class="mb-8 save-btn" @click="nicknamedUserUpdate">Save and logout</f7-button>
           <f7-button class="delete-btn" @click="nicknamedUserLogout">Delete account</f7-button>
