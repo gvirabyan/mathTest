@@ -13,7 +13,6 @@ export const useCoursesStore = defineStore("courses", () => {
       .get(`institutions/${placeId}/courses`)
       .then(res => res.json())
       .then(data => {
-        console.log(data.courses)
         courses.value = data.courses;
       });
   };
