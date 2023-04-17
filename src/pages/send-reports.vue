@@ -276,6 +276,13 @@ const removeParentEmailHandler = async () => {
 @import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/send-reports";
 
+.loading-container {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%);
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;

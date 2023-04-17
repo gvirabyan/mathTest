@@ -10,10 +10,6 @@
 
 <style lang="scss">
 .loading-container {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%);
   display: grid;
   place-items: center;
   flex: 1;
