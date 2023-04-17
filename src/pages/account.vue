@@ -145,45 +145,45 @@
           </f7-link>
           <f7-block-title>Logout Warning</f7-block-title>
         </f7-block>
-        <f7-block>
-          <p>
-            Please provide your email and password to be able to login back later. Otherwise, your account and all
-            related data will be deleted immediately after logout. This action can't be reverted
-          </p>
-        </f7-block>
+        <div class="scrolling-box">
+          <f7-block>
+            <p>
+              Please provide your email and password to be able to login back later. Otherwise, your account and all
+              related data will be deleted immediately after logout. This action can't be reverted
+            </p>
+          </f7-block>
+          <f7-list no-hairlines form>
+            <f7-list-input
+                v-model:value="nicknamedUserData.email"
+                class="custom-list-input"
+                type="text"
+                name="email"
+                placeholder="E-mail"
+                :error-message="nicknamedUserDataError.email"
+                :error-message-force="true"
+            ></f7-list-input>
 
-        <f7-list no-hairlines form>
-          <f7-list-input
-            v-model:value="nicknamedUserData.email"
-            class="custom-list-input"
-            type="text"
-            name="email"
-            placeholder="E-mail"
-            :error-message="nicknamedUserDataError.email"
-            :error-message-force="true"
-          ></f7-list-input>
+            <f7-list-input
+                v-model:value="nicknamedUserData.password"
+                class="custom-list-input"
+                type="password"
+                name="password"
+                placeholder="Password"
+                :error-message="nicknamedUserDataError.password"
+                :error-message-force="true"
+            ></f7-list-input>
 
-          <f7-list-input
-            v-model:value="nicknamedUserData.password"
-            class="custom-list-input"
-            type="password"
-            name="password"
-            placeholder="Password"
-            :error-message="nicknamedUserDataError.password"
-            :error-message-force="true"
-          ></f7-list-input>
-
-          <f7-list-input
-            v-model:value="nicknamedUserData.confirmPassword"
-            class="custom-list-input"
-            type="password"
-            name="password"
-            placeholder="Confirm password"
-            :error-message="nicknamedUserDataError.confirmPassword"
-            :error-message-force="true"
-          ></f7-list-input>
-        </f7-list>
-
+            <f7-list-input
+                v-model:value="nicknamedUserData.confirmPassword"
+                class="custom-list-input"
+                type="password"
+                name="password"
+                placeholder="Confirm password"
+                :error-message="nicknamedUserDataError.confirmPassword"
+                :error-message-force="true"
+            ></f7-list-input>
+          </f7-list>
+        </div>
         <f7-block class="logout-popup-footer-block">
           <f7-button class="mb-8 save-btn" @click="nicknamedUserUpdate">Save and logout</f7-button>
           <f7-button class="delete-btn" @click="nicknamedUserLogout">Delete account</f7-button>
