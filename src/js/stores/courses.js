@@ -6,7 +6,6 @@ import api from "@/js/api";
 export const useCoursesStore = defineStore("courses", () => {
   const authStore = useAuthStore();
   const { user } = authStore;
-
   const courses = ref(user.institution?.courses || []);
 
   const getCourses = async placeId => {
@@ -14,6 +13,7 @@ export const useCoursesStore = defineStore("courses", () => {
       .get(`institutions/${placeId}/courses`)
       .then(res => res.json())
       .then(data => {
+        console.log(data.courses)
         courses.value = data.courses;
       });
   };

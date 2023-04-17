@@ -8,103 +8,94 @@
     <main class="profile-tab-content">
       <Transition name="fade">
         <div class="profile-account">
-          <f7-list form>
+          <f7-list form class="main-list">
             <f7-list-input
-                v-model:value="profileData.email"
-                type="text"
-                name="email"
-                class="custom-list-input"
-                label="E-mail address"
+              v-model:value="profileData.email"
+              type="text"
+              name="email"
+              class="custom-list-input"
+              label="E-mail address"
             />
 
             <f7-list-input
-                v-model:value="profileData.name"
-                type="text"
-                name="name"
-                class="custom-list-input"
-                label="Name"
+              v-model:value="profileData.name"
+              type="text"
+              name="name"
+              class="custom-list-input"
+              label="Name"
             />
 
             <f7-list-input
-                v-model:value="profileData.surname"
-                type="text"
-                name="surname"
-                class="custom-list-input"
-                label="Surname"
+              v-model:value="profileData.surname"
+              type="text"
+              name="surname"
+              class="custom-list-input"
+              label="Surname"
             />
 
             <f7-list-input
-                v-model:value="profileData.username"
-                type="text"
-                name="Nickname"
-                class="custom-list-input"
-                label="Nickname"
+              v-model:value="profileData.username"
+              type="text"
+              name="Nickname"
+              class="custom-list-input"
+              label="Nickname"
             />
 
             <f7-list-input
-                v-model:value="dateStr"
-                type="text"
-                name="date"
-                class="custom-list-input"
-                label="Date of birth"
-                :readonly="isCalendarOpened"
-                @focus="openCalendar"
+              v-model:value="dateStr"
+              type="text"
+              name="date"
+              class="custom-list-input"
+              label="Date of birth"
+              :readonly="isCalendarOpened"
+              @focus="openCalendar"
             />
             <f7-list-input
-                v-model:value="profileData.country"
-                type="text"
-                name="country"
-                class="custom-list-input country-autocomplete"
-                label="Country"
-                @focus="initAutocompleteInputs"
-                @input="updateCountry"
-                @input:clear="updateCountry"
-            />
-
-            <f7-list-input
-                v-model:value="profileData.city"
-                type="text"
-                name="city"
-                class="custom-list-input city-autocomplete"
-                label="City"
-                @focus="initAutocompleteInputs"
-                @input="updateCity"
-                @input:clear="updateCity"
+              v-model:value="profileData.country"
+              type="text"
+              name="country"
+              class="custom-list-input country-autocomplete"
+              label="Country"
+              @focus="initAutocompleteInputs"
+              @input="updateCountry"
+              @input:clear="updateCountry"
             />
 
             <f7-list-input
-                v-model:value="profileData.institution.name"
-                type="text"
-                name="education"
-                class="custom-list-input institution-autocomplete"
-                label="Educational institution"
-                @focus="initAutocompleteInputs"
-                @input="setCourseInputValid"
+              v-model:value="profileData.city"
+              type="text"
+              name="city"
+              class="custom-list-input city-autocomplete"
+              label="City"
+              @focus="initAutocompleteInputs"
+              @input="updateCity"
+              @input:clear="updateCity"
+            />
+
+            <f7-list-input
+              v-model:value="profileData.institution.name"
+              type="text"
+              name="education"
+              class="custom-list-input institution-autocomplete"
+              label="Educational institution"
+              @focus="initAutocompleteInputs"
+              @input="setCourseInputValid"
             />
             <f7-list-input
-                ref="coursesInput"
-                v-model:value="profileData.course"
-                v-click-out-side="closeDropdown"
-                class="courses-input custom-list-input"
-                label="Class/course"
-                type="text"
-                placeholder="Your class/course"
-                clear-button
-                error-message="Please fill your school/university/college before class/course"
-                :error-message-force="showCourseErrorMsg"
-                @input="setCourseInputValid"
-                @focus="openDropdown"
+              id="coursesInput"
+              v-model:value="profileData.course"
+              v-click-out-side="closeDropdown"
+              class="courses-input custom-list-input"
+              label="Class/course"
+              type="text"
+              placeholder="Your class/course"
+              clear-button
+              error-message="Please fill your school/university/college before class/course"
+              :error-message-force="showCourseErrorMsg"
+              @input="setCourseInputValid"
+              @focus="openDropdown"
             >
             </f7-list-input>
-            <f7-list v-if="courses && isCoursesDropdown" simple-list>
-              <f7-list-item
-                  v-for="(course, index) in courses"
-                  :key="`course-item_${index + 1}`"
-                  :title="course"
-                  @click="selectCourse(course)"
-              />
-            </f7-list>
-
             <f7-button class="log-out-btn" @click="logoutHandler">
               <p>Log Out</p>
             </f7-button>
@@ -114,6 +105,16 @@
             <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
             <p class="error-message">{{ errorMessage }}</p>
           </f7-block>
+          <div class="courses-list"
+            :style="{'top': topCoursesLists}"
+            v-if="courses && isCoursesDropdown && coursesCurrent.length">
+            <f7-button
+              v-for="(course, index) in coursesCurrent"
+              :key="`course-item_${index + 1}`"
+              :text="course"
+              @click="selectCourse(course)"
+            />
+          </div>
         </div>
       </Transition>
     </main>
@@ -129,10 +130,10 @@
     />
 
     <leave-page-popup
-        v-if="accountLeavePopup"
-        @leave-changes="discardChanges"
-        @save-changes="updateProfile"
-        @close="closeLeavePopup"
+      v-if="accountLeavePopup"
+      @leave-changes="discardChanges"
+      @save-changes="updateProfile"
+      @close="closeLeavePopup"
     />
 
     <bottom-menu :current-path="f7route.path" />
@@ -153,33 +154,33 @@
 
         <f7-list no-hairlines form>
           <f7-list-input
-              v-model:value="nicknamedUserData.email"
-              class="custom-list-input"
-              type="text"
-              name="email"
-              placeholder="E-mail"
-              :error-message="nicknamedUserDataError.email"
-              :error-message-force="true"
+            v-model:value="nicknamedUserData.email"
+            class="custom-list-input"
+            type="text"
+            name="email"
+            placeholder="E-mail"
+            :error-message="nicknamedUserDataError.email"
+            :error-message-force="true"
           ></f7-list-input>
 
           <f7-list-input
-              v-model:value="nicknamedUserData.password"
-              class="custom-list-input"
-              type="password"
-              name="password"
-              placeholder="Password"
-              :error-message="nicknamedUserDataError.password"
-              :error-message-force="true"
+            v-model:value="nicknamedUserData.password"
+            class="custom-list-input"
+            type="password"
+            name="password"
+            placeholder="Password"
+            :error-message="nicknamedUserDataError.password"
+            :error-message-force="true"
           ></f7-list-input>
 
           <f7-list-input
-              v-model:value="nicknamedUserData.confirmPassword"
-              class="custom-list-input"
-              type="password"
-              name="password"
-              placeholder="Confirm password"
-              :error-message="nicknamedUserDataError.confirmPassword"
-              :error-message-force="true"
+            v-model:value="nicknamedUserData.confirmPassword"
+            class="custom-list-input"
+            type="password"
+            name="password"
+            placeholder="Confirm password"
+            :error-message="nicknamedUserDataError.confirmPassword"
+            :error-message-force="true"
           ></f7-list-input>
         </f7-list>
         <f7-block class="logout-popup-footer-block">
@@ -222,8 +223,9 @@ const props = defineProps({
 });
 
 const isCoursesDropdown = ref(false);
-
+const topCoursesLists = ref(0)
 const openDropdown = () => {
+  topCoursesLists.value = `${document.getElementById('coursesInput').getBoundingClientRect().top + 53}px`;
   isCoursesDropdown.value = true;
 };
 
@@ -247,6 +249,10 @@ const { changeCheckAccountData } = authStore;
 const dateStr = ref(null);
 const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
+
+const coursesCurrent = computed(() => {
+ return courses.value.filter(c => c.indexOf(profileData.course) !== -1)
+})
 
 const profileTabs = ref([
   {
@@ -291,20 +297,24 @@ const profileData = reactive({
 
 const checkOutSideClick = ref(true);
 watch(
-    () => profileData.course,
-    () => {
-      checkOutSideClick.value = true;
-    },
+  () => profileData.course,
+  (v) => {
+    checkOutSideClick.value = true;
+    if (courses.value && courses.value.find(c => c === v)) {
+      isCoursesDropdown.value = false
+    }
+  },
 );
 
 const errorMessage = ref("");
 
 watch(
-    () => profileData.institution,
-    val => {
-      val.place_id && getCourses(val.place_id);
-    },
-    { deep: true },
+  () => profileData.institution,
+  val => {
+    courses.value = [];
+    val.place_id && getCourses(val.place_id);
+  },
+  { deep: true },
 );
 
 const initAutocompleteInputs = () => {
@@ -364,6 +374,7 @@ const updateProfile = () => {
 
   updateUser(profileData).then(res => {
     if (res.status === "success") {
+      checkAccountData.value = false;
       successPopup.value = true;
       return;
     }
@@ -442,16 +453,16 @@ watch(countryCode, val => {
 });
 
 watch(
-    () => user.value,
-    val => {
-      if(val && val.dateOfBirth) {
-        setProfileDate(val.dateOfBirth);
-      }
+  () => user.value,
+  val => {
+    if(val && val.dateOfBirth) {
+      setProfileDate(val.dateOfBirth);
+    }
 
     },
-    {
-      deep: true,
-    },
+  {
+    deep: true,
+  },
 );
 
 const isCalendarOpened = ref(false);
@@ -475,31 +486,31 @@ function setProfileDate(val) {
 }
 
 watch(
-    () => profileData.dateOfBirth,
-    val => {
-      if (val && val instanceof Date) {
-        // date formatting
-        dateStr.value = val.toISOString().slice(0, 10).split("-").reverse().join("/");
-        isCalendarOpened.value = false;
-      }
-    },
-    {
-      immediate: true,
-    },
+  () => profileData.dateOfBirth,
+  val => {
+    if (val && val instanceof Date) {
+      // date formatting
+      dateStr.value = val.toISOString().slice(0, 10).split("-").reverse().join("/");
+      isCalendarOpened.value = false;
+    }
+  },
+  {
+    immediate: true,
+  },
 );
 const { checkAccountData } = storeToRefs(authStore);
 let changeSecondTime = 0;
 watch(
-    () => profileData,
-    val => {
-      ++changeSecondTime;
-      if(changeSecondTime > 2) {
-        changeCheckAccountData(true);
-      }
-    },
-    {
-      deep: true,
-    },
+  () => profileData,
+  val => {
+    ++changeSecondTime;
+    if(changeSecondTime > 2) {
+      changeCheckAccountData(true);
+    }
+  },
+  {
+    deep: true,
+  },
 );
 
 const isLoading = ref(false);
@@ -532,10 +543,6 @@ const getAllData = async () => {
   await delay();
   await Promise.all([
     getUser(),
-    // getLastCategory(),
-    // getPastCategories(),
-    // getAnsweredQuestionsCount(),
-    // getCategories()
   ]);
 
   isLoading.value = false;
