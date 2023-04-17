@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, watch, reactive, onMounted, onUnmounted } from "vue";
+import { ref, watch, reactive, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
@@ -68,7 +68,6 @@ const category = ref(null);
 const topListStore = useTopList();
 
 const rankings = ref(null);
-const isLoading = ref(false);
 
 onMounted(async () => {
   rankings.value = await topListStore.getRankings();
