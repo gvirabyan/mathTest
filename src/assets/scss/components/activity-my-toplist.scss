@@ -1,12 +1,37 @@
 .top-lists {
   background: #fff;
   padding: 0;
-  height: calc(100vh - 286px);
-  //&.scroll-list {
-  //  overflow: auto;
-  //}
 
   .blocks {
+    .circle-points {
+      display: grid;
+      place-items: center;
+      width: 166px;
+      height: 166px;
+      margin: 0 auto 30px auto;
+      border: 10px solid rgba(#D8B3FF, 0.2);
+      border-radius: 50%;
+      p {
+        margin: 0;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 36px;
+        line-height: 33px;
+        align-items: center;
+        text-align: center;
+        color: #212121;
+        span {
+          font-family: 'Rubik';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 17px;
+          align-items: center;
+          color: #212121;
+        }
+      }
+    }
     .block {
       background: rgba(216, 179, 255, 0.2);
       padding: 24px 20px;
