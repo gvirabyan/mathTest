@@ -77,7 +77,7 @@
         .item-input-error-message {
           position: relative !important;
           top: 0;
-          margin-top: 20px !important;
+          margin-top: 10px !important;
           margin-bottom: 0 !important;
         }
       }
@@ -143,9 +143,12 @@
     }
   }
   .profile-account {
-    padding-bottom: 54px;
-    .list {
-      margin: 0px;
+    margin-bottom: -30px;
+    .main-list {
+      overflow-y: auto;
+      margin: 0 -24px;
+      padding: 0 24px;
+      height: calc(100vh - 346px);
       .custom-list-input {
         height: 81px;
         .item-content {
@@ -196,7 +199,6 @@
           }
         }
       }
-
       ul {
         padding: 0;
         &::before {
@@ -262,39 +264,6 @@
           color: #8419FF;
         }
       }
-      .save-btn-block {
-        position: fixed;
-        background: #fff;
-        bottom: 74px;
-        display: block;
-        width: 100%;
-        margin: 0 -24px;
-        z-index: 50;
-        padding: 10px 24px 0px 24px;
-        .error-message {
-          min-height: 28px;
-          margin: 10px 0;
-          font-family: 'Rubik';
-          font-style: normal;
-          font-weight: 400;
-          font-size: 12px;
-          line-height: 14px;
-          text-align: center;
-          color: #FF0000;
-        }
-        .button-save {
-          margin-top: auto;
-          width: 100% !important;
-          color: #fff !important;
-          background-color: #FFC700 !important;
-          background-repeat: no-repeat;
-          background-position: right;
-          background-image: url("../../images/pointsBtns.png");
-          &.button-disabled-fill {
-            opacity: 0.5;
-          }
-        }
-      }
       .class-options {
         position: absolute;
         bottom: -10px;
@@ -318,6 +287,65 @@
           }
         }
 
+      }
+    }
+    .courses-list  {
+      display: block;
+      width: calc(100vw - 48px);
+      max-height: 150px;
+      overflow: auto;
+      position: absolute;
+      z-index: 95;
+      padding: 8px;
+      border: 1px solid #E4E4E4;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #fff;
+      .button {
+        all: unset;
+        display: block;
+        padding: 8px;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        color: #212121;
+        border-radius: 5px;
+        &:hover {
+          background: #F1E5FF;
+        }
+      }
+    }
+    .save-btn-block {
+      background: #fff;
+      display: block;
+      width: 100%;
+      margin: 0;
+      z-index: 50;
+      padding: 0px;
+      .error-message {
+        min-height: 28px;
+        margin: 5px 0 0 0;
+        font-family: 'Rubik';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        text-align: center;
+        color: #FF0000;
+      }
+      .button-save {
+        margin-top: auto;
+        width: 100% !important;
+        color: #fff !important;
+        background-color: #FFC700 !important;
+        background-repeat: no-repeat;
+        background-position: right;
+        background-image: url("../../images/pointsBtns.png");
+        &.button-disabled-fill {
+          opacity: 0.5;
+        }
       }
     }
   }

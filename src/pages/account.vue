@@ -8,7 +8,7 @@
     <main class="profile-tab-content">
       <Transition name="fade">
         <div class="profile-account">
-          <f7-list form>
+          <f7-list form class="main-list">
             <f7-list-input
               v-model:value="profileData.email"
               type="text"
@@ -82,7 +82,7 @@
               @input="setCourseInputValid"
             />
             <f7-list-input
-              ref="coursesInput"
+              id="coursesInput"
               v-model:value="profileData.course"
               v-click-out-side="closeDropdown"
               class="courses-input custom-list-input"
@@ -95,27 +95,26 @@
               @input="setCourseInputValid"
               @focus="openDropdown"
             >
-              <template #root-end>
-                <f7-list v-if="courses && isCoursesDropdown" simple-list>
-                  <f7-list-item
-                    v-for="(course, index) in courses"
-                    :key="`course-item_${index + 1}`"
-                    :title="course"
-                    @click="selectCourse(course)"
-                  />
-                </f7-list>
-              </template>
             </f7-list-input>
-
             <f7-button class="log-out-btn" @click="logoutHandler">
               <p>Log Out</p>
             </f7-button>
 
-            <f7-block class="save-btn-block">
-              <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
-              <p class="error-message">{{ errorMessage }}</p>
-            </f7-block>
           </f7-list>
+          <f7-block class="save-btn-block">
+            <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
+            <p class="error-message">{{ errorMessage }}</p>
+          </f7-block>
+          <div class="courses-list"
+            :style="{'top': topCoursesLists}"
+            v-if="courses && isCoursesDropdown && coursesCurrent.length">
+            <f7-button
+              v-for="(course, index) in coursesCurrent"
+              :key="`course-item_${index + 1}`"
+              :text="course"
+              @click="selectCourse(course)"
+            />
+          </div>
         </div>
       </Transition>
     </main>
@@ -125,9 +124,9 @@
     </div>
 
     <success-message-popup
-      v-if="successPopup"
-     :title="'Successfully updated'"
-      @close="closeSuccessPopup"
+        v-if="successPopup"
+        :title="'Successfully updated'"
+        @close="closeSuccessPopup"
     />
 
     <leave-page-popup
@@ -224,8 +223,9 @@ const props = defineProps({
 });
 
 const isCoursesDropdown = ref(false);
-
+const topCoursesLists = ref(0)
 const openDropdown = () => {
+  topCoursesLists.value = `${document.getElementById('coursesInput').getBoundingClientRect().top + 53}px`;
   isCoursesDropdown.value = true;
 };
 
@@ -249,6 +249,10 @@ const { changeCheckAccountData } = authStore;
 const dateStr = ref(null);
 const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
+
+const coursesCurrent = computed(() => {
+ return courses.value.filter(c => c.indexOf(profileData.course) !== -1)
+})
 
 const profileTabs = ref([
   {
@@ -294,8 +298,11 @@ const profileData = reactive({
 const checkOutSideClick = ref(true);
 watch(
   () => profileData.course,
-  () => {
+  (v) => {
     checkOutSideClick.value = true;
+    if (courses.value && courses.value.find(c => c === v)) {
+      isCoursesDropdown.value = false
+    }
   },
 );
 
@@ -304,6 +311,7 @@ const errorMessage = ref("");
 watch(
   () => profileData.institution,
   val => {
+    courses.value = [];
     val.place_id && getCourses(val.place_id);
   },
   { deep: true },
@@ -326,10 +334,10 @@ const initAutocompleteInputs = () => {
     elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
 
     countryCode.value &&
-      autocomplete.setComponentRestrictions({
-        // restrict the country
-        country: countryCode.value,
-      });
+    autocomplete.setComponentRestrictions({
+      // restrict the country
+      country: countryCode.value,
+    });
 
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
@@ -366,6 +374,7 @@ const updateProfile = () => {
 
   updateUser(profileData).then(res => {
     if (res.status === "success") {
+      checkAccountData.value = false;
       successPopup.value = true;
       return;
     }
@@ -450,7 +459,7 @@ watch(
       setProfileDate(val.dateOfBirth);
     }
 
-  },
+    },
   {
     deep: true,
   },
@@ -534,10 +543,6 @@ const getAllData = async () => {
   await delay();
   await Promise.all([
     getUser(),
-    // getLastCategory(),
-    // getPastCategories(),
-    // getAnsweredQuestionsCount(),
-    // getCategories()
   ]);
 
   isLoading.value = false;
