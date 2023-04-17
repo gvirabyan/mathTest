@@ -46,6 +46,9 @@ const emit = defineEmits(["close"]);
     left: 50%;
     transform: translate(-50%, -50%);
     .block-title {
+      overflow: unset;
+      text-overflow: unset;
+      white-space: unset;
       margin: 0;
       font-family: "Rubik";
       font-style: normal;
