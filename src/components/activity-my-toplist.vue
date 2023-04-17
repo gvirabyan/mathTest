@@ -7,6 +7,11 @@
     name="top-lists"
   >
     <div v-if="category === null" class="blocks">
+      <div class="circle-points">
+        <p>{{ user.points }}<br>
+          <span>points</span>
+        </p>
+      </div>
       <f7-block
         v-for="(list, index) in linksList"
         :key="`menu-item_${index + 1}`"
