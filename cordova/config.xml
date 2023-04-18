@@ -66,4 +66,5 @@
     <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <engine name="ios" />
+    <engine name="android" spec="^10.1.2" />
 </widget>
