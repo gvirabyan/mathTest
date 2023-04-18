@@ -1,13 +1,5 @@
 <template>
   <f7-page id="activity-page" class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <!-- Top Navbar -->
-    <!--    <f7-navbar :sliding="false">-->
-    <!--      <f7-nav-left>-->
-    <!--        <f7-link icon-ios="f7:menu" icon-md="material:menu" panel-open="left" />-->
-    <!--      </f7-nav-left>-->
-    <!--      <f7-nav-title sliding>Math</f7-nav-title>-->
-    <!--    </f7-navbar>-->
-
     <!-- Page content-->
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
       <template #title>Activity</template>
@@ -18,7 +10,6 @@
     >
       <Transition name="fade">
         <component
-          @scroll-unset="changeScrolling"
           :is="currentActivityComponent"
         />
       </Transition>
@@ -84,15 +75,6 @@ const currentActivityComponent = ref(null);
 const setActiveComponent = id => {
   currentActivityComponent.value = activityTabs.value.find(t => t.id === id).component;
 };
-
-const changeScrolling = (checked) => {
-  const element = document.getElementsByClassName('activity-tab-content')[0]
-  if(checked) {
-    element.classList.add("scroll-unset")
-  } else {
-    element.classList.remove("scroll-unset")
-  }
-}
 
 const getAllData = async () => {
   isLoading.value = true;

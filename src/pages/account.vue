@@ -94,6 +94,7 @@
               :error-message-force="showCourseErrorMsg"
               @input="setCourseInputValid"
               @focus="openDropdown"
+              @click="openDropdown"
             >
             </f7-list-input>
             <f7-button class="log-out-btn" @click="logoutHandler">
@@ -249,7 +250,7 @@ const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const coursesCurrent = computed(() => {
-  return courses.value.filter(c => c.indexOf(profileData.course) !== -1);
+  return profileData.course ? courses.value.filter(c => c.indexOf(profileData.course) !== -1) : courses.value
 });
 
 const profileTabs = ref([

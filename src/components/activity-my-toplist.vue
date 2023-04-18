@@ -71,16 +71,6 @@ const topListStore = useTopList();
 
 const rankings = ref(null);
 
-watch(
-  () => category.value,
-  (value) => {
-    emit("scroll-unset", !!value);
-    },
-  {
-    immediate: true
-  }
-)
-
 onMounted(async () => {
   rankings.value = await topListStore.getRankings();
 });
