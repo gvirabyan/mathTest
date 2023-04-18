@@ -2,7 +2,8 @@
   <f7-page class="hg-dashboard-content send-reports-dash" name="dashboard">
     <top-bar :tabs="profileTabs" :search="false" :first-load-index="3" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
-      <template #subtitle>Username</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -16,10 +17,10 @@
                   <f7-list-item v-for="{ id, email } in parentsEmails" :key="`parent-email_${id}`" :title="email">
                     <template #content>
                       <f7-button fill class="action-btn edit-action" @click="openEditParentEmail(id, email)">
-                        <img src="@/assets/icons/pencil.svg" />
+                        <img src="@/assets/icons/pencil.svg" alt="" />
                       </f7-button>
                       <f7-button fill class="action-btn delete-action" @click="openRemoveParentEmail(id)">
-                        <img src="@/assets/icons/trash.svg" />
+                        <img src="@/assets/icons/trash.svg" alt="" />
                       </f7-button>
                     </template>
                   </f7-list-item>
@@ -114,6 +115,7 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/js/stores/auth";
 import { useParentsEmailsStore } from "@/js/stores/parents-emails";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
@@ -128,13 +130,13 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  f7router: Object,
+  f7router: {
+    type: Object,
+    default: () => {},
+  },
 });
 
-onMounted(() => {
-  getParentsEmailsHandler();
-});
-
+const { user } = storeToRefs(useAuthStore());
 const { parentsEmails } = storeToRefs(useParentsEmailsStore());
 const { getParentsEmails, saveParentsEmails, editParentEmail, removeParentEmail } = useParentsEmailsStore();
 
@@ -148,19 +150,6 @@ const inputStyle = {
 
 const isLoading = ref(false);
 const isSending = ref(false);
-
-const parentsEmailsInputs = reactive({
-  email1: "",
-  email2: "",
-  email3: "",
-  email4: "",
-});
-
-const deletePopup = ref(false);
-
-const btnDisabled = computed(() => !Object.values(parentsEmailsInputs).some(el => el) || isSending.value);
-const multipleEmails = computed(() => Object.values(parentsEmailsInputs).length > 1);
-
 const profileTabs = ref([
   {
     id: 1,
@@ -183,6 +172,16 @@ const profileTabs = ref([
     path: "/profile/send-reports/",
   },
 ]);
+const deletePopup = ref(false);
+
+const parentsEmailsInputs = reactive({
+  email1: "",
+  email2: "",
+  email3: "",
+  email4: "",
+});
+
+const btnDisabled = computed(() => !Object.values(parentsEmailsInputs).some(el => el) || isSending.value);
 
 const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
@@ -260,6 +259,10 @@ const removeParentEmailHandler = async () => {
     });
   });
 };
+
+onMounted(() => {
+  getParentsEmailsHandler();
+});
 </script>
 
 <style lang="scss">

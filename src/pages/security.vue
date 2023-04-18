@@ -8,7 +8,8 @@
       @tab-selected="setProfileComponent"
     >
       <template #title>Profile</template>
-      <template #subtitle>Username</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -75,7 +76,6 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from "vue";
-import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 
 import TopBar from "@/components/topbar.vue";
@@ -85,37 +85,14 @@ import LeavePagePopup from "@/components/leave-page-popup.vue";
 import { storeToRefs } from "pinia/dist/pinia";
 
 const authStore = useAuthStore();
-const { updateUser } = authStore;
-const { changePasswords } = authStore;
-const { changeSecurityPath } = authStore;
-const { changeSecurityLeavePopup } = authStore;
-const { securityPath } = storeToRefs(authStore);
-const { passwords } = storeToRefs(authStore);
-// const { successPopup } = storeToRefs(authStore);
+const { updateUser, changePasswords, changeSecurityPath, changeSecurityLeavePopup } = authStore;
+const { user, securityPath, passwords } = storeToRefs(authStore);
 const successPopup = ref(false);
 const { securityLeavePopup } = storeToRefs(authStore);
 
-const updatePasswordData = reactive({
-  newPassword: "",
-  confirmNewPassword: "",
-});
-
-// watch(
-//   () => updatePasswordData,
-//   (obj) => {
-//     localStorage.setItem('passwords', JSON.stringify(obj))
-//   },
-//   {
-//     immediate: true,
-//     deep: true
-//   }
-// )
-
-const emit = defineEmits(["open-success-popup"]);
-
 const props = defineProps({
-  f7route: Object,
-  f7router: Object,
+  f7route: { type: Object, default: () => {} },
+  f7router: { type: Object, default: () => {} },
 });
 
 const profileTabs = ref([
@@ -143,6 +120,11 @@ const profileTabs = ref([
     path: "/profile/send-reports/",
   },
 ]);
+
+const updatePasswordData = reactive({
+  newPassword: "",
+  confirmNewPassword: "",
+});
 
 const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
@@ -176,9 +158,7 @@ const disableSubmit = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-const disableSaveBtn = computed(() =>
-  !updatePasswordData.newPassword || !updatePasswordData.confirmNewPassword ? true : false,
-);
+const disableSaveBtn = computed(() => !updatePasswordData.newPassword || !updatePasswordData.confirmNewPassword);
 
 const validatePasswordUpdate = () => {
   errorMessage.value = "";
