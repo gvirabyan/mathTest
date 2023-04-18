@@ -145,13 +145,15 @@ const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
 };
 
+let calledId = false;
 const getCategoriesByClass = async id => {
-  isLoading.value = true;
-
-  await delay();
-  await getCategoriesByCategoryClass(id);
-
-  isLoading.value = false;
+  if(calledId !== id) {
+    calledId = id
+    isLoading.value = true;
+    await delay();
+    await getCategoriesByCategoryClass(id);
+    isLoading.value = false;
+  }
 };
 
 const toggleSearchPopup = () => {
