@@ -132,7 +132,7 @@ const setGoalHandler = async goal => {
 onMounted(async () => {
   isLoading.value = true;
 
-  await delay(1500);
+  await delay();
   await getUserStatus();
 
   isLoading.value = false;

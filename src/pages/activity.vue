@@ -1,19 +1,17 @@
 <template>
   <f7-page id="activity-page" class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <!-- Page content-->
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
       <template #title>Activity</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
-    <main class="activity-tab-content"
-    >
+
+    <main class="activity-tab-content">
       <Transition name="fade">
-        <component
-          :is="currentActivityComponent"
-        />
+        <component :is="currentActivityComponent" />
       </Transition>
     </main>
+
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
@@ -22,14 +20,10 @@
 import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-// import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
-// import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
-import BottomMenu from "@/components/bottom-menu.vue";
 import MyStatus from "@/components/activity-my-status.vue";
-// import TopList from "@/components/activity-my-toplist.vue";
-// import MyAnswers from "@/components/activity-my-answers.vue";
+import BottomMenu from "@/components/bottom-menu.vue";
 
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
@@ -42,15 +36,9 @@ defineProps({
 });
 
 const authStore = useAuthStore();
-// const categoryStore = useCategoryStore();
-// const questionsStore = useQuestionsStore();
 
 const { user } = storeToRefs(authStore);
-// const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
-// const { answeredQuestionsCount } = storeToRefs(questionsStore);
-
 const { getUser } = authStore;
-// const { getAnsweredQuestionsCount } = questionsStore;
 
 const activityTabs = ref([
   {
@@ -80,13 +68,7 @@ const getAllData = async () => {
   isLoading.value = true;
 
   await delay();
-  await Promise.all([
-    getUser(),
-    // getLastCategory(),
-    // getPastCategories(),
-    // getAnsweredQuestionsCount(),
-    // getCategories()
-  ]);
+  await Promise.all([getUser()]);
 
   isLoading.value = false;
 };

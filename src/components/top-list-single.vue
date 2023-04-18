@@ -1,16 +1,12 @@
 <template>
   <div class="single-list">
-    <div
-      class="back-block"
-    >
+    <div class="back-block">
       <f7-row class="display-inline-flex align-items-center" @click="goBack">
         <img src="@/assets/icons/backSlag.svg" alt="" />
         <p>Back to the Top List</p>
       </f7-row>
     </div>
-    <div
-      class="scroll-page"
-    >
+    <div class="scroll-page">
       <f7-block v-if="category">
         <f7-row class="justify-content-space-between">
           <f7-block-title>
@@ -30,10 +26,7 @@
         </f7-row>
       </f7-block>
 
-      <f7-list
-        v-if="topList.length"
-        class="top-list list-scroll"
-      >
+      <f7-list v-if="topList.length" class="top-list list-scroll">
         <f7-list-item
           v-for="({ id, username, points }, index) in topList"
           :key="`list-item_${index + 1}`"
@@ -64,6 +57,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 const props = defineProps({
   category: {
     type: Object,
+    default: () => {},
   },
 });
 const emit = defineEmits(["empty-category"]);

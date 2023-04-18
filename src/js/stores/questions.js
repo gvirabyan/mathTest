@@ -1,4 +1,4 @@
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, reactive } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
@@ -14,9 +14,14 @@ export const useQuestionsStore = defineStore("questions", () => {
   const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
   const answeredQuestionsPoints = ref(0);
-  const questionsToGoal = ref(
-    localStorage.getItem("questionsToGoal") ? localStorage.getItem("questionsToGoal") : auth.user.everyday_goal,
+  const everydayGoal = reactive(
+    localStorage.getItem("everydayGoal")
+      ? JSON.parse(localStorage.getItem("everydayGoal"))
+      : { questionsToGoal: auth.user?.everyday_goal, isPassed: false, passingDatetime: null },
   );
+  // const questionsToGoal = ref(
+  //   localStorage.getItem("questionsToGoal") ? localStorage.getItem("questionsToGoal") : auth.user.everyday_goal,
+  // );
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
@@ -73,11 +78,17 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   const decreaseQuestionsToGoal = () => {
-    if (questionsToGoal.value === 0) {
+    if (everydayGoal.questionsToGoal === 0) {
       return;
     }
 
-    questionsToGoal.value -= 1;
+    everydayGoal.questionsToGoal -= 1;
+  };
+
+  const restartEverydayGoal = () => {
+    everydayGoal.questionsToGoal = auth.user?.everyday_goal;
+    everydayGoal.isPassed = false;
+    everydayGoal.passingDatetime = null;
   };
 
   const sendEverydayGoalReach = async () => {
@@ -85,15 +96,21 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   watch(
-    questionsToGoal,
+    () => everydayGoal,
     async val => {
-      localStorage.setItem("questionsToGoal", val);
+      localStorage.setItem("everydayGoal", JSON.stringify(val));
 
-      if (val - auth.user.everyday_goal === 0) {
+      if (val.questionsToGoal === 0) {
+        everydayGoal.isPassed = true;
+
+        if (!everydayGoal.passingDatetime) {
+          everydayGoal.passingDatetime = new Date().toISOString();
+        }
+
         await sendEverydayGoalReach();
       }
     },
-    { immediate: true },
+    { deep: true },
   );
 
   return {
@@ -105,7 +122,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestionsData,
     answeredQuestionsCount,
     answeredQuestionsPoints,
-    questionsToGoal,
+    everydayGoal,
     questionsData,
     questionData,
     questionsAreOver,
@@ -114,6 +131,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     getAnsweredQuestionsCount,
     getNextQuestion,
     decreaseQuestionsToGoal,
+    restartEverydayGoal,
     sendEverydayGoalReach,
   };
 });
