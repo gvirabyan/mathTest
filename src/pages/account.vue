@@ -194,32 +194,29 @@
 </template>
 
 <script setup>
-import { ref, markRaw, reactive, watch, computed, onMounted } from "vue";
+import { ref, reactive, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCoursesStore } from "@/js/stores/courses";
 import { getCountryCode } from "@/js/helpers/country-name-to-iso";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
-// import { useCategoryStore } from "@/js/stores/categories";
-// import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
-// import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
-import { f7 } from "framework7-vue";
-// const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
-// const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 const props = defineProps({
   f7route: {
     type: Object,
     default: () => {},
   },
-  f7router: Object,
+  f7router: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const isCoursesDropdown = ref(false);
@@ -251,7 +248,7 @@ const successPopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const coursesCurrent = computed(() => {
-  return profileData.course ? courses.value.filter(c => c.indexOf(profileData.course) !== -1) : courses.value
+  return profileData.course ? courses.value.filter(c => c.indexOf(profileData.course) !== -1) : courses.value;
 });
 
 const profileTabs = ref([

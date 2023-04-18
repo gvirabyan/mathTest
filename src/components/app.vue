@@ -20,7 +20,7 @@ import { storeToRefs } from "pinia";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
 import { useQuestionsStore } from "@/js/stores/questions";
-import { isTomorrow } from "@/js/utils/date-check";
+import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
 
@@ -59,7 +59,7 @@ const loaded = ref(false);
 const checkEverydayGoalPassingDate = () => {
   const passingDatetime = new Date(everydayGoal.value.passingDatetime);
 
-  if (!isTomorrow(passingDatetime)) {
+  if (!isYesterday(passingDatetime)) {
     return;
   }
 
