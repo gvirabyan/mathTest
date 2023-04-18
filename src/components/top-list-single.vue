@@ -1,10 +1,7 @@
 <template>
   <div class="single-list">
     <div
-      :class="{
-        'back-block': true,
-        'small-height': smallHeight,
-      }"
+      class="back-block"
     >
       <f7-row class="display-inline-flex align-items-center" @click="goBack">
         <img src="@/assets/icons/backSlag.svg" alt="" />
@@ -12,9 +9,7 @@
       </f7-row>
     </div>
     <div
-      :class="{
-        'scroll-page': smallHeight,
-      }"
+      class="scroll-page"
     >
       <f7-block v-if="category">
         <f7-row class="justify-content-space-between">
@@ -37,10 +32,7 @@
 
       <f7-list
         v-if="topList.length"
-        :class="{
-          'top-list': true,
-          'list-scroll': !smallHeight,
-        }"
+        class="top-list list-scroll"
       >
         <f7-list-item
           v-for="({ id, username, points }, index) in topList"
@@ -129,6 +121,7 @@ const goBack = () => {
 <style lang="scss">
 .single-list {
   //padding: 0 24px;
+  height: calc(100vh - 290px);
   .back-block {
     //padding-top: 30px;
     opacity: 0.5;
@@ -262,6 +255,20 @@ const goBack = () => {
             color: #8419ff;
           }
         }
+      }
+    }
+  }
+}
+
+@media (max-height: 501px) {
+  .top-list {
+    margin: 0;
+    &.list-scroll {
+      ul {
+        overflow: unset !important;
+        margin-right: unset !important;
+        padding-right: unset !important;
+        height: unset !important;
       }
     }
   }
