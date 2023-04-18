@@ -1,8 +1,11 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
+import { useQuestionsStore } from "@/js/stores/questions";
 
 export const useAuthStore = defineStore("auth", () => {
+  const questionsStore = useQuestionsStore();
+
   // state properties
   const token = ref(localStorage.getItem("user") || "");
   const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
@@ -241,8 +244,11 @@ export const useAuthStore = defineStore("auth", () => {
       return;
     }
 
-    if (!localStorage.getItem("questionsToGoal")) {
-      localStorage.setItem("questionsToGoal", val.everyday_goal);
+    if (!localStorage.getItem("everydayGoal")) {
+      localStorage.setItem(
+        "everydayGoal",
+        JSON.stringify({ questionsToGoal: val.everyday_goal, isPassed: false, passingDatetime: null }),
+      );
     }
 
     localStorage.setItem("user", JSON.stringify(val));

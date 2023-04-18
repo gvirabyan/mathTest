@@ -9,25 +9,32 @@
       </f7-page>
     </f7-panel>
     <!-- Your main view, should have "view-main" class -->
-    <f7-view v-if="loaded" main class="safe-areas" url="/"></f7-view>
+    <f7-view v-if="loaded" main class="safe-areas" url="/" />
     <Loading v-else />
   </f7-app>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
 import { f7, f7ready } from "framework7-vue";
+import { storeToRefs } from "pinia";
 import routes from "../js/routes.js";
-import MainMenu from "./main-menu.vue";
 import cordovaApp from "@/js/cordova-app";
+import { useQuestionsStore } from "@/js/stores/questions";
+import { isTomorrow } from "@/js/utils/date-check";
+import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
+
+const { everydayGoal } = storeToRefs(useQuestionsStore());
+const { restartEverydayGoal } = useQuestionsStore();
+
 const f7params = {
-  name: "Math App", // App name
+  name: "Mathe App", // App name
   theme: "auto", // Automatic theme detection
   routes: routes, // App routes
 };
 
 const addGmapsScript = () => {
-  // dynamic adding of google map script on app creation
+  // dynamic adding of Google map script on app creation
   const gmapsScriptId = "gm-script";
   const gmapsScriptIsAdded = !!document.getElementById(gmapsScriptId);
   const gmapsScript = document.createElement("script");
@@ -49,6 +56,16 @@ const addGmapsScript = () => {
 
 const loaded = ref(false);
 
+const checkEverydayGoalPassingDate = () => {
+  const passingDatetime = new Date(everydayGoal.value.passingDatetime);
+
+  if (!isTomorrow(passingDatetime)) {
+    return;
+  }
+
+  restartEverydayGoal();
+};
+
 onMounted(() => {
   f7ready(() => {
     cordovaApp.init(f7);
@@ -57,7 +74,9 @@ onMounted(() => {
   setTimeout(() => {
     loaded.value = true;
   }, 7000);
+
   addGmapsScript();
+  checkEverydayGoalPassingDate();
 });
 </script>
 
