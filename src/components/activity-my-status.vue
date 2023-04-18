@@ -33,7 +33,8 @@
           </div>
         </f7-block>
 
-        <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count">
+        <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count" class="experience">
+          <h3 class="experience-title">Past categories</h3>
           <custom-gauge
             :width="customGaugeOptions.width"
             :height="customGaugeOptions.height"

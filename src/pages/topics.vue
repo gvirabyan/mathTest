@@ -150,8 +150,8 @@ const getCategoriesClassesHandler = async () => {
 
 let calledId = false;
 const getCategoriesByClass = async id => {
-  if(calledId !== id) {
-    calledId = id
+  if (calledId !== id) {
+    calledId = id;
     isLoading.value = true;
     await delay();
     await getCategoriesByCategoryClass(id);
