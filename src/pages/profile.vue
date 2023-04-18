@@ -2,16 +2,13 @@
   <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="profileTabs" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
-      <template #subtitle>Username</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="profile-tab-content">
       <Transition name="fade">
         <f7-view />
-        <!--        <component-->
-        <!--          @open-success-popup="(e) => successPopup = e"-->
-        <!--          :is="currentActivityComponent"-->
-        <!--        />-->
       </Transition>
     </main>
 
@@ -25,19 +22,13 @@
 import { ref, markRaw } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-// import { useCategoryStore } from "@/js/stores/categories";
-// import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
-// import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import Account from "@/pages/account.vue";
 import Security from "@/pages/security.vue";
 import AboutUs from "@/pages/about-us.vue";
-
-// const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
-// const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 defineProps({
   f7route: {
@@ -47,12 +38,9 @@ defineProps({
 });
 
 const authStore = useAuthStore();
-// const categoryStore = useCategoryStore();
-// const questionsStore = useQuestionsStore();
 
 const { user } = storeToRefs(authStore);
-// const { categories, lastCategoryData, pastCategoriesData } = storeToRefs(categoryStore);
-// const { answeredQuestionsCount } = storeToRefs(questionsStore);
+const { getUser } = authStore;
 
 const profileTabs = ref([
   {
@@ -74,11 +62,6 @@ const profileTabs = ref([
 
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
-
-const { getUser } = authStore;
-// const { getCategories, getLastCategory, getPastCategories } = categoryStore;
-// const { getAnsweredQuestionsCount } = questionsStore;
-
 const successPopup = ref(false);
 
 const setProfileComponent = id => {

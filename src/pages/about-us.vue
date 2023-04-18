@@ -2,7 +2,8 @@
   <f7-page class="hg-dashboard-content about-us-page" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="profileTabs" :search="false" :first-load-index="2" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
-      <template #subtitle>Username</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -41,17 +42,22 @@ import ImprintPopup from "@/components/imprint-popup.vue";
 import SoftwarePopup from "@/components/software-popup.vue";
 import ReleasePopup from "@/components/release-popup.vue";
 import ReviewPopup from "@/components/review-popup.vue";
+
 const props = defineProps({
   f7route: {
     type: Object,
     default: () => {},
   },
-  f7router: Object,
+  f7router: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const authStore = useAuthStore();
 
 const { user } = storeToRefs(authStore);
+const { getUser } = authStore;
 
 const profileTabs = ref([
   {
@@ -107,11 +113,6 @@ const infos = reactive([
 ]);
 
 const isLoading = ref(false);
-const currentActivityComponent = ref(null);
-
-const { getUser } = authStore;
-// const { getCategories, getLastCategory, getPastCategories } = categoryStore;
-// const { getAnsweredQuestionsCount } = questionsStore;
 
 const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
