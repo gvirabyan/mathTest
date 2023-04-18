@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
@@ -76,6 +76,12 @@ import LoadingSmall from "@/components/loading-small.vue";
 const userStatsStore = useUserStats();
 const { answersStats } = storeToRefs(userStatsStore);
 const { getAnswersStats } = userStatsStore;
+
+const emit = defineEmits(['scroll-unset'])
+
+onMounted(() => {
+  emit('scroll-unset', false)
+})
 
 const customGaugeOptions = {
   width: 186,

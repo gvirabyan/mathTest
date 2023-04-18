@@ -89,6 +89,8 @@ const { updateUser } = authStore;
 const { userStatus } = storeToRefs(userStatsStore);
 const { getUserStatus } = userStatsStore;
 
+const emit = defineEmits(['scroll-unset'])
+
 const customGaugeOptions = {
   width: 186,
   height: 186,
@@ -133,6 +135,7 @@ const setGoalHandler = async goal => {
 };
 
 onMounted(async () => {
+  emit('scroll-unset', false)
   isLoading.value = true;
 
   await delay(1500);
