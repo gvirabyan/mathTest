@@ -95,6 +95,9 @@
       font-family: Rubik;
       color: #212121;
       white-space: pre-line;
+      span {
+        display: inline-block;
+      }
     }
 
     .block-header {
@@ -111,7 +114,7 @@
     }
 
     .list {
-      height: calc(100vh - 300px);
+      height: calc(100vh - 357px);
       overflow: auto;
       padding: 0 24px !important;
 
