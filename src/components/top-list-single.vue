@@ -212,7 +212,7 @@ const goBack = () => {
         overflow: auto;
         margin-right: -24px;
         padding-right: 24px;
-        height: calc(100vh - 418px);
+        height: calc(100vh - 443px);
       }
     }
     ul {
