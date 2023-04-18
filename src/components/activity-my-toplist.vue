@@ -74,7 +74,7 @@ const rankings = ref(null);
 watch(
   () => category.value,
   (value) => {
-    emit("scroll-unset", value ? true : false);
+    emit("scroll-unset", !!value);
     },
   {
     immediate: true
