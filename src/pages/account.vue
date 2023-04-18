@@ -307,12 +307,13 @@ watch(
 );
 
 const errorMessage = ref("");
-
+let placeIdOld = null;
 watch(
   () => profileData.institution,
-  val => {
+  (val) => {
     courses.value = [];
-    val.place_id && getCourses(val.place_id);
+    val.place_id && val.place_id !== placeIdOld && getCourses(val.place_id);
+    placeIdOld = val.place_id
   },
   { deep: true },
 );
