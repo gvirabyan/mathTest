@@ -1,9 +1,11 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
 
 export const useQuestionsStore = defineStore("questions", () => {
+  const auth = useAuthStore();
+
   const questions = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
@@ -12,8 +14,9 @@ export const useQuestionsStore = defineStore("questions", () => {
   const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
   const answeredQuestionsPoints = ref(0);
-
-  const auth = useAuthStore();
+  const questionsToGoal = ref(
+    localStorage.getItem("questionsToGoal") ? localStorage.getItem("questionsToGoal") : auth.user.everyday_goal,
+  );
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
@@ -69,6 +72,30 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
   };
 
+  const decreaseQuestionsToGoal = () => {
+    if (questionsToGoal.value === 0) {
+      return;
+    }
+
+    questionsToGoal.value -= 1;
+  };
+
+  const sendEverydayGoalReach = async () => {
+    console.log("goal has been reached");
+  };
+
+  watch(
+    questionsToGoal,
+    async val => {
+      localStorage.setItem("questionsToGoal", val);
+
+      if (val - auth.user.everyday_goal === 0) {
+        await sendEverydayGoalReach();
+      }
+    },
+    { immediate: true },
+  );
+
   return {
     questions,
     question,
@@ -78,6 +105,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestionsData,
     answeredQuestionsCount,
     answeredQuestionsPoints,
+    questionsToGoal,
     questionsData,
     questionData,
     questionsAreOver,
@@ -85,5 +113,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
     getNextQuestion,
+    decreaseQuestionsToGoal,
+    sendEverydayGoalReach,
   };
 });

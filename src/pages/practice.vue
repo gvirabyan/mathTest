@@ -1,9 +1,9 @@
 <template>
-  <f7-page class="hg-practice-page" name="player-vs-machine">
+  <f7-page class="hg-practice-page" name="player-vs-machine" @page:beforein="getPastCategories">
     <top-bar :tabs="practiceTabs">
       <template #title>Practice</template>
-      <template #subtitle>Today's Goal</template>
-      <template #subtitle-data>20 questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
     <f7-list>
@@ -22,16 +22,21 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "@/js/stores/auth";
+import { useCategoryStore } from "@/js/stores/categories";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import BottomMenu from "@/components/bottom-menu.vue";
 import TopBar from "@/components/topbar.vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
 
+const { user } = storeToRefs(useAuthStore());
+const { getPastCategories } = useCategoryStore();
 const { setQuizMode } = useQuizStore();
 
 const gameModes = [

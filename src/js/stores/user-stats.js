@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 
-export const useUserStats = defineStore("userStats", () => {
+export const useUserStats = defineStore("user-stats", () => {
   const answersStats = reactive({
     questions_count: null,
     questions_left_count: null,
@@ -18,6 +18,9 @@ export const useUserStats = defineStore("userStats", () => {
     last_update: null,
     points: null,
     time_in_app: null,
+    past_categories_count: null,
+    categories_count: null,
+    past_categories_percent: null,
   });
 
   const getUserStatus = async () => {
@@ -29,6 +32,9 @@ export const useUserStats = defineStore("userStats", () => {
         userStatus.last_update = data.last_update;
         userStatus.points = data.points;
         userStatus.time_in_app = data.time_in_app;
+        userStatus.past_categories_count = data.past_categories_count;
+        userStatus.categories_count = data.categories_count;
+        userStatus.past_categories_percent = data.past_categories_percent;
       });
   };
 

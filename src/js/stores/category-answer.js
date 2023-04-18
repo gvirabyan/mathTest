@@ -46,6 +46,7 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
       .then(data => {
         if (!data.error) {
           questionStore.answeredQuestions.push(answer.question);
+          questionStore.decreaseQuestionsToGoal();
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };
