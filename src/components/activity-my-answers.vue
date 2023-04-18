@@ -77,12 +77,6 @@ const userStatsStore = useUserStats();
 const { answersStats } = storeToRefs(userStatsStore);
 const { getAnswersStats } = userStatsStore;
 
-const emit = defineEmits(['scroll-unset'])
-
-onMounted(() => {
-  emit('scroll-unset', false)
-})
-
 const customGaugeOptions = {
   width: 186,
   height: 160,
