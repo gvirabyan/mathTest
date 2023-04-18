@@ -31,13 +31,10 @@
             <p v-if="userStatus.points" class="experience-points">{{ userStatus.points }}</p>
             <p v-else class="experience-points no-points">Start your journey to earn the points</p>
           </div>
-          <p v-if="userStatus.time_in_app" class="experience-time">
-            You are in Mathe App <span class="value">{{ userStatus.time_in_app }}</span>
-          </p>
-          <p v-else class="experience-time">Welcome to the Mathe App!👋</p>
         </f7-block>
 
-        <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count">
+        <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count" class="experience">
+          <h3 class="experience-title">Past categories</h3>
           <custom-gauge
             :width="customGaugeOptions.width"
             :height="customGaugeOptions.height"
@@ -50,6 +47,11 @@
             <template #info>categories were answered</template>
           </custom-gauge>
         </f7-block>
+
+        <p v-if="userStatus.time_in_app" class="experience-time">
+          You are in Mathe App <span class="value">{{ userStatus.time_in_app }}</span>
+        </p>
+        <p v-else class="experience-time">Welcome to the Mathe App!👋</p>
       </div>
     </transition>
 
@@ -115,11 +117,6 @@ const setGoalHandler = async goal => {
   await updateUser({ everyday_goal: goalValue }).then(res => {
     if (res.status === "success") {
       showSelectGoalSuccess.value = true;
-
-      setTimeout(() => {
-        showSelectGoalSuccess.value = false;
-      }, 1500);
-
       return;
     }
 
