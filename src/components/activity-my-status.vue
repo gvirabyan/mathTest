@@ -26,13 +26,15 @@
 
         <f7-block class="experience">
           <h3 class="experience-title">Experience points</h3>
-          <p class="experience-update">Last update: {{ lastUpdate }}</p>
+          <p v-if="lastUpdate" class="experience-update">Last update: {{ lastUpdate }}</p>
           <div class="experience-points-wrapper">
-            <p class="experience-points">{{ userStatus.points }}</p>
+            <p v-if="userStatus.points" class="experience-points">{{ userStatus.points }}</p>
+            <p v-else class="experience-points no-points">Start your journey to earn the points</p>
           </div>
-          <p class="experience-time">
-            You are in Math App <span class="value">{{ userStatus.time_in_app }}</span>
+          <p v-if="userStatus.time_in_app" class="experience-time">
+            You are in Mathe App <span class="value">{{ userStatus.time_in_app }}</span>
           </p>
+          <p v-else class="experience-time">Welcome to the Mathe App!👋</p>
         </f7-block>
 
         <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count">
@@ -99,7 +101,9 @@ const isLoading = ref(false);
 const disableSelect = ref(false);
 const showSelectGoalSuccess = ref(false);
 
-const lastUpdate = computed(() => timeAgo(new Date(userStatus.value.last_update)));
+const lastUpdate = computed(() =>
+  userStatus.value.last_update ? timeAgo(new Date(userStatus.value.last_update)) : null,
+);
 const questionsSelectDefault = computed(() =>
   user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
 );

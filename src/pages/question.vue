@@ -49,8 +49,7 @@
           </f7-button>
           <f7-button
             class="button button-large button-submit"
-            :class="{ 'btn-disable': !chosenAnswer }"
-            :disabled="isSending"
+            :class="{ 'btn-disable': !chosenAnswer || isSending }"
             @click="sendAnswer"
           >
             abgeben
