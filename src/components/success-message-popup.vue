@@ -1,20 +1,18 @@
 <template>
-  <div class="success-popup-background" @click="$emit('close')">
+  <div class="success-popup-background" @click="emit('close')">
     <f7-block class="success-popup-body" @click.stop>
-      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
-      <f7-block-title>
-        {{ title }}
-      </f7-block-title>
-      <p v-if="text">
-        {{ text }}
-      </p>
-      <f7-button @click="$emit('close')">Got it</f7-button>
+      <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
+      <f7-block-title>{{ title }}</f7-block-title>
+
+      <p v-if="text">{{ text }}</p>
+
+      <f7-button @click="emit('close')">Got it</f7-button>
     </f7-block>
   </div>
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   text: {
     type: String,
     default: "",
@@ -24,15 +22,19 @@ const props = defineProps({
     default: "",
   },
 });
+
+const emit = defineEmits(["close"]);
 </script>
 
 <style lang="scss" scoped>
 .success-popup-background {
   position: fixed;
+  top: 0;
   z-index: 95;
   height: 100vh;
   width: 100%;
   background: rgba(33, 33, 33, 0.7);
+
   .success-popup-body {
     padding: 30px;
     width: 342px;

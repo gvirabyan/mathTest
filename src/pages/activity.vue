@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
+  <f7-page id="activity-page" class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
     <!-- Top Navbar -->
     <!--    <f7-navbar :sliding="false">-->
     <!--      <f7-nav-left>-->
@@ -149,18 +149,20 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from "vue";
+import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import { useCategoryStore } from "@/js/stores/categories";
 // import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 // import ActiveCategoriesPopup from "../components/active-categories-popup.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import MyStatus from "@/components/activity-my-status.vue";
-import TopList from "@/components/activity-my-toplist.vue";
-import MyAnswers from "@/components/activity-my-answers.vue";
+// import TopList from "@/components/activity-my-toplist.vue";
+// import MyAnswers from "@/components/activity-my-answers.vue";
+
+const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
+const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
 defineProps({
   f7route: {
@@ -170,7 +172,7 @@ defineProps({
 });
 
 const authStore = useAuthStore();
-const categoryStore = useCategoryStore();
+// const categoryStore = useCategoryStore();
 // const questionsStore = useQuestionsStore();
 
 const { user } = storeToRefs(authStore);
@@ -178,11 +180,6 @@ const { user } = storeToRefs(authStore);
 // const { answeredQuestionsCount } = storeToRefs(questionsStore);
 
 const { getUser } = authStore;
-const {
-  // getCategories,
-  // getLastCategory,
-  getPastCategories,
-} = categoryStore;
 // const { getAnsweredQuestionsCount } = questionsStore;
 
 const activityTabs = ref([
@@ -217,7 +214,7 @@ const getAllData = async () => {
   await Promise.all([
     getUser(),
     // getLastCategory(),
-    getPastCategories(),
+    // getPastCategories(),
     // getAnsweredQuestionsCount(),
     // getCategories()
   ]);

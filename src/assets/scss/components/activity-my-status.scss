@@ -1,7 +1,7 @@
 .my-status {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
   font-family: 'Rubik', sans-serif;
 
   .goal-wrapper {
@@ -61,7 +61,7 @@
   }
 
   .experience-update {
-    margin: 0 0 20px;
+    margin: 0;
     font-weight: 400;
     font-size: 12px;
     line-height: 14px;
@@ -72,7 +72,7 @@
     place-items: center;
     width: 186px;
     height: 186px;
-    margin: 0 0 30px;
+    margin: 20px 0 30px;
     border: 10px solid rgba(#D8B3FF, 0.2);
     border-radius: 50%;
   }
@@ -81,6 +81,12 @@
     font-weight: 500;
     font-size: 36px;
     line-height: 43px;
+
+    &.no-points {
+      font-size: 20px;
+      text-align: center;
+      line-height: 1.2;
+    }
   }
 
   .experience-time {

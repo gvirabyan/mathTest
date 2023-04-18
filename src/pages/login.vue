@@ -98,8 +98,8 @@ import fbHandler from "@/js/handlers/fb-handler";
 const showPassword = ref(false);
 
 const props = defineProps({
-  f7route: Object,
-  f7router: Object,
+  f7route: { type: Object, default: () => {} },
+  f7router: { type: Object, default: () => {} },
 });
 
 const { suggestedCredentials } = storeToRefs(useAuthStore());
@@ -131,7 +131,7 @@ const btnDisabled = computed(() => !(userData.password && userData.identifier));
 const startLogin = () => {
   login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
-      props.f7router.navigate("/activity/");
+      props.f7router.navigate("/");
     } else {
       error.identifier = "";
       error.password = "";
@@ -154,7 +154,7 @@ const fbLoginHandler = async function () {
     if (response.authResponse) {
       loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
         if (resp.status === "success") {
-          props.f7router.navigate("/activity/");
+          props.f7router.navigate("/");
           return;
         }
 

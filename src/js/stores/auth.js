@@ -241,6 +241,10 @@ export const useAuthStore = defineStore("auth", () => {
       return;
     }
 
+    if (!localStorage.getItem("questionsToGoal")) {
+      localStorage.setItem("questionsToGoal", val.everyday_goal);
+    }
+
     localStorage.setItem("user", JSON.stringify(val));
   });
 
