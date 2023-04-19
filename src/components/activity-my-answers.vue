@@ -4,7 +4,7 @@
       <div class="display-flex flex-direction-column align-items-center">
         <h2 class="title">Summary</h2>
 
-        <p class="last-update-info">Last update: {{ lastUpdate }}</p>
+        <p v-if="lastUpdate" class="last-update-info">Last update: {{ lastUpdate }}</p>
 
         <div class="stats">
           <custom-gauge
@@ -86,17 +86,31 @@ const customGaugeOptions = {
 
 const isLoading = ref(false);
 
-const lastUpdate = computed(() => timeAgo(new Date(answersStats.value.last_update)));
-const answersPercent = computed(() =>
-  Math.round((answersStats.value.answers_count / answersStats.value.questions_count) * 100),
+const lastUpdate = computed(() => answersStats.value.last_update && timeAgo(new Date(answersStats.value.last_update)));
+const answersPercent = computed(
+  () =>
+    answersStats.value.answers_count &&
+    answersStats.value.questions_count &&
+    Math.round((answersStats.value.answers_count / answersStats.value.questions_count) * 100),
 );
-const correctAnswersPercent = computed(() =>
-  Math.round((answersStats.value.correct_answers / answersStats.value.answers_count) * 100),
+const correctAnswersPercent = computed(
+  () =>
+    answersStats.value.correct_answers &&
+    answersStats.value.answers_count &&
+    Math.round((answersStats.value.correct_answers / answersStats.value.answers_count) * 100),
 );
-const wrongAnswersPercent = computed(() =>
-  Math.round((answersStats.value.wrong_answers / answersStats.value.answers_count) * 100),
+const wrongAnswersPercent = computed(
+  () =>
+    answersStats.value.wrong_answers &&
+    answersStats.value.answers_count &&
+    Math.round((answersStats.value.wrong_answers / answersStats.value.answers_count) * 100),
 );
-const skippedAnswersPercent = computed(() => 100 - correctAnswersPercent.value - wrongAnswersPercent.value);
+const skippedAnswersPercent = computed(
+  () =>
+    correctAnswersPercent.value &&
+    wrongAnswersPercent.value &&
+    100 - correctAnswersPercent.value - wrongAnswersPercent.value,
+);
 
 const getAnswersStatsHandler = async () => {
   isLoading.value = true;
