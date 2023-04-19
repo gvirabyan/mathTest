@@ -132,11 +132,11 @@ const setGoalHandler = async goal => {
   disableSelect.value = false;
 };
 
-const goLastQuiz = (quiz) => {
-  if(quiz) {
+const goLastQuiz = quiz => {
+  if (quiz) {
     f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
   }
-}
+};
 
 onMounted(async () => {
   isLoading.value = true;

@@ -6,14 +6,9 @@
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
 
-    <main
-      class="activity-tab-content"
-    >
+    <main class="activity-tab-content">
       <Transition name="fade">
-        <component
-          @scroll-unset="changeScrolling"
-          :is="currentActivityComponent"
-        />
+        <component :is="currentActivityComponent" @scroll-unset="changeScrolling" />
       </Transition>
     </main>
 
@@ -67,21 +62,21 @@ const currentActivityComponent = ref(null);
 
 const setActiveComponent = id => {
   const active = activityTabs.value.find(t => t.id === id);
-  const element = document.getElementsByClassName('activity-tab-content')[0]
-  if(active.name !== 'Top List' && element) {
+  const element = document.getElementsByClassName("activity-tab-content")[0];
+  if (active.name !== "Top List" && element) {
     element.classList.remove("scroll-unset");
   }
   currentActivityComponent.value = active.component;
 };
 
-const changeScrolling = (checked) => {
-  const element = document.getElementsByClassName('activity-tab-content')[0]
-  if(checked) {
-    element.classList.add("scroll-unset")
+const changeScrolling = checked => {
+  const element = document.getElementsByClassName("activity-tab-content")[0];
+  if (checked) {
+    element.classList.add("scroll-unset");
   } else {
-    element.classList.remove("scroll-unset")
+    element.classList.remove("scroll-unset");
   }
-}
+};
 
 const getAllData = async () => {
   isLoading.value = true;

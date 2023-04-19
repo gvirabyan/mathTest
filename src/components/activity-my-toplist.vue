@@ -53,7 +53,7 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
 import TopListSingle from "@/components/top-list-single.vue";
 
-const emit = defineEmits(['scroll-unset'])
+const emit = defineEmits(["scroll-unset"]);
 
 defineProps({
   f7route: {
@@ -73,13 +73,13 @@ const rankings = ref(null);
 
 watch(
   () => category.value,
-  (value) => {
+  value => {
     emit("scroll-unset", !!value);
-    },
+  },
   {
-    immediate: true
-  }
-)
+    immediate: true,
+  },
+);
 
 onMounted(async () => {
   rankings.value = await topListStore.getRankings();
