@@ -11,7 +11,7 @@
             <i class="icon icon-back" />
           </a>
         </div>
-        <div class="title">Player vs. Machine</div>
+        <div class="title">Reihenfolge der Operationen, drei..</div>
       </div>
     </div>
 
