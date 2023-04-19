@@ -35,20 +35,8 @@ export const useQuizStore = defineStore("quiz", () => {
       return;
     }
 
-    const categoriesIds = category.pastCategoriesIds.join();
-
-    let idsFilter = "";
-
-    if (answeredQuizQuestions.value.length) {
-      idsFilter = answeredQuizQuestions.value.join();
-    }
-
-    const url = idsFilter
-      ? `quiz-questions?categories=${categoriesIds}&excludedQuestions=${idsFilter}&limit=${limit}`
-      : `quiz-questions?categories=${categoriesIds}&limit=${limit}`;
-
-    await api
-      .get(url)
+    return api
+      .get(`quiz-questions?limit=${limit}`)
       .then(res => res.json())
       .then(data => {
         quizQuestions.value = data.questions;
