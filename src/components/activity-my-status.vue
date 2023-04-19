@@ -15,12 +15,16 @@
 
         <template v-if="userStatus.last_quiz && userStatus.last_quiz.lastCategory">
           <h2 class="title">Last quiz</h2>
-
           <f7-block class="last-quiz">
-            <h3 class="last-quiz-name">{{ userStatus.last_quiz?.lastCategory.name }}</h3>
-            <p class="last-quiz-stats">
-              {{ userStatus.last_quiz?.answeredQuestions }}/{{ userStatus.last_quiz?.totalQuestions }}
-            </p>
+            <f7-button @click="goLastQuiz(userStatus.last_quiz)">
+              <h3 class="last-quiz-name">{{ userStatus.last_quiz?.lastCategory.name }}</h3>
+            </f7-button>
+
+            <f7-button @click="goLastQuiz(userStatus.last_quiz)">
+              <p class="last-quiz-stats">
+                {{ userStatus.last_quiz?.answeredQuestions }}/{{ userStatus.last_quiz?.totalQuestions }}
+              </p>
+            </f7-button>
           </f7-block>
         </template>
 
@@ -85,7 +89,6 @@ const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/succ
 
 const authStore = useAuthStore();
 const userStatsStore = useUserStats();
-
 const { user } = storeToRefs(authStore);
 const { updateUser } = authStore;
 const { userStatus } = storeToRefs(userStatsStore);
@@ -129,9 +132,14 @@ const setGoalHandler = async goal => {
   disableSelect.value = false;
 };
 
+const goLastQuiz = (quiz) => {
+  if(quiz) {
+    f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
+  }
+}
+
 onMounted(async () => {
   isLoading.value = true;
-
   await delay();
   await getUserStatus();
 
