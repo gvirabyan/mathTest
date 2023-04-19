@@ -109,15 +109,20 @@
   }
 
   .questions-content {
+    @media (max-height: 500px) {
+      height: calc(100vh - 125px);
+      overflow: auto;
+      padding-bottom: 30px;
+    }
     .block-title {
       margin: 28px 24px;
     }
-
     .list {
-      height: calc(100vh - 357px);
-      overflow: auto;
+      @media (min-height: 501px) {
+        height: calc(100vh - 357px);
+        overflow: auto;
+      }
       padding: 0 24px !important;
-
       ul {
         &:before {
           display: none;
@@ -331,3 +336,4 @@
     width: 100%;
   }
 }
+
