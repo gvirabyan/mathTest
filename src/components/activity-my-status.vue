@@ -30,11 +30,16 @@
 
         <f7-block class="experience">
           <h3 class="experience-title">Experience points</h3>
+
           <p v-if="lastUpdate" class="experience-update">Last update: {{ lastUpdate }}</p>
+
           <div class="experience-points-wrapper">
-            <p v-if="userStatus.points" class="experience-points">{{ userStatus.points }}</p>
-            <p v-else class="experience-points no-points">Start your journey to earn the points</p>
+            <p class="experience-points">{{ userStatus.points }}</p>
           </div>
+
+          <f7-link v-if="!userStatus.points" class="experience-points no-points" href="/topics/"
+            >Start your journey to earn the points – go to the Topics
+          </f7-link>
         </f7-block>
 
         <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count" class="experience">
