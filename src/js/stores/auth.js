@@ -1,11 +1,8 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
-import { useQuestionsStore } from "@/js/stores/questions";
 
 export const useAuthStore = defineStore("auth", () => {
-  const questionsStore = useQuestionsStore();
-
   // state properties
   const token = ref(localStorage.getItem("user") || "");
   const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
