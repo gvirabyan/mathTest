@@ -145,12 +145,16 @@ const getAfterText = category => {
 
 const getCategoriesClassesHandler = async () => {
   categoriesStore.$reset();
+
   await getCategoryClasses();
+  await getCategoriesByClass(categoryClasses.value[0].id);
 };
 
 let calledId = false;
 const getCategoriesByClass = async id => {
   if (calledId !== id) {
+    console.log(id);
+
     calledId = id;
     isLoading.value = true;
     await delay();

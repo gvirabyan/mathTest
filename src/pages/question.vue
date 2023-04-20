@@ -83,7 +83,7 @@
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ correctAnswers.length }}/{{ category.questions_amount }} right answered
+                {{ correctAnswers.length }}/{{ category?.questions_amount }} right answered
                 {{ pluralizeWord(correctAnswers.length, "question") }}
               </p>
             </f7-row>
@@ -268,7 +268,7 @@ const clearStores = () => {
 };
 
 const closeAndNavigate = href => {
-  clearCategory();
+  clearStores();
   isAllAnsweredPopup.value = false;
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
@@ -282,7 +282,9 @@ watch(questionIndex, val => {
 });
 
 watch(questionsAreOver, async val => {
-  isAllAnsweredPopup.value = !!val;
+  if (!val) return;
+
+  isAllAnsweredPopup.value = true;
   await getAnsweredQuestions(props.f7route.params.categoryID);
 });
 
