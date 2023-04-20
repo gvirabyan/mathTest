@@ -4,11 +4,11 @@
     name="player-vs-machine"
     @page:beforein="getQuizQuestionsHandler(quizMode.questions)"
   >
-    <div class="navbar">
+    <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
           <a href="#" class="link icon-only" @click="breakQuiz">
-            <i class="icon icon-back" />
+            <img src="@/assets/icons/arrow-right.svg" >
           </a>
         </div>
         <div class="title">Reihenfolge der Operationen, drei..</div>
@@ -16,37 +16,87 @@
     </div>
 
     <template v-if="!isLoading">
-      <f7-block> Your: {{ userScore }} / Phone: {{ machineScore }} </f7-block>
-      <f7-block> Question {{ currentQuizQuestionNumber }} / {{ quizQuestionsLength }} </f7-block>
+      <f7-row class="scores-block">
+        <f7-block class="my-score">
+          Your score:&nbsp;
+          <span>{{ userScore }}</span>
+        </f7-block>
+        <f7-block class="machine-score">
+          Machine score:&nbsp;
+          <span>{{ machineScore }}</span>
+        </f7-block>
+      </f7-row>
 
-      <f7-block v-if="quizQuestion">
-        <f7-block-title>{{ quizQuestion?.question }}</f7-block-title>
-        <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
+      <f7-block v-if="quizQuestion" class="player-machine-questions-content">
+        <f7-block-title>
+          <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
+        </f7-block-title>
+<!--        <f7-list>-->
+<!--          <f7-list-item-->
+<!--            v-for="(answer, index) in answersData"-->
+<!--            :key="answer.id"-->
+<!--            :class="{-->
+<!--              'hg-wrong-answer': chosenQuizAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,-->
+<!--              'hg-correct-answer': chosenQuizAnswer && quizQuestion?.answer === answer,-->
+<!--            }"-->
+<!--            :disabled="!!chosenQuizAnswer"-->
+<!--            :title="answer"-->
+<!--            :checked="chosenQuizAnswer === answer"-->
+<!--            radio-icon="end"-->
+<!--            name="demo-radio-end"-->
+<!--            radio-->
+<!--            @change="chooseQuizAnswer(answer, index)"-->
+<!--          ></f7-list-item>-->
+<!--        </f7-list>-->
 
         <f7-list>
           <f7-list-item
             v-for="(answer, index) in answersData"
-            :key="answer.id"
-            :class="{
-              'hg-wrong-answer': chosenQuizAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
-              'hg-correct-answer': chosenQuizAnswer && quizQuestion?.answer === answer,
-            }"
-            :disabled="!!chosenQuizAnswer"
-            :title="answer"
+            :key="index"
             :checked="chosenQuizAnswer === answer"
-            radio-icon="end"
+            :disabled="!!sentAnswer"
+            :class="{
+              'hg-correct-machine-answer': sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
+              'hg-wrong-machine-answer': sentAnswer && quizQuestion.machine_answer === 'wrong' && quizQuestion.wrong_answers[1]  == answer,
+            }"
             name="demo-radio-end"
             radio
             @change="chooseQuizAnswer(answer, index)"
-          ></f7-list-item>
+          >
+            <f7-col
+              :class="{
+                'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
+                'hg-correct-answer': sentAnswer && quizQuestion?.answer === answer,
+                'hg-wrong-answer': sentAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer
+              }">
+              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <math-jax :latex="'\\sf' + answer"></math-jax>
+            </f7-col>
+          </f7-list-item>
         </f7-list>
 
-        <div class="hg-actions-btns-content">
-          <button v-if="!chosenQuizAnswer" class="button button-outline hg-default-btn-width" @click="skip">
-            Skip
-          </button>
+<!--        <div class="hg-actions-btns-content">-->
+<!--          <button v-if="!chosenQuizAnswer" class="button button-outline hg-default-btn-width" @click="skip">-->
+<!--            Skip-->
+<!--          </button>-->
 
-          <button v-else class="button button-fill hg-default-btn-width" @click="next">Next</button>
+<!--          <button v-else class="button button-fill hg-default-btn-width" @click="next">Next</button>-->
+<!--        </div>-->
+        <div class="hg-actions-btns-content">
+          <f7-row v-if="!sentAnswer">
+            <f7-button  class="button button-large button-skip" :disabled="isSending" @click="skip">
+              wrong answer
+            </f7-button>
+            <f7-button
+              class="button button-large button-submit"
+              :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
+              @click="sendAnswer"
+            >
+              abgeben
+            </f7-button>
+          </f7-row>
+
+          <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
         </div>
       </f7-block>
 
@@ -97,6 +147,11 @@ const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
 
+const getLetterByIndex = index => {
+  const letterCode = "a".charCodeAt(0) + index;
+  return String.fromCharCode(letterCode);
+};
+
 const getQuizQuestionsHandler = async limit => {
   isLoading.value = true;
 
@@ -109,15 +164,26 @@ const getQuizQuestionsHandler = async limit => {
 const chooseQuizAnswer = (answer, index) => {
   chosenQuizAnswer.value = typeof answer === "string" ? answer : String(answer);
   chosenQuizAnswerIndex.value = index;
-
-  const status = quizQuestion.value.answer === answer ? "correct" : "wrong";
-
-  updateScore(status, quizQuestion.value.machine_answer);
 };
+const isSending = ref(false);
+const sentAnswer = ref(false);
+
+const sendAnswer = () => {
+  if(chosenQuizAnswer.value) {
+    isSending.value = true;
+    const status = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
+    updateScore(status, quizQuestion.value.machine_answer)
+    isSending.value = false;
+    sentAnswer.value = true;
+    chosenQuizAnswer.value = null;
+  }
+}
 
 const clearChosenData = () => {
   chosenQuizAnswer.value = null;
   chosenQuizAnswerIndex.value = null;
+  isSending.value = false;
+  sentAnswer.value = false;
 };
 
 const skip = () => {
