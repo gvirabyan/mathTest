@@ -36,7 +36,8 @@ function onMathJaxReady() {
   renderByMathjax(el);
 }
 
-initMathJax({}, onMathJaxReady);
+// TODO: Change the url with the code from https://unpkg.com/mathjax@3.2.0/es5/tex-svg.js , maybe
+initMathJax({ url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.0.5/es5/tex-svg.js" }, onMathJaxReady);
 // Mount the app
 app.use(pinia);
 app.use(MathJax);
