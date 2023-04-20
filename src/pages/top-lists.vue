@@ -142,9 +142,9 @@ const emptyCategory = () => {
 
 <style lang="scss">
 .top-lists {
-  background: #fff;
+  /*background: #fff;
   padding: 0;
-  height: 100vh;
+  height: 100vh;*/
   .page-content {
     padding: 0;
     overflow: unset;
