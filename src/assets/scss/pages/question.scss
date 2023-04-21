@@ -9,6 +9,7 @@
         margin-right: 18px;
         a {
           width: unset;
+          padding: 0;
           img {
             transform: rotate(180deg);
           }
@@ -97,7 +98,9 @@
     scroll-snap-type: x mandatory;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-
+    &.machine-player-circle {
+      margin-top: 30px;
+    }
     &::-webkit-scrollbar {
       display: none;
     }
@@ -157,17 +160,20 @@
   .player-machine-questions-content {
     padding-left: 0;
     padding-right: 0;
+    margin: 0;
     @media (max-height: 500px) {
-      height: calc(100vh - 125px);
+      height: calc(100vh - 235px);
       overflow: auto;
       padding-bottom: 30px;
     }
     .block-title {
-      margin: 28px 24px;
+      border-top: 1.5px solid #F0EBF5;
+      margin: 0 24px;
+      padding: 20px 0;
     }
     .list {
       @media (min-height: 501px) {
-        height: calc(100vh - 357px);
+        height: calc(100vh - 445px);
         overflow: auto;
       }
       padding: 0 24px !important;
@@ -184,9 +190,10 @@
           border: 1.5px solid #F0EBF5;
           border-radius: 8px;
           margin-bottom: 16px;
-
+          height: 52px;
           .item-content {
             padding: 0;
+            min-height: unset;
             .item-inner {
               padding: 0;
               &:after {
@@ -199,7 +206,7 @@
                 width: 100%;
                 border-radius: 8px;
                 padding: 0 16px;
-                height: 47px;
+                height: 52px;
                 .list-number {
                   font-family: Rubik;
                   color: #212121;
@@ -217,9 +224,13 @@
             padding: 3px;
             border-color: #2EE56B;
             .item-inner {
+              all: unset;
+              display: flex;
+              width: 100%;
+              max-height: 44px;
               .col {
                 padding: 0 12px;
-                height: 41px;
+                height: 44px;
               }
             }
           }
@@ -227,14 +238,17 @@
             padding: 3px;
             border-color: #FF0000;
             .item-inner {
+              all: unset;
+              display: flex;
+              width: 100%;
+              max-height: 44px;
               .col {
                 padding: 0 12px;
-                height: 41px;
+                height: 44px;
               }
             }
           }
         }
-
       }
     }
   }
@@ -266,11 +280,16 @@
           border: 1.5px solid #F0EBF5;
           border-radius: 8px;
           margin-bottom: 16px;
+          min-height: 52px;
+          max-height: 52px;
 
           .item-content {
             padding-right: 16px !important;
 
             .item-inner {
+              padding: unset;
+              min-height: 52px;
+              max-height: 52px;
               &:after {
                 display: none;
               }
