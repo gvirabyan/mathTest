@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, defineAsyncComponent, onUpdated} from "vue";
+import { ref, computed, onMounted, defineAsyncComponent, onUpdated } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -147,7 +147,7 @@ const goLastQuiz = quiz => {
 onMounted(async () => {
   isLoading.value = true;
   await delay();
-  await getUserStatus()
+  await getUserStatus();
 
   isLoading.value = false;
 });
