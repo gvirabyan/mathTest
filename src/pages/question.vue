@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-question-page" name="question">
+  <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData">
     <f7-navbar back-link="Back" @click:back="clearStores">
       <template v-if="isLoading" #title> Loading... </template>
 
@@ -83,7 +83,7 @@
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ correctAnswers.length }}/{{ category.questions_amount }} right answered
+                {{ correctAnswers.length }}/{{ category?.questions_amount }} right answered
                 {{ pluralizeWord(correctAnswers.length, "question") }}
               </p>
             </f7-row>
@@ -268,13 +268,14 @@ const clearStores = async () => {
     await delay();
     await getUserStatus();
   }
+  isAllAnsweredPopup.value = false;
   questionStore.$reset();
   categoryAnswerStore.$reset();
   clearCategory();
 };
 
 const closeAndNavigate = href => {
-  clearCategory();
+  clearStores();
   isAllAnsweredPopup.value = false;
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
@@ -288,11 +289,13 @@ watch(questionIndex, val => {
 });
 
 watch(questionsAreOver, async val => {
-  isAllAnsweredPopup.value = !!val;
+  if (!val) return;
+
+  isAllAnsweredPopup.value = true;
   await getAnsweredQuestions(props.f7route.params.categoryID);
 });
 
-getAllQuestionData();
+// getAllQuestionData();
 </script>
 
 <style lang="scss">

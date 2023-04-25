@@ -22,7 +22,6 @@
       @save-changes="closeFinishPopup"
       @close="closeFinishPopup"
     />
-<!--    <success-message-popup v-if="finishGame" :title="finishGame" btn-text="Ok" @close="closeFinishPopup" />-->
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
@@ -115,7 +114,6 @@ import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },

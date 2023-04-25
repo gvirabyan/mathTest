@@ -1,7 +1,7 @@
 import { ref, computed, watch, reactive } from "vue";
 import { defineStore } from "pinia";
-import api from "@/js/api";
 import { useAuthStore } from "@/js/stores/auth";
+import api from "@/js/api";
 
 export const useQuestionsStore = defineStore("questions", () => {
   const auth = useAuthStore();
@@ -19,9 +19,6 @@ export const useQuestionsStore = defineStore("questions", () => {
       ? JSON.parse(localStorage.getItem("everydayGoal"))
       : { questionsToGoal: auth.user?.everyday_goal, isPassed: false, passingDatetime: null },
   );
-  // const questionsToGoal = ref(
-  //   localStorage.getItem("questionsToGoal") ? localStorage.getItem("questionsToGoal") : auth.user.everyday_goal,
-  // );
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
