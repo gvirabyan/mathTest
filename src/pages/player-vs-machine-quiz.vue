@@ -7,17 +7,12 @@
     <leave-page-popup
       v-if="leavePopupPageText"
       :text="leavePopupPageText"
-      saveBtn="Stay"
+      save-btn="Stay"
       @leave-changes="leavePage"
       @save-changes="leavePopupPageText = ''"
       @close="leavePopupPageText = ''"
     />
-    <success-message-popup
-      v-if="finishGame"
-      :title="finishGame"
-      btn-text="Ok"
-      @close="closeFinishPopup"
-    />
+    <success-message-popup v-if="finishGame" :title="finishGame" btn-text="Ok" @close="closeFinishPopup" />
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
@@ -25,16 +20,11 @@
             <img src="@/assets/icons/arrow-right.svg" />
           </a>
         </div>
-        <div class="title">Reihenfolge der Operationen, drei..</div>
+        <div class="title">Player vs. Machine</div>
       </div>
     </div>
     <div ref="circles" class="circles machine-player-circle">
-      <Circle
-        v-for="point in getPoints"
-        :key="point.point"
-        :point="point.point"
-        :status="point.status"
-      />
+      <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
     </div>
     <template v-if="!isLoading">
       <f7-row class="scores-block">
@@ -105,7 +95,7 @@
 </template>
 
 <script setup>
-import {ref, computed, watch, onMounted, onUnmounted} from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -114,8 +104,8 @@ import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
-import LeavePagePopup from "@/components/leave-page-popup.vue"
-import SuccessMessagePopup from "@/components/success-message-popup.vue"
+import LeavePagePopup from "@/components/leave-page-popup.vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -155,9 +145,9 @@ const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
 
-const presentIndex = ref(0)
-const getPoints = ref( [],);
-const circles = ref(null)
+const presentIndex = ref(0);
+const getPoints = ref([]);
+const circles = ref(null);
 watch(
   () => quizQuestions.value,
   () => {
@@ -193,13 +183,13 @@ const chooseQuizAnswer = (answer, index) => {
 const isSending = ref(false);
 const sentAnswer = ref(false);
 
-const finishGame = ref('');
+const finishGame = ref("");
 const closeFinishPopup = () => {
-  finishGame.value = ''
-  props.f7router.navigate('/practice/')
-}
+  finishGame.value = "";
+  props.f7router.navigate("/practice/");
+};
 
-const status = ref('normal')
+const status = ref("normal");
 const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
@@ -210,8 +200,9 @@ const sendAnswer = () => {
     chosenQuizAnswer.value = null;
   }
   //got it-i popup-i errorn a es anter 1-@ chi jokum
-  if(quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    finishGame.value = Number(machineScore.value) < Number(userScore.value) ? "You have won this game" : "You have played this game";
+  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+    finishGame.value =
+      Number(machineScore.value) < Number(userScore.value) ? "You have won this game" : "You have played this game";
   }
 };
 
@@ -225,7 +216,7 @@ const clearChosenData = () => {
 const skip = () => {
   clearChosenData();
   updateScore("skipped", quizQuestion.value.machine_answer);
-  status.value = "wrong"
+  status.value = "wrong";
   next();
 };
 
@@ -233,21 +224,26 @@ const next = () => {
   clearChosenData();
   getPoints.value[presentIndex.value].status = status.value;
   ++presentIndex.value;
-  if(presentIndex.value < getPoints.value.length) {
-    getPoints.value[presentIndex.value].status = 'present';
+  if (presentIndex.value < getPoints.value.length) {
+    getPoints.value[presentIndex.value].status = "present";
   }
-  if (circles.value.clientWidth/2-16 < circles.value.children[presentIndex.value].getBoundingClientRect().left-24) {
-    circles.value.scrollLeft += circles.value.children[presentIndex.value].getBoundingClientRect().left-2-circles.value.clientWidth/2
+  if (
+    circles.value.clientWidth / 2 - 16 <
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
+  ) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   getNextQuizQuestion();
 };
 
 const onOrientationChange = () => {
-  if(circles.value.clientWidth/2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left-2) {
-    circles.value.scrollLeft += circles.value.children[presentIndex.value].getBoundingClientRect().left-2-circles.value.clientWidth/2
+  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
-}
+};
 
 const endQuiz = () => {
   let result;
@@ -290,22 +286,24 @@ const endQuiz = () => {
   });
 };
 
-const leavePopupPageText = ref('');
+const leavePopupPageText = ref("");
 const breakQuiz = () => {
-  if(presentIndex.value === 0) {
+  if (presentIndex.value === 0) {
     props.f7router.navigate("/practice/");
   } else {
-    leavePopupPageText.value =`Your progress will be lost and you will lose ${Math.abs(quizMode.value.losePoints)} points.`
+    leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
+      quizMode.value.losePoints,
+    )} points.`;
   }
 };
 
 const leavePage = () => {
-  updateUser({points: user.value.points + quizMode.value.losePoints}).then(() => {
+  updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
     useQuizStore().$reset();
-    leavePopupPageText.value = ''
+    leavePopupPageText.value = "";
     props.f7router.navigate("/");
   });
-}
+};
 
 watch(allQuizQuestionAnswered, val => {
   if (!val) {

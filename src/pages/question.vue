@@ -264,7 +264,7 @@ const clearChosenData = () => {
 
 const clearStores = async () => {
   if (isSending.value) return;
-  if(props.f7router.history[0] === '/') {
+  if (props.f7router.history[0] === "/") {
     await delay();
     await getUserStatus();
   }
