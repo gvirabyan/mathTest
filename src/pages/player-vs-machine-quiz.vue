@@ -210,9 +210,9 @@ const sendAnswer = () => {
     chosenQuizAnswer.value = null;
   }
   //got it-i popup-i errorn a es anter 1-@ chi jokum
-  // if(quizQuestions.value.length - Number(presentIndex.value) === 1) {
-  //   finishGame.value = Number(machineScore.value) < Number(userScore.value) ? "You have won this game" : "You have played this game";
-  // }
+  if(quizQuestions.value.length - Number(presentIndex.value) === 1) {
+    finishGame.value = Number(machineScore.value) < Number(userScore.value) ? "You have won this game" : "You have played this game";
+  }
 };
 
 const clearChosenData = () => {
@@ -233,7 +233,9 @@ const next = () => {
   clearChosenData();
   getPoints.value[presentIndex.value].status = status.value;
   ++presentIndex.value;
-  getPoints.value[presentIndex.value].status = 'present';
+  if(presentIndex.value < getPoints.value.length) {
+    getPoints.value[presentIndex.value].status = 'present';
+  }
   if (circles.value.clientWidth/2-16 < circles.value.children[presentIndex.value].getBoundingClientRect().left-24) {
     circles.value.scrollLeft += circles.value.children[presentIndex.value].getBoundingClientRect().left-2-circles.value.clientWidth/2
   }
