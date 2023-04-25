@@ -7,7 +7,7 @@ import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 export const useCategoryStore = defineStore("category", () => {
   const categories = ref([]);
   const searchedCategories = ref([]);
-  const category = ref({});
+  const category = ref(null);
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
 
@@ -114,7 +114,7 @@ export const useCategoryStore = defineStore("category", () => {
   };
 
   const clearCategory = () => {
-    category.value = {};
+    category.value = null;
   };
 
   return {
