@@ -22,6 +22,14 @@
       @save-changes="closeFinishPopup"
       @close="closeFinishPopup"
     />
+    <success-message-popup
+      v-if="quizQuestions.length < quizMode.questions && !isLoading"
+      title="Oops!"
+      :text="`You need to answer at least ${quizMode.questions} questions to be able to play against the machine.
+      Please continue your learning in Topics page for now.`"
+      btn-text="Go to topics"
+      @close="closeEmptyPopup"
+    />
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
@@ -32,10 +40,10 @@
         <div class="title">Player vs. Machine</div>
       </div>
     </div>
-    <div ref="circles" class="circles machine-player-circle">
+    <div v-if="quizQuestions.length >= quizMode.questions" ref="circles" class="circles machine-player-circle">
       <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
     </div>
-    <template v-if="!isLoading">
+    <template v-if="!isLoading && quizQuestions.length >= quizMode.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           Your score:&nbsp;
@@ -114,6 +122,7 @@ import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -208,9 +217,13 @@ const sendAnswer = () => {
     chosenQuizAnswer.value = null;
   }
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz()
+    endQuiz();
   }
 };
+
+const closeEmptyPopup = () => {
+  props.f7router.navigate("/topics/")
+}
 
 const clearChosenData = () => {
   chosenQuizAnswer.value = null;
@@ -226,14 +239,14 @@ const skip = () => {
   sentAnswer.value = true;
   status.value = "wrong";
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz()
+    endQuiz();
   }
   answersData.value.find((answer, index) => {
-    if(answer !== quizQuestion.value.answer) {
+    if (answer !== quizQuestion.value.answer) {
       chosenQuizAnswerIndex.value = index;
-      return answer
+      return answer;
     }
-  })
+  });
 };
 
 const next = () => {
@@ -256,7 +269,7 @@ const next = () => {
 
 const goMyStatus = () => {
   props.f7router.navigate("/activity/");
-}
+};
 
 const onOrientationChange = () => {
   if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
@@ -264,7 +277,7 @@ const onOrientationChange = () => {
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
-const finishGameText = ref('')
+const finishGameText = ref("");
 const endQuiz = () => {
   let result;
 
@@ -279,15 +292,15 @@ const endQuiz = () => {
   const alertTextObj = {
     win: {
       title: "You have won",
-      text: `You got ${presentIndex.value+1} points`
+      text: `You got ${presentIndex.value + 1} points`,
     },
     draw: {
       title: "You have played a draw",
-      text: `You got ${(presentIndex.value+1)/2} points`
+      text: `You got ${(presentIndex.value + 1) / 2} points`,
     },
     lose: {
       title: "You have lost",
-      text: `You lost -${(presentIndex.value+1)/5} points`
+      text: `You lost -${(presentIndex.value + 1) / 5} points`,
     },
   };
 
@@ -304,13 +317,9 @@ const endQuiz = () => {
 
 const leavePopupPageText = ref("");
 const breakQuiz = () => {
-  if (presentIndex.value === 0) {
-    props.f7router.navigate("/practice/");
-  } else {
-    leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
-      quizMode.value.losePoints,
-    )} points.`;
-  }
+  leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
+    quizMode.value.losePoints,
+  )} points.`;
 };
 
 const leavePage = () => {
