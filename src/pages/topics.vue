@@ -144,8 +144,6 @@ const getAfterText = category => {
 };
 
 const getCategoriesClassesHandler = async () => {
-  categoriesStore.$reset();
-
   await getCategoryClasses();
   await getCategoriesByClass(categoryClasses.value[0].id);
 };

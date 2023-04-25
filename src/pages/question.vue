@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-question-page" name="question">
+  <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData">
     <f7-navbar back-link="Back" @click:back="clearStores">
       <template v-if="isLoading" #title> Loading... </template>
 
@@ -262,6 +262,8 @@ const clearChosenData = () => {
 const clearStores = () => {
   if (isSending.value) return;
 
+  isAllAnsweredPopup.value = false;
+
   questionStore.$reset();
   categoryAnswerStore.$reset();
   clearCategory();
@@ -288,7 +290,7 @@ watch(questionsAreOver, async val => {
   await getAnsweredQuestions(props.f7route.params.categoryID);
 });
 
-getAllQuestionData();
+// getAllQuestionData();
 </script>
 
 <style lang="scss">

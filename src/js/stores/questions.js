@@ -33,7 +33,7 @@ export const useQuestionsStore = defineStore("questions", () => {
       .then(data => {
         const resData = data?.data?.attributes?.results;
 
-        questionsAreLoaded.value = !!resData.length;
+        questionsAreLoaded.value = true;
         questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
         questionIndex.value = 0;
         question.value = questions.value[questionIndex.value];
