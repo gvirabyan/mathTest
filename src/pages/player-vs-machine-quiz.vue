@@ -12,7 +12,17 @@
       @save-changes="leavePopupPageText = ''"
       @close="leavePopupPageText = ''"
     />
-    <success-message-popup v-if="finishGame" :title="finishGame" btn-text="Ok" @close="closeFinishPopup" />
+    <leave-page-popup
+      v-if="finishGame"
+      :title="finishGame"
+      :text="finishGameText"
+      save-btn="New Game"
+      leave-btn="My Status"
+      @leave-changes="goMyStatus"
+      @save-changes="closeFinishPopup"
+      @close="closeFinishPopup"
+    />
+<!--    <success-message-popup v-if="finishGame" :title="finishGame" btn-text="Ok" @close="closeFinishPopup" />-->
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
@@ -199,10 +209,8 @@ const sendAnswer = () => {
     sentAnswer.value = true;
     chosenQuizAnswer.value = null;
   }
-  //got it-i popup-i errorn a es anter 1-@ chi jokum
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    finishGame.value =
-      Number(machineScore.value) < Number(userScore.value) ? "You have won this game" : "You have played this game";
+    endQuiz()
   }
 };
 
@@ -214,10 +222,20 @@ const clearChosenData = () => {
 };
 
 const skip = () => {
-  clearChosenData();
+  isSending.value = true;
   updateScore("skipped", quizQuestion.value.machine_answer);
+  isSending.value = false;
+  sentAnswer.value = true;
   status.value = "wrong";
-  next();
+  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+    endQuiz()
+  }
+  answersData.value.find((answer, index) => {
+    if(answer !== quizQuestion.value.answer) {
+      chosenQuizAnswerIndex.value = index;
+      return answer
+    }
+  })
 };
 
 const next = () => {
@@ -238,13 +256,17 @@ const next = () => {
   getNextQuizQuestion();
 };
 
+const goMyStatus = () => {
+  props.f7router.navigate("/activity/");
+}
+
 const onOrientationChange = () => {
   if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
-
+const finishGameText = ref('')
 const endQuiz = () => {
   let result;
 
@@ -257,9 +279,18 @@ const endQuiz = () => {
   }
 
   const alertTextObj = {
-    win: "You have won",
-    draw: "You have played a draw",
-    lose: "You have lost",
+    win: {
+      title: "You have won",
+      text: `You got ${presentIndex.value+1} points`
+    },
+    draw: {
+      title: "You have played a draw",
+      text: `You got ${(presentIndex.value+1)/2} points`
+    },
+    lose: {
+      title: "You have lost",
+      text: `You lost -${(presentIndex.value+1)/5} points`
+    },
   };
 
   const pointsObject = {
@@ -267,22 +298,9 @@ const endQuiz = () => {
     draw: user.value.points + quizMode.value.drawPoints,
     lose: user.value.points + quizMode.value.losePoints,
   };
-
-  endQuizAlert.value = f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
-    updateUser({ points: pointsObject[result] }).then(() => {
-      f7.toast.show({
-        text: "Your points were updated",
-        closeButton: true,
-        closeTimeout: 1000,
-        on: {
-          close: () => {
-            useQuizStore().$reset();
-            endQuizAlert.value = null;
-            props.f7router.navigate("/");
-          },
-        },
-      });
-    });
+  updateUser({ points: pointsObject[result] }).then(() => {
+    finishGame.value = alertTextObj[result].title;
+    finishGameText.value = alertTextObj[result].text;
   });
 };
 
