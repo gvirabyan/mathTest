@@ -1,10 +1,12 @@
 import { ref, computed, watch, reactive } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
+import { useNotifications } from "@/js/stores/notifications";
 import api from "@/js/api";
 
 export const useQuestionsStore = defineStore("questions", () => {
   const auth = useAuthStore();
+  const notifications = useNotifications();
 
   const questions = ref([]);
   const question = ref(null);
@@ -89,7 +91,15 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   const sendEverydayGoalReach = async () => {
-    console.log("goal has been reached");
+    if (import.meta.env.TARGET === "cordova") {
+      // eslint-disable-next-line no-undef
+      WonderPush.getInstallationId(function (installationId) {
+        return api
+          .post("everyday-goal-notify", { installationId })
+          .then(res => res.json())
+          .then(data => notifications.addNotification(data));
+      });
+    }
   };
 
   watch(
