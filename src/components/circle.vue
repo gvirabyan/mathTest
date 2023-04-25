@@ -11,7 +11,7 @@ defineProps({
     type: String,
     default: "normal",
     validator(value) {
-      return ["active", "true", "false", "skip", "normal"].includes(value);
+      return ["present", "correct", "wrong", "skip", "normal"].includes(value);
     },
   },
 });
@@ -35,17 +35,18 @@ defineProps({
     border: 2px solid #f0ebf5;
   }
 
-  &.active {
+  &.present {
     color: white;
+    border: 2px solid #212121;
     background: #212121;
   }
 
-  &.false {
+  &.wrong {
     color: #ff0000;
     border: 2px solid #ff0000;
   }
 
-  &.true {
+  &.correct {
     color: #2ee56b;
     border: 2px solid #2ee56b;
   }

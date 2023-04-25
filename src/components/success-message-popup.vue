@@ -6,7 +6,7 @@
 
       <p v-if="text">{{ text }}</p>
 
-      <f7-button @click="emit('close')">Got it</f7-button>
+      <f7-button @click="emit('close')">{{ btnText }}</f7-button>
     </f7-block>
   </div>
 </template>
@@ -20,6 +20,10 @@ defineProps({
   title: {
     type: String,
     default: "",
+  },
+  btnText: {
+    type: String,
+    default: "Got it",
   },
 });
 

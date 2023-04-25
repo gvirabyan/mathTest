@@ -35,6 +35,7 @@ export const useUserStats = defineStore("user-stats", () => {
         userStatus.past_categories_count = data.past_categories_count;
         userStatus.categories_count = data.categories_count;
         userStatus.past_categories_percent = data.past_categories_percent;
+        return userStatus;
       });
   };
 
