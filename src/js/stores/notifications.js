@@ -6,10 +6,11 @@ import api from "@/js/api";
 export const useNotifications = defineStore("notifications", () => {
   const auth = useAuthStore();
   const notifications = ref([]);
+  const hasNewNotifications = ref(false);
 
   const getNotifications = async () => {
     return api
-      .get(`notifications&filters[users_permissions_user][id][$eq]=${auth.user.id}`)
+      .get(`notifications?filters[users_permissions_user][id][$eq]=${auth.user.id}`)
       .then(res => res.json())
       .then(data => {
         notifications.value = data?.data;
@@ -18,11 +19,18 @@ export const useNotifications = defineStore("notifications", () => {
 
   const addNotification = notification => {
     notifications.value.push(notification);
+    hasNewNotifications.value = true;
+  };
+
+  const readNotifications = () => {
+    hasNewNotifications.value = false;
   };
 
   return {
     notifications,
+    hasNewNotifications,
     getNotifications,
     addNotification,
+    readNotifications,
   };
 });

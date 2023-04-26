@@ -34,6 +34,7 @@
               stroke-linejoin="round"
             />
           </svg>
+          <span v-if="hasNewNotifications" class="unread-point"></span>
         </f7-button>
       </div>
     </div>
@@ -69,8 +70,10 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import { useNotifications } from "@/js/stores/notifications";
 import CustomPopup from "@/components/custom-popup.vue";
 import Notifications from "@/components/notifications.vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -93,6 +96,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
+
+const { hasNewNotifications } = storeToRefs(useNotifications());
 
 const tabsResult = ref(props.tabs);
 const topBarTabs = ref(null);

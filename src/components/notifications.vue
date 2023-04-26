@@ -21,18 +21,24 @@
       Notifications
     </h2>
 
-    <f7-list class="notifications-list">
+    <f7-list v-if="!isLoading && notifications.length" class="notifications-list">
       <f7-list-item v-for="item in notifications" :key="item.id">
         <h3 class="item-title">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="5" cy="5" r="5" :fill="getCircleColor(item.importance)" />
+            <circle cx="5" cy="5" r="5" fill="#FFC700" />
           </svg>
 
-          {{ item.title }}
+          {{ item.attributes.title }}
         </h3>
-        <p class="item-text">{{ item.text }}</p>
+        <p class="item-text">{{ item.attributes.text }}</p>
       </f7-list-item>
     </f7-list>
+
+    <f7-block v-else-if="!notifications.length" class="no-padding">
+      <p>There are no notifications yet</p>
+    </f7-block>
+
+    <loading-small v-else />
 
     <f7-block class="welcome-block">
       <h3 class="title">Welcome to the MatheApp</h3>
@@ -42,29 +48,31 @@
 </template>
 
 <script setup>
-const notifications = [
-  {
-    id: 1,
-    title: "Congrats! You achieved today's goal!",
-    text: "Keep up the good work & soon you will be the first among the students of your school.",
-    importance: 2,
-  },
-  {
-    id: 2,
-    title: "We have an update.",
-    text: "You can update your application via Play Store or App Store.",
-    importance: 1,
-  },
-];
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useNotifications } from "@/js/stores/notifications";
+import delay from "@/js/helpers/delay";
+import LoadingSmall from "@/components/loading-small.vue";
 
-const getCircleColor = importance => {
-  const colorsObj = {
-    1: "#FF0000",
-    2: "#FFC700",
-  };
+const { notifications } = storeToRefs(useNotifications());
+const { getNotifications, readNotifications } = useNotifications();
 
-  return colorsObj[importance];
+const isLoading = ref(false);
+
+const getNotificationsHandler = async () => {
+  isLoading.value = true;
+
+  await delay(500);
+  await getNotifications();
+
+  isLoading.value = false;
 };
+
+onMounted(() => {
+  readNotifications();
+});
+
+getNotificationsHandler();
 </script>
 
 <style lang="scss">
