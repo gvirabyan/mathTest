@@ -294,8 +294,6 @@ watch(questionsAreOver, async val => {
   isAllAnsweredPopup.value = true;
   await getAnsweredQuestions(props.f7route.params.categoryID);
 });
-
-// getAllQuestionData();
 </script>
 
 <style lang="scss">

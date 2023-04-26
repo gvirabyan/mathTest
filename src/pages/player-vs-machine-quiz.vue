@@ -222,8 +222,8 @@ const sendAnswer = () => {
 };
 
 const closeEmptyPopup = () => {
-  props.f7router.navigate("/topics/")
-}
+  props.f7router.navigate("/topics/");
+};
 
 const clearChosenData = () => {
   chosenQuizAnswer.value = null;
