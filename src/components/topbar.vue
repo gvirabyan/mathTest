@@ -93,14 +93,29 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  changeTab: {
+    type: Number,
+    default: -1
+  }
 });
+
+const topBarTabs = ref(null);
+watch(
+  () => props.changeTab,
+  (index) => {
+    if(index > -1) {
+      selectTab(props.tabs.find((t, i) => i === index).id, index)
+    }
+},{
+    deep: true
+  },
+)
 
 const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
 
 const { hasNewNotifications } = storeToRefs(useNotifications());
 
 const tabsResult = ref(props.tabs);
-const topBarTabs = ref(null);
 const showTabsShadow = ref(true);
 const hasNotificationsPopup = ref(false);
 const showNotificationsPopup = ref(false);
