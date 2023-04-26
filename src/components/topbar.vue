@@ -95,21 +95,22 @@ const props = defineProps({
   },
   changeTab: {
     type: Number,
-    default: -1
-  }
+    default: -1,
+  },
 });
 
 const topBarTabs = ref(null);
 watch(
   () => props.changeTab,
-  (index) => {
-    if(index > -1) {
-      selectTab(props.tabs.find((t, i) => i === index).id, index)
+  index => {
+    if (index > -1) {
+      selectTab(props.tabs.find((t, i) => i === index).id, index);
     }
-},{
-    deep: true
   },
-)
+  {
+    deep: true,
+  },
+);
 
 const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
 

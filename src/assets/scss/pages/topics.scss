@@ -106,6 +106,8 @@
 
 
       .item-after {
+        flex-direction: column;
+        text-align: right;
         p {
           color: #8419FF;
           font-size: 14px;
