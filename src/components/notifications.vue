@@ -21,7 +21,7 @@
       Notifications
     </h2>
 
-    <f7-list v-if="!isLoading && notifications.length" class="notifications-list">
+    <f7-list v-if="!isLoading && notifications?.length" class="notifications-list">
       <f7-list-item v-for="item in notifications" :key="item.id">
         <h3 class="item-title">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +34,7 @@
       </f7-list-item>
     </f7-list>
 
-    <f7-block v-else-if="!notifications.length" class="no-padding">
+    <f7-block v-else-if="!notifications?.length" class="no-padding">
       <p>There are no notifications yet</p>
     </f7-block>
 

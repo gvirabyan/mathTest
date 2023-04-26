@@ -187,10 +187,10 @@ const getAfterText = category => {
 
 const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
-  await getCategoriesByClass(categoryClasses.value[0].id);
+  await getCategoriesByClass(1);
 };
 
-let calledId = false;
+let calledId = null;
 const getCategoriesByClass = async id => {
   if (calledId !== id) {
     calledId = id;
@@ -198,6 +198,7 @@ const getCategoriesByClass = async id => {
     await delay();
     await getCategoriesByCategoryClass(id);
     isLoading.value = false;
+    calledId = null;
   }
 };
 

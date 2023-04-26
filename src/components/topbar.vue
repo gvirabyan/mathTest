@@ -121,8 +121,8 @@ const hasNotificationsPopup = ref(false);
 const showNotificationsPopup = ref(false);
 
 onMounted(() => {
-  if(props.firstLoadIndex !== 0) {
-    selectTab( props.tabs.find((t, i) => i === props.firstLoadIndex).id, props.firstLoadIndex)
+  if (props.firstLoadIndex !== 0) {
+    selectTab(props.tabs.find((t, i) => i === props.firstLoadIndex).id, props.firstLoadIndex);
   }
   window.addEventListener("resize", resizeChange);
 });
@@ -138,7 +138,10 @@ const resizeChange = () => {
     topBarTabs.value.children[activeIndex.value].getBoundingClientRect().left + 41
   ) {
     topBarTabs.value.scrollLeft +=
-      topBarTabs.value.children[activeIndex.value].getBoundingClientRect().left + (topBarTabs.value.children[activeIndex.value].clientWidth+20)/2-24 - topBarTabs.value.clientWidth / 2;
+      topBarTabs.value.children[activeIndex.value].getBoundingClientRect().left +
+      (topBarTabs.value.children[activeIndex.value].clientWidth + 20) / 2 -
+      24 -
+      topBarTabs.value.clientWidth / 2;
   }
 };
 
@@ -156,7 +159,10 @@ const handleTabsScroll = e => {
 const selectTab = (id, index) => {
   activeIndex.value = index;
   topBarTabs.value.scrollLeft +=
-    topBarTabs.value.children[index].getBoundingClientRect().left + (topBarTabs.value.children[activeIndex.value].clientWidth+20)/2-24 - topBarTabs.value.clientWidth / 2;
+    topBarTabs.value.children[index].getBoundingClientRect().left +
+    (topBarTabs.value.children[activeIndex.value].clientWidth + 20) / 2 -
+    24 -
+    topBarTabs.value.clientWidth / 2;
   tabsResult.value = tabsResult.value.map(t => {
     t.active = false;
     t.active = t.id === id;
