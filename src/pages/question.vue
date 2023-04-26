@@ -142,6 +142,7 @@ const { getCategory, clearCategory } = categoryStore;
 const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
+const questionsInitialLength = 23;
 const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
@@ -176,15 +177,6 @@ const getAllQuestionData = async () => {
 
   await delay();
   await getCategory(props.f7route.params.categoryID);
-  await getQuestions(props.f7route.params.categoryID);
-
-  isLoading.value = false;
-};
-
-const getQuestionsHandler = async () => {
-  isLoading.value = true;
-
-  await delay();
   await getQuestions(props.f7route.params.categoryID);
 
   isLoading.value = false;
@@ -280,12 +272,15 @@ const closeAndNavigate = href => {
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
 
-watch(questionIndex, val => {
-  if (!questions.value.length || val < questions.value.length) {
+watch(questionIndex, async val => {
+  const questionsLength =
+    questions.value.length >= questionsInitialLength ? questionsInitialLength : questions.value.length;
+
+  if (!questions.value.length || val < questionsLength) {
     return;
   }
 
-  getQuestionsHandler(props.f7route.params.categoryID);
+  await getQuestions(props.f7route.params.categoryID);
 });
 
 watch(questionsAreOver, async val => {
