@@ -47,11 +47,11 @@
     <div class="top-bar-tabs-wrapper" :class="{ shadow: showTabsShadow }">
       <div ref="topBarTabs" class="top-bar-tabs">
         <f7-button
-          v-for="{ id, name, active } in tabsResult"
+          v-for="({ id, name, active }, index) in tabsResult"
           :key="`top-bar-tab_${id}`"
           class="top-bar-tab"
           :class="{ active: byRoute ? name === byRoute : active }"
-          @click="selectTab(id)"
+          @click="selectTab(id, index)"
         >
           {{ name }}
         </f7-button>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useNotifications } from "@/js/stores/notifications";
 import CustomPopup from "@/components/custom-popup.vue";
 import Notifications from "@/components/notifications.vue";
@@ -105,6 +105,25 @@ const showTabsShadow = ref(true);
 const hasNotificationsPopup = ref(false);
 const showNotificationsPopup = ref(false);
 
+onMounted(() => {
+  window.addEventListener("resize", resizeChange);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeChange);
+});
+
+const activeIndex = ref(0);
+const resizeChange = () => {
+  if (
+    topBarTabs.value.clientWidth / 2 !==
+    topBarTabs.value.children[activeIndex.value].getBoundingClientRect().left + 41
+  ) {
+    topBarTabs.value.scrollLeft +=
+      topBarTabs.value.children[activeIndex.value].getBoundingClientRect().left + 41 - topBarTabs.value.clientWidth / 2;
+  }
+};
+
 const handleTabsScroll = e => {
   const maxScrollLeftDistance = e.currentTarget.scrollWidth - e.currentTarget.clientWidth;
   const scrollLeftDistance = e.currentTarget.scrollLeft;
@@ -116,7 +135,10 @@ const handleTabsScroll = e => {
   }
 };
 
-const selectTab = id => {
+const selectTab = (id, index) => {
+  activeIndex.value = index;
+  topBarTabs.value.scrollLeft +=
+    topBarTabs.value.children[index].getBoundingClientRect().left + 41 - topBarTabs.value.clientWidth / 2;
   tabsResult.value = tabsResult.value.map(t => {
     t.active = false;
     t.active = t.id === id;

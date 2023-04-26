@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
+import { ref, computed, onMounted, defineAsyncComponent, onUpdated } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -114,6 +114,7 @@ const showSelectGoalSuccess = ref(false);
 const lastUpdate = computed(() =>
   userStatus.value.last_update ? timeAgo(new Date(userStatus.value.last_update)) : null,
 );
+
 const questionsSelectDefault = computed(() =>
   user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
 );

@@ -4,49 +4,103 @@
     name="player-vs-machine"
     @page:beforein="getQuizQuestionsHandler(quizMode.questions)"
   >
-    <div class="navbar">
+    <leave-page-popup
+      v-if="leavePopupPageText"
+      :text="leavePopupPageText"
+      save-btn="Stay"
+      @leave-changes="leavePage"
+      @save-changes="leavePopupPageText = ''"
+      @close="leavePopupPageText = ''"
+    />
+    <leave-page-popup
+      v-if="finishGame"
+      :title="finishGame"
+      :text="finishGameText"
+      save-btn="New Game"
+      leave-btn="My Status"
+      @leave-changes="goMyStatus"
+      @save-changes="closeFinishPopup"
+      @close="closeFinishPopup"
+    />
+    <success-message-popup
+      v-if="quizQuestions.length < quizMode.questions && !isLoading"
+      title="Oops!"
+      :text="`You need to answer at least ${quizMode.questions} questions to be able to play against the machine.
+      Please continue your learning in Topics page for now.`"
+      btn-text="Go to topics"
+      @close="closeEmptyPopup"
+    />
+    <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
           <a href="#" class="link icon-only" @click="breakQuiz">
-            <i class="icon icon-back" />
+            <img src="@/assets/icons/arrow-right.svg" />
           </a>
         </div>
         <div class="title">Player vs. Machine</div>
       </div>
     </div>
-
-    <template v-if="!isLoading">
-      <f7-block> Your: {{ userScore }} / Phone: {{ machineScore }} </f7-block>
-      <f7-block> Question {{ currentQuizQuestionNumber }} / {{ quizQuestionsLength }} </f7-block>
-
-      <f7-block v-if="quizQuestion">
-        <f7-block-title>{{ quizQuestion?.question }}</f7-block-title>
-        <f7-block-header>What will be the result of this mathematical operation?</f7-block-header>
-
+    <div v-if="quizQuestions.length >= quizMode.questions" ref="circles" class="circles machine-player-circle">
+      <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
+    </div>
+    <template v-if="!isLoading && quizQuestions.length >= quizMode.questions">
+      <f7-row class="scores-block">
+        <f7-block class="my-score">
+          Your score:&nbsp;
+          <span>{{ userScore }}</span>
+        </f7-block>
+        <f7-block class="machine-score">
+          Machine score:&nbsp;
+          <span>{{ machineScore }}</span>
+        </f7-block>
+      </f7-row>
+      <f7-block v-if="quizQuestion" class="player-machine-questions-content">
+        <f7-block-title>
+          <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
+        </f7-block-title>
         <f7-list>
           <f7-list-item
             v-for="(answer, index) in answersData"
-            :key="answer.id"
-            :class="{
-              'hg-wrong-answer': chosenQuizAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
-              'hg-correct-answer': chosenQuizAnswer && quizQuestion?.answer === answer,
-            }"
-            :disabled="!!chosenQuizAnswer"
-            :title="answer"
+            :key="index"
             :checked="chosenQuizAnswer === answer"
-            radio-icon="end"
+            :disabled="!!sentAnswer"
+            :class="{
+              'hg-correct-machine-answer':
+                sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
+              'hg-wrong-machine-answer':
+                sentAnswer && quizQuestion.machine_answer === 'wrong' && quizQuestion.wrong_answers[1] == answer,
+            }"
             name="demo-radio-end"
             radio
             @change="chooseQuizAnswer(answer, index)"
-          ></f7-list-item>
+          >
+            <f7-col
+              :class="{
+                'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
+                'hg-correct-answer': sentAnswer && quizQuestion?.answer === answer,
+                'hg-wrong-answer': sentAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+              }"
+            >
+              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <math-jax :latex="'\\sf' + answer"></math-jax>
+            </f7-col>
+          </f7-list-item>
         </f7-list>
-
         <div class="hg-actions-btns-content">
-          <button v-if="!chosenQuizAnswer" class="button button-outline hg-default-btn-width" @click="skip">
-            Skip
-          </button>
+          <f7-row v-if="!sentAnswer">
+            <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
+              wrong answer
+            </f7-button>
+            <f7-button
+              class="button button-large button-submit"
+              :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
+              @click="sendAnswer"
+            >
+              abgeben
+            </f7-button>
+          </f7-row>
 
-          <button v-else class="button button-fill hg-default-btn-width" @click="next">Next</button>
+          <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
         </div>
       </f7-block>
 
@@ -58,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -66,10 +120,21 @@ import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
+import Circle from "@/components/circle.vue";
+import LeavePagePopup from "@/components/leave-page-popup.vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
+});
+
+onMounted(() => {
+  window.addEventListener("resize", onOrientationChange);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onOrientationChange);
 });
 
 const { user } = storeToRefs(useAuthStore());
@@ -97,6 +162,28 @@ const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
 
+const presentIndex = ref(0);
+const getPoints = ref([]);
+const circles = ref(null);
+watch(
+  () => quizQuestions.value,
+  () => {
+    getPoints.value = quizQuestions.value.map((q, i) => {
+      return {
+        id: q.id,
+        answer: q.answer,
+        point: i + 1,
+        status: i === presentIndex.value ? "present" : "normal",
+      };
+    });
+  },
+);
+
+const getLetterByIndex = index => {
+  const letterCode = "a".charCodeAt(0) + index;
+  return String.fromCharCode(letterCode);
+};
+
 const getQuizQuestionsHandler = async limit => {
   isLoading.value = true;
 
@@ -109,29 +196,88 @@ const getQuizQuestionsHandler = async limit => {
 const chooseQuizAnswer = (answer, index) => {
   chosenQuizAnswer.value = typeof answer === "string" ? answer : String(answer);
   chosenQuizAnswerIndex.value = index;
+};
+const isSending = ref(false);
+const sentAnswer = ref(false);
 
-  const status = quizQuestion.value.answer === answer ? "correct" : "wrong";
+const finishGame = ref("");
+const closeFinishPopup = () => {
+  finishGame.value = "";
+  props.f7router.navigate("/practice/");
+};
 
-  updateScore(status, quizQuestion.value.machine_answer);
+const status = ref("normal");
+const sendAnswer = () => {
+  if (chosenQuizAnswer.value) {
+    isSending.value = true;
+    status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
+    updateScore(status.value, quizQuestion.value.machine_answer);
+    isSending.value = false;
+    sentAnswer.value = true;
+    chosenQuizAnswer.value = null;
+  }
+  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+    endQuiz();
+  }
+};
+
+const closeEmptyPopup = () => {
+  props.f7router.navigate("/topics/");
 };
 
 const clearChosenData = () => {
   chosenQuizAnswer.value = null;
   chosenQuizAnswerIndex.value = null;
+  isSending.value = false;
+  sentAnswer.value = false;
 };
 
 const skip = () => {
-  clearChosenData();
+  isSending.value = true;
   updateScore("skipped", quizQuestion.value.machine_answer);
-  next();
+  isSending.value = false;
+  sentAnswer.value = true;
+  status.value = "wrong";
+  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+    endQuiz();
+  }
+  answersData.value.find((answer, index) => {
+    if (answer !== quizQuestion.value.answer) {
+      chosenQuizAnswerIndex.value = index;
+      return answer;
+    }
+  });
 };
 
 const next = () => {
   clearChosenData();
+  getPoints.value[presentIndex.value].status = status.value;
+  ++presentIndex.value;
+  if (presentIndex.value < getPoints.value.length) {
+    getPoints.value[presentIndex.value].status = "present";
+  }
+  if (
+    circles.value.clientWidth / 2 - 16 <
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
+  ) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  }
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   getNextQuizQuestion();
 };
 
+const goMyStatus = () => {
+  props.f7router.navigate("/activity/");
+};
+
+const onOrientationChange = () => {
+  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  }
+};
+const finishGameText = ref("");
 const endQuiz = () => {
   let result;
 
@@ -144,9 +290,18 @@ const endQuiz = () => {
   }
 
   const alertTextObj = {
-    win: "You have won",
-    draw: "You have played a draw",
-    lose: "You have lost",
+    win: {
+      title: "You have won",
+      text: `You got ${presentIndex.value + 1} points`,
+    },
+    draw: {
+      title: "You have played a draw",
+      text: `You got ${(presentIndex.value + 1) / 2} points`,
+    },
+    lose: {
+      title: "You have lost",
+      text: `You lost -${(presentIndex.value + 1) / 5} points`,
+    },
   };
 
   const pointsObject = {
@@ -154,36 +309,25 @@ const endQuiz = () => {
     draw: user.value.points + quizMode.value.drawPoints,
     lose: user.value.points + quizMode.value.losePoints,
   };
-
-  endQuizAlert.value = f7.dialog.alert(alertTextObj[result], "The quiz result", () => {
-    updateUser({ points: pointsObject[result] }).then(() => {
-      f7.toast.show({
-        text: "Your points were updated",
-        closeButton: true,
-        closeTimeout: 1000,
-        on: {
-          close: () => {
-            useQuizStore().$reset();
-            endQuizAlert.value = null;
-            props.f7router.navigate("/");
-          },
-        },
-      });
-    });
+  updateUser({ points: pointsObject[result] }).then(() => {
+    finishGame.value = alertTextObj[result].title;
+    finishGameText.value = alertTextObj[result].text;
   });
 };
 
+const leavePopupPageText = ref("");
 const breakQuiz = () => {
-  f7.dialog.confirm(
-    `Your progress will be lost and you will lose ${Math.abs(quizMode.value.losePoints)} points. Are you sure?`,
-    "Warning",
-    () => {
-      updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
-        useQuizStore().$reset();
-        props.f7router.navigate("/");
-      });
-    },
-  );
+  leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
+    quizMode.value.losePoints,
+  )} points.`;
+};
+
+const leavePage = () => {
+  updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
+    useQuizStore().$reset();
+    leavePopupPageText.value = "";
+    props.f7router.navigate("/");
+  });
 };
 
 watch(allQuizQuestionAnswered, val => {
