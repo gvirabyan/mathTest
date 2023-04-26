@@ -1,6 +1,11 @@
 <template>
   <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
-    <top-bar :tabs="classesTabs" @tab-selected="getCategoriesByClass" :change-tab="changeClass" @show-search-popup="toggleSearchPopup">
+    <top-bar
+      :tabs="classesTabs"
+      :change-tab="changeClass"
+      @tab-selected="getCategoriesByClass"
+      @show-search-popup="toggleSearchPopup"
+    >
       <template #title>Topics</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
@@ -75,7 +80,7 @@
 </template>
 
 <script setup>
-import {ref, computed, watch, onMounted, onUnmounted} from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import TextClamp from "vue3-text-clamp";
 import { useAuthStore } from "@/js/stores/auth";
@@ -130,39 +135,43 @@ const keywords = ref([
   },
 ]);
 
-const changeClass = ref(0)
+const changeClass = ref(0);
 onMounted(() => {
-  let start = null;
-  window.addEventListener("touchstart",function(event){
-    if(event.touches.length === 1){
-      //just one finger touched
-      start = event.touches.item(0).clientX;
-    } else{
-      //a second finger hit the screen, abort the touch
-      start = null;
-    }
-  });
-  window.addEventListener("touchend",function(event){
-    let offset = 50;//at least 50px are a swipe
-    if(start){
-      //the only finger that hit the screen left it
-      let end = event.changedTouches.item(0).clientX;
-
-      if(end > start + offset && changeClass.value > 0){
-        //a left -> right swipe
-        --changeClass.value;
-      }
-      if(end < start - offset && changeClass.value < 10){
-        //a right -> left swipe
-        ++changeClass.value;
-      }
-    }
-  });
+  window.addEventListener("touchstart", touchStart);
+  window.addEventListener("touchend", touchEnd);
 });
 
 onUnmounted(() => {
-
+  window.removeEventListener("touchstart", touchStart);
+  window.removeEventListener("touchend", touchEnd);
 });
+
+let start = null;
+const touchStart = event => {
+  if (event.touches.length === 1) {
+    //just one finger touched
+    start = event.touches.item(0).clientX;
+  } else {
+    //a second finger hit the screen, abort the touch
+    start = null;
+  }
+};
+
+const touchEnd = event => {
+  let offset = 50; //at least 50px are a swipe
+  if (start) {
+    //the only finger that hit the screen left it
+    let end = event.changedTouches.item(0).clientX;
+    if (end > start + offset && changeClass.value > 0) {
+      //a left -> right swipe
+      --changeClass.value;
+    }
+    if (end < start - offset && changeClass.value < 10) {
+      //a right -> left swipe
+      ++changeClass.value;
+    }
+  }
+};
 
 const classesTabs = computed(() =>
   categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} classes` })),
