@@ -20,6 +20,7 @@
 import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
+import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
@@ -35,10 +36,12 @@ defineProps({
   },
 });
 
+const userStatsStore = useUserStats();
 const authStore = useAuthStore();
 
 const { user } = storeToRefs(authStore);
 const { getUser } = authStore;
+const { getUserStatus } = userStatsStore;
 
 const activityTabs = ref([
   {
@@ -59,18 +62,22 @@ const activityTabs = ref([
 ]);
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
-
+let active = null;
 const setActiveComponent = id => {
-  const active = activityTabs.value.find(t => t.id === id);
+  active = activityTabs.value.find(t => t.id === id);
   currentActivityComponent.value = active.component;
 };
 
 const getAllData = async () => {
   isLoading.value = true;
-
   await delay();
   await Promise.all([getUser()]);
-
+  if (active && active.name === "My Status") {
+    isLoading.value = true;
+    await delay();
+    await getUserStatus();
+    isLoading.value = false;
+  }
   isLoading.value = false;
 };
 </script>
