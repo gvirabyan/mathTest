@@ -71,6 +71,7 @@
 
             <template #after>
               <p>{{ getAfterText(category) }}</p>
+              <span>Class {{ category.attributes.category_class.data.attributes.name }}</span>
             </template>
           </f7-list-item>
         </f7-list>
