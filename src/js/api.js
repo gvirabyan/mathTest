@@ -10,11 +10,11 @@ const defaultOptions = () => {
   return options;
 };
 
-let prevUrl = '';
+let prevUrl = "";
 const get = async url => {
-  if (prevUrl && prevUrl.split('&')[0] === url.split('&')[0]) {
+  if (prevUrl && prevUrl.split("&")[0] === url.split("&")[0]) {
     if (window.controller) {
-      window.controller.abort()
+      window.controller.abort();
     }
     window.controller = new AbortController();
     window.signal = window.controller.signal;

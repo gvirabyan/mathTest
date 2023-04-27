@@ -91,15 +91,13 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   const sendEverydayGoalReach = async () => {
-    if (import.meta.env.TARGET === "cordova") {
-      // eslint-disable-next-line no-undef
-      WonderPush.getInstallationId(function (installationId) {
-        return api
-          .post("everyday-goal-notify", { installationId })
-          .then(res => res.json())
-          .then(data => notifications.addNotification(data));
-      });
-    }
+    // eslint-disable-next-line no-undef
+    WonderPush.getInstallationId(function (installationId) {
+      return api
+        .post("everyday-goal-notify", { installationId })
+        .then(res => res.json())
+        .then(data => notifications.addNotification(data));
+    });
   };
 
   watch(
