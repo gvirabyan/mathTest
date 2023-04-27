@@ -13,7 +13,7 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-ios": "^6.2.0",
+    "cordova-ios": "^6.3.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-keyboard": "^1.2.0",
     "cordova-plugin-splashscreen": "^6.0.2",
@@ -30,20 +30,17 @@
         "APP_ID": "1233719074230188",
         "APP_NAME": "Math App"
       },
-      "wonderpush-cordova-sdk": {
-        "CLIENT_ID": "7eb03e34e599e04a55aea05aa5cd208aa097cd7f",
-        "CLIENT_SECRET": "23974204f3b0a141d8e98602ecdda9d664846f6caab6adb3189c5354e57fc75f",
-        "LOGGING": "false",
-        "AUTO_INIT": "true",
-        "REQUIRES_USER_CONSENT": "false"
-      },
       "wonderpush-cordova-sdk-fcm": {
         "SENDER_ID": "991929394310"
+      },
+      "wonderpush-cordova-sdk": {
+        "CLIENT_ID": "f6cfb28dda9a55ce96b95a138c60318883faa2d0",
+        "CLIENT_SECRET": "1b89aecf7e1cd414319cd7411e378ac10749a4ba2ef58caa3cf940df43326321"
       }
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "dependencies": {
