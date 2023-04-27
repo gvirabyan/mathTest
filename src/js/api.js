@@ -7,11 +7,22 @@ const defaultOptions = () => {
   if (localStorage.getItem("token")) {
     options.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
   }
-
   return options;
 };
 
-const get = url => fetch(`${import.meta.env.VITE_API_URL}${url}`, defaultOptions());
+let prevUrl = '';
+const get = async url => {
+  if (prevUrl && prevUrl.split('&')[0] === url.split('&')[0]) {
+    if (window.controller) {
+      window.controller.abort()
+    }
+    window.controller = new AbortController();
+    window.signal = window.controller.signal;
+  }
+  prevUrl = url;
+  const request = await fetch(`${import.meta.env.VITE_API_URL}${url}`, { signal: window.signal, ...defaultOptions() });
+  return request;
+};
 
 const post = (url, body) =>
   fetch(`${import.meta.env.VITE_API_URL}${url}`, {
@@ -32,7 +43,6 @@ const remove = url =>
     ...defaultOptions(),
     method: "DELETE",
   });
-
 export default {
   get,
   post,
