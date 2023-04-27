@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineAsyncComponent, onUpdated } from "vue";
+import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -143,14 +143,6 @@ const goLastQuiz = quiz => {
     f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
   }
 };
-
-onMounted(async () => {
-  isLoading.value = true;
-  await delay();
-  await getUserStatus();
-
-  isLoading.value = false;
-});
 </script>
 
 <style lang="scss">
