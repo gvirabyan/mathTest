@@ -97,6 +97,7 @@ const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
+
 const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
@@ -188,7 +189,7 @@ const getAfterText = category => {
 
 const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
-  await getCategoriesByClass(1);
+  await getCategoriesByClass(categoryClasses.value[0].id);
 };
 
 let calledId = null;
