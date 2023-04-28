@@ -12,7 +12,7 @@
     </top-bar>
 
     <template v-if="!isLoading">
-      <f7-list no-hairlines-md>
+      <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
         <f7-list-item
           v-for="category in categoriesData"
           :key="category.id"
@@ -137,15 +137,6 @@ const keywords = ref([
 ]);
 
 const changeClass = ref(0);
-onMounted(() => {
-  window.addEventListener("touchstart", touchStart);
-  window.addEventListener("touchend", touchEnd);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("touchstart", touchStart);
-  window.removeEventListener("touchend", touchEnd);
-});
 
 let start = null;
 const touchStart = event => {
