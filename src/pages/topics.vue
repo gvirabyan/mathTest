@@ -13,11 +13,7 @@
 
     <template v-if="!isLoading">
       <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
-        <f7-list-item
-          v-for="category in categoriesData"
-          :key="category.id"
-          :link="`/categories/${category.id}/questions/`"
-        >
+        <f7-list-item v-for="category in categories" :key="category.id" :link="`/categories/${category.id}/questions/`">
           <template #title>
             <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
           </template>
@@ -59,12 +55,8 @@
           </f7-button>
         </div>
 
-        <f7-list v-if="searchedCategoriesData?.length" no-hairlines-md>
-          <f7-list-item
-            v-for="category in searchedCategoriesData"
-            :key="category.id"
-            @click="goToQuestions(category.id)"
-          >
+        <f7-list v-if="searchedCategories?.length" no-hairlines-md>
+          <f7-list-item v-for="category in searchedCategories" :key="category.id" @click="goToQuestions(category.id)">
             <template #title>
               <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
             </template>
@@ -81,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import TextClamp from "vue3-text-clamp";
 import { useAuthStore } from "@/js/stores/auth";
@@ -102,7 +94,7 @@ const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
-const { categoriesData, searchedCategoriesData } = storeToRefs(categoriesStore);
+const { categories, searchedCategories } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
@@ -171,11 +163,11 @@ const classesTabs = computed(() =>
 );
 
 const getAfterText = category => {
-  if (!category.questions_amount) {
+  if (!category.questions) {
     return "";
   }
 
-  return `${category.user_answers_amount}/${category.questions_amount}`;
+  return `${category.answers > category.questions ? category.questions : category.answers}/${category.questions}`;
 };
 
 const getCategoriesClassesHandler = async () => {
