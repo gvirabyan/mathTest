@@ -1,8 +1,11 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
+import { useNotifications } from "@/js/stores/notifications";
 import api from "@/js/api";
 
 export const useAuthStore = defineStore("auth", () => {
+  const notifications = useNotifications();
+
   // state properties
   const token = ref(localStorage.getItem("user") || "");
   const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
@@ -23,6 +26,13 @@ export const useAuthStore = defineStore("auth", () => {
     newPassword: "",
     confirmNewPassword: "",
   });
+
+  // everyday goal
+  // const everydayGoal = reactive(
+  //   localStorage.getItem("everydayGoal")
+  //     ? JSON.parse(localStorage.getItem("everydayGoal"))
+  //     : { questionsToGoal: user?.value.everyday_goal, isPassed: false, passingDatetime: null },
+  // );
 
   // getters
   const userData = computed(() => user.value);
@@ -271,6 +281,7 @@ export const useAuthStore = defineStore("auth", () => {
     userData,
     isNicknamedOnlyUser,
     passwords,
+    // everydayGoal,
     checkPassSave,
     securityLeavePopup,
     accountLeavePopup,

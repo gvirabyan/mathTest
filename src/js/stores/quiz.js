@@ -1,12 +1,12 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
+import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
-import { useQuestionsStore } from "@/js/stores/questions";
 
 export const useQuizStore = defineStore("quiz", () => {
   const categoryAnswersStore = useCategoryAnswerStore();
-  const questionStore = useQuestionsStore();
+  const everydayGoalStore = useEverydayGoalStore();
 
   const quizQuestions = ref(
     localStorage.getItem("quizQuestions") ? JSON.parse(localStorage.getItem("quizQuestions")) : [],
@@ -55,7 +55,6 @@ export const useQuizStore = defineStore("quiz", () => {
 
   const updateAnsweredQuizQuestions = id => {
     answeredQuizQuestions.value.push(id);
-    questionStore.decreaseQuestionsToGoal();
   };
 
   const updateScore = (userAnswerStatus, machineAnswerStatus) => {
