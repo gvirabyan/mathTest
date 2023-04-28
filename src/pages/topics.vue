@@ -12,7 +12,7 @@
     </top-bar>
 
     <template v-if="!isLoading">
-      <f7-list no-hairlines-md>
+      <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
         <f7-list-item
           v-for="category in categoriesData"
           :key="category.id"
@@ -97,6 +97,7 @@ const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
+
 const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
@@ -137,15 +138,6 @@ const keywords = ref([
 ]);
 
 const changeClass = ref(0);
-onMounted(() => {
-  window.addEventListener("touchstart", touchStart);
-  window.addEventListener("touchend", touchEnd);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("touchstart", touchStart);
-  window.removeEventListener("touchend", touchEnd);
-});
 
 let start = null;
 const touchStart = event => {
@@ -188,7 +180,7 @@ const getAfterText = category => {
 
 const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
-  await getCategoriesByClass(1);
+  await getCategoriesByClass(categoryClasses.value[0].id);
 };
 
 let calledId = null;

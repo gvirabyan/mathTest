@@ -108,7 +108,6 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
-import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
@@ -125,13 +124,10 @@ const props = defineProps({
   },
 });
 
-const userStatsStore = useUserStats();
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 const questionStore = useQuestionsStore();
 const categoryAnswerStore = useCategoryAnswerStore();
-
-const { getUserStatus } = userStatsStore;
 const { user } = storeToRefs(authStore);
 const { category } = storeToRefs(categoryStore);
 const { questions, question, answeredQuestionsData, answeredQuestionsPoints, questionIndex, questionsAreOver } =
@@ -174,7 +170,6 @@ const checkStatus = (id, answer) => {
 };
 const getAllQuestionData = async () => {
   isLoading.value = true;
-
   await delay();
   await getCategory(props.f7route.params.categoryID);
   await getQuestions(props.f7route.params.categoryID);
@@ -256,10 +251,6 @@ const clearChosenData = () => {
 
 const clearStores = async () => {
   if (isSending.value) return;
-  if (props.f7router.history[0] === "/") {
-    await delay();
-    await getUserStatus();
-  }
   isAllAnsweredPopup.value = false;
   questionStore.$reset();
   categoryAnswerStore.$reset();

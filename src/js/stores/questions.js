@@ -1,12 +1,10 @@
-import { ref, computed, watch, reactive } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import { useNotifications } from "@/js/stores/notifications";
 import api from "@/js/api";
 
 export const useQuestionsStore = defineStore("questions", () => {
   const auth = useAuthStore();
-  const notifications = useNotifications();
 
   const questions = ref([]);
   const question = ref(null);
@@ -16,11 +14,6 @@ export const useQuestionsStore = defineStore("questions", () => {
   const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
   const answeredQuestionsPoints = ref(0);
-  const everydayGoal = reactive(
-    localStorage.getItem("everydayGoal")
-      ? JSON.parse(localStorage.getItem("everydayGoal"))
-      : { questionsToGoal: auth.user?.everyday_goal, isPassed: false, passingDatetime: null },
-  );
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
@@ -76,48 +69,6 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
   };
 
-  const decreaseQuestionsToGoal = () => {
-    if (everydayGoal.questionsToGoal === 0) {
-      return;
-    }
-
-    everydayGoal.questionsToGoal -= 1;
-  };
-
-  const restartEverydayGoal = () => {
-    everydayGoal.questionsToGoal = auth.user?.everyday_goal;
-    everydayGoal.isPassed = false;
-    everydayGoal.passingDatetime = null;
-  };
-
-  const sendEverydayGoalReach = async () => {
-    // eslint-disable-next-line no-undef
-    WonderPush.getInstallationId(function (installationId) {
-      return api
-        .post("everyday-goal-notify", { installationId })
-        .then(res => res.json())
-        .then(data => notifications.addNotification(data));
-    });
-  };
-
-  watch(
-    () => everydayGoal,
-    async val => {
-      localStorage.setItem("everydayGoal", JSON.stringify(val));
-
-      if (val.questionsToGoal === 0) {
-        everydayGoal.isPassed = true;
-
-        if (!everydayGoal.passingDatetime) {
-          everydayGoal.passingDatetime = new Date().toISOString();
-        }
-
-        await sendEverydayGoalReach();
-      }
-    },
-    { deep: true },
-  );
-
   return {
     questions,
     question,
@@ -127,7 +78,6 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestionsData,
     answeredQuestionsCount,
     answeredQuestionsPoints,
-    everydayGoal,
     questionsData,
     questionData,
     questionsAreOver,
@@ -135,8 +85,5 @@ export const useQuestionsStore = defineStore("questions", () => {
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
     getNextQuestion,
-    decreaseQuestionsToGoal,
-    restartEverydayGoal,
-    sendEverydayGoalReach,
   };
 });

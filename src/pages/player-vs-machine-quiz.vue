@@ -114,9 +114,9 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
-import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
+import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
@@ -129,34 +129,17 @@ const props = defineProps({
   f7route: { type: Object, default: () => {} },
 });
 
-onMounted(() => {
-  window.addEventListener("resize", onOrientationChange);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", onOrientationChange);
-});
-
 const { user } = storeToRefs(useAuthStore());
 const { answersData } = storeToRefs(useCategoryAnswerStore());
-const {
-  quizQuestions,
-  quizQuestion,
-  quizQuestionsLength,
-  answeredQuizQuestions,
-  quizMode,
-  userScore,
-  machineScore,
-  currentQuizQuestionNumber,
-} = storeToRefs(useQuizStore());
-const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore } = useQuizStore();
-
+const { quizQuestions, quizQuestion, quizQuestionsLength, answeredQuizQuestions, quizMode, userScore, machineScore } =
+  storeToRefs(useQuizStore());
 const { updateUser } = useAuthStore();
+const { decreaseQuestionsToGoal } = useEverydayGoalStore();
+const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore } = useQuizStore();
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
-const endQuizAlert = ref(null);
 
 const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
@@ -165,19 +148,6 @@ const allQuizQuestionAnswered = computed(
 const presentIndex = ref(0);
 const getPoints = ref([]);
 const circles = ref(null);
-watch(
-  () => quizQuestions.value,
-  () => {
-    getPoints.value = quizQuestions.value.map((q, i) => {
-      return {
-        id: q.id,
-        answer: q.answer,
-        point: i + 1,
-        status: i === presentIndex.value ? "present" : "normal",
-      };
-    });
-  },
-);
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -215,6 +185,7 @@ const sendAnswer = () => {
     isSending.value = false;
     sentAnswer.value = true;
     chosenQuizAnswer.value = null;
+    decreaseQuestionsToGoal(status.value);
   }
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
     endQuiz();
@@ -330,12 +301,34 @@ const leavePage = () => {
   });
 };
 
+watch(
+  () => quizQuestions.value,
+  () => {
+    getPoints.value = quizQuestions.value.map((q, i) => {
+      return {
+        id: q.id,
+        answer: q.answer,
+        point: i + 1,
+        status: i === presentIndex.value ? "present" : "normal",
+      };
+    });
+  },
+);
+
 watch(allQuizQuestionAnswered, val => {
   if (!val) {
     return false;
   }
 
   endQuiz();
+});
+
+onMounted(() => {
+  window.addEventListener("resize", onOrientationChange);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onOrientationChange);
 });
 </script>
 

@@ -28,9 +28,9 @@
             <circle cx="5" cy="5" r="5" fill="#FFC700" />
           </svg>
 
-          {{ item.title }}
+          {{ item.attributes?.title || item.title }}
         </h3>
-        <p class="item-text">{{ item.text }}</p>
+        <p class="item-text">{{ item.attributes?.text || item.text }}</p>
       </f7-list-item>
     </f7-list>
 
@@ -51,14 +51,11 @@
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useNotifications } from "@/js/stores/notifications";
-import { useQuestionsStore } from "@/js/stores/questions";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 
 const { notifications } = storeToRefs(useNotifications());
 const { getNotifications, readNotifications } = useNotifications();
-
-const { sendEverydayGoalReach } = useQuestionsStore();
 
 const isLoading = ref(false);
 
