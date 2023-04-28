@@ -12,7 +12,6 @@ export const useCategoryStore = defineStore("category", () => {
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
 
-  const categoryData = computed(() => category.value);
   const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
 
   const getCategories = async searchStr => {
@@ -96,7 +95,6 @@ export const useCategoryStore = defineStore("category", () => {
     pastCategoriesData,
     category,
     pastCategoriesIds,
-    categoryData,
     getCategories,
     getCategoriesByCategoryClass,
     getCategory,
