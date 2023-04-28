@@ -19,7 +19,6 @@ export const useNotifications = defineStore("notifications", () => {
 
   const addNotification = notification => {
     notifications.value.push(notification);
-    hasNewNotifications.value = true;
   };
 
   const readNotifications = () => {

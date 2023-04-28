@@ -25,7 +25,6 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
   const sendEverydayGoalReach = async () => {
     // eslint-disable-next-line no-undef
     WonderPush.getInstallationId(function (installationId) {
-      alert(`installation id is: ${installationId}`);
       return api
         .post("everyday-goal-notify", { installationId })
         .then(res => res.json())
@@ -52,7 +51,9 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
         }
 
         localStorage.setItem("everydayGoal", JSON.stringify(everydayGoal));
-        await sendEverydayGoalReach();
+        await sendEverydayGoalReach().then(() => {
+          notifications.hasNewNotifications = true;
+        });
       }
     },
   );
