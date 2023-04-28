@@ -1,21 +1,17 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
-import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 export const useCategoryStore = defineStore("category", () => {
+  const categoryAnswersStore = useCategoryAnswerStore();
+
   const categories = ref([]);
   const searchedCategories = ref([]);
   const category = ref(null);
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
 
-  const authStore = useAuthStore();
-  const categoryAnswersStore = useCategoryAnswerStore();
-
-  const categoriesData = computed(() => categories.value.map(c => createCategoriesDataEntry(c)));
-  const searchedCategoriesData = computed(() => searchedCategories.value.map(c => createCategoriesDataEntry(c)));
   const categoryData = computed(() => category.value);
   const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
 
@@ -25,8 +21,8 @@ export const useCategoryStore = defineStore("category", () => {
     }
 
     const url = searchStr
-      ? `categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user&populate[3]=category_class&filters[name][$containsi]=${searchStr}`
-      : "categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user";
+      ? `categories?populate[0]=category_class&filters[name][$containsi]=${searchStr}`
+      : "categories?populate[0]=category_class";
 
     api
       .get(url)
@@ -45,9 +41,7 @@ export const useCategoryStore = defineStore("category", () => {
     categories.value = [];
 
     api
-      .get(
-        `categories?populate[0]=questions&populate[1]=questions.user_answers&populate[2]=questions.user_answers.users_permissions_user&populate[3]=category_class&filters[category_class][id][$eq]=${categoryID}`,
-      )
+      .get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}`)
       .then(res => res.json())
       .then(data => {
         categories.value = data.data;
@@ -87,28 +81,6 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
-  const createCategoriesDataEntry = category => {
-    const questionsArr = category.attributes.questions.data;
-
-    const userAnswersArr = questionsArr
-      .map(q => {
-        if (!q.attributes.user_answers.data.length) {
-          return [];
-        }
-
-        return q.attributes.user_answers.data.filter(
-          d => d.attributes.users_permissions_user.data?.id === authStore.user?.id,
-        );
-      })
-      .flat();
-
-    return {
-      ...category,
-      questions_amount: questionsArr.length,
-      user_answers_amount: userAnswersArr.length > questionsArr.length ? questionsArr.length : userAnswersArr.length,
-    };
-  };
-
   const clearSearchedCategories = () => {
     searchedCategories.value = [];
   };
@@ -123,8 +95,6 @@ export const useCategoryStore = defineStore("category", () => {
     lastCategoryData,
     pastCategoriesData,
     category,
-    categoriesData,
-    searchedCategoriesData,
     pastCategoriesIds,
     categoryData,
     getCategories,

@@ -197,6 +197,7 @@ const sendAnswer = () => {
       question: question.value.id,
       category: category.value.id,
       answer: chosenAnswer.value,
+      answer_type: "topic",
       status,
     }).then(resp => {
       isSending.value = false;
@@ -223,6 +224,7 @@ const skip = () => {
     category: category.value.id,
     answer: "",
     status: "skipped",
+    answer_type: "topic",
   }).then(resp => {
     isSending.value = false;
 
