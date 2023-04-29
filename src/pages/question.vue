@@ -8,15 +8,9 @@
       </template>
     </f7-navbar>
 
-    <div class="circles">
-      <Circle
-        v-for="point in getPoints"
-        :key="point.point"
-        :point="point.point"
-        :status="checkStatus(point.id, point.answer)"
-      />
+    <div ref="circles" class="circles">
+      <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" ref="circles" />
     </div>
-
     <div v-if="question" id="elementId" class="questions-content">
       <f7-block-title><math-jax :latex="'\\Large \\sf' + question?.question" :block="true"></math-jax></f7-block-title>
 
@@ -101,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -129,7 +123,7 @@ const categoryStore = useCategoryStore();
 const questionStore = useQuestionsStore();
 const categoryAnswerStore = useCategoryAnswerStore();
 const { user } = storeToRefs(authStore);
-const { category } = storeToRefs(categoryStore);
+const { category, categories } = storeToRefs(categoryStore);
 const { questions, question, answeredQuestionsData, answeredQuestionsPoints, questionIndex, questionsAreOver } =
   storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
@@ -138,7 +132,7 @@ const { getCategory, clearCategory } = categoryStore;
 const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
-const questionsInitialLength = 23;
+const questionsInitialLength = questions.value.length-2;
 const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
@@ -146,34 +140,58 @@ const chosenAnswerIndex = ref(null);
 const sentAnswer = ref(false);
 const isAllAnsweredPopup = ref(false);
 
-const getPoints = computed(() => {
-  return questions.value
-    ? questions.value.map((q, i) => {
+const presentIndex = ref(0);
+const getPoints = ref([]);
+const circles = ref(null);
+const checkAnswers = ref(true)
+watch(
+  () => questions.value,
+  async () => {
+    const { answers, questions : questionsL } = categories.value.find(c => c.id === Number(props.f7route.params.categoryID));
+    if(checkAnswers.value) {
+      presentIndex.value = answers;
+      checkAnswers.value = false;
+      for (let i = questions.value.length; i < questionsL; i++) {
+        questions.value.push({
+          id: null,
+          answer: null,
+          point: i + 1,
+          status: i === presentIndex.value ? "present" : "normal",
+        });
+      }
+      getPoints.value = questions.value.map((q, i) => {
         return {
           id: q.id,
           answer: q.answer,
           point: i + 1,
+          status: i === presentIndex.value ? "present" : "normal",
         };
-      })
-    : [];
-});
+      });
+    }
+  },
+);
+const checkCircleChange = ref(true)
+watch(
+  () => circles.value,
+  el => {
+    if (checkCircleChange.value && el.children.length && el.clientWidth / 2 - 16 < el.children[presentIndex.value].getBoundingClientRect().left - 24) {
+      circles.value.scrollLeft +=
+        circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+      checkCircleChange.value = false;
+    }
+  },
+  {
+    deep: true,
+  },
+);
 
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
 
-const checkStatus = (id, answer) => {
-  const staticQuestion = questions.value.find(q => q.id === id);
-  return staticQuestion && staticQuestion.wrong_answers
-    ? staticQuestion.wrong_answers.includes(staticQuestion.answer)
-      ? "false"
-      : "true"
-    : "normal";
-};
 const getAllQuestionData = async () => {
   isLoading.value = true;
   await delay();
   await getCategory(props.f7route.params.categoryID);
   await getQuestions(props.f7route.params.categoryID);
-
   isLoading.value = false;
 };
 
@@ -187,18 +205,19 @@ const chooseAnswer = (answer, index) => {
   chosenAnswerIndex.value = index;
 };
 
+const status = ref("normal");
 const sendAnswer = () => {
   if (chosenAnswer.value) {
     isSending.value = true;
-    let status = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
+    status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: question.value.id,
       category: category.value.id,
       answer: chosenAnswer.value,
+      status: status.value,
       answer_type: "topic",
-      status,
     }).then(resp => {
       isSending.value = false;
       sentAnswer.value = true;
@@ -217,7 +236,7 @@ const sendAnswer = () => {
 
 const skip = () => {
   isSending.value = true;
-
+  status.value = "normal";
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: question.value.id,
@@ -243,6 +262,18 @@ const skip = () => {
 const next = () => {
   clearChosenData();
   getNextQuestion();
+  getPoints.value[presentIndex.value].status = status.value;
+  presentIndex.value++;
+  if (presentIndex.value < getPoints.value.length) {
+    getPoints.value[presentIndex.value].status = "present";
+  }
+  if (
+    circles.value.clientWidth / 2 - 16 <
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
+  ) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  }
 };
 
 const clearChosenData = () => {
@@ -281,6 +312,21 @@ watch(questionsAreOver, async val => {
 
   isAllAnsweredPopup.value = true;
   await getAnsweredQuestions(props.f7route.params.categoryID);
+});
+
+const onOrientationChange = () => {
+  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+    circles.value.scrollLeft +=
+      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("resize", onOrientationChange);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", onOrientationChange);
 });
 </script>
 
