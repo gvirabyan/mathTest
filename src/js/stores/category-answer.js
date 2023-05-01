@@ -52,6 +52,7 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
           }
 
           everydayGoalStore.decreaseQuestionsToGoal(answer.status);
+
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };

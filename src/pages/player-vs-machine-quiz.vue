@@ -12,6 +12,7 @@
       @save-changes="leavePopupPageText = ''"
       @close="leavePopupPageText = ''"
     />
+
     <leave-page-popup
       v-if="finishGame"
       :title="finishGame"
@@ -22,6 +23,7 @@
       @save-changes="closeFinishPopup"
       @close="closeFinishPopup"
     />
+
     <success-message-popup
       v-if="quizQuestions.length < quizMode.questions && !isLoading"
       title="Oops!"
@@ -30,34 +32,41 @@
       btn-text="Go to topics"
       @close="closeEmptyPopup"
     />
+
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
           <a href="#" class="link icon-only" @click="breakQuiz">
-            <img src="@/assets/icons/arrow-right.svg" />
+            <img src="@/assets/icons/arrow-right.svg" alt="" />
           </a>
         </div>
+
         <div class="title">Player vs. Machine</div>
       </div>
     </div>
+
     <div v-if="quizQuestions.length >= quizMode.questions" ref="circles" class="circles machine-player-circle">
       <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
     </div>
+
     <template v-if="!isLoading && quizQuestions.length >= quizMode.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           Your score:&nbsp;
           <span>{{ userScore }}</span>
         </f7-block>
+
         <f7-block class="machine-score">
           Machine score:&nbsp;
           <span>{{ machineScore }}</span>
         </f7-block>
       </f7-row>
+
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <f7-block-title>
           <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
         </f7-block-title>
+
         <f7-list>
           <f7-list-item
             v-for="(answer, index) in answersData"
@@ -68,7 +77,7 @@
               'hg-correct-machine-answer':
                 sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
               'hg-wrong-machine-answer':
-                sentAnswer && quizQuestion.machine_answer === 'wrong' && quizQuestion.wrong_answers[1] == answer,
+                sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === quizQuestion.answer,
             }"
             name="demo-radio-end"
             radio
@@ -86,11 +95,13 @@
             </f7-col>
           </f7-list-item>
         </f7-list>
+
         <div class="hg-actions-btns-content">
           <f7-row v-if="!sentAnswer">
             <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
               wrong answer
             </f7-button>
+
             <f7-button
               class="button button-large button-submit"
               :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
@@ -112,6 +123,7 @@
 </template>
 
 <script setup>
+import { f7 } from "framework7-vue";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
@@ -133,21 +145,27 @@ const { user } = storeToRefs(useAuthStore());
 const { answersData } = storeToRefs(useCategoryAnswerStore());
 const { quizQuestions, quizQuestion, quizQuestionsLength, answeredQuizQuestions, quizMode, userScore, machineScore } =
   storeToRefs(useQuizStore());
-const { updateUser } = useAuthStore();
+const { updateUserAnsweredQuestions } = useCategoryAnswerStore();
 const { decreaseQuestionsToGoal } = useEverydayGoalStore();
-const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore } = useQuizStore();
+const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore, saveQuizResult } =
+  useQuizStore();
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
+const presentIndex = ref(0);
+const getPoints = ref([]);
+const circles = ref(null);
+const status = ref("normal");
+const finishGameText = ref("");
+const leavePopupPageText = ref("");
+const isSending = ref(false);
+const sentAnswer = ref(false);
+const finishGame = ref("");
 
 const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
-
-const presentIndex = ref(0);
-const getPoints = ref([]);
-const circles = ref(null);
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -167,26 +185,41 @@ const chooseQuizAnswer = (answer, index) => {
   chosenQuizAnswer.value = typeof answer === "string" ? answer : String(answer);
   chosenQuizAnswerIndex.value = index;
 };
-const isSending = ref(false);
-const sentAnswer = ref(false);
 
-const finishGame = ref("");
 const closeFinishPopup = () => {
   finishGame.value = "";
   props.f7router.navigate("/practice/");
 };
 
-const status = ref("normal");
 const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
     updateScore(status.value, quizQuestion.value.machine_answer);
-    isSending.value = false;
-    sentAnswer.value = true;
-    chosenQuizAnswer.value = null;
-    decreaseQuestionsToGoal(status.value);
+
+    updateUserAnsweredQuestions({
+      users_permissions_user: user.value.id,
+      question: quizQuestion.value.id,
+      category: quizQuestion.value.category,
+      answer: chosenQuizAnswer.value,
+      answer_type: "practice-vs-machine",
+      status: status.value,
+    }).then(resp => {
+      isSending.value = false;
+      sentAnswer.value = true;
+
+      if (resp.status !== "success") {
+        chosenQuizAnswer.value = null;
+        decreaseQuestionsToGoal(status.value);
+
+        f7.toast.show({
+          text: resp.message,
+          closeButton: true,
+        });
+      }
+    });
   }
+
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
     endQuiz();
   }
@@ -209,9 +242,11 @@ const skip = () => {
   isSending.value = false;
   sentAnswer.value = true;
   status.value = "wrong";
+
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
     endQuiz();
   }
+
   answersData.value.find((answer, index) => {
     if (answer !== quizQuestion.value.answer) {
       chosenQuizAnswerIndex.value = index;
@@ -224,9 +259,11 @@ const next = () => {
   clearChosenData();
   getPoints.value[presentIndex.value].status = status.value;
   ++presentIndex.value;
+
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
   }
+
   if (
     circles.value.clientWidth / 2 - 16 <
     circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
@@ -234,6 +271,7 @@ const next = () => {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
+
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   getNextQuizQuestion();
 };
@@ -248,18 +286,8 @@ const onOrientationChange = () => {
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
-const finishGameText = ref("");
-const endQuiz = () => {
-  let result;
 
-  if (userScore.value > machineScore.value) {
-    result = "win";
-  } else if (userScore.value < machineScore.value) {
-    result = "lose";
-  } else {
-    result = "draw";
-  }
-
+const endQuiz = async () => {
   const alertTextObj = {
     win: {
       title: "You have won",
@@ -275,26 +303,31 @@ const endQuiz = () => {
     },
   };
 
-  const pointsObject = {
-    win: user.value.points + quizMode.value.winPoints,
-    draw: user.value.points + quizMode.value.drawPoints,
-    lose: user.value.points + quizMode.value.losePoints,
-  };
-  updateUser({ points: pointsObject[result] }).then(() => {
+  await saveQuizResult({
+    user_score: userScore.value,
+    rival_score: machineScore.value,
+    mode: quizMode.value,
+  }).then(({ data }) => {
+    const result = data.attributes.result;
+
     finishGame.value = alertTextObj[result].title;
     finishGameText.value = alertTextObj[result].text;
   });
 };
 
-const leavePopupPageText = ref("");
 const breakQuiz = () => {
   leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
     quizMode.value.losePoints,
   )} points.`;
 };
 
-const leavePage = () => {
-  updateUser({ points: user.value.points + quizMode.value.losePoints }).then(() => {
+const leavePage = async () => {
+  await saveQuizResult({
+    user_score: userScore.value,
+    rival_score: machineScore.value,
+    mode: quizMode.value,
+    result: "lose",
+  }).then(() => {
     useQuizStore().$reset();
     leavePopupPageText.value = "";
     props.f7router.navigate("/");
