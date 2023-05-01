@@ -7,9 +7,22 @@ export const useUserStats = defineStore("user-stats", () => {
     questions_count: null,
     questions_left_count: null,
     answers_count: null,
-    correct_answers: null,
-    wrong_answers: null,
-    skipped_answers: null,
+    topic_answers: {
+      count: null,
+      percent: null,
+    },
+    correct_answers: {
+      count: null,
+      percent: null,
+    },
+    wrong_answers: {
+      count: null,
+      percent: null,
+    },
+    skipped_answers: {
+      count: null,
+      percent: null,
+    },
     last_update: null,
   });
 
@@ -47,9 +60,14 @@ export const useUserStats = defineStore("user-stats", () => {
         answersStats.questions_count = data.questions_count;
         answersStats.questions_left_count = data.questions_left_count;
         answersStats.answers_count = data.answers_count;
-        answersStats.correct_answers = data.correct_answers;
-        answersStats.wrong_answers = data.wrong_answers;
-        answersStats.skipped_answers = data.skipped_answers;
+        answersStats.topic_answers.count = data.topic_answers.count;
+        answersStats.topic_answers.percent = data.topic_answers.percent;
+        answersStats.correct_answers.count = data.correct_answers.count;
+        answersStats.correct_answers.percent = data.correct_answers.percent;
+        answersStats.wrong_answers.count = data.wrong_answers.count;
+        answersStats.wrong_answers.percent = data.wrong_answers.percent;
+        answersStats.skipped_answers.count = data.skipped_answers.count;
+        answersStats.skipped_answers.percent = data.skipped_answers.percent;
         answersStats.last_update = data.last_update;
       });
   };
