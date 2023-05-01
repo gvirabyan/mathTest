@@ -1,7 +1,7 @@
 <template>
   <f7-page id="activity-page" class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
-      <template #title>Activity</template>
+      <template #title>{{ $t("activity.Activity") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
@@ -19,6 +19,7 @@
 <script setup>
 import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
@@ -36,6 +37,8 @@ defineProps({
   },
 });
 
+const i18n = useI18n();
+
 const userStatsStore = useUserStats();
 const authStore = useAuthStore();
 
@@ -46,17 +49,17 @@ const { getUserStatus } = userStatsStore;
 const activityTabs = ref([
   {
     id: 1,
-    name: "My Status",
+    name: i18n.t("activity.tabs.My Status"),
     component: markRaw(MyStatus),
   },
   {
     id: 2,
-    name: "Top List",
+    name: i18n.t("activity.tabs.Top List"),
     component: markRaw(TopList),
   },
   {
     id: 3,
-    name: "My Answers",
+    name: i18n.t("activity.tabs.My Answers"),
     component: markRaw(MyAnswers),
   },
 ]);
