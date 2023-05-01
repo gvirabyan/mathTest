@@ -8,8 +8,8 @@
       </template>
     </f7-navbar>
 
-    <div ref="circles" class="circles">
-      <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" ref="circles" />
+    <div ref="circles" class="circles" style="">
+      <Circle v-for="point in getPoints" :key="point.point" ref="circles" :point="point.point" :status="point.status" />
     </div>
     <div v-if="question" id="elementId" class="questions-content">
       <f7-block-title><math-jax :latex="'\\Large \\sf' + question?.question" :block="true"></math-jax></f7-block-title>
@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -132,7 +132,7 @@ const { getCategory, clearCategory } = categoryStore;
 const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
-const questionsInitialLength = questions.value.length-2;
+const questionsInitialLength = questions.value.length - 2;
 const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
@@ -143,12 +143,16 @@ const isAllAnsweredPopup = ref(false);
 const presentIndex = ref(0);
 const getPoints = ref([]);
 const circles = ref(null);
-const checkAnswers = ref(true)
+const checkAnswers = ref(true);
+let startIndex = 0;
 watch(
   () => questions.value,
   async () => {
-    const { answers, questions : questionsL } = categories.value.find(c => c.id === Number(props.f7route.params.categoryID));
-    if(checkAnswers.value) {
+    const { answers, questions: questionsL } = categories.value.find(
+      c => c.id === Number(props.f7route.params.categoryID),
+    );
+    if (checkAnswers.value) {
+      startIndex = answers;
       presentIndex.value = answers;
       checkAnswers.value = false;
       for (let i = questions.value.length; i < questionsL; i++) {
@@ -170,11 +174,15 @@ watch(
     }
   },
 );
-const checkCircleChange = ref(true)
+const checkCircleChange = ref(true);
 watch(
   () => circles.value,
   el => {
-    if (checkCircleChange.value && el.children.length && el.clientWidth / 2 - 16 < el.children[presentIndex.value].getBoundingClientRect().left - 24) {
+    if (
+      checkCircleChange.value &&
+      el.children.length &&
+      el.clientWidth / 2 - 16 < el.children[presentIndex.value].getBoundingClientRect().left - 24
+    ) {
       circles.value.scrollLeft +=
         circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
       checkCircleChange.value = false;
@@ -303,8 +311,9 @@ watch(questionIndex, async val => {
   if (!questions.value.length || val < questionsLength) {
     return;
   }
-
-  await getQuestions(props.f7route.params.categoryID);
+  if (startIndex + 23 === presentIndex.value) {
+    await getQuestions(props.f7route.params.categoryID);
+  }
 });
 
 watch(questionsAreOver, async val => {
