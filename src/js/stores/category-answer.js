@@ -41,14 +41,18 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
     return [...randomData].sort(() => 0.5 - Math.random());
   };
 
-  const updateUserAnsweredQuestions = async answer => {
+  const updateUserAnsweredQuestions = async (answer, mode = "topic") => {
     return api
       .post("user-answers", { data: answer })
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
-          questionStore.answeredQuestions.push(answer.question);
+          if (mode === "topic") {
+            questionStore.answeredQuestions.push(answer.question);
+          }
+
           everydayGoalStore.decreaseQuestionsToGoal(answer.status);
+
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };
