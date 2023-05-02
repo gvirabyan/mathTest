@@ -277,10 +277,12 @@ const next = async () => {
   }
   getNextQuestion();
   getPoints.value[presentIndex.value].status = status.value;
-  presentIndex.value++;
   if (presentIndex.value === getPoints.value.length - 1) {
     isAllAnsweredPopup.value = true;
+    await getAnsweredQuestions(props.f7route.params.categoryID);
+    return;
   }
+  presentIndex.value++;
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
   }

@@ -30,7 +30,7 @@ export const useQuestionsStore = defineStore("questions", () => {
 
         questionsAreLoaded.value = true;
         if (categoryID === selectedCategoryId.value) {
-          questions.value = resData.length ? [...questions.value, ...resData].sort(() => 0.5 - Math.random()) : [];
+          questions.value = resData.length ? [...questions.value, ...resData.sort(() => 0.5 - Math.random())] : [];
         } else {
           questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
           questionIndex.value = 0;
