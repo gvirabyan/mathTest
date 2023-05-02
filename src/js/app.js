@@ -23,6 +23,9 @@ import MathJax, { initMathJax, renderByMathjax } from "mathjax-vue3";
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
 
+//language
+import i18n from "./i18n";
+
 // Init App
 const app = createApp(App);
 const pinia = createPinia();
@@ -40,6 +43,7 @@ function onMathJaxReady() {
 initMathJax({ url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.0.5/es5/tex-svg.js" }, onMathJaxReady);
 // Mount the app
 app.use(pinia);
+app.use(i18n);
 app.use(MathJax);
 app.mount("#app");
 

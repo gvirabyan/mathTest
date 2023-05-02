@@ -13,8 +13,8 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#8419FF"
-            :percent="answersPercent"
-            ><template #percent>{{ answersPercent }}</template>
+            :percent="answersStats.topic_answers.percent"
+            ><template #percent>{{ answersStats.topic_answers.percent }}</template>
             <template #amount>{{ answersStats.questions_left_count }}</template>
             <template #info>of {{ answersStats.questions_count }} questions left</template>
           </custom-gauge>
@@ -25,9 +25,9 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#2EE56B"
-            :percent="correctAnswersPercent"
-            ><template #percent>{{ correctAnswersPercent }}</template>
-            <template #amount>{{ answersStats.correct_answers }}</template>
+            :percent="answersStats.correct_answers.percent"
+            ><template #percent>{{ answersStats.correct_answers.percent }}</template>
+            <template #amount>{{ answersStats.correct_answers.count }}</template>
             <template #info>correct answers</template>
           </custom-gauge>
 
@@ -37,9 +37,9 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#FF0000"
-            :percent="wrongAnswersPercent"
-            ><template #percent>{{ wrongAnswersPercent }}</template>
-            <template #amount>{{ answersStats.wrong_answers }}</template>
+            :percent="answersStats.wrong_answers.percent"
+            ><template #percent>{{ answersStats.wrong_answers.percent }}</template>
+            <template #amount>{{ answersStats.wrong_answers.count }}</template>
             <template #info>wrong answers</template>
           </custom-gauge>
 
@@ -49,9 +49,9 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#89838F"
-            :percent="skippedAnswersPercent"
-            ><template #percent>{{ skippedAnswersPercent }}</template>
-            <template #amount>{{ answersStats.skipped_answers }}</template>
+            :percent="answersStats.skipped_answers.percent"
+            ><template #percent>{{ answersStats.skipped_answers.percent }}</template>
+            <template #amount>{{ answersStats.skipped_answers.count }}</template>
             <template #info>skipped answers</template>
           </custom-gauge>
         </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
@@ -87,30 +87,6 @@ const customGaugeOptions = {
 const isLoading = ref(false);
 
 const lastUpdate = computed(() => answersStats.value.last_update && timeAgo(new Date(answersStats.value.last_update)));
-const answersPercent = computed(
-  () =>
-    answersStats.value.answers_count &&
-    answersStats.value.questions_count &&
-    Math.round((answersStats.value.answers_count / answersStats.value.questions_count) * 100),
-);
-const correctAnswersPercent = computed(
-  () =>
-    answersStats.value.correct_answers &&
-    answersStats.value.answers_count &&
-    Math.round((answersStats.value.correct_answers / answersStats.value.answers_count) * 100),
-);
-const wrongAnswersPercent = computed(
-  () =>
-    answersStats.value.wrong_answers &&
-    answersStats.value.answers_count &&
-    Math.round((answersStats.value.wrong_answers / answersStats.value.answers_count) * 100),
-);
-const skippedAnswersPercent = computed(
-  () =>
-    correctAnswersPercent.value &&
-    wrongAnswersPercent.value &&
-    100 - correctAnswersPercent.value - wrongAnswersPercent.value,
-);
 
 const getAnswersStatsHandler = async () => {
   isLoading.value = true;

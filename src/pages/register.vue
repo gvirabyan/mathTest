@@ -137,6 +137,8 @@
 <script setup>
 import { computed, reactive, ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
+import fbHandler from "@/js/handlers/fb-handler";
+import { f7 } from "framework7-vue";
 
 const props = defineProps({
   f7route: { type: Object, default: () => {} },
@@ -166,7 +168,7 @@ const error = reactive({
 
 const remember = ref(false);
 
-const { register, registerByNickname } = useAuthStore();
+const { register, registerByNickname, loginViaProvider } = useAuthStore();
 
 const registerMode = ref("credentials");
 const rememberUser = ref(false);
@@ -227,6 +229,26 @@ const startRegister = () => {
       } else {
         error.message = resp.error.message;
       }
+    }
+  });
+};
+
+const fbLoginHandler = async function () {
+  await fbHandler.login().then(response => {
+    if (response.authResponse) {
+      loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
+        if (resp.status === "success") {
+          props.f7router.navigate("/");
+          return;
+        }
+
+        f7.toast.show({
+          text: resp.error.message,
+          closeButton: true,
+        });
+      });
+    } else {
+      alert("User cancelled login or did not fully authorize.");
     }
   });
 };

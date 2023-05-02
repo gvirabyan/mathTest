@@ -1,0 +1,11 @@
+{
+  "activity": {
+    "Activity": "Activity",
+    "tabs": {
+      "My Status": "My Status",
+      "Top List": "Top List",
+      "My Answers": "My Answers"
+    }
+  },
+  "message": "message"
+}

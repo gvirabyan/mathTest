@@ -1,12 +1,10 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 export const useQuizStore = defineStore("quiz", () => {
   const categoryAnswersStore = useCategoryAnswerStore();
-  const everydayGoalStore = useEverydayGoalStore();
 
   const quizQuestions = ref(
     localStorage.getItem("quizQuestions") ? JSON.parse(localStorage.getItem("quizQuestions")) : [],
@@ -62,6 +60,19 @@ export const useQuizStore = defineStore("quiz", () => {
     machineScore.value = machineAnswerStatus === "correct" ? machineScore.value + 1 : machineScore.value;
   };
 
+  const saveQuizResult = async data => {
+    return api
+      .post("practice-results", { data })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          return { status: "error", message: data.error?.message };
+        }
+
+        return { status: "success", data: data.data };
+      });
+  };
+
   const clearAnsweredQuizQuestions = () => {
     answeredQuizQuestions.value = [];
   };
@@ -81,6 +92,7 @@ export const useQuizStore = defineStore("quiz", () => {
     getNextQuizQuestion,
     updateAnsweredQuizQuestions,
     updateScore,
+    saveQuizResult,
     clearAnsweredQuizQuestions,
   };
 });
