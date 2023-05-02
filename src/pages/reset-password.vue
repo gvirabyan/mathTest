@@ -44,7 +44,7 @@ import { f7 } from "framework7-vue";
 const { resetPassword } = useAuthStore();
 
 const props = defineProps({
-  f7router: Object,
+  f7router: { type: Object, default: () => {} },
 });
 
 const isLoading = ref(false);

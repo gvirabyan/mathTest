@@ -4,10 +4,10 @@
       <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
 
       <f7-block-title>
-        <span v-html="title" />
+        <span v-html="$sanitize(title)" />
       </f7-block-title>
 
-      <p v-html="text" />
+      <p v-html="$sanitize(text)" />
 
       <f7-row>
         <f7-button class="leave-btn" @click="emit('leave-changes')">

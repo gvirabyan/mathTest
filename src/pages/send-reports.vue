@@ -89,7 +89,7 @@
       </Transition>
     </main>
     <success-message-popup v-if="successPopup" :title="successPopup" @close="successPopup = false" />
-    <update-popup
+    <UpdatePopup
       v-if="updatePopup"
       title="Please enter new E-mail"
       :input-value="updateEmail"
@@ -121,8 +121,8 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
-import LeavePagePopup from "@/components/leave-page-popup.vue";
 import UpdatePopup from "@/components/update-popup.vue";
+import LeavePagePopup from "@/components/leave-page-popup.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 
 const props = defineProps({

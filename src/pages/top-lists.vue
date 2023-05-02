@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="top-lists" class="top-lists">
+  <f7-page class="top-lists" name="top-lists" @page:beforein="getRankingsHandler">
     <top-bar :tabs="navbarLinks">
       <template #subtitle-data>20 questions</template>
     </top-bar>
@@ -41,13 +41,20 @@
 </template>
 
 <script setup>
-import BottomMenu from "@/components/bottom-menu.vue";
+import { ref, watch, reactive } from "vue";
+import { storeToRefs } from "pinia/dist/pinia";
+import { useAuthStore } from "@/js/stores/auth";
+import { useTopList } from "@/js/stores/top-list";
 import TopBar from "@/components/topbar.vue";
 import TopListSingle from "@/components/top-list-single.vue";
-import { useTopList } from "@/js/stores/top-list";
-import { useAuthStore } from "@/js/stores/auth";
-import { ref, watch, reactive, onMounted } from "vue";
-import { storeToRefs } from "pinia/dist/pinia";
+import BottomMenu from "@/components/bottom-menu.vue";
+
+defineProps({
+  f7route: {
+    type: Object,
+    default: () => {},
+  },
+});
 
 const navbarLinks = [
   {
@@ -64,23 +71,12 @@ const navbarLinks = [
   },
 ];
 
-defineProps({
-  f7route: Object,
-});
-
 const authStore = useAuthStore();
+const topListStore = useTopList();
 const { user } = storeToRefs(authStore);
 
 const category = ref(null);
-
-const topListStore = useTopList();
-
 const rankings = ref(null);
-
-onMounted(async () => {
-  rankings.value = await topListStore.getRankings();
-});
-
 const linksList = reactive([
   {
     title: "In your Class",
@@ -109,6 +105,22 @@ const linksList = reactive([
   },
 ]);
 
+const getRankingsHandler = async () => {
+  rankings.value = await topListStore.getRankings();
+};
+
+const chooseList = title => {
+  let chosen = linksList.find(l => l.title === title);
+  if (user.value[chosen.key] || chosen.key === "world") {
+    category.value = chosen;
+  }
+};
+
+const emptyCategory = () => {
+  topListStore.emptyTopList();
+  category.value = null;
+};
+
 watch(
   () => rankings.value,
   value => {
@@ -126,52 +138,45 @@ watch(
     }
   },
 );
-
-const chooseList = title => {
-  let chosen = linksList.find(l => l.title === title);
-  if (user.value[chosen.key] || chosen.key === "world") {
-    category.value = chosen;
-  }
-};
-
-const emptyCategory = () => {
-  topListStore.emptyTopList();
-  category.value = null;
-};
 </script>
 
 <style lang="scss">
 .top-lists {
-  /*background: #fff;
-  padding: 0;
-  height: 100vh;*/
   .page-content {
     padding: 0;
     overflow: unset;
+
     .blocks {
       overflow: auto;
       height: calc(100vh - 246px);
       padding: 10px 24px 0 24px;
+
       .block {
         background: rgba(216, 179, 255, 0.2);
         padding: 24px 20px;
         margin: 20px 0;
         border-radius: 8px;
+
         &.menu-item_1 {
           background: rgba(241, 229, 255, 0.2);
         }
+
         &.menu-item_2 {
           background: rgba(228, 228, 228, 0.2);
         }
+
         &.menu-item_3 {
           background: rgba(241, 229, 255, 0.2);
         }
+
         &.menu-item_4 {
           background: rgba(216, 179, 255, 0.2);
         }
+
         &.menu-item_5 {
           background: rgba(241, 229, 255, 0.2);
         }
+
         .block-title {
           all: unset;
           line-height: 17px;
@@ -182,6 +187,7 @@ const emptyCategory = () => {
           align-items: center;
           color: #212121;
         }
+
         .update-txt {
           font-family: "Rubik";
           font-style: normal;
@@ -189,6 +195,7 @@ const emptyCategory = () => {
           font-size: 10px;
           color: #212121;
           opacity: 0.9;
+
           a {
             color: inherit;
             opacity: inherit;
@@ -197,6 +204,7 @@ const emptyCategory = () => {
             font-weight: bold;
           }
         }
+
         .place-txt {
           margin: 0;
           font-family: "Rubik";
@@ -205,6 +213,7 @@ const emptyCategory = () => {
           font-size: 14px;
           color: #8419ff;
         }
+
         .points-txt {
           margin: 0;
           font-family: "Rubik";
@@ -213,6 +222,7 @@ const emptyCategory = () => {
           font-size: 14px;
           color: #8419ff;
         }
+
         .from-txt {
           margin-bottom: 0;
           margin-top: 10px;
@@ -227,9 +237,11 @@ const emptyCategory = () => {
       }
     }
   }
+
   .menu {
     position: fixed;
     bottom: 0;
+
     .toolbar {
       width: 100vw;
     }

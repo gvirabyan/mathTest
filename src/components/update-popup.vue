@@ -1,10 +1,10 @@
 <template>
-  <div class="update-popup-background" @click="$emit('close')">
+  <div class="update-popup-background" @click="emit('close')">
     <f7-block class="update-popup-body" @click.stop>
-      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
-      <f7-block-title>
-        {{ title }}
-      </f7-block-title>
+      <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
+
+      <f7-block-title>{{ title }}</f7-block-title>
+
       <f7-list form>
         <f7-list-input
           v-model:value="input"
@@ -14,7 +14,8 @@
           :error-message-force="true"
           :error-message="error"
         />
-        <f7-button @click="$emit('save', input)">Got it</f7-button>
+
+        <f7-button @click="emit('save', input)">Got it</f7-button>
       </f7-list>
     </f7-block>
   </div>
@@ -26,6 +27,7 @@ import { onMounted, ref } from "vue";
 const props = defineProps({
   inputValue: {
     type: String,
+    default: "",
   },
   title: {
     type: String,
@@ -37,7 +39,10 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["save", "close"]);
+
 const input = ref("");
+
 onMounted(() => {
   input.value = props.inputValue;
 });
