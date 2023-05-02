@@ -132,7 +132,6 @@ const { getCategory, clearCategory } = categoryStore;
 const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
-const questionsInitialLength = questions.value.length - 2;
 const isLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
@@ -144,7 +143,7 @@ const presentIndex = ref(0);
 const getPoints = ref([]);
 const circles = ref(null);
 const checkAnswers = ref(true);
-let startIndex = 0;
+const startIndex = ref(0);
 watch(
   () => questions.value,
   async () => {
@@ -152,17 +151,8 @@ watch(
       c => c.id === Number(props.f7route.params.categoryID),
     );
     if (checkAnswers.value) {
-      startIndex = answers;
       presentIndex.value = answers;
       checkAnswers.value = false;
-      for (let i = questions.value.length; i < questionsL; i++) {
-        questions.value.push({
-          id: null,
-          answer: null,
-          point: i + 1,
-          status: i === presentIndex.value ? "present" : "normal",
-        });
-      }
       getPoints.value = questions.value.map((q, i) => {
         return {
           id: q.id,
@@ -171,6 +161,14 @@ watch(
           status: i === presentIndex.value ? "present" : "normal",
         };
       });
+      for (let i = questions.value.length; i < questionsL; i++) {
+        getPoints.value.push({
+          id: null,
+          answer: null,
+          point: i + 1,
+          status: i === presentIndex.value ? "present" : "normal",
+        });
+      }
     }
   },
 );
@@ -267,11 +265,21 @@ const skip = () => {
   });
 };
 
-const next = () => {
+const next = async () => {
   clearChosenData();
+  startIndex.value++;
+  if (startIndex.value + 3 === questions.value.length) {
+    await getQuestions(props.f7route.params.categoryID);
+  }
+  if (startIndex.value + 1 === questions.value.length) {
+    startIndex.value = 0;
+  }
   getNextQuestion();
   getPoints.value[presentIndex.value].status = status.value;
   presentIndex.value++;
+  if (presentIndex.value === getPoints.value.length - 1) {
+    isAllAnsweredPopup.value = true;
+  }
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
   }
@@ -303,18 +311,6 @@ const closeAndNavigate = href => {
   isAllAnsweredPopup.value = false;
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
-
-watch(questionIndex, async val => {
-  const questionsLength =
-    questions.value.length >= questionsInitialLength ? questionsInitialLength : questions.value.length;
-
-  if (!questions.value.length || val < questionsLength) {
-    return;
-  }
-  if (startIndex + 23 === presentIndex.value) {
-    await getQuestions(props.f7route.params.categoryID);
-  }
-});
 
 watch(questionsAreOver, async val => {
   if (!val) return;

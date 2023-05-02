@@ -18,10 +18,10 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
   const questionsAreOver = computed(() => !questions.value.length && questionsAreLoaded.value);
+  const selectedCategoryId = ref(null);
 
   const getQuestions = categoryID => {
     questionsAreLoaded.value = false;
-
     return api
       .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
       .then(res => res.json())
@@ -29,10 +29,15 @@ export const useQuestionsStore = defineStore("questions", () => {
         const resData = data?.data?.attributes?.results;
 
         questionsAreLoaded.value = true;
-        questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
-        questionIndex.value = 0;
-        question.value = questions.value[questionIndex.value];
-        answeredQuestions.value = [];
+        if (categoryID === selectedCategoryId.value) {
+          questions.value = resData.length ? [...questions.value, ...resData].sort(() => 0.5 - Math.random()) : [];
+        } else {
+          questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
+          questionIndex.value = 0;
+          answeredQuestions.value = [];
+          question.value = questions.value[questionIndex.value];
+        }
+        selectedCategoryId.value = categoryID;
       });
   };
 
