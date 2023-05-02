@@ -78,7 +78,7 @@
               'hg-correct-machine-answer':
                 sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
               'hg-wrong-machine-answer':
-                sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === quizQuestion.answer,
+                sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === machineWrongAnswer,
             }"
             name="demo-radio-end"
             radio
@@ -167,6 +167,10 @@ const finishGame = ref("");
 const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
+
+const machineWrongAnswer = computed(() => {
+  return answersData.value.find(d => d !== quizQuestion.value.answer);
+});
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
