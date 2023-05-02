@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData">
+  <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData" @page:afterout="outPage">
     <f7-navbar back-link="Back" @click:back="clearStores">
       <template v-if="isLoading" #title> Loading... </template>
 
@@ -194,6 +194,7 @@ watch(
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
 
 const getAllQuestionData = async () => {
+  window.addEventListener("resize", onOrientationChange);
   isLoading.value = true;
   await delay();
   await getCategory(props.f7route.params.categoryID);
@@ -326,13 +327,9 @@ const onOrientationChange = () => {
   }
 };
 
-onMounted(() => {
-  window.addEventListener("resize", onOrientationChange);
-});
-
-onUnmounted(() => {
+const outPage = () => {
   window.removeEventListener("resize", onOrientationChange);
-});
+};
 </script>
 
 <style lang="scss">
