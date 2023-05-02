@@ -16,6 +16,12 @@ const cordovaApp = {
       "backbutton",
       function (e) {
         const currentView = f7.views.current;
+
+        if (f7.panel) {
+          f7.panel.close(".panel");
+          return;
+        }
+
         if (currentView && currentView.router && currentView.router.history.length > 1) {
           currentView.router.back();
           e.preventDefault();
