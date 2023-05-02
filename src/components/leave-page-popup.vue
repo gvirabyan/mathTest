@@ -1,16 +1,19 @@
 <template>
-  <div class="leave-popup-background" @click="$emit('close')">
+  <div class="leave-popup-background" @click="emit('close')">
     <f7-block class="leave-popup-body" @click.stop>
-      <img class="close-icon" src="@/assets/icons/x.svg" @click="$emit('close')" />
+      <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
+
       <f7-block-title>
         <span v-html="title" />
       </f7-block-title>
+
       <p v-html="text" />
+
       <f7-row>
-        <f7-button class="leave-btn" @click="$emit('leave-changes')">
+        <f7-button class="leave-btn" @click="emit('leave-changes')">
           {{ leaveBtn }}
         </f7-button>
-        <f7-button class="save-btn" @click="$emit('save-changes')">
+        <f7-button class="save-btn" @click="emit('save-changes')">
           {{ saveBtn }}
         </f7-button>
       </f7-row>
@@ -21,81 +24,26 @@
 <script setup>
 defineProps({
   title: {
+    type: String,
     default: ` Are you sure you want <br> to leave this page?`,
   },
   text: {
+    type: String,
     default: `If you leave this page your edited <br> information will be removed`,
   },
   saveBtn: {
+    type: String,
     default: "Save",
   },
   leaveBtn: {
+    type: String,
     default: "Leave",
   },
 });
+
+const emit = defineEmits(["leave-changes", "save-changes", "close"]);
 </script>
 
 <style lang="scss" scoped>
-.leave-popup-background {
-  position: fixed;
-  z-index: 91;
-  height: 100vh;
-  width: 100%;
-  background: rgba(33, 33, 33, 0.7);
-  .leave-popup-body {
-    padding: 30px 20px;
-    width: 342px;
-    border-radius: 8px;
-    background: #fff;
-    position: absolute;
-    z-index: 100;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -67%);
-    .block-title {
-      margin: 0;
-      font-family: "Rubik";
-      font-style: normal;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 21px;
-      text-align: center;
-      color: #212121;
-    }
-    .button {
-      text-transform: unset;
-      width: 146px;
-      height: 40px;
-      border-radius: 6px;
-      font-family: "Rubik";
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px !important;
-      line-height: 24px;
-      color: #fff;
-      &.leave-btn {
-        background: #212121;
-        opacity: 0.3;
-      }
-      &.save-btn {
-        background: #8419ff;
-      }
-    }
-    p {
-      font-family: "Rubik";
-      font-style: normal;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 17px;
-      text-align: center;
-      color: #212121;
-      margin: 10px 0;
-    }
-    .close-icon {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-    }
-  }
-}
+@import "@/assets/scss/components/leave-page-popup";
 </style>
