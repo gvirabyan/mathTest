@@ -14,6 +14,7 @@ module.exports = {
       },
     ],
     "no-unsafe-optional-chaining": "off",
+    "vue/no-v-html": "off",
     "vue/no-unused-vars": "warn",
     "vue/multi-word-component-names": "off",
   },

@@ -1,5 +1,5 @@
 <template>
-  <f7-page class="hg-profile-content" name="profile">
+  <f7-page class="hg-profile-content" name="profile" @page:beforein="fillProfileData">
     <f7-navbar title="Profile" back-link="Back"></f7-navbar>
     <f7-block-title>Profile</f7-block-title>
 
@@ -141,7 +141,7 @@ const { updateUser } = authStore;
 const { getCourses } = coursesStore;
 
 defineProps({
-  f7route: Object,
+  f7route: { type: Object, default: () => {} },
 });
 
 const profileData = reactive({
@@ -182,6 +182,19 @@ const openDropdown = () => {
 
 const closeDropdown = () => {
   isCoursesDropdown.value = false;
+};
+
+const fillProfileData = () => {
+  Object.keys(profileData).forEach(key => {
+    if (key === "institution") {
+      profileData.institution.name = user?.value[key] ? user?.value[key].name : "";
+      profileData.institution.place_id = user?.value[key] ? user?.value[key].place_id : "";
+    } else {
+      profileData[key] = user?.value[key] || null;
+    }
+  });
+
+  initAutocompleteInputs();
 };
 
 const editProfile = () => {
@@ -318,16 +331,6 @@ watch(
 
 onMounted(() => {
   // fill profile data with initial values
-  Object.keys(profileData).forEach(key => {
-    if (key === "institution") {
-      profileData.institution.name = user?.value[key] ? user?.value[key].name : "";
-      profileData.institution.place_id = user?.value[key] ? user?.value[key].place_id : "";
-    } else {
-      profileData[key] = user?.value[key] || null;
-    }
-  });
-
-  initAutocompleteInputs();
 });
 </script>
 

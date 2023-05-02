@@ -89,7 +89,7 @@ import useDebouncedRef from "@/js/composables/use-debounced-ref";
 import delay from "@/js/helpers/delay";
 
 const props = defineProps({
-  f7route: Object,
+  f7route: { type: Object, default: () => {} },
 });
 
 const authStore = useAuthStore();

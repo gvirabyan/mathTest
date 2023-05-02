@@ -63,13 +63,16 @@
         </div>
       </Transition>
     </main>
+
     <success-message-popup v-if="successPopup" title="Password has been changed" @close="closeSuccessPopup" />
+
     <leave-page-popup
       v-if="securityLeavePopup"
       @leave-changes="discardChanges"
       @save-changes="updatePasswordHandler"
       @close="closeLeavePopup"
     />
+
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
@@ -86,7 +89,7 @@ import { storeToRefs } from "pinia/dist/pinia";
 
 const authStore = useAuthStore();
 const { updateUser, changePasswords, changeSecurityPath, changeSecurityLeavePopup } = authStore;
-const { user, securityPath, passwords } = storeToRefs(authStore);
+const { user, securityPath } = storeToRefs(authStore);
 const successPopup = ref(false);
 const { securityLeavePopup } = storeToRefs(authStore);
 
@@ -100,19 +103,16 @@ const profileTabs = ref([
     id: 1,
     name: "Account",
     path: "/profile/account/",
-    // component: markRaw(Account),
   },
   {
     id: 2,
     name: "Security",
     path: "/profile/security/",
-    // component: markRaw(Security),
   },
   {
     id: 3,
     name: "About Us",
     path: "/profile/about-us/",
-    // component: markRaw(AboutUs),
   },
   {
     id: 4,

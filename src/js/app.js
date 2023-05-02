@@ -1,6 +1,7 @@
 // Import Vue
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import Vue3Sanitize from "vue-3-sanitize";
 
 // Import Framework7
 import Framework7 from "framework7/lite-bundle";
@@ -45,6 +46,7 @@ initMathJax({ url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.0.5/es5/tex
 app.use(pinia);
 app.use(i18n);
 app.use(MathJax);
+app.use(Vue3Sanitize);
 app.mount("#app");
 
 export default app;

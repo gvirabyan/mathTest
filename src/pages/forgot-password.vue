@@ -30,7 +30,7 @@ import { useAuthStore } from "@/js/stores/auth";
 const { forgotPassword } = useAuthStore();
 
 const props = defineProps({
-  f7router: Object,
+  f7router: { type: Object, default: () => {} },
 });
 
 const isLoading = ref(false);
