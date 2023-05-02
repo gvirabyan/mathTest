@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
@@ -6,14 +6,27 @@ import api from "@/js/api";
 export const useNotifications = defineStore("notifications", () => {
   const auth = useAuthStore();
   const notifications = ref([]);
-  const hasNewNotifications = ref(false);
+
+  const hasUnreadNotifications = computed(() =>
+    notifications.value.some(n => n.attributes.read === false || n.read === false),
+  );
 
   const getNotifications = async () => {
     return api
-      .get(`notifications?filters[users_permissions_user][id][$eq]=${auth.user.id}`)
+      .get(`notifications?filters[users_permissions_user][id][$eq]=${auth.user.id}&sort[0]=read&sort[1]=createdAt:desc`)
       .then(res => res.json())
       .then(data => {
         notifications.value = data?.data;
+      });
+  };
+
+  const readNotification = async id => {
+    return api
+      .put(`notifications/${id}`, { data: { read: true } })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        notifications.value = notifications.value.map(n => (n.id === id ? data?.data : n));
       });
   };
 
@@ -21,15 +34,11 @@ export const useNotifications = defineStore("notifications", () => {
     notifications.value.push(notification);
   };
 
-  const readNotifications = () => {
-    hasNewNotifications.value = false;
-  };
-
   return {
     notifications,
-    hasNewNotifications,
+    hasUnreadNotifications,
     getNotifications,
+    readNotification,
     addNotification,
-    readNotifications,
   };
 });

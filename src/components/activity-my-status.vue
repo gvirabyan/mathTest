@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed, defineAsyncComponent, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -119,6 +119,15 @@ const questionsSelectDefault = computed(() =>
   user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
 );
 
+const getUserStatusHandler = async () => {
+  isLoading.value = true;
+
+  await delay();
+  await getUserStatus();
+
+  isLoading.value = false;
+};
+
 const setGoalHandler = async goal => {
   const goalValue = parseInt(goal);
   disableSelect.value = true;
@@ -143,6 +152,10 @@ const goLastQuiz = quiz => {
     f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
   }
 };
+
+onMounted(() => {
+  getUserStatusHandler();
+});
 </script>
 
 <style lang="scss">

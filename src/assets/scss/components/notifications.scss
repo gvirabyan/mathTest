@@ -1,15 +1,5 @@
 .notifications {
-  .title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 4px;
-    margin-bottom: 30px;
-    padding-left: 4px;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 22px;
-  }
+  padding-top: 86px;
 
   .notifications-list {
     margin: 0 0 30px;
@@ -36,6 +26,8 @@
         flex-direction: column;
         gap: 6px;
         padding: 0;
+        font-size: 14px;
+        line-height: 17px;
 
         &::after {
           display: none;
@@ -48,15 +40,17 @@
           width: 100%;
           margin: 0;
           font-weight: 500;
-          font-size: 14px;
-          line-height: 17px;
         }
 
         .item-text {
           margin: 0;
           font-weight: 400;
-          font-size: 14px;
-          line-height: 17px;
+          opacity: 0.5;
+        }
+
+        .item-date {
+          margin: 0;
+          align-self: end;
           opacity: 0.5;
         }
       }

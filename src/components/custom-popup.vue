@@ -1,15 +1,21 @@
 <template>
-  <f7-popup class="custom-popup" :opened="isOpened">
+  <f7-panel v-model:opened="isOpened" right cover swipe swipe-only-close class="custom-popup">
     <f7-page>
-      <div class="close-btn-wrapper display-flex justify-content-end">
-        <f7-button class="close-btn" @click="closePopup">
-          <img src="@/assets/icons/close.svg" alt="Close popup" />
-        </f7-button>
-      </div>
+      <header class="header">
+        <div class="header-content-wrapper">
+          <div class="close-btn-wrapper display-flex justify-content-end">
+            <f7-button class="close-btn" @click="closePopup">
+              <img src="@/assets/icons/close.svg" alt="Close popup" />
+            </f7-button>
+          </div>
 
-      <slot />
+          <slot name="title" />
+        </div>
+      </header>
+
+      <slot name="content" />
     </f7-page>
-  </f7-popup>
+  </f7-panel>
 </template>
 
 <script setup>
@@ -40,26 +46,5 @@ watch(
 </script>
 
 <style lang="scss">
-.custom-popup {
-  font-family: Rubik, sans-serif;
-
-  &.notifications {
-    width: 88%;
-    right: 0;
-    left: unset;
-  }
-
-  .page-content {
-    padding: 24px;
-    background-color: #fff;
-
-    .close-btn {
-      all: unset;
-      display: grid;
-      place-items: center;
-      width: 12px;
-      height: 12px;
-    }
-  }
-}
+@import "@/assets/scss/components/custom-popup";
 </style>
