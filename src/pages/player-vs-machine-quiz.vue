@@ -3,6 +3,7 @@
     class="hg-question-page"
     name="player-vs-machine"
     @page:beforein="getQuizQuestionsHandler(quizMode.questions)"
+    @page:afterout="useQuizStore().$reset()"
   >
     <leave-page-popup
       v-if="leavePopupPageText"
