@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-dashboard-content send-reports-dash" name="dashboard">
-    <top-bar :tabs="profileTabs" :search="false" :first-load-index="3" @tab-selected="setProfileComponent">
+    <top-bar :first-load-index="3" :search="false" :tabs="profileTabs" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
@@ -16,55 +16,56 @@
                 <f7-list class="emails-list">
                   <f7-list-item v-for="{ id, email } in parentsEmails" :key="`parent-email_${id}`" :title="email">
                     <template #content>
-                      <f7-button fill class="action-btn edit-action" @click="openEditParentEmail(id, email)">
-                        <img src="@/assets/icons/pencil.svg" alt="" />
+                      <f7-button class="action-btn edit-action" fill @click="openEditParentEmail(id, email)">
+                        <img alt="" src="@/assets/icons/pencil.svg" />
                       </f7-button>
-                      <f7-button fill class="action-btn delete-action" @click="openRemoveParentEmail(id)">
-                        <img src="@/assets/icons/trash.svg" alt="" />
+                      <f7-button class="action-btn delete-action" fill @click="openRemoveParentEmail(id)">
+                        <img alt="" src="@/assets/icons/trash.svg" />
                       </f7-button>
                     </template>
                   </f7-list-item>
                 </f7-list>
               </div>
 
-              <p v-else-if="areAllInputsEmpty">You did not saved any parents' emails yet</p>
+              <p v-else-if="!parentsEmails.length">You did not saved any parents' emails yet</p>
             </f7-block>
+
             <template v-if="parentsEmails.length < 4">
               <f7-list form>
                 <f7-list-input
                   v-model:value="parentsEmailsInputs.email1"
-                  type="text"
-                  name="email"
                   :input-style="inputStyle"
                   class="custom-list-input"
+                  name="email"
                   placeholder="Enter parent's email"
+                  type="text"
                 />
                 <f7-list-input
                   v-if="parentsEmailsInputs.email1 && parentsEmails.length < 3"
                   v-model:value="parentsEmailsInputs.email2"
-                  type="text"
-                  name="email"
                   :input-style="inputStyle"
                   class="custom-list-input"
+                  name="email"
                   placeholder="Enter parent's email"
+                  type="text"
                 />
                 <f7-list-input
                   v-if="parentsEmailsInputs.email2 && parentsEmails.length < 2"
                   v-model:value="parentsEmailsInputs.email3"
-                  type="text"
-                  name="email"
                   :input-style="inputStyle"
                   class="custom-list-input"
+                  name="email"
                   placeholder="Enter parent's email"
+                  type="text"
                 />
                 <f7-list-input
                   v-if="parentsEmailsInputs.email3 && parentsEmails.length < 1"
                   v-model:value="parentsEmailsInputs.email4"
-                  type="text"
-                  name="email"
                   :input-style="inputStyle"
                   class="custom-list-input"
+                  name="email"
                   placeholder="Enter parent's email"
+                  type="text"
                 />
               </f7-list>
             </template>
@@ -72,8 +73,8 @@
           <f7-block class="reports-footer">
             <f7-button
               v-if="parentsEmails.length < 4"
-              class="button button-raised button-large"
               :class="btnDisabled ? 'button-disabled-fill' : 'button-fill'"
+              class="button button-raised button-large"
               @click="saveParentsEmailsHandler"
             >
               Save
@@ -84,35 +85,38 @@
         </div>
       </Transition>
 
-      <Transition v-else class="loading-reports" name="loader-fadeout" mode="in-out">
+      <Transition v-else class="loading-reports" mode="in-out" name="loader-fadeout">
         <loading-small />
       </Transition>
     </main>
-    <success-message-popup v-if="successPopup" :title="successPopup" @close="successPopup = false" />
-    <UpdatePopup
+
+    <success-message-popup v-if="successPopup" :title="successPopupText" @close="successPopup = false" />
+
+    <updating-popup
       v-if="updatePopup"
-      title="Please enter new E-mail"
-      :input-value="updateEmail"
       :error="errUpdateMsg"
-      @save="editParentEmailHandler"
+      :input-value="updateEmail"
+      title="Please enter new E-mail"
       @close="updatePopup = false"
+      @save="editParentEmailHandler"
     />
+
     <leave-page-popup
       v-if="deletePopup"
-      title="Are you sure you want to <br> delete this E-mail ?"
-      text="If you close this popup E-mail will be not removed"
       leave-btn="No"
       save-btn="Yes"
+      text="If you close this popup E-mail will be not removed"
+      title="Are you sure you want to <br> delete this E-mail ?"
+      @close="deletePopup = false"
       @leave-changes="deletePopup = false"
       @save-changes="removeParentEmailHandler"
-      @close="deletePopup = false"
     />
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
@@ -120,10 +124,11 @@ import { useParentsEmailsStore } from "@/js/stores/parents-emails";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue";
-import UpdatePopup from "@/components/update-popup.vue";
-import LeavePagePopup from "@/components/leave-page-popup.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+
+const UpdatingPopup = defineAsyncComponent(() => import("@/components/update-popup.vue"));
+const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
+const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const props = defineProps({
   f7route: {
@@ -173,6 +178,11 @@ const profileTabs = ref([
   },
 ]);
 const deletePopup = ref(false);
+const errorMsg = ref("");
+const successPopup = ref(false);
+const successPopupText = ref("");
+const updatePopup = ref(false);
+const updateEmail = ref("");
 
 const parentsEmailsInputs = reactive({
   email1: "",
@@ -197,27 +207,24 @@ const getParentsEmailsHandler = async () => {
   isLoading.value = false;
 };
 
-const errorMsg = ref("");
-const successPopup = ref(false);
 const saveParentsEmailsHandler = async () => {
   if (!btnDisabled.value) {
     isSending.value = true;
     errorMsg.value = "";
     await saveParentsEmails(parentsEmailsInputs).then(res => {
       if (res.status === "success") {
-        successPopup.value = "You have saved successfully";
+        successPopup.value = true;
+        successPopupText.value = "You have saved successfully";
         Object.keys(parentsEmailsInputs).forEach(key => (parentsEmailsInputs[key] = "")); // clear all inputs
         return;
       }
+
       errorMsg.value = res.message;
     });
 
     isSending.value = false;
   }
 };
-
-const updatePopup = ref(false);
-const updateEmail = ref("");
 
 const openEditParentEmail = (id, email) => {
   updatePopup.value = id;
@@ -239,7 +246,8 @@ const editParentEmailHandler = async email => {
   await editParentEmail(updatePopup.value, email).then(res => {
     if (res.status === "success") {
       updatePopup.value = false;
-      successPopup.value = "You have successfully updated parent's email";
+      successPopup.value = true;
+      successPopupText.value = "You have successfully updated parent's email";
       return;
     }
     errUpdateMsg.value = res.message;
@@ -250,7 +258,8 @@ const removeParentEmailHandler = async () => {
   await removeParentEmail(deletePopup.value).then(res => {
     if (res.status === "success") {
       deletePopup.value = false;
-      successPopup.value = "You have successfully removed parent's email";
+      successPopup.value = true;
+      successPopupText.value = "You have successfully removed parent's email";
       return;
     }
 
