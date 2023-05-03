@@ -548,7 +548,6 @@ const logoutHandler = () => {
 
 const logoutUser = () => {
   logout().then(() => {
-    console.log(localStorage.getItem("token"));
     coursesStore.$reset();
     authStore.$reset();
     storeCategoryAnswer.$reset();
