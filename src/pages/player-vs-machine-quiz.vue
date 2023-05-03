@@ -251,13 +251,6 @@ const skip = () => {
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
     endQuiz();
   }
-
-  answersData.value.find((answer, index) => {
-    if (answer !== quizQuestion.value.answer) {
-      chosenQuizAnswerIndex.value = index;
-      return answer;
-    }
-  });
 };
 
 const next = () => {
