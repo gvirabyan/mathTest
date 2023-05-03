@@ -45,7 +45,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     const questionsIds = [];
     await api
       .get(
-        `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq]=${auth.user.id}&populate[question][fields]=id&fields=id&pagination[limit]=200`,
+        `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq][0]=${auth.user.id}&filters[status][$ne][1]=skipped&populate[question][fields]=id&fields=id&pagination[limit]=200`,
       )
       .then(res => res.json())
       .then(data => {
