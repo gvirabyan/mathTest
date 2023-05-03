@@ -16,9 +16,10 @@ const cordovaApp = {
       "backbutton",
       function (e) {
         const currentView = f7.views.current;
+        const panel = f7.panel.get(".panel-right");
 
-        if (f7.panel) {
-          f7.panel.close(".panel");
+        if (panel && panel.opened) {
+          panel.close();
           return;
         }
 
