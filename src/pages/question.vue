@@ -196,9 +196,11 @@ const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.
 const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);
   isLoading.value = true;
+
   await delay();
   await getCategory(props.f7route.params.categoryID);
   await getQuestions(props.f7route.params.categoryID);
+
   isLoading.value = false;
 };
 
