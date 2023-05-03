@@ -198,6 +198,17 @@ import { ref, reactive, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCoursesStore } from "@/js/stores/courses";
+import { useCategoryAnswerStore } from "@/js/stores/category-answer";
+import { useCategoryStore } from "@/js/stores/categories";
+import { useNotifications } from "@/js/stores/notifications";
+import { useQuizStore } from "@/js/stores/quiz";
+import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
+import { useParentsEmailsStore } from "@/js/stores/parents-emails";
+import { useTopList } from "@/js/stores/top-list";
+import { useQuestionsStore } from "@/js/stores/questions";
+import { useCategoryClassesStore } from "@/js/stores/category-classes";
+import { useUserStats } from "@/js/stores/user-stats";
+
 import { getCountryCode } from "@/js/helpers/country-name-to-iso";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
@@ -516,6 +527,17 @@ const { logout, updateNicknamedUser, deleteNicknamedUser, getUser } = authStore;
 
 const isPopupOpened = ref(false);
 
+const storeQuestion = useQuestionsStore();
+const storeTop = useTopList();
+const storeEmails = useParentsEmailsStore();
+const storeGoals = useEverydayGoalStore();
+const storeQuiz = useQuizStore();
+const storeNotification = useNotifications();
+const storeCategory = useCategoryStore();
+const storeCategoryAnswer = useCategoryAnswerStore();
+const storeClassesStore = useCategoryClassesStore();
+const storeUserStats = useUserStats();
+
 const logoutHandler = () => {
   if (isNicknamedOnlyUser.value) {
     isPopupOpened.value = true;
@@ -526,6 +548,22 @@ const logoutHandler = () => {
 
 const logoutUser = () => {
   logout().then(() => {
+    console.log(localStorage.getItem("token"));
+    coursesStore.$reset();
+    authStore.$reset();
+    storeCategoryAnswer.$reset();
+    storeCategory.$reset();
+    storeNotification.$reset();
+    storeQuiz.$reset();
+    storeGoals.$reset();
+    storeEmails.$reset();
+    storeTop.$reset();
+    storeQuestion.$reset();
+    storeUserStats.$reset();
+    storeClassesStore.$reset();
+    localStorage.removeItem("everydayGoal");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     props.f7router.navigate("/login/");
   });
 };
