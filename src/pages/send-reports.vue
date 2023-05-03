@@ -27,7 +27,7 @@
                 </f7-list>
               </div>
 
-              <p v-else>You did not saved any parents' emails yet</p>
+              <p v-else-if="areAllInputsEmpty">You did not saved any parents' emails yet</p>
             </f7-block>
             <template v-if="parentsEmails.length < 4">
               <f7-list form>
@@ -181,7 +181,8 @@ const parentsEmailsInputs = reactive({
   email4: "",
 });
 
-const btnDisabled = computed(() => !Object.values(parentsEmailsInputs).some(el => el) || isSending.value);
+const areAllInputsEmpty = computed(() => Object.values(parentsEmailsInputs).every(el => !el));
+const btnDisabled = computed(() => areAllInputsEmpty.value || isSending.value);
 
 const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
