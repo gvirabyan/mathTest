@@ -33,9 +33,9 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
   };
 
   const restartEverydayGoal = () => {
-    everydayGoal.everydayGoal.questionsToGoal = auth.user?.everyday_goal;
-    everydayGoal.everydayGoal.isPassed = false;
-    everydayGoal.everydayGoal.passingDatetime = null;
+    everydayGoal.questionsToGoal = auth.user?.everyday_goal;
+    everydayGoal.isPassed = false;
+    everydayGoal.passingDatetime = null;
   };
 
   watch(
