@@ -23,7 +23,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   const getQuestions = categoryID => {
     questionsAreLoaded.value = false;
     return api
-      .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
+      .get(`topic-questions?categoryId=${categoryID}&pagination[page]=1`)
       .then(res => res.json())
       .then(data => {
         const resData = data?.data?.attributes?.results;
