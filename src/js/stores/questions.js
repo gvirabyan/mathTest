@@ -27,6 +27,8 @@ export const useQuestionsStore = defineStore("questions", () => {
       .then(res => res.json())
       .then(data => {
         const resData = data?.data?.results;
+        const history = data?.data?.history;
+        console.log("history", history);
 
         questionsAreLoaded.value = true;
         if (categoryID === selectedCategoryId.value) {
