@@ -26,7 +26,7 @@ export const useQuestionsStore = defineStore("questions", () => {
       .get(`topic-questions?categoryId=${categoryID}&pagination[page]=1`)
       .then(res => res.json())
       .then(data => {
-        const resData = data?.data?.attributes?.results;
+        const resData = data?.data?.results;
 
         questionsAreLoaded.value = true;
         if (categoryID === selectedCategoryId.value) {
