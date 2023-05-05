@@ -64,7 +64,7 @@
       </div>
     </transition>
 
-    <transition v-else name="loader-fadeout" mode="in-out">
+    <transition v-if="isLoading" name="loader-fadeout" mode="in-out">
       <loading-small />
     </transition>
 
@@ -79,12 +79,11 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, onMounted } from "vue";
+import { ref, computed, defineAsyncComponent, defineProps, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
-import delay from "@/js/helpers/delay";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
 import LoadingSmall from "@/components/loading-small.vue";
@@ -97,7 +96,6 @@ const userStatsStore = useUserStats();
 const { user } = storeToRefs(authStore);
 const { updateUser } = authStore;
 const { userStatus } = storeToRefs(userStatsStore);
-const { getUserStatus } = userStatsStore;
 
 const customGaugeOptions = {
   width: 186,
@@ -107,7 +105,22 @@ const customGaugeOptions = {
 };
 const goalsOptions = ["10 questions", "20 questions", "30 questions", "40 questions"];
 
+const props = defineProps({
+  reqLoading: {
+    type: Boolean,
+  },
+});
 const isLoading = ref(false);
+watch(
+  () => props.reqLoading,
+  () => {
+    isLoading.value = props.reqLoading;
+  },
+  {
+    immediate: true,
+  },
+);
+
 const disableSelect = ref(false);
 const showSelectGoalSuccess = ref(false);
 
@@ -118,15 +131,6 @@ const lastUpdate = computed(() =>
 const questionsSelectDefault = computed(() =>
   user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
 );
-
-const getUserStatusHandler = async () => {
-  isLoading.value = true;
-
-  await delay();
-  await getUserStatus();
-
-  isLoading.value = false;
-};
 
 const setGoalHandler = async goal => {
   const goalValue = parseInt(goal);
@@ -152,10 +156,6 @@ const goLastQuiz = quiz => {
     f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
   }
 };
-
-onMounted(() => {
-  getUserStatusHandler();
-});
 </script>
 
 <style lang="scss">

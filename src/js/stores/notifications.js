@@ -25,7 +25,6 @@ export const useNotifications = defineStore("notifications", () => {
       .put(`notifications/${id}`, { data: { read: true } })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         notifications.value = notifications.value.map(n => (n.id === id ? data?.data : n));
       });
   };

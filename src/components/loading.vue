@@ -13,7 +13,12 @@
 .loading-page {
   height: 100vh;
   background: #212121;
-  position: relative;
+  position: fixed;
+  width: 100%;
+  padding: 0;
+  top: 0;
+  left: 0;
+  z-index: 5001;
   .points-left {
     position: absolute;
     width: 60vw;
