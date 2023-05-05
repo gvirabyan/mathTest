@@ -560,9 +560,6 @@ const logoutUser = () => {
     storeQuestion.$reset();
     storeUserStats.$reset();
     storeClassesStore.$reset();
-    localStorage.removeItem("everydayGoal");
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     props.f7router.navigate("/login/");
   });
 };

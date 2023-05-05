@@ -35,7 +35,7 @@ export const useTopList = defineStore("topList", () => {
 
   const getMyStats = () => {
     return api
-      .get(`get-stats/${user.id}`)
+      .get(`get-stats/${localStorage.getItem("user-id")}`)
       .then(res => res.json())
       .then(data => {
         myStats.value = data;

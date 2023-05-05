@@ -24,12 +24,16 @@ import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
 import { useUserStats } from "@/js/stores/user-stats";
+import { useAuthStore } from "@/js/stores/auth";
 
 const { everydayGoal } = storeToRefs(useEverydayGoalStore());
 const { restartEverydayGoal } = useEverydayGoalStore();
 
 const userStatsStore = useUserStats();
 const { getUserStatus } = userStatsStore;
+const authStore = useAuthStore();
+
+const { getUser } = authStore;
 
 const f7params = {
   name: "Mathe App", // App name
@@ -78,16 +82,31 @@ onMounted(async () => {
   f7ready(() => {
     cordovaApp.init(f7);
   });
-
-  await getUserStatus()
-    .then(() => {
-      loaded.value = true;
-    })
-    .catch(() => {
-      setTimeout(() => {
+  if (localStorage.getItem("user-id") && localStorage.getItem("token")) {
+    await getUserStatus()
+      .then(() => {
         loaded.value = true;
-      }, 2000);
-    });
+        getUser().then(data => {
+          if (data.status === "error") {
+            return false;
+          }
+        });
+      })
+      .catch(() => {
+        localStorage.removeItem("user-id");
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          loaded.value = true;
+        }, 2000);
+      });
+  } else {
+    localStorage.removeItem("user-id");
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      loaded.value = true;
+    }, 2000);
+  }
+
   addGmapsScript();
   checkEverydayGoalPassingDate();
 });
