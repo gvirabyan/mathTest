@@ -7,6 +7,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   const auth = useAuthStore();
 
   const questions = ref([]);
+  const history = ref([]);
   const question = ref(null);
   const questionIndex = ref(0);
   const questionsAreLoaded = ref(false);
@@ -23,10 +24,11 @@ export const useQuestionsStore = defineStore("questions", () => {
   const getQuestions = categoryID => {
     questionsAreLoaded.value = false;
     return api
-      .get(`non-answered-questions?categoryId=${categoryID}&pagination[page]=1`)
+      .get(`topic-questions?categoryId=${categoryID}&pagination[page]=1`)
       .then(res => res.json())
       .then(data => {
-        const resData = data?.data?.attributes?.results;
+        const resData = data?.data?.results;
+        history.value = data?.data?.history;
 
         questionsAreLoaded.value = true;
         if (categoryID === selectedCategoryId.value) {
@@ -76,6 +78,7 @@ export const useQuestionsStore = defineStore("questions", () => {
 
   return {
     questions,
+    history,
     question,
     questionIndex,
     questionsAreLoaded,

@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -124,7 +124,7 @@ const questionStore = useQuestionsStore();
 const categoryAnswerStore = useCategoryAnswerStore();
 const { user } = storeToRefs(authStore);
 const { category, categories } = storeToRefs(categoryStore);
-const { questions, question, answeredQuestionsData, answeredQuestionsPoints, questionIndex, questionsAreOver } =
+const { questions, history, question, answeredQuestionsData, answeredQuestionsPoints, questionsAreOver } =
   storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
@@ -153,20 +153,22 @@ watch(
     if (checkAnswers.value) {
       presentIndex.value = answers;
       checkAnswers.value = false;
-      getPoints.value = questions.value.map((q, i) => {
-        return {
-          id: q.id,
-          answer: q.answer,
-          point: i + 1,
-          status: i === presentIndex.value ? "present" : "normal",
-        };
-      });
-      for (let i = questions.value.length; i < questionsL; i++) {
+      for (let i = 0; i < history.value.length; i++) {
         getPoints.value.push({
           id: null,
           answer: null,
+          history: history.value[i] ?? [],
           point: i + 1,
-          status: i === presentIndex.value ? "present" : "normal",
+          status: history.value[i]["user_answers"][0]["status"],
+        });
+      }
+      for (let i = 0; i < questionsL - history.value.length; i++) {
+        getPoints.value.push({
+          id: questions.value[i] ? questions.value[i].id : null,
+          answer: questions.value[i] ? questions.value[i].answer : null,
+          history: [],
+          point: history.value.length + 1 + i,
+          status: i === 0 ? "present" : "normal",
         });
       }
     }
