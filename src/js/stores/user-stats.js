@@ -37,19 +37,27 @@ export const useUserStats = defineStore("user-stats", () => {
   });
 
   const getUserStatus = async () => {
-    return api
-      .get("get-user-status")
-      .then(res => res.json())
-      .then(data => {
-        userStatus.last_quiz = data.last_quiz;
-        userStatus.last_update = data.last_update;
-        userStatus.points = data.points;
-        userStatus.time_in_app = data.time_in_app;
-        userStatus.past_categories_count = data.past_categories_count;
-        userStatus.categories_count = data.categories_count;
-        userStatus.past_categories_percent = data.past_categories_percent;
-        return userStatus;
-      });
+    return new Promise((resolve, reject) => {
+      api
+        .get("get-user-status")
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            reject("error");
+          }
+          userStatus.last_quiz = data.last_quiz;
+          userStatus.last_update = data.last_update;
+          userStatus.points = data.points;
+          userStatus.time_in_app = data.time_in_app;
+          userStatus.past_categories_count = data.past_categories_count;
+          userStatus.categories_count = data.categories_count;
+          userStatus.past_categories_percent = data.past_categories_percent;
+          resolve(userStatus);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   };
 
   const getAnswersStats = async () => {

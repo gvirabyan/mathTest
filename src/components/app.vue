@@ -79,14 +79,15 @@ onMounted(async () => {
     cordovaApp.init(f7);
   });
 
-  const user = await getUserStatus();
-  if (!user) {
-    setTimeout(() => {
+  await getUserStatus()
+    .then(() => {
       loaded.value = true;
-    }, 7000);
-  } else {
-    loaded.value = true;
-  }
+    })
+    .catch(() => {
+      setTimeout(() => {
+        loaded.value = true;
+      }, 2000);
+    });
   addGmapsScript();
   checkEverydayGoalPassingDate();
 });
