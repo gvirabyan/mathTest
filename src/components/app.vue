@@ -10,7 +10,7 @@
     </f7-panel>
     <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/" />
-    <Loading />
+    <Loading v-if="!loaded" />
   </f7-app>
 </template>
 <script setup>
@@ -23,9 +23,13 @@ import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
+import { useUserStats } from "@/js/stores/user-stats";
 
 const { everydayGoal } = storeToRefs(useEverydayGoalStore());
 const { restartEverydayGoal } = useEverydayGoalStore();
+
+const userStatsStore = useUserStats();
+const { getUserStatus } = userStatsStore;
 
 const f7params = {
   name: "Mathe App", // App name
@@ -70,15 +74,19 @@ const checkEverydayGoalPassingDate = () => {
   restartEverydayGoal();
 };
 
-onMounted(() => {
+onMounted(async () => {
   f7ready(() => {
     cordovaApp.init(f7);
   });
 
-  setTimeout(() => {
+  const user = await getUserStatus();
+  if (!user) {
+    setTimeout(() => {
+      loaded.value = true;
+    }, 7000);
+  } else {
     loaded.value = true;
-  }, 7000);
-
+  }
   addGmapsScript();
   checkEverydayGoalPassingDate();
 });

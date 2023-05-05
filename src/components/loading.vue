@@ -15,6 +15,9 @@
   background: #212121;
   position: fixed;
   width: 100%;
+  padding: 0;
+  top: 0;
+  left: 0;
   z-index: 5001;
   .points-left {
     position: absolute;

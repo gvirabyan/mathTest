@@ -8,7 +8,7 @@
     <slot />
     <main class="activity-tab-content">
       <Transition name="fade">
-        <component :is="currentActivityComponent" />
+        <component :is="currentActivityComponent" :req-loading="isLoading" />
       </Transition>
     </main>
 
@@ -30,8 +30,12 @@ import BottomMenu from "@/components/bottom-menu.vue";
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
-defineProps({
+const props = defineProps({
   f7route: {
+    type: Object,
+    default: () => {},
+  },
+  f7router: {
     type: Object,
     default: () => {},
   },
@@ -72,14 +76,15 @@ const setActiveComponent = id => {
 };
 
 const getAllData = async () => {
-  isLoading.value = true;
   await delay();
   await Promise.all([getUser()]);
   if (active && active.name === "My Status") {
-    isLoading.value = true;
-    await delay();
-    await getUserStatus();
-    isLoading.value = false;
+    if (props.f7router.history.length > 1) {
+      isLoading.value = true;
+      await delay();
+      await getUserStatus();
+      isLoading.value = false;
+    }
   }
   isLoading.value = false;
 };
