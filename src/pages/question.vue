@@ -159,7 +159,7 @@ watch(
           answer: null,
           history: history.value[i] ?? [],
           point: i + 1,
-          status: history.value[i]["user_answers"][0]["status"],
+          status: history.value[i]["user_answer"]["status"],
         });
       }
       for (let i = 0; i < questionsL - history.value.length; i++) {
