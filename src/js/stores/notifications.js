@@ -13,7 +13,11 @@ export const useNotifications = defineStore("notifications", () => {
 
   const getNotifications = async () => {
     return api
-      .get(`notifications?filters[users_permissions_user][id][$eq]=${auth.user.id}&sort[0]=read&sort[1]=createdAt:desc`)
+      .get(
+        `notifications?filters[users_permissions_user][id][$eq]=${localStorage.getItem(
+          "user-id",
+        )}&sort[0]=read&sort[1]=createdAt:desc`,
+      )
       .then(res => res.json())
       .then(data => {
         notifications.value = data?.data;

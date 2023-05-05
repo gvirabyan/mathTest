@@ -4,8 +4,7 @@ import api from "@/js/api";
 
 export const useAuthStore = defineStore("auth", () => {
   // state properties
-  const token = ref(localStorage.getItem("user") || "");
-  const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
+  const user = ref(null);
   const suggestedCredentials = reactive(
     localStorage.getItem("suggestedCredentials")
       ? JSON.parse(localStorage.getItem("suggestedCredentials"))
@@ -160,7 +159,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const getUser = async () => {
     return api
-      .get(`users/${user.value.id}?populate=institution&populate=user_answers`)
+      .get(`users/${localStorage.getItem("user-id")}?populate=institution&populate=user_answers`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
@@ -190,7 +189,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const updateNicknamedUser = async userData => {
     return api
-      .put(`users/${user.value.id}/update-nicknamed-user`, { ...userData })
+      .put(`users/${localStorage.getItem("user-id")}/update-nicknamed-user`, { ...userData })
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
@@ -203,7 +202,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const deleteNicknamedUser = async () => {
     return api
-      .remove(`users/${user.value.id}/delete-nicknamed-user`)
+      .remove(`users/${localStorage.getItem("user-id")}/delete-nicknamed-user`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
@@ -215,41 +214,17 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const storeJwtAndUser = data => {
-    token.value = data?.jwt;
+    localStorage.setItem("token", data?.jwt);
+    localStorage.setItem("user-id", data?.user?.id);
     user.value = data?.user;
   };
 
   const logout = async () => {
-    token.value = "";
     user.value = null;
-
+    localStorage.removeItem("token");
+    localStorage.removeItem("user-id");
     return { status: "success" };
   };
-
-  watch(token, val => {
-    if (!val) {
-      localStorage.removeItem("token");
-      return;
-    }
-
-    localStorage.setItem("token", val);
-  });
-
-  watch(user, val => {
-    if (!val) {
-      localStorage.removeItem("user");
-      return;
-    }
-
-    if (!localStorage.getItem("everydayGoal")) {
-      localStorage.setItem(
-        "everydayGoal",
-        JSON.stringify({ questionsToGoal: val.everyday_goal, isPassed: false, passingDatetime: null }),
-      );
-    }
-
-    localStorage.setItem("user", JSON.stringify(val));
-  });
 
   watch(
     () => suggestedCredentials,
@@ -265,7 +240,6 @@ export const useAuthStore = defineStore("auth", () => {
   );
 
   return {
-    token,
     user,
     suggestedCredentials,
     userData,

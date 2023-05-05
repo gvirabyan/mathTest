@@ -4,19 +4,19 @@ import { useAuthStore } from "./stores/auth";
 import { storeToRefs } from "pinia/dist/pinia";
 
 function checkAuth({ to, from, resolve, reject }) {
+  const store = useAuthStore();
   const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-
+  const { user } = storeToRefs(store);
   if (
     ["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
     token &&
-    user
+    user.value
   ) {
     reject();
     this.navigate("/activity/");
   } else if (
     !["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
-    (!token || !user)
+    (!token || !user.value)
   ) {
     reject();
     this.navigate("/login/");
@@ -57,9 +57,9 @@ const routes = [
   {
     path: "/",
     async({ resolve }) {
+      const userId = localStorage.getItem("user-id");
       const token = localStorage.getItem("token");
-      const user = localStorage.getItem("user");
-      if (token && user) {
+      if (token && userId) {
         resolve({
           name: "Activity",
           component: Activity,
