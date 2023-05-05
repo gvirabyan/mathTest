@@ -9,8 +9,8 @@
       </f7-page>
     </f7-panel>
     <!-- Your main view, should have "view-main" class -->
-    <f7-view v-if="loaded" main class="safe-areas" url="/" />
-    <Loading v-else />
+    <f7-view main class="safe-areas" url="/" />
+    <Loading />
   </f7-app>
 </template>
 <script setup>

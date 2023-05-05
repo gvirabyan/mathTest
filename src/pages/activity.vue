@@ -5,7 +5,7 @@
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
     </top-bar>
-
+    <slot />
     <main class="activity-tab-content">
       <Transition name="fade">
         <component :is="currentActivityComponent" />
