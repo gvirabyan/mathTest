@@ -53,9 +53,16 @@
         <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
       </div>
     </div>
-
     <loading-small v-else-if="isLoading" />
   </f7-page>
+
+  <leave-page-popup
+    v-if="checkSkipPopup"
+    :title="checkSkipPopup"
+    text=""
+    leave-btn="Leave for now"
+    save-btn="Check skipped"
+  />
 
   <teleport to=".hg-question-page">
     <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup">
@@ -106,6 +113,7 @@ import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import LeavePagePopup from "@/components/leave-page-popup.vue";
 
 const props = defineProps({
   f7router: {
@@ -245,6 +253,8 @@ const sendAnswer = () => {
   }
 };
 
+const skippedPoints = ref([]);
+
 const skip = () => {
   isSending.value = true;
   status.value = "normal";
@@ -259,7 +269,7 @@ const skip = () => {
     isSending.value = false;
 
     if (resp.status === "success") {
-      next();
+      next(true);
       return;
     }
 
@@ -270,7 +280,9 @@ const skip = () => {
   });
 };
 
-const next = async () => {
+const checkSkipPopup = ref(false);
+
+const next = async (skip = false) => {
   clearChosenData();
   startIndex.value++;
   if (startIndex.value + 3 === questions.value.length) {
@@ -279,24 +291,27 @@ const next = async () => {
   if (startIndex.value + 1 === questions.value.length) {
     startIndex.value = 0;
   }
-  getNextQuestion();
   getPoints.value[presentIndex.value].status = status.value;
-  if (presentIndex.value === getPoints.value.length - 1) {
+  // if (presentIndex.value === getPoints.value.length - 1) {
+  // }
+  const skippedPoint = getPoints.value.find(
+    v => v.status === "normal" && (!skippedPoints.value.includes(v.point) || skippedPoints.value.length === 0),
+  );
+  if (skippedPoint && !skip) {
+    presentIndex.value = skippedPoint.point - 2;
+  } else if (!skip) {
     isAllAnsweredPopup.value = true;
     await getAnsweredQuestions(props.f7route.params.categoryID);
     return;
   }
+
+  getNextQuestion(skippedPoint ? skippedPoint.point : null);
   presentIndex.value++;
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
   }
-  if (
-    circles.value.clientWidth / 2 - 16 <
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
-  ) {
-    circles.value.scrollLeft +=
-      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
-  }
+  circles.value.scrollLeft +=
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
 
 const clearChosenData = () => {
