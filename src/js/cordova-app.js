@@ -42,7 +42,7 @@ const cordovaApp = {
     // Handle Splash Screen
     cordovaApp.handleSplashScreen();
 
-    if (import.meta.env.TARGET === "cordova") {
+    if (window.cordova) {
       // eslint-disable-next-line no-undef
       WonderPush.subscribeToNotifications();
     }
