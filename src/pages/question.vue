@@ -58,10 +58,13 @@
 
   <leave-page-popup
     v-if="checkSkipPopup"
-    :title="checkSkipPopup"
-    text=""
+    title=""
+    :text="checkSkipPopup"
     leave-btn="Leave for now"
     save-btn="Check skipped"
+    @close="next"
+    @leave-changes="goBack"
+    @save-changes="next"
   />
 
   <teleport to=".hg-question-page">
@@ -267,9 +270,9 @@ const skip = () => {
     answer_type: "topic",
   }).then(resp => {
     isSending.value = false;
-
+    skippedPoints.value.push(presentIndex.value + 1);
     if (resp.status === "success") {
-      next(true);
+      next();
       return;
     }
 
@@ -282,7 +285,24 @@ const skip = () => {
 
 const checkSkipPopup = ref(false);
 
-const next = async (skip = false) => {
+const goBack = () => {
+  checkSkipPopup.value = false;
+  props.f7router.back();
+};
+
+const next = async () => {
+  let skippedPoint = getPoints.value.find(v => v.status === "normal" && !skippedPoints.value.includes(v.point));
+  //check when open popup, for skip
+  if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
+    const quantity = skippedPoints.value.length;
+    if (quantity === 1) {
+      checkSkipPopup.value = `You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.`;
+    } else {
+      checkSkipPopup.value = `You have passed most of the topic but you have skipped ${quantity} questions. You can check them one more time or leave them for now.`;
+    }
+    return;
+  }
+
   clearChosenData();
   startIndex.value++;
   if (startIndex.value + 3 === questions.value.length) {
@@ -292,14 +312,13 @@ const next = async (skip = false) => {
     startIndex.value = 0;
   }
   getPoints.value[presentIndex.value].status = status.value;
-  // if (presentIndex.value === getPoints.value.length - 1) {
-  // }
-  const skippedPoint = getPoints.value.find(
-    v => v.status === "normal" && (!skippedPoints.value.includes(v.point) || skippedPoints.value.length === 0),
-  );
-  if (skippedPoint && !skip) {
+  if (!skippedPoint) {
+    skippedPoints.value = [];
+    skippedPoint = getPoints.value.find(v => v.status === "normal");
+  }
+  if (skippedPoint) {
     presentIndex.value = skippedPoint.point - 2;
-  } else if (!skip) {
+  } else {
     isAllAnsweredPopup.value = true;
     await getAnsweredQuestions(props.f7route.params.categoryID);
     return;
@@ -312,6 +331,8 @@ const next = async (skip = false) => {
   }
   circles.value.scrollLeft +=
     circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+
+  checkSkipPopup.value = false;
 };
 
 const clearChosenData = () => {
