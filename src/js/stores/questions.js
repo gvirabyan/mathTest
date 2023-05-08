@@ -1,11 +1,8 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
 
 export const useQuestionsStore = defineStore("questions", () => {
-  const auth = useAuthStore();
-
   const questions = ref([]);
   const history = ref([]);
   const question = ref(null);
