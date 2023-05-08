@@ -61,8 +61,12 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestions.value = questionsIds;
   };
 
-  const getNextQuestion = () => {
-    questionIndex.value++;
+  const getNextQuestion = (index = null) => {
+    if (index) {
+      questionIndex.value = index;
+    } else {
+      questionIndex.value++;
+    }
     question.value = questions.value[questionIndex.value];
   };
 

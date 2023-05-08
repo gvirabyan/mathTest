@@ -53,9 +53,19 @@
         <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
       </div>
     </div>
-
     <loading-small v-else-if="isLoading" />
   </f7-page>
+
+  <leave-page-popup
+    v-if="checkSkipPopup"
+    title=""
+    :text="checkSkipPopup"
+    leave-btn="Leave for now"
+    save-btn="Check skipped"
+    @close="next"
+    @leave-changes="goBack"
+    @save-changes="next"
+  />
 
   <teleport to=".hg-question-page">
     <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup">
@@ -106,6 +116,7 @@ import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import LeavePagePopup from "@/components/leave-page-popup.vue";
 
 const props = defineProps({
   f7router: {
@@ -245,6 +256,8 @@ const sendAnswer = () => {
   }
 };
 
+const skippedPoints = ref([]);
+
 const skip = () => {
   isSending.value = true;
   status.value = "normal";
@@ -257,7 +270,7 @@ const skip = () => {
     answer_type: "topic",
   }).then(resp => {
     isSending.value = false;
-
+    skippedPoints.value.push(presentIndex.value + 1);
     if (resp.status === "success") {
       next();
       return;
@@ -270,7 +283,26 @@ const skip = () => {
   });
 };
 
+const checkSkipPopup = ref(false);
+
+const goBack = () => {
+  checkSkipPopup.value = false;
+  props.f7router.back();
+};
+
 const next = async () => {
+  let skippedPoint = getPoints.value.find(v => v.status === "normal" && !skippedPoints.value.includes(v.point));
+  //check when open popup, for skip
+  if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
+    const quantity = skippedPoints.value.length;
+    if (quantity === 1) {
+      checkSkipPopup.value = `You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.`;
+    } else {
+      checkSkipPopup.value = `You have passed most of the topic but you have skipped ${quantity} questions. You can check them one more time or leave them for now.`;
+    }
+    return;
+  }
+
   clearChosenData();
   startIndex.value++;
   if (startIndex.value + 3 === questions.value.length) {
@@ -279,24 +311,28 @@ const next = async () => {
   if (startIndex.value + 1 === questions.value.length) {
     startIndex.value = 0;
   }
-  getNextQuestion();
   getPoints.value[presentIndex.value].status = status.value;
-  if (presentIndex.value === getPoints.value.length - 1) {
+  if (!skippedPoint) {
+    skippedPoints.value = [];
+    skippedPoint = getPoints.value.find(v => v.status === "normal");
+  }
+  if (skippedPoint) {
+    presentIndex.value = skippedPoint.point - 2;
+  } else {
     isAllAnsweredPopup.value = true;
     await getAnsweredQuestions(props.f7route.params.categoryID);
     return;
   }
+
+  getNextQuestion(skippedPoint ? skippedPoint.point : null);
   presentIndex.value++;
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
   }
-  if (
-    circles.value.clientWidth / 2 - 16 <
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
-  ) {
-    circles.value.scrollLeft +=
-      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
-  }
+  circles.value.scrollLeft +=
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+
+  checkSkipPopup.value = false;
 };
 
 const clearChosenData = () => {
