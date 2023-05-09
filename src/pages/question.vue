@@ -323,8 +323,7 @@ const next = async () => {
     await getAnsweredQuestions(props.f7route.params.categoryID);
     return;
   }
-
-  getNextQuestion(skippedPoint ? skippedPoint.point : null);
+  getNextQuestion(skippedPoint ? skippedPoint.id : null);
   presentIndex.value++;
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";

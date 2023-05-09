@@ -61,13 +61,18 @@ export const useQuestionsStore = defineStore("questions", () => {
     answeredQuestions.value = questionsIds;
   };
 
-  const getNextQuestion = (index = null) => {
-    if (index) {
-      questionIndex.value = index;
+  const getNextQuestion = (id = null) => {
+    if (id) {
+      question.value = questions.value.find((q, i) => {
+        if (q.id === id) {
+          questionIndex.value = i;
+          return q;
+        }
+      });
     } else {
       questionIndex.value++;
+      question.value = questions.value[questionIndex.value];
     }
-    question.value = questions.value[questionIndex.value];
   };
 
   const getAnsweredQuestionsCount = async () => {
