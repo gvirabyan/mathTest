@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-practice-page" name="player-vs-machine" @page:beforein="getPastCategories">
-    <top-bar :tabs="practiceTabs">
+    <top-bar :tabs="practiceTabs" :search="false">
       <template #title>Practice</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
