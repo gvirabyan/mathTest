@@ -1,8 +1,11 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
+import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import api from "@/js/api";
 
 export const useAuthStore = defineStore("auth", () => {
+  const everydayGoalStore = useEverydayGoalStore();
+
   // state properties
   const user = ref(null);
   const suggestedCredentials = reactive(
@@ -61,6 +64,10 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           storeJwtAndUser(data);
 
+          if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
+            everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
+          }
+
           if (rememberUser) {
             suggestedCredentials.suggestedLogin = userData.identifier;
             suggestedCredentials.suggestedPassword = userData.password;
@@ -83,6 +90,10 @@ export const useAuthStore = defineStore("auth", () => {
       .then(data => {
         if (!data.error) {
           storeJwtAndUser(data);
+
+          if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
+            everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
+          }
 
           return { status: "success" };
         } else {
