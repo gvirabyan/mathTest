@@ -1,6 +1,6 @@
 <template>
   <f7-page id="activity-page" class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="activityTabs" @tab-selected="setActiveComponent">
+    <top-bar :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
       <template #title>{{ $t("activity.Activity") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
