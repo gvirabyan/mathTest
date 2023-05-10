@@ -8,8 +8,8 @@
       <div
         v-for="(option, i) of options"
         :key="i"
-        class="item"
         :class="{ selected: option === selected }"
+        class="item"
         @click="clickSelectItem(option)"
       >
         {{ option }}
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   options: {
@@ -53,6 +53,13 @@ const clickSelectItem = option => {
   isOpened.value = false;
   emit("input:selected", option);
 };
+
+watch(
+  () => props.default,
+  value => {
+    selected.value = value;
+  },
+);
 
 onMounted(() => {
   selected.value = props.default ? props.default : props.options.length > 0 ? props.options[0] : null;

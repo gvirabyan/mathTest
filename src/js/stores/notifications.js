@@ -1,14 +1,12 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
 
 export const useNotifications = defineStore("notifications", () => {
-  const auth = useAuthStore();
   const notifications = ref([]);
 
   const hasUnreadNotifications = computed(() =>
-    notifications.value.some(n => n.attributes.read === false || n.read === false),
+    notifications.value.some(n => n?.attributes?.read === false || n?.read === false),
   );
 
   const getNotifications = async () => {

@@ -83,6 +83,7 @@ import { ref, computed, defineAsyncComponent, defineProps, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
+import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
@@ -92,10 +93,14 @@ import CustomGauge from "@/components/custom-gauge.vue";
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const authStore = useAuthStore();
+const everydayGoalStore = useEverydayGoalStore();
 const userStatsStore = useUserStats();
+
 const { user } = storeToRefs(authStore);
-const { updateUser } = authStore;
 const { userStatus } = storeToRefs(userStatsStore);
+
+const { updateUser } = authStore;
+const { setEverydayGoal } = everydayGoalStore;
 
 const customGaugeOptions = {
   width: 186,
@@ -111,6 +116,7 @@ const props = defineProps({
   },
 });
 const isLoading = ref(false);
+
 watch(
   () => props.reqLoading,
   () => {
@@ -129,7 +135,7 @@ const lastUpdate = computed(() =>
 );
 
 const questionsSelectDefault = computed(() =>
-  user.value && user.value.everyday_goal ? `${user.value.everyday_goal} questions` : "No goal",
+  user.value && user.value?.everyday_goal ? `${user.value?.everyday_goal} questions` : "No goal",
 );
 
 const setGoalHandler = async goal => {
@@ -139,6 +145,7 @@ const setGoalHandler = async goal => {
   await updateUser({ everyday_goal: goalValue }).then(res => {
     if (res.status === "success") {
       showSelectGoalSuccess.value = true;
+      setEverydayGoal(goalValue);
       return;
     }
 
