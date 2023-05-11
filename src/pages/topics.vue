@@ -1,6 +1,12 @@
 <template>
-  <f7-page class="hg-categories-page" name="categories" @page:beforein="getCategoriesClassesHandler">
+  <f7-page
+    class="hg-categories-page"
+    name="categories"
+    @page:afterin="selectRightClass"
+    @page:beforein="getCategoriesClassesHandler"
+  >
     <top-bar
+      ref="topBar"
       :tabs="classesTabs"
       :change-tab="changeClass"
       @tab-selected="getCategoriesByClass"
@@ -73,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, watchEffect } from "vue";
 import { storeToRefs } from "pinia";
 import TextClamp from "vue3-text-clamp";
 import { useAuthStore } from "@/js/stores/auth";
@@ -95,7 +101,7 @@ const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
 const { categories, searchedCategories } = storeToRefs(categoriesStore);
-const { categoryClasses } = storeToRefs(categoriesClassesStore);
+const { categoryClasses, selectedClass } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
@@ -169,10 +175,16 @@ const getAfterText = category => {
 
   return `${category.answers > category.questions ? category.questions : category.answers}/${category.questions}`;
 };
+const topBar = ref(null);
 
 const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
-  await getCategoriesByClass(categoryClasses.value[0].id);
+};
+
+const selectRightClass = async () => {
+  await getCategoriesByClass(selectedClass.value);
+  topBar.value.selectTab(selectedClass.value, selectedClass.value - 1);
+  selectedClass.value = 1;
 };
 
 let calledId = null;
