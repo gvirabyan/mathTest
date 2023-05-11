@@ -43,7 +43,10 @@ export const useCategoryStore = defineStore("category", () => {
       .get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}`)
       .then(res => res.json())
       .then(data => {
-        categories.value = data.data;
+        categories.value = data.data.map(c => {
+          c.classId = categoryID;
+          return c;
+        });
       });
   };
 
@@ -54,6 +57,7 @@ export const useCategoryStore = defineStore("category", () => {
       .then(data => {
         category.value =
           {
+            classId: categoryID,
             id: data?.data?.id,
             name: data?.data?.attributes?.name,
             questions_amount: data?.data?.attributes?.questions?.data?.length,

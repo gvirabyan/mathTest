@@ -112,11 +112,15 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
+import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
+
+const storeCategoryClass = useCategoryClassesStore();
+const { selectedClass } = storeToRefs(storeCategoryClass);
 
 const props = defineProps({
   f7router: {
@@ -161,6 +165,7 @@ watch(
     const { answers, questions: questionsL } = categories.value.find(
       c => c.id === Number(props.f7route.params.categoryID),
     );
+    selectedClass.value = categories.value[0].classId;
     if (checkAnswers.value) {
       presentIndex.value = answers;
       checkAnswers.value = false;
@@ -209,11 +214,9 @@ const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.
 const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);
   isLoading.value = true;
-
   await delay();
   await getCategory(props.f7route.params.categoryID);
   await getQuestions(props.f7route.params.categoryID);
-
   isLoading.value = false;
 };
 

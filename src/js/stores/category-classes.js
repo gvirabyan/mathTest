@@ -4,6 +4,7 @@ import api from "@/js/api";
 
 export const useCategoryClassesStore = defineStore("category-classes", () => {
   const categoryClasses = ref([]);
+  const selectedClass = ref(1);
 
   const getCategoryClasses = async () => {
     return api
@@ -17,5 +18,6 @@ export const useCategoryClassesStore = defineStore("category-classes", () => {
   return {
     categoryClasses,
     getCategoryClasses,
+    selectedClass,
   };
 });

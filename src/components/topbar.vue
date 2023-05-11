@@ -230,6 +230,9 @@ onMounted(() => {
 if (props.tabs.length) {
   selectFirstTab(props.tabs);
 }
+defineExpose({
+  selectTab,
+});
 </script>
 
 <style lang="scss" scoped>
