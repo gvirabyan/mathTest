@@ -26,7 +26,7 @@
     />
 
     <success-message-popup
-      v-if="quizQuestions.length < quizMode.questions && !isLoading"
+      v-if="!isLoading && quizQuestions.length < quizMode?.questions"
       title="Oops!"
       :text="`You need to answer at least ${quizMode.questions} questions to be able to play against the machine.
       Please continue your learning in Topics page for now.`"
@@ -46,11 +46,11 @@
       </div>
     </div>
 
-    <div v-if="quizQuestions.length >= quizMode.questions" ref="circles" class="circles machine-player-circle">
+    <div v-if="quizQuestions?.length >= quizMode?.questions" ref="circles" class="circles machine-player-circle">
       <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
     </div>
 
-    <template v-if="!isLoading && quizQuestions.length >= quizMode.questions">
+    <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           Your score:&nbsp;

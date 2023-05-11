@@ -14,6 +14,10 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
       : { questionsToGoal: auth.user?.everyday_goal, isPassed: false, passingDatetime: null },
   );
 
+  const setEverydayGoal = questions => {
+    everydayGoal.questionsToGoal = questions;
+  };
+
   const decreaseQuestionsToGoal = status => {
     if (everydayGoal.questionsToGoal === 0) return;
 
@@ -41,25 +45,23 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
   watch(
     () => everydayGoal.questionsToGoal,
     async val => {
+      console.log("questions to answer: ", val);
       localStorage.setItem("everydayGoal", JSON.stringify({ ...everydayGoal, questionsToGoal: val }));
 
       if (val === 0) {
         everydayGoal.isPassed = true;
-
-        if (!everydayGoal.passingDatetime) {
-          everydayGoal.passingDatetime = new Date().toISOString();
-        }
+        everydayGoal.passingDatetime = new Date().toISOString();
 
         localStorage.setItem("everydayGoal", JSON.stringify(everydayGoal));
-        await sendEverydayGoalReach().then(() => {
-          notifications.hasNewNotifications = true;
-        });
+
+        await sendEverydayGoalReach();
       }
     },
   );
 
   return {
     everydayGoal,
+    setEverydayGoal,
     decreaseQuestionsToGoal,
     sendEverydayGoalReach,
     restartEverydayGoal,

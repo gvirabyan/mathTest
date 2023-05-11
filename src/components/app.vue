@@ -82,6 +82,7 @@ onMounted(async () => {
   f7ready(() => {
     cordovaApp.init(f7);
   });
+
   if (localStorage.getItem("user-id") && localStorage.getItem("token")) {
     await getUserStatus()
       .then(() => {

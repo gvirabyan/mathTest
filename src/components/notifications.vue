@@ -1,10 +1,10 @@
 <template>
   <div class="notifications">
     <f7-list v-if="!isLoading && notifications?.length" class="notifications-list">
-      <f7-list-item v-for="item in notifications" :key="item.id" @click="selectNotification(item.id)">
+      <f7-list-item v-for="item in notifications" :key="item?.id" @click="selectNotification(item?.id)">
         <h3 class="item-title">
           <svg
-            v-if="item.attributes?.read === false || item.read === false"
+            v-if="item?.attributes?.read === false || item?.read === false"
             width="10"
             height="10"
             viewBox="0 0 10 10"
@@ -14,10 +14,10 @@
             <circle cx="5" cy="5" r="5" fill="#FFC700" />
           </svg>
 
-          {{ item.attributes?.title || item.title }}
+          {{ item?.attributes?.title || item?.title }}
         </h3>
-        <p class="item-text">{{ item.attributes?.text || item.text }}</p>
-        <p class="item-date">{{ formatDate(item.attributes?.createdAt) || formatDate(item.createdAt) }}</p>
+        <p class="item-text">{{ item?.attributes?.text || item?.text }}</p>
+        <p class="item-date">{{ formatDate(item?.attributes?.createdAt) || formatDate(item?.createdAt) }}</p>
       </f7-list-item>
     </f7-list>
 
