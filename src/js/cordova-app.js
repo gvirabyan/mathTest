@@ -58,7 +58,7 @@ const cordovaApp = {
       };
 
       // eslint-disable-next-line no-undef
-      ClarityPlugin.initialize(import.meta.env.CLARITY_APP_ID, success, failure);
+      ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
     }
   },
 };
