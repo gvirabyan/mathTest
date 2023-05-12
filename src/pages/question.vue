@@ -12,7 +12,7 @@
       <Circle v-for="point in getPoints" :key="point.point" ref="circles" :point="point.point" :status="point.status" />
     </div>
     <div v-if="question" id="elementId" class="questions-content">
-      <f7-block-title><math-jax :latex="'\\Large \\sf' + question?.question" :block="true"></math-jax></f7-block-title>
+      <f7-block-title><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax></f7-block-title>
 
       <f7-list>
         <f7-list-item
