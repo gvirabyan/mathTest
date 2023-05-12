@@ -14,6 +14,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^11.0.0",
+    "cordova-clarity": "^0.0.4",
     "cordova-ios": "^6.3.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-keyboard": "^1.2.0",
@@ -41,7 +42,8 @@
         "LOGGING": "false",
         "AUTO_INIT": "true",
         "REQUIRES_USER_CONSENT": "false"
-      }
+      },
+      "cordova-clarity": {}
     },
     "platforms": [
       "ios",
