@@ -34,7 +34,7 @@
           <p v-if="lastUpdate" class="experience-update">Last update: {{ lastUpdate }}</p>
 
           <div class="experience-points-wrapper">
-            <p class="experience-points">{{ userStatus.points }}</p>
+            <p class="experience-points">{{ userStatus.points || 0 }}</p>
           </div>
 
           <f7-link v-if="!userStatus.points" class="experience-points no-points" href="/topics/"
