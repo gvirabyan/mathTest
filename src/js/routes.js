@@ -3,10 +3,14 @@ import Activity from "../pages/activity.vue";
 import { useAuthStore } from "./stores/auth";
 import { storeToRefs } from "pinia/dist/pinia";
 
-function checkAuth({ to, from, resolve, reject }) {
+async function checkAuth({ to, from, resolve, reject }) {
   const store = useAuthStore();
   const token = localStorage.getItem("token");
+  const { getUser } = store;
   const { user } = storeToRefs(store);
+  if (token && !user.value) {
+    await getUser();
+  }
   if (
     ["Register", "Login", "ForgotPassword", "ResetPassword", "Home", "ProviderLoginRedirect"].includes(to.name) &&
     token &&
