@@ -94,14 +94,18 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useNotifications } from "@/js/stores/notifications";
 import CustomPopup from "@/components/custom-popup.vue";
 import Notifications from "@/components/notifications.vue";
 import { storeToRefs } from "pinia";
+import { useCategoryClassesStore } from "@/js/stores/category-classes";
+import { f7 } from "framework7-vue";
+
+const categoriesClassesStore = useCategoryClassesStore();
+const { selectedClass } = storeToRefs(categoriesClassesStore);
 
 const props = defineProps({
-  f7router: { type: Object, default: () => {} },
   tabs: {
     type: Array,
     default: () => [],
@@ -199,13 +203,18 @@ const selectTab = (id, index) => {
   emit("tab-selected", id);
 };
 
-const selectFirstTab = tabs => {
+const selectFirstTab = async tabs => {
+  const tabIndex = f7.views.main.router.currentRoute.name === "Topics" ? selectedClass.value : props.firstLoadIndex + 1;
+
   tabsResult.value = tabs
     .sort((a, b) => a.id - b.id)
     .map((t, index) => {
-      return { ...t, active: index === props.firstLoadIndex };
+      console.log(index, tabIndex - 1);
+      return { ...t, active: index === tabIndex - 1 };
     });
-  emit("tab-selected", tabsResult.value[props.firstLoadIndex].id);
+  emit("tab-selected", tabIndex);
+  await nextTick();
+  selectTab(tabIndex, tabIndex - 1);
 };
 
 const toggleNotificationsPopup = () => {
@@ -227,9 +236,6 @@ onMounted(() => {
   hasNotificationsPopup.value = true;
 });
 
-if (props.tabs.length) {
-  selectFirstTab(props.tabs);
-}
 defineExpose({
   selectTab,
 });

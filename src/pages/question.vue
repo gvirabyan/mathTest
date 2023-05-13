@@ -4,7 +4,7 @@
       <template v-if="isLoading" #title> Loading... </template>
 
       <template v-else #title>
-        {{ category?.name }}
+        {{ categoryQuestion?.name }}
       </template>
     </f7-navbar>
 
@@ -87,7 +87,7 @@
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ correctAnswers.length }}/{{ category?.questions_amount }} right answered
+                {{ correctAnswers.length }}/{{ categoryQuestion?.questions_amount }} right answered
                 {{ pluralizeWord(correctAnswers.length, "question") }}
               </p>
             </f7-row>
@@ -109,7 +109,6 @@ import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
-import { useCategoryStore } from "@/js/stores/categories";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
@@ -134,16 +133,21 @@ const props = defineProps({
 });
 
 const authStore = useAuthStore();
-const categoryStore = useCategoryStore();
 const questionStore = useQuestionsStore();
 const categoryAnswerStore = useCategoryAnswerStore();
 const { user } = storeToRefs(authStore);
-const { category, categories } = storeToRefs(categoryStore);
-const { questions, history, question, answeredQuestionsData, answeredQuestionsPoints, questionsAreOver } =
-  storeToRefs(questionStore);
+const {
+  categoryQuestion,
+  questions,
+  history,
+  question,
+  answeredQuestionsData,
+  answeredQuestionsPoints,
+  questionsAreOver,
+} = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
-const { getCategory, clearCategory } = categoryStore;
+const { clearCategory } = questionStore;
 const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
@@ -162,13 +166,11 @@ const startIndex = ref(0);
 watch(
   () => questions.value,
   async () => {
-    const { answers, questions: questionsL } = categories.value.find(
-      c => c.id === Number(props.f7route.params.categoryID),
-    );
-    selectedClass.value = categories.value[0].classId;
-    if (checkAnswers.value) {
-      presentIndex.value = answers;
+    if (checkAnswers.value && categoryQuestion.value) {
+      selectedClass.value = categoryQuestion.value.classId;
+      presentIndex.value = history.value.length;
       checkAnswers.value = false;
+      const questionsL = categoryQuestion.value.questions_amount;
       for (let i = 0; i < history.value.length; i++) {
         getPoints.value.push({
           id: null,
@@ -215,7 +217,6 @@ const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);
   isLoading.value = true;
   await delay();
-  await getCategory(props.f7route.params.categoryID);
   await getQuestions(props.f7route.params.categoryID);
   isLoading.value = false;
 };
@@ -239,7 +240,7 @@ const sendAnswer = () => {
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: question.value.id,
-      category: category.value.id,
+      category: categoryQuestion.value.id,
       answer: chosenAnswer.value,
       status: status.value,
       answer_type: "topic",
@@ -267,7 +268,7 @@ const skip = () => {
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: question.value.id,
-    category: category.value.id,
+    category: categoryQuestion.value.id,
     answer: "",
     status: "skipped",
     answer_type: "topic",
