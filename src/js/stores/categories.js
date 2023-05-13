@@ -8,7 +8,6 @@ export const useCategoryStore = defineStore("category", () => {
 
   const categories = ref([]);
   const searchedCategories = ref([]);
-  const category = ref(null);
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
 
@@ -50,22 +49,6 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
-  const getCategory = async categoryID => {
-    api
-      .get(`categories/${categoryID}?fields=name&populate=answer&populate=questions`)
-      .then(res => res.json())
-      .then(data => {
-        category.value =
-          {
-            classId: categoryID,
-            id: data?.data?.id,
-            name: data?.data?.attributes?.name,
-            questions_amount: data?.data?.attributes?.questions?.data?.length,
-          } || [];
-        categoryAnswersStore.categoryAnswers = data?.data?.attributes?.answer?.data?.attributes?.answers?.answers || [];
-      });
-  };
-
   const getLastCategory = async () => {
     api
       .get(`last-categories`)
@@ -88,23 +71,16 @@ export const useCategoryStore = defineStore("category", () => {
     searchedCategories.value = [];
   };
 
-  const clearCategory = () => {
-    category.value = null;
-  };
-
   return {
     categories,
     searchedCategories,
     lastCategoryData,
     pastCategoriesData,
-    category,
     pastCategoriesIds,
     getCategories,
     getCategoriesByCategoryClass,
-    getCategory,
     getLastCategory,
     getPastCategories,
     clearSearchedCategories,
-    clearCategory,
   };
 });

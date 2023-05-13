@@ -182,9 +182,9 @@ const getCategoriesClassesHandler = async () => {
 };
 
 const selectRightClass = async () => {
-  await getCategoriesByClass(selectedClass.value);
-  topBar.value.selectTab(selectedClass.value, selectedClass.value - 1);
-  selectedClass.value = 1;
+  // let id = selectedClass.value;
+  // await getCategoriesByClass(id);
+  // selectedClass.value = 1;
 };
 
 let calledId = null;
@@ -195,7 +195,6 @@ const getCategoriesByClass = async id => {
     await delay();
     await getCategoriesByCategoryClass(id);
     isLoading.value = false;
-    calledId = null;
   }
 };
 

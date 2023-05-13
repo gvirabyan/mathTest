@@ -18,15 +18,26 @@ export const useQuestionsStore = defineStore("questions", () => {
   const questionsAreOver = computed(() => !questions.value.length && questionsAreLoaded.value);
   const selectedCategoryId = ref(null);
 
+  //category data for questions
+  const categoryQuestion = ref({});
+  const clearCategory = () => {
+    categoryQuestion.value = {};
+  };
+
   const getQuestions = categoryID => {
     questionsAreLoaded.value = false;
     return api
       .get(`topic-questions?categoryId=${categoryID}&pagination[page]=1`)
       .then(res => res.json())
       .then(data => {
+        categoryQuestion.value = {
+          id: categoryID,
+          classId: data?.data?.class_id,
+          name: data?.data?.category_name,
+          questions_amount: data?.meta?.total + history.value.length,
+        };
         const resData = data?.data?.results;
         history.value = data?.data?.history;
-
         questionsAreLoaded.value = true;
         if (categoryID === selectedCategoryId.value) {
           questions.value = resData.length ? [...questions.value, ...resData.sort(() => 0.5 - Math.random())] : [];
@@ -97,6 +108,8 @@ export const useQuestionsStore = defineStore("questions", () => {
     questionsData,
     questionData,
     questionsAreOver,
+    categoryQuestion,
+    clearCategory,
     getQuestions,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
