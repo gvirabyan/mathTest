@@ -45,6 +45,20 @@ const cordovaApp = {
     if (window.cordova) {
       // eslint-disable-next-line no-undef
       WonderPush.subscribeToNotifications();
+
+      // Start Clarify
+      const success = message => {
+        console.log(message);
+      };
+      const failure = message => {
+        console.log(message);
+      };
+      const idCallback = id => {
+        console.log("The session id is:", id);
+      };
+
+      // eslint-disable-next-line no-undef
+      ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
     }
   },
 };

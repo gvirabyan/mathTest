@@ -19,20 +19,19 @@ import { f7, f7ready } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
+import { useAuthStore } from "@/js/stores/auth";
 import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
+import { useUserStats } from "@/js/stores/user-stats";
 import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
-import { useUserStats } from "@/js/stores/user-stats";
-import { useAuthStore } from "@/js/stores/auth";
+
+const authStore = useAuthStore();
 
 const { everydayGoal } = storeToRefs(useEverydayGoalStore());
 const { restartEverydayGoal } = useEverydayGoalStore();
-
 const userStatsStore = useUserStats();
 const { getUserStatus } = userStatsStore;
-const authStore = useAuthStore();
-
 const { getUser } = authStore;
 
 const f7params = {
