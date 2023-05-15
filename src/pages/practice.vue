@@ -1,6 +1,11 @@
 <template>
-  <f7-page class="hg-practice-page" name="player-vs-machine" @page:beforein="getPastCategories">
-    <top-bar :tabs="practiceTabs" :search="false">
+  <f7-page
+    class="hg-practice-page"
+    name="player-vs-machine"
+    @page:beforein="getPastCategories"
+    @page:afterin="loadFirstTab"
+  >
+    <top-bar ref="topBar" :tabs="practiceTabs" :search="false">
       <template #title>Practice</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
@@ -22,6 +27,7 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
 import { useQuizStore } from "@/js/stores/quiz";
@@ -68,14 +74,20 @@ const gameModes = [
 
 const practiceTabs = [
   {
-    id: "1",
+    id: 1,
     name: "Player VS Machine",
   },
   {
-    id: "2",
+    id: 2,
     name: "Play with Friends",
   },
 ];
+
+const topBar = ref(null);
+
+const loadFirstTab = () => {
+  topBar.value.selectFirstTab(practiceTabs, false);
+};
 
 const setMode = mode => {
   setQuizMode(mode);

@@ -2,7 +2,6 @@
   <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData" @page:afterout="outPage">
     <f7-navbar back-link="Back" @click:back="clearStores">
       <template v-if="isLoading" #title> Loading... </template>
-
       <template v-else #title>
         {{ categoryQuestion?.name }}
       </template>
@@ -105,7 +104,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
@@ -195,10 +194,11 @@ watch(
 const checkCircleChange = ref(true);
 watch(
   () => circles.value,
-  el => {
+  async el => {
+    await nextTick();
     if (
       checkCircleChange.value &&
-      el.children.length &&
+      el.children[presentIndex.value] &&
       el.clientWidth / 2 - 16 < el.children[presentIndex.value].getBoundingClientRect().left - 24
     ) {
       circles.value.scrollLeft +=

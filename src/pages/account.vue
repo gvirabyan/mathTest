@@ -1,6 +1,11 @@
 <template>
-  <f7-page class="hg-dashboard-content profile-account-page" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
+  <f7-page
+    class="hg-dashboard-content profile-account-page"
+    name="dashboard"
+    @page:beforein="getAllData"
+    @page:afterin="loadFirstTab"
+  >
+    <top-bar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
@@ -287,6 +292,12 @@ const profileTabs = ref([
     path: "/profile/send-reports/",
   },
 ]);
+
+const topBar = ref(null);
+
+const loadFirstTab = () => {
+  topBar.value.selectFirstTab(profileTabs.value, false);
+};
 
 const profileData = reactive({
   email: "",

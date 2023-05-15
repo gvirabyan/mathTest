@@ -34,7 +34,7 @@ export const useQuestionsStore = defineStore("questions", () => {
           id: categoryID,
           classId: data?.data?.class_id,
           name: data?.data?.category_name,
-          questions_amount: data?.meta?.total + history.value.length,
+          questions_amount: data?.meta?.total + data?.data?.history.length,
         };
         const resData = data?.data?.results;
         history.value = data?.data?.history;
@@ -45,8 +45,8 @@ export const useQuestionsStore = defineStore("questions", () => {
           questions.value = resData.length ? [...resData].sort(() => 0.5 - Math.random()) : [];
           questionIndex.value = 0;
           answeredQuestions.value = [];
-          question.value = questions.value[questionIndex.value];
         }
+        question.value = questions.value[questionIndex.value];
         selectedCategoryId.value = categoryID;
       });
   };
