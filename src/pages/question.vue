@@ -11,30 +11,32 @@
       <Circle v-for="point in getPoints" :key="point.point" ref="circles" :point="point.point" :status="point.status" />
     </div>
     <div v-if="question" id="elementId" class="questions-content">
-      <f7-block-title><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax></f7-block-title>
-
-      <f7-list>
-        <f7-list-item
-          v-for="(answer, index) in answersData"
-          :key="answer.id"
-          :class="{
-            'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
-            'hg-correct-answer': sentAnswer && question?.answer === answer,
-            'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
-          }"
-          :checked="chosenAnswer === answer"
-          :disabled="!!sentAnswer"
-          name="demo-radio-end"
-          radio
-          @change="chooseAnswer(answer, index)"
-        >
-          <f7-col>
-            <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-            <math-jax :latex="'\\sf' + answer"></math-jax>
-          </f7-col>
-        </f7-list-item>
-      </f7-list>
-
+      <div>
+        <f7-block-title
+          ><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax
+        ></f7-block-title>
+        <f7-list>
+          <f7-list-item
+            v-for="(answer, index) in answersData"
+            :key="answer.id"
+            :class="{
+              'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
+              'hg-correct-answer': sentAnswer && question?.answer === answer,
+              'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
+            }"
+            :checked="chosenAnswer === answer"
+            :disabled="!!sentAnswer"
+            name="demo-radio-end"
+            radio
+            @change="chooseAnswer(answer, index)"
+          >
+            <f7-col>
+              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <math-jax :latex="'\\sf' + answer"></math-jax>
+            </f7-col>
+          </f7-list-item>
+        </f7-list>
+      </div>
       <div class="hg-actions-btns-content">
         <f7-row v-if="!sentAnswer">
           <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
