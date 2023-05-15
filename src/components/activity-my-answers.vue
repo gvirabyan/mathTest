@@ -14,7 +14,8 @@
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#8419FF"
             :percent="answersStats.topic_answers.percent"
-            ><template #percent>{{ answersStats.topic_answers.percent }}</template>
+          >
+            <template #percent>{{ answersStats.topic_answers.percent }}</template>
             <template #amount>{{ answersStats.questions_left_count }}</template>
             <template #info>of {{ answersStats.questions_count }} questions left</template>
           </custom-gauge>
@@ -26,7 +27,8 @@
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#2EE56B"
             :percent="answersStats.correct_answers.percent"
-            ><template #percent>{{ answersStats.correct_answers.percent }}</template>
+          >
+            <template #percent>{{ answersStats.correct_answers.percent }}</template>
             <template #amount>{{ answersStats.correct_answers.count }}</template>
             <template #info>correct answers</template>
           </custom-gauge>
@@ -38,7 +40,8 @@
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#FF0000"
             :percent="answersStats.wrong_answers.percent"
-            ><template #percent>{{ answersStats.wrong_answers.percent }}</template>
+          >
+            <template #percent>{{ answersStats.wrong_answers.percent }}</template>
             <template #amount>{{ answersStats.wrong_answers.count }}</template>
             <template #info>wrong answers</template>
           </custom-gauge>
@@ -50,7 +53,8 @@
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#89838F"
             :percent="answersStats.skipped_answers.percent"
-            ><template #percent>{{ answersStats.skipped_answers.percent }}</template>
+          >
+            <template #percent>{{ answersStats.skipped_answers.percent }}</template>
             <template #amount>{{ answersStats.skipped_answers.count }}</template>
             <template #info>skipped answers</template>
           </custom-gauge>
@@ -69,7 +73,6 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
-import delay from "@/js/helpers/delay";
 import CustomGauge from "@/components/custom-gauge.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 
@@ -91,7 +94,6 @@ const lastUpdate = computed(() => answersStats.value.last_update && timeAgo(new 
 const getAnswersStatsHandler = async () => {
   isLoading.value = true;
 
-  await delay(2000);
   await getAnswersStats();
 
   isLoading.value = false;
