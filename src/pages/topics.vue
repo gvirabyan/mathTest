@@ -4,9 +4,9 @@
     name="categories"
     @page:afterin="selectRightClass"
     @page:beforein="getCategoriesClassesHandler"
+    @page:beforeout="emptyData"
   >
     <top-bar
-      ref="topBar"
       :tabs="classesTabs"
       :change-tab="changeClass"
       @tab-selected="getCategoriesByClass"
@@ -175,19 +175,16 @@ const getAfterText = category => {
 
   return `${category.answers > category.questions ? category.questions : category.answers}/${category.questions}`;
 };
-const topBar = ref(null);
 
 const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
 };
 
-const selectRightClass = async () => {
-  // let id = selectedClass.value;
-  // await getCategoriesByClass(id);
-  // selectedClass.value = 1;
+let calledId = null;
+const emptyData = () => {
+  calledId = null;
 };
 
-let calledId = null;
 const getCategoriesByClass = async id => {
   if (calledId !== id) {
     calledId = id;

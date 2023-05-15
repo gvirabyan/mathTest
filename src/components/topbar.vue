@@ -203,18 +203,19 @@ const selectTab = (id, index) => {
   emit("tab-selected", id);
 };
 
-const selectFirstTab = async tabs => {
-  const tabIndex = f7.views.main.router.currentRoute.name === "Topics" ? selectedClass.value : props.firstLoadIndex + 1;
-
+const selectFirstTab = async (tabs, selected = true) => {
+  const tabIndex =
+    f7.views.main.router.currentRoute.name === "Topics" && selected ? selectedClass.value : props.firstLoadIndex + 1;
   tabsResult.value = tabs
     .sort((a, b) => a.id - b.id)
     .map((t, index) => {
-      console.log(index, tabIndex - 1);
       return { ...t, active: index === tabIndex - 1 };
     });
   emit("tab-selected", tabIndex);
   await nextTick();
-  selectTab(tabIndex, tabIndex - 1);
+  if (topBarTabs.value.children[tabIndex - 1]) {
+    selectTab(tabIndex, tabIndex - 1);
+  }
 };
 
 const toggleNotificationsPopup = () => {
@@ -237,7 +238,7 @@ onMounted(() => {
 });
 
 defineExpose({
-  selectTab,
+  selectFirstTab,
 });
 </script>
 
