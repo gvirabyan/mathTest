@@ -255,19 +255,16 @@
     }
   }
   .questions-content {
-    @media (max-height: 500px) {
-      height: calc(100vh - 125px);
-      overflow: auto;
-      padding-bottom: 30px;
-    }
+    height: calc(100vh - 125px);
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    overflow: auto;
+    padding-bottom: 30px;
     .block-title {
       margin: 28px 24px;
     }
     .list {
-      @media (min-height: 501px) {
-        height: calc(100vh - 357px);
-        overflow: auto;
-      }
       padding: 0 24px !important;
       ul {
         &:before {
