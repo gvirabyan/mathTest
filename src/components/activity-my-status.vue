@@ -64,10 +64,6 @@
       </div>
     </transition>
 
-    <transition v-if="isLoading" name="loader-fadeout" mode="in-out">
-      <loading-small />
-    </transition>
-
     <teleport v-if="showSelectGoalSuccess" to="#activity-page">
       <success-message-popup
         title="Success"
@@ -87,7 +83,6 @@ import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
-import LoadingSmall from "@/components/loading-small.vue";
 import CustomGauge from "@/components/custom-gauge.vue";
 
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
@@ -100,7 +95,14 @@ const { user } = storeToRefs(authStore);
 const { userStatus } = storeToRefs(userStatsStore);
 
 const { updateUser } = authStore;
+const { getUserStatus } = userStatsStore;
 const { setEverydayGoal } = everydayGoalStore;
+
+const props = defineProps({
+  reqLoading: {
+    type: Boolean,
+  },
+});
 
 const customGaugeOptions = {
   width: 186,
@@ -110,23 +112,7 @@ const customGaugeOptions = {
 };
 const goalsOptions = ["10 questions", "20 questions", "30 questions", "40 questions"];
 
-const props = defineProps({
-  reqLoading: {
-    type: Boolean,
-  },
-});
 const isLoading = ref(false);
-
-watch(
-  () => props.reqLoading,
-  () => {
-    isLoading.value = props.reqLoading;
-  },
-  {
-    immediate: true,
-  },
-);
-
 const disableSelect = ref(false);
 const showSelectGoalSuccess = ref(false);
 
@@ -137,6 +123,14 @@ const lastUpdate = computed(() =>
 const questionsSelectDefault = computed(() =>
   user.value && user.value?.everyday_goal ? `${user.value?.everyday_goal} questions` : "No goal",
 );
+
+const getUserStatusHandler = async () => {
+  isLoading.value = true;
+
+  await getUserStatus();
+
+  isLoading.value = false;
+};
 
 const setGoalHandler = async goal => {
   const goalValue = parseInt(goal);
@@ -163,6 +157,18 @@ const goLastQuiz = quiz => {
     f7.views.main.router.navigate(`/categories/${quiz.lastCategory.id}/questions`);
   }
 };
+
+watch(
+  () => props.reqLoading,
+  () => {
+    isLoading.value = props.reqLoading;
+  },
+  {
+    immediate: true,
+  },
+);
+
+getUserStatusHandler();
 </script>
 
 <style lang="scss">
