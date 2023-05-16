@@ -16,19 +16,15 @@ export const useNotifications = defineStore("notifications", () => {
           "user-id",
         )}&sort[0]=read&sort[1]=createdAt:desc`,
       )
-      .then(res => res.json())
       .then(data => {
         notifications.value = data?.data;
       });
   };
 
   const readNotification = async id => {
-    return api
-      .put(`notifications/${id}`, { data: { read: true } })
-      .then(res => res.json())
-      .then(data => {
-        notifications.value = notifications.value.map(n => (n.id === id ? data?.data : n));
-      });
+    return api.put(`notifications/${id}`, { data: { read: true } }).then(data => {
+      notifications.value = notifications.value.map(n => (n.id === id ? data?.data : n));
+    });
   };
 
   const addNotification = notification => {

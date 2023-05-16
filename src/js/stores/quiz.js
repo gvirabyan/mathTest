@@ -31,15 +31,12 @@ export const useQuizStore = defineStore("quiz", () => {
       return;
     }
 
-    return api
-      .get(`quiz-questions?limit=${limit}`)
-      .then(res => res.json())
-      .then(data => {
-        quizQuestions.value = data.questions;
-        quizQuestion.value = data.questions[quizQuestionIndex.value];
-        quizQuestionsLength.value = data.questions.length;
-        categoryAnswersStore.categoryAnswers = data.categories_answers;
-      });
+    return api.get(`quiz-questions?limit=${limit}`).then(data => {
+      quizQuestions.value = data.questions || [];
+      quizQuestion.value = quizQuestions.value[quizQuestionIndex.value];
+      quizQuestionsLength.value = quizQuestions.value.length;
+      categoryAnswersStore.categoryAnswers = data.categories_answers || [];
+    });
   };
 
   const setQuizMode = mode => {
@@ -61,16 +58,13 @@ export const useQuizStore = defineStore("quiz", () => {
   };
 
   const saveQuizResult = async data => {
-    return api
-      .post("practice-results", { data })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          return { status: "error", message: data.error?.message };
-        }
+    return api.post("practice-results", { data }).then(data => {
+      if (data.error) {
+        return { status: "error", message: data.error?.message };
+      }
 
-        return { status: "success", data: data.data };
-      });
+      return { status: "success", data: data.data };
+    });
   };
 
   const clearAnsweredQuizQuestions = () => {

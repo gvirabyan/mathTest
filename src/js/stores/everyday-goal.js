@@ -29,10 +29,7 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
   const sendEverydayGoalReach = async () => {
     // eslint-disable-next-line no-undef
     WonderPush.getInstallationId(function (installationId) {
-      return api
-        .post("everyday-goal-notify", { installationId })
-        .then(res => res.json())
-        .then(data => notifications.addNotification(data));
+      return api.post("everyday-goal-notify", { installationId }).then(data => notifications.addNotification(data));
     });
   };
 

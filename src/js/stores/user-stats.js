@@ -40,7 +40,6 @@ export const useUserStats = defineStore("user-stats", () => {
     return new Promise((resolve, reject) => {
       api
         .get("get-user-status")
-        .then(res => res.json())
         .then(data => {
           if (data.error) {
             reject("error");
@@ -61,23 +60,20 @@ export const useUserStats = defineStore("user-stats", () => {
   };
 
   const getAnswersStats = async () => {
-    return api
-      .get("get-answers-stats")
-      .then(res => res.json())
-      .then(data => {
-        answersStats.questions_count = data.questions_count;
-        answersStats.questions_left_count = data.questions_left_count;
-        answersStats.answers_count = data.answers_count;
-        answersStats.topic_answers.count = data.topic_answers.count;
-        answersStats.topic_answers.percent = data.topic_answers.percent;
-        answersStats.correct_answers.count = data.correct_answers.count;
-        answersStats.correct_answers.percent = data.correct_answers.percent;
-        answersStats.wrong_answers.count = data.wrong_answers.count;
-        answersStats.wrong_answers.percent = data.wrong_answers.percent;
-        answersStats.skipped_answers.count = data.skipped_answers.count;
-        answersStats.skipped_answers.percent = data.skipped_answers.percent;
-        answersStats.last_update = data.last_update;
-      });
+    return api.get("get-answers-stats").then(data => {
+      answersStats.questions_count = data.questions_count;
+      answersStats.questions_left_count = data.questions_left_count;
+      answersStats.answers_count = data.answers_count;
+      answersStats.topic_answers.count = data.topic_answers.count;
+      answersStats.topic_answers.percent = data.topic_answers.percent;
+      answersStats.correct_answers.count = data.correct_answers.count;
+      answersStats.correct_answers.percent = data.correct_answers.percent;
+      answersStats.wrong_answers.count = data.wrong_answers.count;
+      answersStats.wrong_answers.percent = data.wrong_answers.percent;
+      answersStats.skipped_answers.count = data.skipped_answers.count;
+      answersStats.skipped_answers.percent = data.skipped_answers.percent;
+      answersStats.last_update = data.last_update;
+    });
   };
 
   return {
