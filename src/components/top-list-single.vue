@@ -87,7 +87,7 @@ const topListStore = useTopList();
 const topList = computed(() => topListStore.topList);
 const { getTopList } = topListStore;
 
-const userPoints = computed(() => topList.value.find(list => list.id === user.value.id).points);
+const userPoints = computed(() => topList.value.find(list => list.id === user.value.id)?.points);
 
 watch(
   () => props.category,
@@ -96,7 +96,7 @@ watch(
       if (category.key === "world") {
         await getTopList(category.key, "");
       } else if (category.key === "institution") {
-        await getTopList(category.key, user.value.institution?.place_id);
+        await getTopList(category.key, user.value?.institution?.place_id);
       } else {
         await getTopList(category.key, user.value[category.key]);
       }

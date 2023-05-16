@@ -1,7 +1,7 @@
 <template>
   <div class="loading-page">
-    <img class="points-right" src="@/assets/images/pointsRight.png" />
-    <img class="points-left" src="@/assets/images/pointsLeft.png" />
+    <img class="points-right" src="@/assets/images/pointsRight.svg" />
+    <img class="points-left" src="@/assets/images/pointsLeft.svg" />
     <div class="loading-block">
       <img width="50" src="@/assets/gifs/gray.gif" />
       <f7-block-title> <span class="special-word">Mathe </span> App </f7-block-title>

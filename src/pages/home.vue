@@ -2,7 +2,7 @@
   <f7-page class="hg-home-page" name="home">
     <h1 class="welcome-message">Welcome</h1>
 
-    <img class="points-left" src="@/assets/images/pointsLeft.png" alt="points left" />
+    <img class="points-left" src="@/assets/images/pointsLeft.svg" alt="points left" />
 
     <div class="titles-block">
       <h4 class="small-title">Play the games</h4>
