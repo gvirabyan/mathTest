@@ -13,7 +13,6 @@
     </top-bar>
     <slot />
     <main class="activity-tab-content">
-      <a href="/error">go 404</a>
       <Transition name="fade">
         <component :is="currentActivityComponent" :req-loading="isLoading" />
       </Transition>
