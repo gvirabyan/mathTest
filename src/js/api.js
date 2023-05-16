@@ -1,3 +1,5 @@
+import { f7 } from "framework7-vue";
+
 const defaultOptions = () => {
   let options = {
     headers: {
@@ -20,7 +22,14 @@ const get = async url => {
     window.signal = window.controller.signal;
   }
   prevUrl = url;
-  const request = await fetch(`${import.meta.env.VITE_API_URL}${url}`, { signal: window.signal, ...defaultOptions() });
+  const request = await fetch(`${import.meta.env.VITE_API_URL}${url}`, { signal: window.signal, ...defaultOptions() })
+    .then(res => res.json())
+    .then(data => {
+      if (Object.keys(data).length === 0) {
+        f7.views.main.router.navigate("/error");
+      }
+      return data;
+    });
   return request;
 };
 

@@ -22,49 +22,37 @@ export const useCategoryStore = defineStore("category", () => {
       ? `categories?populate[0]=category_class&filters[name][$containsi]=${searchStr}`
       : "categories?populate[0]=category_class";
 
-    api
-      .get(url)
-      .then(res => res.json())
-      .then(data => {
-        if (searchStr) {
-          searchedCategories.value = data?.data;
-          return;
-        }
+    api.get(url).then(data => {
+      if (searchStr) {
+        searchedCategories.value = data?.data;
+        return;
+      }
 
-        categories.value = data?.data;
-      });
+      categories.value = data?.data;
+    });
   };
 
   const getCategoriesByCategoryClass = async categoryID => {
     categories.value = [];
 
-    api
-      .get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}`)
-      .then(res => res.json())
-      .then(data => {
-        categories.value = data.data.map(c => {
-          c.classId = categoryID;
-          return c;
-        });
+    api.get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}`).then(data => {
+      categories.value = data.data.map(c => {
+        c.classId = categoryID;
+        return c;
       });
+    });
   };
 
   const getLastCategory = async () => {
-    api
-      .get(`last-categories`)
-      .then(res => res.json())
-      .then(data => {
-        lastCategoryData.value = data;
-      });
+    api.get(`last-categories`).then(data => {
+      lastCategoryData.value = data;
+    });
   };
 
   const getPastCategories = async () => {
-    api
-      .get(`past-categories`)
-      .then(res => res.json())
-      .then(data => {
-        pastCategoriesData.value = data;
-      });
+    api.get(`past-categories`).then(data => {
+      pastCategoriesData.value = data;
+    });
   };
 
   const clearSearchedCategories = () => {

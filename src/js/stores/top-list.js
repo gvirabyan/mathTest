@@ -25,28 +25,19 @@ export const useTopList = defineStore("topList", () => {
     }
     topList.value = [];
 
-    return api
-      .get(url)
-      .then(res => res.json())
-      .then(data => {
-        topList.value.push(...data);
-      });
+    return api.get(url).then(data => {
+      topList.value.push(...data);
+    });
   };
 
   const getMyStats = () => {
-    return api
-      .get(`get-stats/${localStorage.getItem("user-id")}`)
-      .then(res => res.json())
-      .then(data => {
-        myStats.value = data;
-      });
+    return api.get(`get-stats/${localStorage.getItem("user-id")}`).then(data => {
+      myStats.value = data;
+    });
   };
 
   const getRankings = () => {
-    return api
-      .get(`get-rankings`)
-      .then(res => res.json())
-      .then(({ rankings }) => rankings);
+    return api.get(`get-rankings`).then(({ rankings }) => rankings);
   };
 
   return {

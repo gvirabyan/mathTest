@@ -9,12 +9,9 @@ export const useCoursesStore = defineStore("courses", () => {
   const courses = ref(user.institution?.courses || []);
 
   const getCourses = async placeId => {
-    return api
-      .get(`institutions/${placeId}/courses`)
-      .then(res => res.json())
-      .then(data => {
-        courses.value = data.courses;
-      });
+    return api.get(`institutions/${placeId}/courses`).then(data => {
+      courses.value = data.courses;
+    });
   };
 
   return {

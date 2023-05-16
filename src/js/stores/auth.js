@@ -84,22 +84,19 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const loginViaProvider = async (provider, accessToken) => {
-    return api
-      .get(`auth/${provider}/callback${accessToken}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.error) {
-          storeJwtAndUser(data);
+    return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
+      if (!data.error) {
+        storeJwtAndUser(data);
 
-          if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
-            everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
-          }
-
-          return { status: "success" };
-        } else {
-          return { status: "error", message: data.error?.message };
+        if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
+          everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
         }
-      });
+
+        return { status: "success" };
+      } else {
+        return { status: "error", message: data.error?.message };
+      }
+    });
   };
 
   const register = async (userData, rememberUser = false) => {
@@ -169,18 +166,15 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const getUser = async () => {
-    return api
-      .get(`users/${localStorage.getItem("user-id")}?populate=institution&populate=user_answers`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.error) {
-          user.value = data;
+    return api.get(`users/${localStorage.getItem("user-id")}?populate=institution&populate=user_answers`).then(data => {
+      if (!data.error) {
+        user.value = data;
 
-          return { status: "success" };
-        } else {
-          return { status: "error", message: data.error?.message };
-        }
-      });
+        return { status: "success" };
+      } else {
+        return { status: "error", message: data.error?.message };
+      }
+    });
   };
 
   const updateUser = async userData => {
