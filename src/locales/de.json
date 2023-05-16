@@ -1,0 +1,64 @@
+{
+  "activity": {
+    "Activity": "Activity",
+    "tabs": {
+      "My Status": "My Status",
+      "Top List": "Top List",
+      "My Answers": "My Answers"
+    }
+  },
+  "not-found": {
+    "mathematics": [
+      {
+        "name": "Pythagoras",
+        "bio": "Vegetarian mystical leader and number-obsessive, he owes his standing as the most famous name in maths due to a theorem about right-angled triangles, although it now appears it probably predated him. He lived in a community where numbers were venerated as much for their spiritual qualities as for their mathematical ones. His elevation of numbers as the essence of the world made him the towering primogenitor of Greek mathematics, essentially the beginning of mathematics as we know it now. And, famously, he didn't eat beans.",
+        "img": "Pythagoras"
+      },
+      {
+        "name": "Hypatia",
+        "bio": "Women are under-represented in mathematics, yet the history of the subject is not exclusively male. Hypatia was a scholar at the library in Alexandria in the 4th century CE. Her most valuable scientific legacy was her edited version of Euclid's The Elements, the most important Greek mathematical text, and one of the standard versions for centuries after her particularly horrific death: she was murdered by a Christian mob who stripped her naked, peeled away her flesh with broken pottery and ripped apart her limbs",
+        "img": "Hypatia"
+      },
+      {
+        "name": "Girolamo Cardano",
+        "bio": "Italian polymath for whom the term Renaissance man could have been invented. A doctor by profession, he was the author of 131 books. He was also a compulsive gambler. It was this last habit that led him to the first scientific analysis of probability. He realised he could win more on the dicing table if he expressed the likelihood of chance events using numbers. This was a revolutionary idea, and it led to probability theory, which in turn led to the birth of statistics, marketing, the insurance industry and the weather forecast.",
+        "img": "Girolamo"
+      },
+      {
+        "name": "Leonhard Euler",
+        "bio": "The most prolific mathematician of all time, publishing close to 900 books. When he went blind in his late 50s his productivity in many areas increased. His famous formula eiπ + 1 = 0, where e is the mathematical constant sometimes known as Euler's number and i is the square root of minus one, is widely considered the most beautiful in mathematics. He later took an interest in Latin squares – grids where each row and column contains each member of a set of numbers or objects once. Without this work, we might not have had sudoku.",
+        "img": "Leonhard"
+      },
+      {
+        "name": "Carl Friedrich Gauss",
+        "bio": "Known as the prince of mathematicians, Gauss made significant contributions to most fields of 19th century mathematics. An obsessive perfectionist, he didn't publish much of his work, preferring to rework and improve theorems first. His revolutionary discovery of non-Euclidean space (that it is mathematically consistent that parallel lines may diverge) was found in his notes after his death. During his analysis of astronomical data, he realised that measurement error produced a bell curve – and that shape is now known as a Gaussian distribution.",
+        "img": "Carl"
+      },
+      {
+        "name": "Georg Cantor",
+        "bio": "Of all the great mathematicians, Cantor most perfectly fulfils the (Hollywood) stereotype that a genius for maths and mental illness are somehow inextricable. Cantor's most brilliant insight was to develop a way to talk about mathematical infinity. His set theory lead to the counter-intuitive discovery that some infinities were larger than others. The result was mind-blowing. Unfortunately he suffered mental breakdowns and was frequently hospitalised. He also became fixated on proving that the works of Shakespeare were in fact written by Francis Bacon.",
+        "img": "Georg"
+      },
+      {
+        "name": "Paul Erdös",
+        "bio": "Erdös lived a nomadic, possession-less life, moving from university to university, from colleague's spare room to conference hotel. He rarely published alone, preferring to collaborate – writing about 1,500 papers, with 511 collaborators, making him the second-most prolific mathematician after Euler. As a humorous tribute, an \"Erdös number\" is given to mathematicians according to their collaborative proximity to him: No 1 for those who have authored papers with him; No 2 for those who have authored with mathematicians with an Erdös No 1, and so on.",
+        "img": "Paul"
+      },
+      {
+        "name": "John Horton Conway",
+        "bio": "The Liverpudlian is best known for the serious maths that has come from his analyses of games and puzzles. In 1970, he came up with the rules for the Game of Life, a game in which you see how patterns of cells evolve in a grid. Early computer scientists adored playing Life, earning Conway star status. He has made important contributions to many branches of pure maths, such as group theory, number theory and geometry and, with collaborators, has also come up with wonderful-sounding concepts like surreal numbers, the grand antiprism and monstrous moonshine.",
+        "img": "John"
+      },
+      {
+        "name": "Grigori Perelman",
+        "bio": "Perelman was awarded $1m last month for proving one of the most famous open questions in maths, the Poincaré Conjecture. But the Russian recluse has refused to accept the cash. He had already turned down maths' most prestigious honour, the Fields Medal in 2006. \"If the proof is correct then no other recognition is needed,\" he reportedly said. The Poincaré Conjecture was first stated in 1904 by Henri Poincaré and concerns the behaviour of shapes in three dimensions. Perelman is currently unemployed and lives a frugal life with his mother in St Petersburg.",
+        "img": "Grigori"
+      },
+      {
+        "name": "Terry Tao",
+        "bio": "An Australian of Chinese heritage who lives in the US, Tao also won (and accepted) the Fields Medal in 2006. Together with Ben Green, he proved an amazing result about prime numbers – that you can find sequences of primes of any length in which every number in the sequence is a fixed distance apart. For example, the sequence 3, 7, 11 has three primes spaced 4 apart. The sequence 11, 17, 23, 29 has four primes that are 6 apart. While sequences like this of any length exist, no one has found one of more than 25 primes, since the primes by then are more than 18 digits long.",
+        "img": "Terry"
+      }
+    ]
+  }
+}

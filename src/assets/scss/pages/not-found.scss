@@ -1,0 +1,42 @@
+.not-found-page {
+  overflow: auto;
+  .page-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    .block {
+      margin: unset;
+      padding: 36px 24px;
+      background-repeat: no-repeat;
+      background-position: top right;
+      background-image: url("@/assets/images/points.svg");
+      img{
+        width: 150px;
+      }
+      .block-title {
+        all: unset;
+        background: unset;
+        margin: 0 0 30px;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 22px;
+        text-align: center;
+      }
+      .mathematician {
+        margin: 30px 0;
+        p {
+          margin: 0;
+        }
+        .mathematician-avatar {
+          display: inline;
+          float: left;
+          padding-right: 15px;
+          .mathematician-name {
+            text-align: center;
+          }
+        }
+      }
+
+    }
+  }
+}

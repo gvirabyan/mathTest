@@ -1,11 +1,51 @@
 <template>
-  <f7-page>
-    <f7-navbar title="Not found" back-link="Back"></f7-navbar>
-    <f7-block strong>
-      <p>Sorry</p>
-      <p>Requested content not found.</p>
-    </f7-block>
+  <f7-page class="hg-dashboard-content not-found-page" @page:beforein="getAllData">
+    <div class="not-found-page-content">
+      <f7-block>
+        <f7-block-title>
+          Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends
+          and human relationships. Enjoy)).
+        </f7-block-title>
+        <div v-if="mathematician" class="mathematician">
+          <div class="mathematician-avatar">
+            <img :src="`assets/images/mathematicians/${mathematician.img}.jpg`" :alt="`${mathematician.img}`" />
+            <p class="mathematician-name">{{ mathematician.name }}</p>
+          </div>
+
+          <p>{{ mathematician.bio }}</p>
+        </div>
+      </f7-block>
+    </div>
+    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import BottomMenu from "@/components/bottom-menu.vue";
+import { useI18n } from "vue-i18n";
+
+defineProps({
+  f7route: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const i18n = useI18n();
+
+const mathematician = ref(null);
+
+const getAllData = () => {
+  const index = Math.round(Math.random() * 9);
+  mathematician.value = {
+    name: i18n.t(`not-found.mathematics.${index}.name`),
+    bio: i18n.t(`not-found.mathematics.${index}.bio`),
+    img: i18n.t(`not-found.mathematics.${index}.img`),
+  };
+};
+</script>
+
+<style lang="scss">
+@import "../assets/scss/pages/not-found";
+</style>
