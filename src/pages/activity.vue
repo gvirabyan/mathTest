@@ -91,14 +91,11 @@ const setActiveComponent = id => {
 const getAllData = async () => {
   await delay();
   await Promise.all([getUser()]);
-  if (active && active.name === "My Status") {
-    if (props.f7router.history.length > 1) {
-      isLoading.value = true;
-      await delay();
-      await getUserStatus();
-      isLoading.value = false;
-    }
-  }
+  // if (active && active.name === "My Status") {
+  //   if (props.f7router.history.length > 1) {
+  //
+  //   }
+  // }
   isLoading.value = false;
 };
 </script>
