@@ -307,7 +307,7 @@ const fbLoginHandler = async function () {
 
       .login-screen-title {
         @include form-title;
-        background-image: url("../assets/images/points.png");
+        background-image: url("../assets/images/points.svg");
       }
       .block {
         &.inset {

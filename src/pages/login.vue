@@ -226,7 +226,7 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 
       .login-screen-title {
         @include form-title;
-        background-image: url("../assets/images/points.png");
+        background-image: url("../assets/images/points.svg");
       }
 
       .list {
