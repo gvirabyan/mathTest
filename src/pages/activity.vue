@@ -6,11 +6,11 @@
     @page:beforein="getAllData"
     @page:afterin="loadFirstTab"
   >
-    <top-bar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
+    <topbar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
       <template #title>{{ $t("activity.Activity") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
-    </top-bar>
+    </topbar>
     <slot />
     <main class="activity-tab-content">
       <Transition name="fade">
@@ -27,16 +27,15 @@ import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
-import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
-import TopBar from "@/components/topbar.vue";
+import Topbar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
 
-const props = defineProps({
+defineProps({
   f7route: {
     type: Object,
     default: () => {},
@@ -49,12 +48,10 @@ const props = defineProps({
 
 const i18n = useI18n();
 
-const userStatsStore = useUserStats();
 const authStore = useAuthStore();
 
 const { user } = storeToRefs(authStore);
 const { getUser } = authStore;
-const { getUserStatus } = userStatsStore;
 
 const activityTabs = ref([
   {
@@ -91,11 +88,7 @@ const setActiveComponent = id => {
 const getAllData = async () => {
   await delay();
   await Promise.all([getUser()]);
-  // if (active && active.name === "My Status") {
-  //   if (props.f7router.history.length > 1) {
-  //
-  //   }
-  // }
+
   isLoading.value = false;
 };
 </script>
