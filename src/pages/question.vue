@@ -40,18 +40,20 @@
       <div class="hg-actions-btns-content">
         <f7-row v-if="!sentAnswer">
           <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
-            überspringen
+            {{ $t("buttons.skip") }}
           </f7-button>
           <f7-button
             class="button button-large button-submit"
             :class="{ 'btn-disable': !chosenAnswer || isSending }"
             @click="sendAnswer"
           >
-            abgeben
+            {{ $t("buttons.send") }}
           </f7-button>
         </f7-row>
 
-        <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
+        <f7-button v-else class="button button-large button-next" @click="next">
+          {{ $t("buttons.next") }}
+        </f7-button>
       </div>
     </div>
     <loading-small v-else-if="isLoading" />

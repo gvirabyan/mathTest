@@ -3,7 +3,7 @@
     <transition v-if="!isLoading" name="activity-fade" mode="out-in" appear>
       <div class="display-flex flex-direction-column align-items-center">
         <div class="goal-wrapper">
-          <p>Set everyday goal</p>
+          <p>{{ $t("activity.my-status.set-everyday-goal") }}</p>
 
           <custom-select
             :options="goalsOptions"
@@ -14,7 +14,7 @@
         </div>
 
         <template v-if="userStatus.last_quiz && userStatus.last_quiz.lastCategory">
-          <h2 class="title">Last quiz</h2>
+          <h2 class="title">{{ $t("activity.my-status.last-quiz") }}</h2>
           <f7-block class="last-quiz">
             <f7-button @click="goLastQuiz(userStatus.last_quiz)">
               <h3 class="last-quiz-name">{{ userStatus.last_quiz?.lastCategory.name }}</h3>
@@ -29,21 +29,23 @@
         </template>
 
         <f7-block class="experience">
-          <h3 class="experience-title">Experience points</h3>
+          <h3 class="experience-title">{{ $t("activity.my-status.experience-points") }}</h3>
 
-          <p v-if="lastUpdate" class="experience-update">Last update: {{ lastUpdate }}</p>
+          <p v-if="lastUpdate" class="experience-update">
+            {{ `${$t("activity.my-status.last-update")}  ${lastUpdate}` }}
+          </p>
 
           <div class="experience-points-wrapper">
             <p class="experience-points">{{ userStatus.points || 0 }}</p>
           </div>
 
           <f7-link v-if="!userStatus.points" class="experience-points no-points" href="/topics/"
-            >Start your journey to earn the points – go to the Topics
+            >{{ $t("activity.my-status.go-to-topics") }}
           </f7-link>
         </f7-block>
 
         <f7-block v-if="userStatus.past_categories_count && userStatus.categories_count" class="experience">
-          <h3 class="experience-title">Past categories</h3>
+          <h3 class="experience-title">{{ $t("activity.my-status.past-categories") }}</h3>
           <custom-gauge
             :width="customGaugeOptions.width"
             :height="customGaugeOptions.height"
@@ -53,14 +55,14 @@
             :percent="userStatus.past_categories_percent"
             ><template #percent>{{ userStatus.past_categories_percent }}</template>
             <template #amount>{{ userStatus.past_categories_count }}/{{ userStatus.categories_count }}</template>
-            <template #info>categories were answered</template>
+            <template #info>{{ $t("activity.my-status.categories-were-answered") }}</template>
           </custom-gauge>
         </f7-block>
 
         <p v-if="userStatus.time_in_app" class="experience-time">
-          You are in Mathe App <span class="value">{{ userStatus.time_in_app }}</span>
+          {{ $t("activity.my-status.you-are-in") }} <span class="value">{{ userStatus.time_in_app }}</span>
         </p>
-        <p v-else class="experience-time">Welcome to the Mathe App!👋</p>
+        <p v-else class="experience-time">{{ $t("activity.my-status.past-categories") }}</p>
       </div>
     </transition>
 
@@ -78,6 +80,7 @@
 import { ref, computed, defineAsyncComponent, defineProps, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useUserStats } from "@/js/stores/user-stats";
@@ -98,6 +101,8 @@ const { updateUser } = authStore;
 const { getUserStatus } = userStatsStore;
 const { setEverydayGoal } = everydayGoalStore;
 
+const i18n = useI18n();
+
 const props = defineProps({
   reqLoading: {
     type: Boolean,
@@ -110,7 +115,12 @@ const customGaugeOptions = {
   radius: 93,
   strokeWidth: 10,
 };
-const goalsOptions = ["10 questions", "20 questions", "30 questions", "40 questions"];
+const goalsOptions = [
+  `10 ${i18n.t("top-bar.questions")}`,
+  `20 ${i18n.t("top-bar.questions")}`,
+  `30 ${i18n.t("top-bar.questions")}`,
+  `40 ${i18n.t("top-bar.questions")}`,
+];
 
 const isLoading = ref(false);
 const disableSelect = ref(false);
@@ -121,7 +131,9 @@ const lastUpdate = computed(() =>
 );
 
 const questionsSelectDefault = computed(() =>
-  user.value && user.value?.everyday_goal ? `${user.value?.everyday_goal} questions` : "No goal",
+  user.value && user.value?.everyday_goal
+    ? `${user.value?.everyday_goal} ${i18n.t("top-bar.questions")}`
+    : `${i18n.t("activity.my-status.no-goal")}`,
 );
 
 const getUserStatusHandler = async () => {

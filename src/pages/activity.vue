@@ -8,8 +8,10 @@
   >
     <topbar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
       <template #title>{{ $t("activity.Activity") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal} ${$t("top-bar.questions")}`
+      }}</template>
     </topbar>
     <slot />
     <main class="activity-tab-content">

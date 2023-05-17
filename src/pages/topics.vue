@@ -13,8 +13,10 @@
       @show-search-popup="toggleSearchPopup"
     >
       <template #title>Topics</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data
+        >{{ `${user.everyday_goal} ${$t("top-bar.questions")}` }}
+      </template>
     </top-bar>
 
     <template v-if="!isLoading">
@@ -81,6 +83,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import TextClamp from "vue3-text-clamp";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryStore } from "@/js/stores/categories";
@@ -104,6 +107,8 @@ const { categories, searchedCategories } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
+
+const i18n = useI18n();
 
 const isLoading = ref(false);
 const isSearchPopup = ref(false);
@@ -165,7 +170,7 @@ const touchEnd = event => {
 };
 
 const classesTabs = computed(() =>
-  categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} classes` })),
+  categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} ${i18n.t("topics.classes")}` })),
 );
 
 const getAfterText = category => {
