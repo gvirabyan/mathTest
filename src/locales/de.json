@@ -1,12 +1,80 @@
 {
+  "top-bar": {
+    "questions": "questions",
+    "today-goal": "Today's Goal"
+  },
+  "buttons": {
+    "skip": "überspringen",
+    "send": "abgeben",
+    "next": "nächstes"
+  },
+
   "activity": {
     "Activity": "Activity",
     "tabs": {
       "My Status": "My Status",
       "Top List": "Top List",
       "My Answers": "My Answers"
+    },
+    "my-status": {
+      "set-everyday-goal": "Set everyday goal",
+      "last-quiz": "Last Quiz",
+      "experience-points": "Experience points",
+      "last-update": "Last update:",
+      "go-to-topics": "Start your journey to earn the points – go to the Topics",
+      "past-categories": "Past categories",
+      "categories-were-answered": "categories were answered",
+      "you-are-in": "You are in Math App",
+      "welcome-app": "Welcome to the Mathe App!\uD83D\uDC4B",
+      "no-goal": "No goal"
+    },
+    "top-list": {
+     "lists": [
+       {
+         "title": "In your Class",
+         "fieldName": "class"
+       },
+       {
+         "title": "In your School",
+         "fieldName": "school"
+       },
+       {
+         "title": "In your City",
+         "fieldName": "city"
+       },
+       {
+         "title": "In your Country",
+         "fieldName": "country"
+       },
+       {
+         "title": "In World",
+         "fieldName": "world"
+       }
+     ],
+     "points": "points",
+     "place": "place",
+     "please": "Please",
+     "update": "update",
+     "your": "your",
+     "from": "from",
+     "people": "people",
+     "back-to-the-top-list": "Back to the Top List"
+    },
+    "my-answers": {
+      "summary": "Summary",
+      "questions-left": "questions left",
+      "of": "of",
+      "correct-answers": "correct answers",
+      "wrong-answers": "wrong answers",
+      "skipped-answers": "skipped answers"
     }
   },
+
+  "topics": {
+    "topics": "Topics",
+    "classes": "classes"
+  },
+
   "not-found": {
     "mathematics": [
       {

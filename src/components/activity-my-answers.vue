@@ -2,9 +2,9 @@
   <div class="my-answers">
     <transition v-if="!isLoading" name="activity-fade" mode="out-in" appear>
       <div class="display-flex flex-direction-column align-items-center">
-        <h2 class="title">Summary</h2>
+        <h2 class="title">{{ $t("activity.my-answers.summary") }}</h2>
 
-        <p v-if="lastUpdate" class="last-update-info">Last update: {{ lastUpdate }}</p>
+        <p v-if="lastUpdate" class="last-update-info">{{ `${$t("activity.my-status.last-update")} ${lastUpdate}` }}</p>
 
         <div class="stats">
           <custom-gauge
@@ -17,7 +17,13 @@
           >
             <template #percent>{{ answersStats.topic_answers.percent }}</template>
             <template #amount>{{ answersStats.questions_left_count }}</template>
-            <template #info>of {{ answersStats.questions_count }} questions left</template>
+            <template #info
+              >{{
+                `${$t("activity.my-answers.of")} ${answersStats.questions_count} ${$t(
+                  "activity.my-answers.questions-left",
+                )}`
+              }}
+            </template>
           </custom-gauge>
 
           <custom-gauge
@@ -30,7 +36,7 @@
           >
             <template #percent>{{ answersStats.correct_answers.percent }}</template>
             <template #amount>{{ answersStats.correct_answers.count }}</template>
-            <template #info>correct answers</template>
+            <template #info>{{ $t("activity.my-answers.correct-answers") }}</template>
           </custom-gauge>
 
           <custom-gauge
@@ -43,7 +49,7 @@
           >
             <template #percent>{{ answersStats.wrong_answers.percent }}</template>
             <template #amount>{{ answersStats.wrong_answers.count }}</template>
-            <template #info>wrong answers</template>
+            <template #info>{{ $t("activity.my-answers.wrong-answers") }}</template>
           </custom-gauge>
 
           <custom-gauge
@@ -56,7 +62,7 @@
           >
             <template #percent>{{ answersStats.skipped_answers.percent }}</template>
             <template #amount>{{ answersStats.skipped_answers.count }}</template>
-            <template #info>skipped answers</template>
+            <template #info>{{ $t("activity.my-answers.skipped-answers") }}</template>
           </custom-gauge>
         </div>
       </div>

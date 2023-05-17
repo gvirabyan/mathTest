@@ -3,7 +3,7 @@
     <div class="back-block">
       <f7-row class="display-inline-flex align-items-center" @click="goBack">
         <img src="@/assets/icons/backSlag.svg" alt="" />
-        <p>Back to the Top List</p>
+        <p>{{ $t("activity.top-list.back-to-the-top-list") }}</p>
       </f7-row>
     </div>
     <div class="scroll-page">
@@ -13,8 +13,7 @@
             {{ category.title }}
           </f7-block-title>
           <p class="place-txt">
-            {{ category.place }}
-            place
+            {{ `${category.place}  ${$t("activity.top-list.place")}` }}
           </p>
         </f7-row>
 
@@ -22,7 +21,7 @@
           <p class="from-txt">
             {{ category.from }}
           </p>
-          <p class="from-txt">{{ userPoints }} points</p>
+          <p class="from-txt">{{ `${userPoints}  ${$t("activity.top-list.points")}` }}</p>
         </f7-row>
       </f7-block>
 
