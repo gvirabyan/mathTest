@@ -42,7 +42,6 @@ export const useEverydayGoalStore = defineStore("everyday-goal", () => {
   watch(
     () => everydayGoal.questionsToGoal,
     async val => {
-      console.log("questions to answer: ", val);
       localStorage.setItem("everydayGoal", JSON.stringify({ ...everydayGoal, questionsToGoal: val }));
 
       if (val === 0) {

@@ -58,13 +58,16 @@ export const useQuizStore = defineStore("quiz", () => {
   };
 
   const saveQuizResult = async data => {
-    return api.post("practice-results", { data }).then(data => {
-      if (data.error) {
-        return { status: "error", message: data.error?.message };
-      }
+    return api
+      .post("practice-results", { data })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          return { status: "error", message: data.error?.message };
+        }
 
-      return { status: "success", data: data.data };
-    });
+        return { status: "success", data: data.data };
+      });
   };
 
   const clearAnsweredQuizQuestions = () => {
