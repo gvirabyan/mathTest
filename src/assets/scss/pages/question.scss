@@ -163,21 +163,18 @@
     padding-left: 0;
     padding-right: 0;
     margin: 0;
-    @media (max-height: 500px) {
-      height: calc(100vh - 235px);
-      overflow: auto;
-      padding-bottom: 30px;
-    }
+    height: calc(100vh - 240px);
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    overflow: auto;
+    padding-bottom: 30px;
     .block-title {
       border-top: 1.5px solid #F0EBF5;
       margin: 0 24px;
       padding: 20px 0;
     }
     .list {
-      @media (min-height: 501px) {
-        height: calc(100vh - 445px);
-        overflow: auto;
-      }
       padding: 0 24px !important;
       ul {
         &:before {

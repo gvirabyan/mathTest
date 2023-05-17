@@ -64,39 +64,40 @@
       </f7-row>
 
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
-        <f7-block-title>
-          <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
-        </f7-block-title>
+        <div>
+          <f7-block-title>
+            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
+          </f7-block-title>
 
-        <f7-list>
-          <f7-list-item
-            v-for="(answer, index) in answersData"
-            :key="index"
-            :checked="chosenQuizAnswer === answer"
-            :disabled="!!sentAnswer"
-            :class="{
-              'hg-correct-machine-answer':
-                sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
-              'hg-wrong-machine-answer':
-                sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === machineWrongAnswer,
-            }"
-            name="demo-radio-end"
-            radio
-            @change="chooseQuizAnswer(answer, index)"
-          >
-            <f7-col
+          <f7-list>
+            <f7-list-item
+              v-for="(answer, index) in answersData"
+              :key="index"
+              :checked="chosenQuizAnswer === answer"
+              :disabled="!!sentAnswer"
               :class="{
-                'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                'hg-correct-answer': sentAnswer && quizQuestion?.answer === answer,
-                'hg-wrong-answer': sentAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                'hg-correct-machine-answer':
+                  sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
+                'hg-wrong-machine-answer':
+                  sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === machineWrongAnswer,
               }"
+              name="demo-radio-end"
+              radio
+              @change="chooseQuizAnswer(answer, index)"
             >
-              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <math-jax :latex="'\\sf' + answer"></math-jax>
-            </f7-col>
-          </f7-list-item>
-        </f7-list>
-
+              <f7-col
+                :class="{
+                  'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
+                  'hg-correct-answer': sentAnswer && quizQuestion?.answer === answer,
+                  'hg-wrong-answer': sentAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                }"
+              >
+                <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+                <math-jax :latex="'\\sf' + answer"></math-jax>
+              </f7-col>
+            </f7-list-item>
+          </f7-list>
+        </div>
         <div class="hg-actions-btns-content">
           <f7-row v-if="!sentAnswer">
             <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
@@ -224,7 +225,6 @@ const sendAnswer = () => {
       }
     });
   }
-
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
     endQuiz();
   }
@@ -263,8 +263,8 @@ const next = () => {
   }
 
   if (
-    circles.value.clientWidth / 2 - 16 <
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
+    circles.value.children[presentIndex.value] &&
+    circles.value.clientWidth / 2 - 16 < circles.value.children[presentIndex.value].getBoundingClientRect().left - 24
   ) {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
@@ -279,7 +279,10 @@ const goMyStatus = () => {
 };
 
 const onOrientationChange = () => {
-  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+  if (
+    circles.value.children[presentIndex.value] &&
+    circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2
+  ) {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
@@ -306,10 +309,9 @@ const endQuiz = async () => {
     rival_score: machineScore.value,
     mode: quizMode.value,
   }).then(({ data }) => {
-    const result = data.attributes.result;
-
-    finishGame.value = alertTextObj[result].title;
-    finishGameText.value = alertTextObj[result].text;
+    const result = data?.attributes?.result;
+    finishGame.value = result && alertTextObj[result].title;
+    finishGameText.value = result && alertTextObj[result].text;
   });
 };
 
