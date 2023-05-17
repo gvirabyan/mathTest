@@ -5,11 +5,11 @@
     @page:beforein="getAllData"
     @page:afterin="loadFirstTab"
   >
-    <top-bar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
+    <topbar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
       <template #title>Profile</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
-    </top-bar>
+    </topbar>
 
     <main class="profile-tab-content">
       <Transition name="fade">
@@ -201,6 +201,8 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
+import { DatePicker } from "v-calendar";
+import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCoursesStore } from "@/js/stores/courses";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
@@ -213,16 +215,15 @@ import { useTopList } from "@/js/stores/top-list";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import { useUserStats } from "@/js/stores/user-stats";
-
 import { getCountryCode } from "@/js/helpers/country-name-to-iso";
-import { DatePicker } from "v-calendar";
-import "v-calendar/dist/style.css";
 import delay from "@/js/helpers/delay";
-import TopBar from "@/components/topbar.vue";
+
+import Topbar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
-import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
+
+import "v-calendar/dist/style.css";
 
 const props = defineProps({
   f7route: {

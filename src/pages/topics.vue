@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect } from "vue";
+import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import TextClamp from "vue3-text-clamp";
 import { useAuthStore } from "@/js/stores/auth";
@@ -101,7 +101,7 @@ const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
 const { categories, searchedCategories } = storeToRefs(categoriesStore);
-const { categoryClasses, selectedClass } = storeToRefs(categoriesClassesStore);
+const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 

@@ -5,11 +5,11 @@
     @page:beforein="getPastCategories"
     @page:afterin="loadFirstTab"
   >
-    <top-bar ref="topBar" :tabs="practiceTabs" :search="false">
+    <topbar ref="topBar" :tabs="practiceTabs" :search="false">
       <template #title>Practice</template>
       <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
-    </top-bar>
+    </topbar>
 
     <f7-list>
       <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
@@ -33,7 +33,7 @@ import { useCategoryStore } from "@/js/stores/categories";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import BottomMenu from "@/components/bottom-menu.vue";
-import TopBar from "@/components/topbar.vue";
+import Topbar from "@/components/topbar.vue";
 import { storeToRefs } from "pinia";
 
 const props = defineProps({
