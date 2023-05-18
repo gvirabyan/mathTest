@@ -56,6 +56,21 @@ export const useAuthStore = defineStore("auth", () => {
     passwords.value = data;
   };
 
+  const sendAppInfo = async appInfo => {
+    if (!window.cordova) return;
+
+    return api
+      .put(`users/${user.value.id}`, { appInfo })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
+  };
+
   const login = async (userData, rememberUser = false) => {
     return api
       .post("auth/local?populate[0]=institution", userData)
@@ -250,13 +265,13 @@ export const useAuthStore = defineStore("auth", () => {
     userData,
     isNicknamedOnlyUser,
     passwords,
-    // everydayGoal,
     checkPassSave,
     securityLeavePopup,
     accountLeavePopup,
     accountPath,
     checkAccountData,
     securityPath,
+    sendAppInfo,
     changeCheckAccountData,
     changeAccountPath,
     changeAccountLeavePopup,

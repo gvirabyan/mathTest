@@ -28,6 +28,7 @@ import Loading from "@/components/loading.vue";
 
 const authStore = useAuthStore();
 
+const { user } = storeToRefs(authStore);
 const { everydayGoal } = storeToRefs(useEverydayGoalStore());
 const { restartEverydayGoal } = useEverydayGoalStore();
 const userStatsStore = useUserStats();
