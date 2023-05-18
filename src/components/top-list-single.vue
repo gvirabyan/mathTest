@@ -21,7 +21,7 @@
           <p class="from-txt">
             {{ category.from }}
           </p>
-          <p class="from-txt">{{ `${userPoints}  ${$t("activity.top-list.points")}` }}</p>
+          <p class="from-txt">{{ `${userPoints}  ${$t("over.points")}` }}</p>
         </f7-row>
       </f7-block>
 

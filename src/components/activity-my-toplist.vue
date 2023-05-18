@@ -10,7 +10,7 @@
       <div class="circle-points">
         <p>
           {{ user.points }}<br />
-          <span>{{ $t("activity.top-list.points") }}</span>
+          <span>{{ $t("over.points") }}</span>
         </p>
       </div>
       <f7-block

@@ -63,8 +63,8 @@
     v-if="checkSkipPopup"
     title=""
     :text="checkSkipPopup"
-    leave-btn="Leave for now"
-    save-btn="Check skipped"
+    :leave-btn="$t('question.leave-for-now')"
+    :save-btn="$t('question.check-skipped')"
     @close="next"
     @leave-changes="goBack"
     @save-changes="next"
@@ -81,22 +81,27 @@
 
         <div class="content">
           <h2 class="title"><span>Mathe</span>App</h2>
-
           <f7-block>
             <f7-row class="justify-content-space-between align-items-center">
-              <f7-block-title> Your score on this topic </f7-block-title>
-              <p class="place-txt">{{ answeredQuestionsPoints }} {{ pluralizeWord(correctAnswers.length, "point") }}</p>
+              <f7-block-title> {{ $t("question.your-score-on-this-topic") }} </f7-block-title>
+              <p class="place-txt">
+                {{ answeredQuestionsPoints }} {{ pluralizeWord(correctAnswers.length, $t("question.point")) }}
+              </p>
             </f7-row>
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ correctAnswers.length }}/{{ categoryQuestion?.questions_amount }} right answered
-                {{ pluralizeWord(correctAnswers.length, "question") }}
+                {{
+                  `${correctAnswers.length} / ${categoryQuestion?.questions_amount}  ${$t("question.right-answered")}
+                ${pluralizeWord(correctAnswers.length, $t("question.question"))}`
+                }}
               </p>
             </f7-row>
           </f7-block>
 
-          <f7-button class="footer-button" @click="closeAndNavigate('practice')">Start Practice</f7-button>
+          <f7-button class="footer-button" @click="closeAndNavigate('practice')">{{
+            $t("question.start-practice")
+          }}</f7-button>
         </div>
 
         <f7-link @click="closeAndNavigate('/')">
@@ -120,6 +125,7 @@ import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
+import { useI18n } from "vue-i18n";
 
 const storeCategoryClass = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(storeCategoryClass);
@@ -298,15 +304,19 @@ const goBack = () => {
   props.f7router.back();
 };
 
+const i18n = useI18n();
+
 const next = async () => {
   let skippedPoint = getPoints.value.find(v => v.status === "normal" && !skippedPoints.value.includes(v.point));
   //check when open popup, for skip
   if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
     const quantity = skippedPoints.value.length;
     if (quantity === 1) {
-      checkSkipPopup.value = `You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.`;
+      checkSkipPopup.value = i18n.t("question.single-skipped-text");
     } else {
-      checkSkipPopup.value = `You have passed most of the topic but you have skipped ${quantity} questions. You can check them one more time or leave them for now.`;
+      checkSkipPopup.value = `${i18n.t("question.skipped-first-text")} ${quantity} ${i18n.t(
+        "question.skipped-second-text",
+      )}`;
     }
     return;
   }

@@ -8,7 +8,7 @@
     <leave-page-popup
       v-if="leavePopupPageText"
       :text="leavePopupPageText"
-      save-btn="Stay"
+      :save-btn="$t('practice.leave-page-popup.stay')"
       @leave-changes="leavePage"
       @save-changes="leavePopupPageText = ''"
       @close="leavePopupPageText = ''"
@@ -18,8 +18,8 @@
       v-if="finishGame"
       :title="finishGame"
       :text="finishGameText"
-      save-btn="New Game"
-      leave-btn="My Status"
+      :save-btn="$t('practice.finish-game-popup.save-btn-text')"
+      :leave-btn="$t('practice.finish-game-popup.leave-btn-text')"
       @leave-changes="goMyStatus"
       @save-changes="closeFinishPopup"
       @close="closeFinishPopup"
@@ -27,10 +27,11 @@
 
     <success-message-popup
       v-if="!isLoading && quizQuestions.length < quizMode?.questions"
-      title="Oops!"
-      :text="`You need to answer at least ${quizMode.questions} questions to be able to play against the machine.
-      Please continue your learning in Topics page for now.`"
-      btn-text="Go to topics"
+      :title="$t('practice.popup-go-topic.Oops')"
+      :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
+        'practice.popup-go-topic.second-text',
+      )}`"
+      :btn-text="$t('practice.popup-go-topic.go-to-topics')"
       @close="closeEmptyPopup"
     />
 
@@ -42,7 +43,7 @@
           </a>
         </div>
 
-        <div class="title">Player vs. Machine</div>
+        <div class="title">{{ $t("practice.player-vs-machine") }}</div>
       </div>
     </div>
 
@@ -53,12 +54,12 @@
     <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
-          Your score:&nbsp;
+          {{ $t("practice.your-score") }}&nbsp;
           <span>{{ userScore }}</span>
         </f7-block>
 
         <f7-block class="machine-score">
-          Machine score:&nbsp;
+          {{ $t("practice.machine-score") }}&nbsp;
           <span>{{ machineScore }}</span>
         </f7-block>
       </f7-row>
@@ -100,24 +101,23 @@
         </div>
         <div class="hg-actions-btns-content">
           <f7-row v-if="!sentAnswer">
-            <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
-              wrong answer
-            </f7-button>
+            <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">{{
+              $t("buttons.wrong-answer")
+            }}</f7-button>
 
             <f7-button
               class="button button-large button-submit"
               :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
               @click="sendAnswer"
+              >{{ $t("buttons.send") }}</f7-button
             >
-              abgeben
-            </f7-button>
           </f7-row>
 
-          <f7-button v-else class="button button-large button-next" @click="next"> nächstes </f7-button>
+          <f7-button v-else class="button button-large button-next" @click="next">{{ $t("buttons.next") }}</f7-button>
         </div>
       </f7-block>
 
-      <f7-block v-else-if="allQuizQuestionAnswered">You have answered all questions</f7-block>
+      <f7-block v-else-if="allQuizQuestionAnswered">{{ $t("practice.answered-all-text") }}</f7-block>
     </template>
 
     <loading-small v-else />
@@ -137,6 +137,7 @@ import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -164,6 +165,8 @@ const leavePopupPageText = ref("");
 const isSending = ref(false);
 const sentAnswer = ref(false);
 const finishGame = ref("");
+
+const i18n = useI18n();
 
 const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
@@ -291,16 +294,20 @@ const onOrientationChange = () => {
 const endQuiz = async () => {
   const alertTextObj = {
     win: {
-      title: "You have won",
-      text: `You got ${presentIndex.value + 1} points`,
+      title: i18n.t("practice.finish-game-popup.win.title"),
+      text: `${i18n.t("practice.finish-game-popup.win.text")} ${presentIndex.value + 1} ${i18n.t("over.points")}`,
     },
     draw: {
-      title: "You have played a draw",
-      text: `You got ${(presentIndex.value + 1) / 2} points`,
+      title: i18n.t("practice.finish-game-popup.draw.title"),
+      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${(presentIndex.value + 1) / 2} ${i18n.t(
+        "over.points",
+      )}`,
     },
     lose: {
-      title: "You have lost",
-      text: `You lost -${(presentIndex.value + 1) / 5} points`,
+      title: i18n.t("practice.finish-game-popup.lose.title"),
+      text: `${i18n.t("practice.finish-game-popup.lose.text")} -${(presentIndex.value + 1) / 5} ${i18n.t(
+        "over.points",
+      )}`,
     },
   };
 
@@ -314,11 +321,10 @@ const endQuiz = async () => {
     finishGameText.value = result && alertTextObj[result].text;
   });
 };
-
 const breakQuiz = () => {
-  leavePopupPageText.value = `Your progress will be lost and you will lose ${Math.abs(
+  leavePopupPageText.value = `${i18n.t("practice.leave-page-popup.first-text")} ${Math.abs(
     quizMode.value.losePoints,
-  )} points.`;
+  )} ${i18n.t("over.points")}`;
 };
 
 const leavePage = async () => {

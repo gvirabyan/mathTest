@@ -6,7 +6,24 @@
   "buttons": {
     "skip": "überspringen",
     "send": "abgeben",
-    "next": "nächstes"
+    "next": "nächstes",
+    "wrong-answer": "wrong answer"
+  },
+  "popups": {
+    "leave-page-popup": {
+      "first-title": "Are you sure you want",
+      "second-title": "to leave this page ?",
+      "first-text": "If you leave this page your edited",
+      "second-text": "information will be removed",
+      "save": "Save",
+      "leave": "Leave"
+    },
+    "success-message-popup": {
+      "got-it": "Got it"
+    }
+  },
+  "over": {
+    "points": "points"
   },
 
   "activity": {
@@ -51,7 +68,6 @@
          "fieldName": "world"
        }
      ],
-     "points": "points",
      "place": "place",
      "please": "Please",
      "update": "update",
@@ -73,6 +89,58 @@
   "topics": {
     "topics": "Topics",
     "classes": "classes"
+  },
+
+  "question": {
+    "question": "question",
+    "point": "point",
+    "start-practice": "Start Practice",
+    "right-answered": "right answered",
+    "your-score-on-this-topic": "Your score on this topic",
+    "check-skipped": "Check skipped",
+    "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
+    "leave-for-now": "Leave for now",
+    "skipped-first-text": "You have passed most of the topic but you have skipped",
+    "skipped-second-text": "questions. You can check them one more time or leave them for now."
+  },
+
+  "practice": {
+    "practice": "Practice",
+    "player-vs-machine": "Player vs Machine",
+    "play-with-friends": "Play with Friends",
+    "your-score": "Your score:",
+    "machine-score": "Machine score:",
+    "answered-all-text": "You have answered all questions",
+    "popup-go-topic": {
+      "Oops": "Oops!",
+      "first-text": "You need to answer at least",
+      "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
+      "go-to-topics": "Go to topics"
+    },
+    "leave-page-popup": {
+      "first-text": "Your progress will be lost and you will lose",
+      "stay": "Stay"
+    },
+    "finish-game-popup": {
+      "save-btn-text": "New Game",
+      "leave-btn-text": "My Status",
+      "win": {
+        "title": "You have won",
+        "text": "You got"
+      },
+      "draw": {
+        "title": "You have played a draw",
+        "text": "You got"
+      },
+      "lose": {
+        "title": "You have lost",
+        "text": "You lost"
+      }
+    }
+  },
+
+  "profile": {
+    "profile": "Profile"
   },
 
   "not-found": {

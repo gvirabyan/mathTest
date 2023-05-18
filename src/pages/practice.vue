@@ -6,16 +6,21 @@
     @page:afterin="loadFirstTab"
   >
     <topbar ref="topBar" :tabs="practiceTabs" :search="false">
-      <template #title>Practice</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template #title>{{ $t("practice.practice") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal} ${$t("top-bar.questions")}`
+      }}</template>
     </topbar>
 
     <f7-list>
       <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
         <template #title>
           <f7-row class="justify-content-space-between align-items-center">
-            <p class="question">{{ mode.questions }} Questions</p>
+            <p class="question">
+              {{ mode.questions }}
+              <span>{{ $t("top-bar.questions") }}</span>
+            </p>
             <p class="points">{{ mode.showPoints }}</p>
           </f7-row>
         </template>
@@ -34,6 +39,8 @@ import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import BottomMenu from "@/components/bottom-menu.vue";
 import Topbar from "@/components/topbar.vue";
+import { useI18n } from "vue-i18n";
+
 import { storeToRefs } from "pinia";
 
 const props = defineProps({
@@ -72,14 +79,16 @@ const gameModes = [
   },
 ];
 
+const i18n = useI18n();
+
 const practiceTabs = [
   {
     id: 1,
-    name: "Player VS Machine",
+    name: i18n.t("practice.player-vs-machine"),
   },
   {
     id: 2,
-    name: "Play with Friends",
+    name: i18n.t("practice.play-with-friends"),
   },
 ];
 
