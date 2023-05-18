@@ -11,6 +11,7 @@ jobs:
       VITE_GOOGLE_API_KEY: '${{ secrets.VITE_GOOGLE_API_KEY }}'
       VITE_API_URL: '${{ secrets.VITE_API_URL }}'
       VITE_CLARITY_APP_ID: '${{ secrets.VITE_CLARITY_APP_ID }}'
+      VITE_LANGUAGE: '${{ secrets.VITE_LANGUAGE }}'
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
