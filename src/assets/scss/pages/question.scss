@@ -335,6 +335,15 @@
     }
   }
 
+  .question-continue-text {
+    all: unset;
+    display: block;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
   .hg-actions-btns-content {
     padding: 0 16px;
     display: flex;
@@ -343,7 +352,6 @@
       width: 100%;
       flex-wrap: nowrap !important;
     }
-
     .button {
       padding: 20px 0;
       text-transform: revert !important;
