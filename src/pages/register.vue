@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-register-page" login-screen>
-    <f7-login-screen-title>Sign Up</f7-login-screen-title>
+    <f7-login-screen-title>{{ $t("login-register.sign-up") }}</f7-login-screen-title>
 
     <f7-block inset>
       <f7-segmented raised>
@@ -10,8 +10,7 @@
           }"
           :active="registerMode === 'credentials'"
           @click="registerMode = 'credentials'"
-        >
-          Registration
+          >{{ $t("login-register.registration") }}
         </f7-button>
         <f7-button
           :class="{
@@ -19,8 +18,7 @@
           }"
           :active="registerMode === 'nickname'"
           @click="registerMode = 'nickname'"
-        >
-          Only nickname
+          >{{ $t("login-register.only-nickname") }}
         </f7-button>
       </f7-segmented>
     </f7-block>
@@ -35,7 +33,7 @@
           class="custom-list-input"
           :error-message-force="!!error.username"
           :error-message="error.username"
-          placeholder="Nickname"
+          :placeholder="$t('inputs.nickname')"
         ></f7-list-input>
 
         <f7-list-input
@@ -46,7 +44,7 @@
           class="custom-list-input"
           :error-message-force="!!error.email"
           :error-message="error.email"
-          placeholder="E-mail"
+          :placeholder="$t('inputs.E-mail')"
         ></f7-list-input>
 
         <f7-list-input
@@ -57,7 +55,7 @@
           class="custom-list-input"
           :error-message-force="!!error.password"
           :error-message="error.password"
-          placeholder="Password"
+          :placeholder="$t('inputs.password')"
         >
           <template #media>
             <div class="eye-icons" @click="showPassword = !showPassword">
@@ -71,7 +69,7 @@
           <div class="radio-round">
             <div v-if="remember" class="radio-circle" />
           </div>
-          <span class="radio-text">Remember me</span>
+          <span class="radio-text">{{ $t("login-register.remember-me") }}</span>
         </div>
       </template>
 
@@ -84,7 +82,7 @@
           class="custom-list-input"
           :error-message-force="!!error.username"
           :error-message="error.username"
-          placeholder="Nickname"
+          :placeholder="$t('login-register.only-nickname')"
         ></f7-list-input>
       </template>
 
@@ -98,7 +96,7 @@
         }"
         @click="startRegister"
       >
-        Sign Up
+        {{ $t("login-register.sign-up") }}
       </f7-button>
       <p class="error-message">{{ error.message }}</p>
     </f7-list>
@@ -106,28 +104,28 @@
     <f7-list class="f7-footer">
       <f7-block class="f7-content-title">
         <div class="f7-line" />
-        <p class="f7-content-title-text">Sign Up using</p>
+        <p class="f7-content-title-text">{{ $t("login-register.sign-up-using") }}</p>
         <div class="f7-line" />
       </f7-block>
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">Google</f7-button>
-          <f7-button class="f7-btn" @click="fbLoginHandler">Facebook</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>
+          <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">TikTok</f7-button>
-          <f7-button class="f7-btn">Apple</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>
         </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-footer">
         <p>
-          Already have an account?
-          <a href="/login/"> Sign in </a>
+          {{ $t("login-register.already-have-account") }}
+          <a href="/login/"> {{ $t("login-register.sign-in") }} </a>
         </p>
       </f7-block>
     </f7-list>
@@ -139,6 +137,7 @@ import { computed, reactive, ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
 import fbHandler from "@/js/handlers/fb-handler";
 import { f7 } from "framework7-vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   f7route: { type: Object, default: () => {} },
@@ -233,6 +232,8 @@ const startRegister = () => {
   });
 };
 
+const i18n = useI18n();
+
 const fbLoginHandler = async function () {
   await fbHandler.login().then(response => {
     if (response.authResponse) {
@@ -248,7 +249,7 @@ const fbLoginHandler = async function () {
         });
       });
     } else {
-      alert("User cancelled login or did not fully authorize.");
+      alert(i18n.t("login-register.user-cancelled-register"));
     }
   });
 };
