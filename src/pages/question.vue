@@ -247,6 +247,12 @@ const sendAnswer = () => {
     isSending.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
+    //save user answer
+    questions.value.find(q => q.id === question.value.id).user_answer = {
+      status: status.value,
+      answer: chosenAnswer.value,
+    };
+
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: question.value.id,
