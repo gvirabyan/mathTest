@@ -8,9 +8,47 @@
     </f7-navbar>
 
     <div ref="circles" class="circles" style="">
-      <Circle v-for="point in getPoints" :key="point.point" ref="circles" :point="point.point" :status="point.status" />
+      <Circle
+        v-for="point in getPoints"
+        :key="point.point"
+        ref="circles"
+        :point="point.point"
+        :status="point.status"
+        @click="showHistory(point.point)"
+      />
     </div>
-    <div v-if="question" id="elementId" class="questions-content">
+    <div v-if="questionHistory" id="element" class="questions-content">
+      <div>
+        <f7-block-title
+          ><math-jax :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax
+        ></f7-block-title>
+        <f7-list>
+          <f7-list-item
+            v-for="(answer, index) in [questionHistory.answer, ...questionHistory.wrong_answers]"
+            :key="answer"
+            :class="{
+              'hg-correct-answer':
+                questionHistory.user_answer.status === 'correct' && questionHistory?.user_answer?.answer == answer,
+              'hg-wrong-answer':
+                questionHistory.user_answer.status === 'wrong' &&
+                `${questionHistory?.user_answer?.answer}` === `${answer}`,
+            }"
+            :checked="true"
+            :disabled="true"
+            name="demo-radio-end"
+            radio
+          >
+            <f7-col>
+              {{ `${questionHistory.user_answer.status === "wrong"} ${questionHistory?.user_answer?.answer}` }}
+              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <math-jax :latex="'\\sf' + answer"></math-jax>
+            </f7-col>
+          </f7-list-item>
+        </f7-list>
+      </div>
+      <f7-button class="question-continue-text" @click="goPresentQuestion">Continue </f7-button>
+    </div>
+    <div v-else-if="question" id="elementId" class="questions-content">
       <div>
         <f7-block-title
           ><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax
@@ -275,6 +313,15 @@ const sendAnswer = () => {
   }
 };
 
+const questionHistory = ref(null);
+
+const showHistory = point => {
+  const index = Number(point) - 1;
+  if (index < history.value.length) {
+    questionHistory.value = history.value[index];
+  }
+};
+
 const skippedPoints = ref([]);
 
 const skip = () => {
@@ -307,6 +354,12 @@ const checkSkipPopup = ref(false);
 const goBack = () => {
   checkSkipPopup.value = false;
   props.f7router.back();
+};
+
+const goPresentQuestion = () => {
+  questionHistory.value = null;
+  circles.value.scrollLeft +=
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
 
 const i18n = useI18n();
