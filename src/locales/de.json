@@ -7,7 +7,25 @@
     "skip": "überspringen",
     "send": "abgeben",
     "next": "nächstes",
-    "wrong-answer": "wrong answer"
+    "wrong-answer": "wrong answer",
+    "save": "save"
+  },
+  "inputs": {
+    "E-mail-address": "E-mail address",
+    "name": "Name",
+    "surname": "Surname",
+    "nickname": "Nickname",
+    "date-of-birth": "Date of birth",
+    "country": "Country",
+    "city": "City",
+    "educational-institution": "Educational institution",
+    "class/course": "Class/course",
+    "your-class/course": "Your class/course",
+    "E-mail": "E-mail",
+    "password": "Password",
+    "confirm-password": "confirm password",
+    "new-password": "New password",
+    "confirm-new-password": "Confirm new password"
   },
   "popups": {
     "leave-page-popup": {
@@ -24,6 +42,33 @@
   },
   "over": {
     "points": "points"
+  },
+
+  "home": {
+    "welcome": "Welcome",
+    "play-game": "Play the game",
+    "improve-your-skills": "improve your skills",
+    "be-the-first": "Be the first in the World",
+    "start-playing": "Start playing"
+  },
+
+  "login-register": {
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "registration": "Registration",
+    "only-nickname": "Only nickname",
+    "remember-me": "Remember me",
+    "forgot-password": "Forgot Password ?",
+    "sign-in-using": "Sign In using",
+    "sign-up-using": "Sign Up using",
+    "google": "Google",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "apple": "Apple",
+    "dont-have-account": "Don't have an account? ",
+    "already-have-account": "Already have an account? ",
+    "user-cancelled-login": "User cancelled login or did not fully authorize.",
+    "user-cancelled-register": "User cancelled register or did not fully authorize."
   },
 
   "activity": {
@@ -140,7 +185,49 @@
   },
 
   "profile": {
-    "profile": "Profile"
+    "profile": "Profile",
+    "tabs": [
+      "Account",
+      "Security",
+      "About Us",
+      "Send Reports"
+    ],
+    "account": {
+      "logout-warning": "Logout Warning",
+      "logout-text": "Please provide your email and password to be able to login back later. Otherwise, your account and all related data will be deleted immediately after logout. This action can't be reverted",
+      "log-out": "Log Out",
+      "save-and-logout": "Save and logout",
+      "delete-account": "Delete account"
+    },
+    "security": {
+      "popup-text": "Password has been changed"
+    },
+    "about-us": {
+      "infos": [
+        "Terms of services",
+        "Privacy",
+        "Imprint",
+        "Software licenses",
+        "Release notes",
+        "Write a review"
+      ]
+    },
+    "send-reports": {
+      "saved-email": "Saved emails:",
+      "parent-email": "Enter parent's email",
+      "not-saved-email": "You did not saved any parents' emails yet",
+      "add-four-email-text": "You can add no more than 4 emails, but you can edit one of the existing emails or remove it.",
+      "enter-new-email": "Please enter new E-mail",
+      "leave-popup-title": "Are you sure you want to <br> delete this E-mail ?",
+      "leave-popup-text": "If you close this popup E-mail will be not removed",
+      "email-can-not-be-empty": "Email cannot be empty",
+      "saved-successfully": "You have saved successfully",
+      "success-text": "You have successfully updated parent's email",
+      "remove-success-text": "You have successfully removed parent's email",
+      "successfully-updated": "Successfully updated",
+      "no": "No",
+      "yes": "Yes"
+    }
   },
 
   "not-found": {

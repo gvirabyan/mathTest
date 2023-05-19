@@ -1,7 +1,7 @@
 <template>
   <f7-page class="hg-login-page" login-screen>
     <f7-list form>
-      <f7-login-screen-title>Sign In</f7-login-screen-title>
+      <f7-login-screen-title>{{ $t("login-register.sign-in") }}</f7-login-screen-title>
       <f7-list-input
         v-model:value="userData.identifier"
         type="text"
@@ -10,7 +10,7 @@
         class="custom-list-input"
         :error-message-force="!!error.identifier"
         :error-message="error.identifier"
-        placeholder="E-mail"
+        :placeholder="$t('inputs.E-mail')"
       ></f7-list-input>
 
       <f7-list-input
@@ -21,7 +21,7 @@
         class="custom-list-input"
         :error-message-force="!!error.password"
         :error-message="error.password"
-        placeholder="Password"
+        :placeholder="$t('inputs.password')"
       >
         <template #media>
           <div class="eye-icons" @click="showPassword = !showPassword">
@@ -37,9 +37,9 @@
             <div class="radio-round">
               <div v-if="remember" class="radio-circle" />
             </div>
-            <span class="radio-text">Remember me</span>
+            <span class="radio-text">{{ $t("login-register.remember-me") }}</span>
           </div>
-          <f7-link href="/forgot-password/">Forgot password?</f7-link>
+          <f7-link href="/forgot-password/">{{ $t("login-register.forgot-password") }}</f7-link>
         </f7-row>
       </f7-block>
 
@@ -52,7 +52,7 @@
           }"
           @click="startLogin"
         >
-          Sign In
+          {{ $t("login-register.sign-in") }}
         </f7-button>
       </f7-block>
     </f7-list>
@@ -60,28 +60,28 @@
     <f7-list class="f7-footer">
       <f7-block class="f7-content-title">
         <div class="f7-line" />
-        <p class="f7-content-title-text">Sign In using</p>
+        <p class="f7-content-title-text">{{ $t("login-register.sign-in-using") }}</p>
         <div class="f7-line" />
       </f7-block>
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">Google</f7-button>
-          <f7-button class="f7-btn" @click="fbLoginHandler">Facebook</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>
+          <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">TikTok</f7-button>
-          <f7-button class="f7-btn">Apple</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>
+          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>
         </f7-row>
       </f7-block>
 
       <f7-block class="f7-content-footer">
         <p>
-          Don’t have an account?
-          <a href="/register/"> Sign Up </a>
+          {{ $t("login-register.dont-have-account") }}
+          <a href="/register/">{{ $t("login-register.sign-up") }}</a>
         </p>
       </f7-block>
     </f7-list>
@@ -94,6 +94,7 @@ import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import fbHandler from "@/js/handlers/fb-handler";
+import { useI18n } from "vue-i18n";
 
 const showPassword = ref(false);
 
@@ -149,6 +150,8 @@ const startLogin = () => {
   });
 };
 
+const i18n = useI18n();
+
 const fbLoginHandler = async function () {
   await fbHandler.login().then(response => {
     if (response.authResponse) {
@@ -164,7 +167,7 @@ const fbLoginHandler = async function () {
         });
       });
     } else {
-      alert("User cancelled login or did not fully authorize.");
+      alert(i18n.t("login-register.user-cancelled-login"));
     }
   });
 };

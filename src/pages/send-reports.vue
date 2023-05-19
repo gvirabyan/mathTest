@@ -1,9 +1,11 @@
 <template>
   <f7-page class="hg-dashboard-content send-reports-dash" name="dashboard">
     <top-bar :first-load-index="3" :search="false" :tabs="profileTabs" @tab-selected="setProfileComponent">
-      <template #title>Profile</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template #title>{{ $t("profile.profile") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal}  ${$t("top-bar.questions")}`
+      }}</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -12,7 +14,7 @@
           <div class="content">
             <f7-block v-if="!isLoading" class="emails-block">
               <div v-if="parentsEmails.length">
-                <p class="m-0 mb-8">Saved emails:</p>
+                <p class="m-0 mb-8">{{ $t("profile.send-reports.saved-email") }}</p>
                 <f7-list class="emails-list">
                   <f7-list-item v-for="{ id, email } in parentsEmails" :key="`parent-email_${id}`" :title="email">
                     <template #content>
@@ -27,7 +29,7 @@
                 </f7-list>
               </div>
 
-              <p v-else-if="!parentsEmails.length">You did not saved any parents' emails yet</p>
+              <p v-else-if="!parentsEmails.length">{{ $t("profile.send-reports.not-saved-email") }}</p>
             </f7-block>
 
             <template v-if="parentsEmails.length < 4">
@@ -37,7 +39,7 @@
                   :input-style="inputStyle"
                   class="custom-list-input"
                   name="email"
-                  placeholder="Enter parent's email"
+                  :placeholder="$t('profile.send-reports.parent-email')"
                   type="text"
                 />
                 <f7-list-input
@@ -46,7 +48,7 @@
                   :input-style="inputStyle"
                   class="custom-list-input"
                   name="email"
-                  placeholder="Enter parent's email"
+                  :placeholder="$t('profile.send-reports.parent-email')"
                   type="text"
                 />
                 <f7-list-input
@@ -55,7 +57,7 @@
                   :input-style="inputStyle"
                   class="custom-list-input"
                   name="email"
-                  placeholder="Enter parent's email"
+                  :placeholder="$t('profile.send-reports.parent-email')"
                   type="text"
                 />
                 <f7-list-input
@@ -64,7 +66,7 @@
                   :input-style="inputStyle"
                   class="custom-list-input"
                   name="email"
-                  placeholder="Enter parent's email"
+                  :placeholder="$t('profile.send-reports.parent-email')"
                   type="text"
                 />
               </f7-list>
@@ -76,10 +78,9 @@
               :class="btnDisabled ? 'button-disabled-fill' : 'button-fill'"
               class="button button-raised button-large"
               @click="saveParentsEmailsHandler"
-            >
-              Save
+              >{{ $t("buttons.save") }}
             </f7-button>
-            <p v-else>You can add no more than 4 emails, but you can edit one of the existing emails or remove it.</p>
+            <p v-else>{{ $t("profile.send-reports.add-four-email-text") }}</p>
             <p class="reports-footer-error">{{ errorMsg }}</p>
           </f7-block>
         </div>
@@ -96,17 +97,17 @@
       v-if="updatePopup"
       :error="errUpdateMsg"
       :input-value="updateEmail"
-      title="Please enter new E-mail"
+      :title="$t('profile.send-reports.enter-new-email')"
       @close="updatePopup = false"
       @save="editParentEmailHandler"
     />
 
     <leave-page-popup
       v-if="deletePopup"
-      leave-btn="No"
-      save-btn="Yes"
-      text="If you close this popup E-mail will be not removed"
-      title="Are you sure you want to <br> delete this E-mail ?"
+      :leave-btn="$t('profile.send-reports.no')"
+      :save-btn="$t('profile.send-reports.yes')"
+      :text="$t('profile.send-reports.leave-popup-text')"
+      :title="$t('profile.send-reports.leave-popup-title')"
       @close="deletePopup = false"
       @leave-changes="deletePopup = false"
       @save-changes="removeParentEmailHandler"
@@ -125,6 +126,7 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import { useI18n } from "vue-i18n";
 
 const UpdatingPopup = defineAsyncComponent(() => import("@/components/update-popup.vue"));
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
@@ -155,25 +157,27 @@ const inputStyle = {
 
 const isLoading = ref(false);
 const isSending = ref(false);
+
+const i18n = useI18n();
 const profileTabs = ref([
   {
     id: 1,
-    name: "Account",
+    name: i18n.t("profile.tabs.0"),
     path: "/profile/account/",
   },
   {
     id: 2,
-    name: "Security",
+    name: i18n.t("profile.tabs.1"),
     path: "/profile/security/",
   },
   {
     id: 3,
-    name: "About Us",
+    name: i18n.t("profile.tabs.2"),
     path: "/profile/about-us/",
   },
   {
     id: 4,
-    name: "Send Reports",
+    name: i18n.t("profile.tabs.3"),
     path: "/profile/send-reports/",
   },
 ]);
@@ -214,7 +218,7 @@ const saveParentsEmailsHandler = async () => {
     await saveParentsEmails(parentsEmailsInputs).then(res => {
       if (res.status === "success") {
         successPopup.value = true;
-        successPopupText.value = "You have saved successfully";
+        successPopupText.value = i18n.t("profile.send-reports.saved-successfully");
         Object.keys(parentsEmailsInputs).forEach(key => (parentsEmailsInputs[key] = "")); // clear all inputs
         return;
       }
@@ -239,7 +243,7 @@ const errUpdateMsg = ref("");
 const editParentEmailHandler = async email => {
   errUpdateMsg.value = "";
   if (!email) {
-    errUpdateMsg.value = "Email cannot be empty";
+    errUpdateMsg.value = i18n.t("profile.send-reports.email-can-not-be-empty");
     return;
   }
 
@@ -247,7 +251,7 @@ const editParentEmailHandler = async email => {
     if (res.status === "success") {
       updatePopup.value = false;
       successPopup.value = true;
-      successPopupText.value = "You have successfully updated parent's email";
+      successPopupText.value = i18n.t("profile.send-reports.success-text");
       return;
     }
     errUpdateMsg.value = res.message;
@@ -259,7 +263,7 @@ const removeParentEmailHandler = async () => {
     if (res.status === "success") {
       deletePopup.value = false;
       successPopup.value = true;
-      successPopupText.value = "You have successfully removed parent's email";
+      successPopupText.value = i18n.t("profile.send-reports.remove-success-text");
       return;
     }
 

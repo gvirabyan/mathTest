@@ -6,9 +6,11 @@
     @page:afterin="loadFirstTab"
   >
     <topbar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
-      <template #title>Profile</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template #title>{{ $t("profile.profile") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal}  ${$t("top-bar.questions")}`
+      }}</template>
     </topbar>
 
     <main class="profile-tab-content">
@@ -20,7 +22,7 @@
               type="text"
               name="email"
               class="custom-list-input"
-              label="E-mail address"
+              :label="$t('inputs.E-mail-address')"
             />
 
             <f7-list-input
@@ -28,7 +30,7 @@
               type="text"
               name="name"
               class="custom-list-input"
-              label="Name"
+              :label="$t('inputs.name')"
             />
 
             <f7-list-input
@@ -36,7 +38,7 @@
               type="text"
               name="surname"
               class="custom-list-input"
-              label="Surname"
+              :label="$t('inputs.surname')"
             />
 
             <f7-list-input
@@ -44,7 +46,7 @@
               type="text"
               name="Nickname"
               class="custom-list-input"
-              label="Nickname"
+              :label="$t('inputs.nickname')"
             />
 
             <f7-list-input
@@ -52,7 +54,7 @@
               type="text"
               name="date"
               class="custom-list-input"
-              label="Date of birth"
+              :label="$t('inputs.date-of-birth')"
               :readonly="isCalendarOpened"
               @focus="openCalendar"
             />
@@ -61,7 +63,7 @@
               type="text"
               name="country"
               class="custom-list-input country-autocomplete"
-              label="Country"
+              :label="$t('inputs.country')"
               @focus="initAutocompleteInputs"
               @input="updateCountry"
               @input:clear="updateCountry"
@@ -72,7 +74,7 @@
               type="text"
               name="city"
               class="custom-list-input city-autocomplete"
-              label="City"
+              :label="$t('inputs.city')"
               @focus="initAutocompleteInputs"
               @input="updateCity"
               @input:clear="updateCity"
@@ -83,7 +85,7 @@
               type="text"
               name="education"
               class="custom-list-input institution-autocomplete"
-              label="Educational institution"
+              :label="$t('inputs.educational-institution')"
               @focus="initAutocompleteInputs"
               @input="setCourseInputValid"
             />
@@ -92,9 +94,9 @@
               v-model:value="profileData.course"
               v-click-out-side="closeDropdown"
               class="courses-input custom-list-input"
-              label="Class/course"
+              :label="$t('inputs.class/course')"
               type="text"
-              placeholder="Your class/course"
+              :placeholder="$t('inputs.your-class/course')"
               clear-button
               error-message="Please fill your school/university/college before class/course"
               :error-message-force="showCourseErrorMsg"
@@ -104,11 +106,11 @@
             >
             </f7-list-input>
             <f7-button class="log-out-btn" @click="logoutHandler">
-              <p>Log Out</p>
+              <p>{{ $t("profile.account.log-out") }}</p>
             </f7-button>
           </f7-list>
           <f7-block class="save-btn-block">
-            <f7-button class="button-save button-large" @click="updateProfile"> Save </f7-button>
+            <f7-button class="button-save button-large" @click="updateProfile">{{ $t("buttons.save") }}</f7-button>
             <p class="error-message">{{ errorMessage }}</p>
           </f7-block>
           <div
@@ -131,7 +133,11 @@
       <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" @click.stop />
     </div>
 
-    <success-message-popup v-if="successPopup" :title="'Successfully updated'" @close="closeSuccessPopup" />
+    <success-message-popup
+      v-if="successPopup"
+      :title="$t('profile.send-reports.successfully-updated')"
+      @close="closeSuccessPopup"
+    />
 
     <leave-page-popup
       v-if="accountLeavePopup"
@@ -147,14 +153,11 @@
           <f7-link class="x-icon" popup-close>
             <img src="@/assets/icons/x.svg" />
           </f7-link>
-          <f7-block-title>Logout Warning</f7-block-title>
+          <f7-block-title>{{ $t("profile.account.logout-warning") }}</f7-block-title>
         </f7-block>
         <div class="scrolling-box">
           <f7-block>
-            <p>
-              Please provide your email and password to be able to login back later. Otherwise, your account and all
-              related data will be deleted immediately after logout. This action can't be reverted
-            </p>
+            <p>{{ $t("profile.account.logout-text") }}</p>
           </f7-block>
           <f7-list no-hairlines form>
             <f7-list-input
@@ -162,7 +165,7 @@
               class="custom-list-input"
               type="text"
               name="email"
-              placeholder="E-mail"
+              :placeholder="$t('inputs.E-mail')"
               :error-message="nicknamedUserDataError.email"
               :error-message-force="true"
             ></f7-list-input>
@@ -172,7 +175,7 @@
               class="custom-list-input"
               type="password"
               name="password"
-              placeholder="Password"
+              :placeholder="$t('inputs.password')"
               :error-message="nicknamedUserDataError.password"
               :error-message-force="true"
             ></f7-list-input>
@@ -182,15 +185,19 @@
               class="custom-list-input"
               type="password"
               name="password"
-              placeholder="Confirm password"
+              :placeholder="$t('inputs.confirm password')"
               :error-message="nicknamedUserDataError.confirmPassword"
               :error-message-force="true"
             ></f7-list-input>
           </f7-list>
         </div>
         <f7-block class="logout-popup-footer-block">
-          <f7-button class="mb-8 save-btn" @click="nicknamedUserUpdate">Save and logout</f7-button>
-          <f7-button class="delete-btn" @click="nicknamedUserLogout">Delete account</f7-button>
+          <f7-button class="mb-8 save-btn" @click="nicknamedUserUpdate">{{
+            $t("profile.account.save-and-logout")
+          }}</f7-button>
+          <f7-button class="delete-btn" @click="nicknamedUserLogout">{{
+            $t("profile.account.delete-account")
+          }}</f7-button>
           <p class="error-message">{{ errMessageNicknamed }}</p>
         </f7-block>
       </f7-page>
@@ -201,6 +208,7 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { DatePicker } from "v-calendar";
 import { clickOutSide as vClickOutSide } from "@mahdikhashan/vue3-click-outside";
 import { useAuthStore } from "@/js/stores/auth";
@@ -268,28 +276,27 @@ const coursesCurrent = computed(() => {
   return profileData.course ? courses.value.filter(c => c.indexOf(profileData.course) !== -1) : courses.value;
 });
 
+const i18n = useI18n();
+
 const profileTabs = ref([
   {
     id: 1,
-    name: "Account",
+    name: i18n.t("profile.tabs.0"),
     path: "/profile/account/",
-    // component: markRaw(Account),
   },
   {
     id: 2,
-    name: "Security",
+    name: i18n.t("profile.tabs.1"),
     path: "/profile/security/",
-    // component: markRaw(Security),
   },
   {
     id: 3,
-    name: "About Us",
+    name: i18n.t("profile.tabs.2"),
     path: "/profile/about-us/",
-    // component: markRaw(AboutUs),
   },
   {
     id: 4,
-    name: "Send Reports",
+    name: i18n.t("profile.tabs.3"),
     path: "/profile/send-reports/",
   },
 ]);
