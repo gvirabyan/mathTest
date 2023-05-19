@@ -260,11 +260,16 @@ const sendAnswer = () => {
 
       if (resp.status !== "success") {
         clearChosenData();
-
         f7.toast.show({
           text: resp.message,
           closeButton: true,
         });
+      } else {
+        //save user answer
+        questions.value.find(q => q.id === question.value.id).user_answer = {
+          status: status.value,
+          answer: chosenAnswer.value,
+        };
       }
     });
   }
