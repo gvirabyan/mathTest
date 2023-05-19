@@ -18,9 +18,6 @@
                 <f7-list class="emails-list">
                   <f7-list-item v-for="{ id, email } in parentsEmails" :key="`parent-email_${id}`" :title="email">
                     <template #content>
-                      <f7-button class="action-btn edit-action" fill @click="openEditParentEmail(id, email)">
-                        <img alt="" src="@/assets/icons/pencil.svg" />
-                      </f7-button>
                       <f7-button class="action-btn delete-action" fill @click="openRemoveParentEmail(id)">
                         <img alt="" src="@/assets/icons/trash.svg" />
                       </f7-button>
@@ -93,15 +90,6 @@
 
     <success-message-popup v-if="successPopup" :title="successPopupText" @close="successPopup = false" />
 
-    <updating-popup
-      v-if="updatePopup"
-      :error="errUpdateMsg"
-      :input-value="updateEmail"
-      :title="$t('profile.send-reports.enter-new-email')"
-      @close="updatePopup = false"
-      @save="editParentEmailHandler"
-    />
-
     <leave-page-popup
       v-if="deletePopup"
       :leave-btn="$t('profile.send-reports.no')"
@@ -128,7 +116,6 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import { useI18n } from "vue-i18n";
 
-const UpdatingPopup = defineAsyncComponent(() => import("@/components/update-popup.vue"));
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
@@ -145,7 +132,7 @@ const props = defineProps({
 
 const { user } = storeToRefs(useAuthStore());
 const { parentsEmails } = storeToRefs(useParentsEmailsStore());
-const { getParentsEmails, saveParentsEmails, editParentEmail, removeParentEmail } = useParentsEmailsStore();
+const { getParentsEmails, saveParentsEmails, removeParentEmail } = useParentsEmailsStore();
 
 const inputStyle = {
   padding: "0px",
@@ -185,8 +172,6 @@ const deletePopup = ref(false);
 const errorMsg = ref("");
 const successPopup = ref(false);
 const successPopupText = ref("");
-const updatePopup = ref(false);
-const updateEmail = ref("");
 
 const parentsEmailsInputs = reactive({
   email1: "",
@@ -215,7 +200,10 @@ const saveParentsEmailsHandler = async () => {
   if (!btnDisabled.value) {
     isSending.value = true;
     errorMsg.value = "";
+
     await saveParentsEmails(parentsEmailsInputs).then(res => {
+      console.log(res);
+
       if (res.status === "success") {
         successPopup.value = true;
         successPopupText.value = i18n.t("profile.send-reports.saved-successfully");
@@ -230,32 +218,8 @@ const saveParentsEmailsHandler = async () => {
   }
 };
 
-const openEditParentEmail = (id, email) => {
-  updatePopup.value = id;
-  updateEmail.value = email;
-};
-
 const openRemoveParentEmail = id => {
   deletePopup.value = id;
-};
-const errUpdateMsg = ref("");
-
-const editParentEmailHandler = async email => {
-  errUpdateMsg.value = "";
-  if (!email) {
-    errUpdateMsg.value = i18n.t("profile.send-reports.email-can-not-be-empty");
-    return;
-  }
-
-  await editParentEmail(updatePopup.value, email).then(res => {
-    if (res.status === "success") {
-      updatePopup.value = false;
-      successPopup.value = true;
-      successPopupText.value = i18n.t("profile.send-reports.success-text");
-      return;
-    }
-    errUpdateMsg.value = res.message;
-  });
 };
 
 const removeParentEmailHandler = async () => {

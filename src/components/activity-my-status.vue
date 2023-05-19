@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, defineProps, watch } from "vue";
+import { ref, computed, defineAsyncComponent, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
 import { useI18n } from "vue-i18n";
