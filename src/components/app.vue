@@ -3,13 +3,15 @@
     <!-- Left panel with cover effect-->
     <f7-panel left cover dark>
       <f7-page>
-        <f7-navbar title="Menu"></f7-navbar>
+        <f7-navbar title="Menu" />
 
         <main-menu />
       </f7-page>
     </f7-panel>
+
     <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/" />
+
     <Loading v-if="!loaded" />
   </f7-app>
 </template>
@@ -27,19 +29,22 @@ import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
 
 const authStore = useAuthStore();
-
-const { user } = storeToRefs(authStore);
-const { everydayGoal } = storeToRefs(useEverydayGoalStore());
-const { restartEverydayGoal } = useEverydayGoalStore();
+const everydayGoalStore = useEverydayGoalStore();
 const userStatsStore = useUserStats();
-const { getUserStatus } = userStatsStore;
+
 const { getUser } = authStore;
+const { getUserStatus } = userStatsStore;
+
+const { everydayGoal } = storeToRefs(everydayGoalStore);
+const { restartEverydayGoal } = everydayGoalStore;
 
 const f7params = {
   name: "Mathe App", // App name
   theme: "auto", // Automatic theme detection
   routes: routes, // App routes
 };
+
+const loaded = ref(false);
 
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
@@ -61,8 +66,6 @@ const addGmapsScript = () => {
   );
   document.head.appendChild(gmapsScript);
 };
-
-const loaded = ref(false);
 
 const checkEverydayGoalPassingDate = () => {
   if (!everydayGoal.value?.passingDatetime) {
@@ -87,6 +90,7 @@ onMounted(async () => {
     await getUserStatus()
       .then(() => {
         loaded.value = true;
+
         getUser().then(data => {
           if (data.status === "error") {
             return false;

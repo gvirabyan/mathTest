@@ -8,6 +8,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // state properties
   const user = ref(null);
+  const token = ref(localStorage.getItem("token") ? localStorage.getItem("token") : null);
   const suggestedCredentials = reactive(
     localStorage.getItem("suggestedCredentials")
       ? JSON.parse(localStorage.getItem("suggestedCredentials"))
@@ -28,6 +29,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // getters
   const userData = computed(() => user.value);
+  const isLoggedIn = computed(() => !!(user.value && token.value));
   const isNicknamedOnlyUser = computed(() => {
     return user.value && user.value?.username && !user.value?.email;
   });
@@ -54,21 +56,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   const changePasswords = data => {
     passwords.value = data;
-  };
-
-  const sendAppInfo = async appInfo => {
-    if (!window.cordova) return;
-
-    return api
-      .put(`users/${user.value.id}`, { appInfo })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.error) {
-          return { status: "success" };
-        } else {
-          return { status: "error", message: data.error?.message };
-        }
-      });
   };
 
   const login = async (userData, rememberUser = false) => {
@@ -233,6 +220,22 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
+  const sendAppInfo = () => {
+    if (!window.cordova) return;
+
+    const appInfo = {
+      installation_id: null,
+      user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+
+    // eslint-disable-next-line no-undef
+    WonderPush.getInstallationId(function (installationId) {
+      appInfo.installation_id = installationId;
+
+      return updateUser({ app_info: appInfo, installation: installationId });
+    });
+  };
+
   const storeJwtAndUser = data => {
     localStorage.setItem("token", data?.jwt);
     localStorage.setItem("user-id", data?.user?.id);
@@ -245,6 +248,16 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("user-id");
     return { status: "success" };
   };
+
+  watch(
+    isLoggedIn,
+    value => {
+      if (!value) return;
+
+      sendAppInfo();
+    },
+    { immediate: true },
+  );
 
   watch(
     () => suggestedCredentials,
@@ -261,8 +274,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     user,
+    token,
     suggestedCredentials,
     userData,
+    isLoggedIn,
     isNicknamedOnlyUser,
     passwords,
     checkPassSave,
@@ -271,7 +286,6 @@ export const useAuthStore = defineStore("auth", () => {
     accountPath,
     checkAccountData,
     securityPath,
-    sendAppInfo,
     changeCheckAccountData,
     changeAccountPath,
     changeAccountLeavePopup,
@@ -288,6 +302,7 @@ export const useAuthStore = defineStore("auth", () => {
     updateUser,
     updateNicknamedUser,
     deleteNicknamedUser,
+    sendAppInfo,
     storeJwtAndUser,
     logout,
   };
