@@ -220,20 +220,30 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
-  const sendAppInfo = () => {
+  const sendAppInfo = (logout = false) => {
     if (!window.cordova) return;
 
     const appInfo = {
-      installation_id: null,
+      app_opened_datetime: new Date(),
       user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     // eslint-disable-next-line no-undef
     WonderPush.getInstallationId(function (installationId) {
-      appInfo.installation_id = installationId;
+      if (logout) {
+        appInfo.app_opened_datetime = null;
+        appInfo.user_timezone = null;
+      }
 
       return updateUser({ app_info: appInfo, installation: installationId });
     });
+
+    // if (logout) {
+    //   appInfo.app_opened_datetime = null;
+    //   appInfo.user_timezone = null;
+    // }
+    //
+    // return updateUser({ ...appInfo, installation: "4f740260de319c41ffeda4c05f6769b51b025a6d" });
   };
 
   const storeJwtAndUser = data => {
@@ -244,8 +254,12 @@ export const useAuthStore = defineStore("auth", () => {
 
   const logout = async () => {
     user.value = null;
+
     localStorage.removeItem("token");
     localStorage.removeItem("user-id");
+
+    await sendAppInfo(true);
+
     return { status: "success" };
   };
 
