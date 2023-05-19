@@ -1,9 +1,11 @@
 <template>
   <f7-page class="hg-dashboard-content about-us-page" name="dashboard" @page:beforein="getAllData">
     <top-bar :tabs="profileTabs" :search="false" :first-load-index="2" @tab-selected="setProfileComponent">
-      <template #title>Profile</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template #title>{{ $t("profile.profile") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal}  ${$t("top-bar.questions")}`
+      }}</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -32,6 +34,7 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
@@ -59,55 +62,54 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const { getUser } = authStore;
 
+const i18n = useI18n();
+
 const profileTabs = ref([
   {
     id: 1,
-    name: "Account",
+    name: i18n.t("profile.tabs.0"),
     path: "/profile/account/",
-    // component: markRaw(Account),
   },
   {
     id: 2,
-    name: "Security",
+    name: i18n.t("profile.tabs.1"),
     path: "/profile/security/",
-    // component: markRaw(Security),
   },
   {
     id: 3,
-    name: "About Us",
+    name: i18n.t("profile.tabs.2"),
     path: "/profile/about-us/",
-    // component: markRaw(AboutUs),
   },
   {
     id: 4,
-    name: "Send Reports",
+    name: i18n.t("profile.tabs.3"),
     path: "/profile/send-reports/",
   },
 ]);
 
 const infos = reactive([
   {
-    title: "Terms of services",
+    title: i18n.t("profile.about-us.infos.0"),
     popup: "TermsPopup",
   },
   {
-    title: "Privacy",
+    title: i18n.t("profile.about-us.infos.1"),
     popup: "PrivacyPopup",
   },
   {
-    title: "Imprint",
+    title: i18n.t("profile.about-us.infos.2"),
     popup: "ImprintPopup",
   },
   {
-    title: "Software licenses",
+    title: i18n.t("profile.about-us.infos.3"),
     popup: "SoftwarePopup",
   },
   {
-    title: "Release notes",
+    title: i18n.t("profile.about-us.infos.4"),
     popup: "ReleasePopup",
   },
   {
-    title: "Write a review",
+    title: i18n.t("profile.about-us.infos.5"),
     popup: "ReviewPopup",
   },
 ]);

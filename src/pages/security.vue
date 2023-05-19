@@ -7,9 +7,11 @@
       :first-load-index="1"
       @tab-selected="setProfileComponent"
     >
-      <template #title>Profile</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
+      <template #title>{{ $t("profile.profile") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+      <template v-if="user && user.everyday_goal" #subtitle-data>{{
+        `${user.everyday_goal}  ${$t("top-bar.questions")}`
+      }}</template>
     </top-bar>
 
     <main class="profile-tab-content">
@@ -21,7 +23,7 @@
               :type="showPassword ? 'text' : 'password'"
               name="password"
               class="custom-list-input"
-              label="New password"
+              :label="$t('inputs.new-password')"
             >
               <template #media>
                 <div class="eye-icons" @click="showPassword = !showPassword">
@@ -36,7 +38,7 @@
               :type="showConfirmPassword ? 'text' : 'password'"
               name="password"
               class="custom-list-input"
-              label="Confirm new password"
+              :label="$t('inputs.confirm-new-password')"
             >
               <template #media>
                 <div class="eye-icons" @click="showConfirmPassword = !showConfirmPassword">
@@ -55,7 +57,7 @@
                 }"
                 @click="updatePasswordHandler"
               >
-                Save
+                {{ $t("buttons.save") }}
               </f7-button>
               <p class="error-message">{{ errorMessage }}</p>
             </f7-block>
@@ -64,7 +66,7 @@
       </Transition>
     </main>
 
-    <success-message-popup v-if="successPopup" title="Password has been changed" @close="closeSuccessPopup" />
+    <success-message-popup v-if="successPopup" :title="$t('profile.security.popup-text')" @close="closeSuccessPopup" />
 
     <leave-page-popup
       v-if="securityLeavePopup"
@@ -86,6 +88,7 @@ import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import { storeToRefs } from "pinia/dist/pinia";
+import { useI18n } from "vue-i18n";
 
 const authStore = useAuthStore();
 const { updateUser, changePasswords, changeSecurityPath, changeSecurityLeavePopup } = authStore;
@@ -98,25 +101,27 @@ const props = defineProps({
   f7router: { type: Object, default: () => {} },
 });
 
+const i18n = useI18n();
+
 const profileTabs = ref([
   {
     id: 1,
-    name: "Account",
+    name: i18n.t("profile.tabs.0"),
     path: "/profile/account/",
   },
   {
     id: 2,
-    name: "Security",
+    name: i18n.t("profile.tabs.1"),
     path: "/profile/security/",
   },
   {
     id: 3,
-    name: "About Us",
+    name: i18n.t("profile.tabs.2"),
     path: "/profile/about-us/",
   },
   {
     id: 4,
-    name: "Send Reports",
+    name: i18n.t("profile.tabs.3"),
     path: "/profile/send-reports/",
   },
 ]);
