@@ -28,10 +28,11 @@
             :key="answer"
             :class="{
               'hg-correct-answer':
-                questionHistory.user_answer.status === 'correct' && questionHistory?.user_answer?.answer == answer,
+                questionHistory.user_answer?.status === 'correct' &&
+                `${questionHistory.user_answer?.answer}` === `${answer}`,
               'hg-wrong-answer':
-                questionHistory.user_answer.status === 'wrong' &&
-                `${questionHistory?.user_answer?.answer}` === `${answer}`,
+                questionHistory.user_answer?.status === 'wrong' &&
+                `${questionHistory.user_answer?.answer}` === `${answer}`,
             }"
             :checked="true"
             :disabled="true"
@@ -39,7 +40,6 @@
             radio
           >
             <f7-col>
-              {{ `${questionHistory.user_answer.status === "wrong"} ${questionHistory?.user_answer?.answer}` }}
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
               <math-jax :latex="'\\sf' + answer"></math-jax>
             </f7-col>
@@ -313,12 +313,38 @@ const sendAnswer = () => {
   }
 };
 
+const indexQuestionHistory = ref(null);
 const questionHistory = ref(null);
 
 const showHistory = point => {
   const index = Number(point) - 1;
+  indexQuestionHistory.value = index;
   if (index < history.value.length) {
     questionHistory.value = history.value[index];
+  } else if (
+    questions.value[index - history.value.length] &&
+    !questions.value[index - history.value.length].user_answer &&
+    index < presentIndex.value
+  ) {
+    questionHistory.value = null;
+    indexQuestionHistory.value = null;
+    question.value = questions.value[index - history.value.length];
+    getPoints.value[presentIndex.value].status = "normal";
+    presentIndex.value = index;
+    getPoints.value[presentIndex.value].status = "present";
+  } else if (
+    questions.value[index - history.value.length] &&
+    questions.value[index - history.value.length].user_answer
+  ) {
+    questionHistory.value = questions.value[index - history.value.length];
+  } else if (index === presentIndex.value) {
+    questionHistory.value = null;
+    indexQuestionHistory.value = null;
+  }
+  //circle go on the point
+  if (index < presentIndex.value) {
+    circles.value.scrollLeft +=
+      circles.value.children[index].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
 
@@ -358,6 +384,7 @@ const goBack = () => {
 
 const goPresentQuestion = () => {
   questionHistory.value = null;
+  indexQuestionHistory.value = null;
   circles.value.scrollLeft +=
     circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
@@ -438,7 +465,15 @@ watch(questionsAreOver, async val => {
 });
 
 const onOrientationChange = () => {
-  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+  if (indexQuestionHistory.value) {
+    circles.value.scrollLeft +=
+      circles.value.children[indexQuestionHistory.value].getBoundingClientRect().left -
+      2 -
+      circles.value.clientWidth / 2;
+  } else if (
+    circles.value.clientWidth / 2 !==
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2
+  ) {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
