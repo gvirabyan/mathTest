@@ -1,13 +1,12 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import api from "@/js/api";
+import { isYesterday } from "@/js/utils/date-check";
 
 export const useAuthStore = defineStore("auth", () => {
-  const everydayGoalStore = useEverydayGoalStore();
-
   // state properties
   const user = ref(null);
+  const token = ref(localStorage.getItem("token") ? localStorage.getItem("token") : null);
   const suggestedCredentials = reactive(
     localStorage.getItem("suggestedCredentials")
       ? JSON.parse(localStorage.getItem("suggestedCredentials"))
@@ -28,6 +27,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // getters
   const userData = computed(() => user.value);
+  const isLoggedIn = computed(() => !!(user.value && token.value));
   const isNicknamedOnlyUser = computed(() => {
     return user.value && user.value?.username && !user.value?.email;
   });
@@ -64,10 +64,6 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           storeJwtAndUser(data);
 
-          if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
-            everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
-          }
-
           if (rememberUser) {
             suggestedCredentials.suggestedLogin = userData.identifier;
             suggestedCredentials.suggestedPassword = userData.password;
@@ -87,10 +83,6 @@ export const useAuthStore = defineStore("auth", () => {
     return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
       if (!data.error) {
         storeJwtAndUser(data);
-
-        if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
-          everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
-        }
 
         return { status: "success" };
       } else {
@@ -166,15 +158,17 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const getUser = async () => {
-    return api.get(`users/${localStorage.getItem("user-id")}?populate=institution&populate=user_answers`).then(data => {
-      if (!data.error) {
-        user.value = data;
+    return api
+      .get(`users/${localStorage.getItem("user-id")}?populate[0]=institution&populate[1]=installations`)
+      .then(data => {
+        if (!data.error) {
+          user.value = data;
 
-        return { status: "success" };
-      } else {
-        return { status: "error", message: data.error?.message };
-      }
-    });
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
   };
 
   const updateUser = async userData => {
@@ -218,6 +212,48 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
+  const checkEverydayGoal = async () => {
+    if (!user.value?.everyday_goal_passed) {
+      return;
+    }
+
+    const passingDatetime = new Date(user.value?.everyday_goal_passed);
+
+    if (!isYesterday(passingDatetime)) {
+      return;
+    }
+
+    await updateUser({ everyday_goal_passed: null });
+  };
+
+  const sendAppInfo = async (logout = false) => {
+    if (!window.cordova) return;
+
+    const appInfo = {
+      app_opened_datetime: new Date(),
+      user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+
+    // eslint-disable-next-line no-undef
+    WonderPush.getInstallationId(async function (installationId) {
+      if (logout) {
+        appInfo.app_opened_datetime = null;
+        appInfo.user_timezone = null;
+
+        await updateUser({ ...appInfo });
+        await Promise.all(
+          user.value.installations.map(inst => {
+            api.remove(`installations/${inst.id}`);
+          }),
+        );
+
+        return;
+      }
+
+      return updateUser({ ...appInfo, installation: installationId });
+    });
+  };
+
   const storeJwtAndUser = data => {
     localStorage.setItem("token", data?.jwt);
     localStorage.setItem("user-id", data?.user?.id);
@@ -225,11 +261,26 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const logout = async () => {
+    await sendAppInfo(true);
+
     user.value = null;
+
     localStorage.removeItem("token");
     localStorage.removeItem("user-id");
+
     return { status: "success" };
   };
+
+  watch(
+    isLoggedIn,
+    async value => {
+      if (!value) return;
+
+      await sendAppInfo();
+      await checkEverydayGoal();
+    },
+    { immediate: true },
+  );
 
   watch(
     () => suggestedCredentials,
@@ -246,11 +297,12 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     user,
+    token,
     suggestedCredentials,
     userData,
+    isLoggedIn,
     isNicknamedOnlyUser,
     passwords,
-    // everydayGoal,
     checkPassSave,
     securityLeavePopup,
     accountLeavePopup,
@@ -273,6 +325,7 @@ export const useAuthStore = defineStore("auth", () => {
     updateUser,
     updateNicknamedUser,
     deleteNicknamedUser,
+    sendAppInfo,
     storeJwtAndUser,
     logout,
   };
