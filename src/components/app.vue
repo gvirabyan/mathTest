@@ -18,25 +18,18 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { f7, f7ready } from "framework7-vue";
-import { storeToRefs } from "pinia";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
 import { useAuthStore } from "@/js/stores/auth";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useUserStats } from "@/js/stores/user-stats";
-import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
 
 const authStore = useAuthStore();
-const everydayGoalStore = useEverydayGoalStore();
 const userStatsStore = useUserStats();
 
 const { getUser } = authStore;
 const { getUserStatus } = userStatsStore;
-
-const { everydayGoal } = storeToRefs(everydayGoalStore);
-const { restartEverydayGoal } = everydayGoalStore;
 
 const f7params = {
   name: "Mathe App", // App name
@@ -65,20 +58,6 @@ const addGmapsScript = () => {
     }&callback=Function.prototype&libraries=places`,
   );
   document.head.appendChild(gmapsScript);
-};
-
-const checkEverydayGoalPassingDate = () => {
-  if (!everydayGoal.value?.passingDatetime) {
-    return;
-  }
-
-  const passingDatetime = new Date(everydayGoal.value?.passingDatetime);
-
-  if (!isYesterday(passingDatetime)) {
-    return;
-  }
-
-  restartEverydayGoal();
 };
 
 onMounted(async () => {
@@ -113,7 +92,6 @@ onMounted(async () => {
   }
 
   addGmapsScript();
-  checkEverydayGoalPassingDate();
 });
 </script>
 

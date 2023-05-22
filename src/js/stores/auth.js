@@ -1,11 +1,9 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import api from "@/js/api";
+import { isYesterday } from "@/js/utils/date-check";
 
 export const useAuthStore = defineStore("auth", () => {
-  const everydayGoalStore = useEverydayGoalStore();
-
   // state properties
   const user = ref(null);
   const token = ref(localStorage.getItem("token") ? localStorage.getItem("token") : null);
@@ -66,10 +64,6 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           storeJwtAndUser(data);
 
-          if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
-            everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
-          }
-
           if (rememberUser) {
             suggestedCredentials.suggestedLogin = userData.identifier;
             suggestedCredentials.suggestedPassword = userData.password;
@@ -89,10 +83,6 @@ export const useAuthStore = defineStore("auth", () => {
     return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
       if (!data.error) {
         storeJwtAndUser(data);
-
-        if (!everydayGoalStore.everydayGoal.questionsToGoal && data.user.everyday_goal) {
-          everydayGoalStore.setEverydayGoal(data.user.everyday_goal);
-        }
 
         return { status: "success" };
       } else {
@@ -168,15 +158,17 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const getUser = async () => {
-    return api.get(`users/${localStorage.getItem("user-id")}?populate=institution&populate=user_answers`).then(data => {
-      if (!data.error) {
-        user.value = data;
+    return api
+      .get(`users/${localStorage.getItem("user-id")}?populate[0]=institution&populate[1]=installations`)
+      .then(data => {
+        if (!data.error) {
+          user.value = data;
 
-        return { status: "success" };
-      } else {
-        return { status: "error", message: data.error?.message };
-      }
-    });
+          return { status: "success" };
+        } else {
+          return { status: "error", message: data.error?.message };
+        }
+      });
   };
 
   const updateUser = async userData => {
@@ -220,7 +212,21 @@ export const useAuthStore = defineStore("auth", () => {
       });
   };
 
-  const sendAppInfo = (logout = false) => {
+  const checkEverydayGoal = async () => {
+    if (!user.value?.everyday_goal_passed) {
+      return;
+    }
+
+    const passingDatetime = new Date(user.value?.everyday_goal_passed);
+
+    if (!isYesterday(passingDatetime)) {
+      return;
+    }
+
+    await updateUser({ everyday_goal_passed: null });
+  };
+
+  const sendAppInfo = async (logout = false) => {
     if (!window.cordova) return;
 
     const appInfo = {
@@ -229,21 +235,23 @@ export const useAuthStore = defineStore("auth", () => {
     };
 
     // eslint-disable-next-line no-undef
-    WonderPush.getInstallationId(function (installationId) {
+    WonderPush.getInstallationId(async function (installationId) {
       if (logout) {
         appInfo.app_opened_datetime = null;
         appInfo.user_timezone = null;
+
+        await updateUser({ ...appInfo });
+        await Promise.all(
+          user.value.installations.map(inst => {
+            api.remove(`installations/${inst.id}`);
+          }),
+        );
+
+        return;
       }
 
-      return updateUser({ app_info: appInfo, installation: installationId });
+      return updateUser({ ...appInfo, installation: installationId });
     });
-
-    // if (logout) {
-    //   appInfo.app_opened_datetime = null;
-    //   appInfo.user_timezone = null;
-    // }
-    //
-    // return updateUser({ ...appInfo, installation: "4f740260de319c41ffeda4c05f6769b51b025a6d" });
   };
 
   const storeJwtAndUser = data => {
@@ -253,22 +261,23 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const logout = async () => {
+    await sendAppInfo(true);
+
     user.value = null;
 
     localStorage.removeItem("token");
     localStorage.removeItem("user-id");
-
-    await sendAppInfo(true);
 
     return { status: "success" };
   };
 
   watch(
     isLoggedIn,
-    value => {
+    async value => {
       if (!value) return;
 
-      sendAppInfo();
+      await sendAppInfo();
+      await checkEverydayGoal();
     },
     { immediate: true },
   );

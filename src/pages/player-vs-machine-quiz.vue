@@ -128,16 +128,15 @@
 import { f7 } from "framework7-vue";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
-import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -149,7 +148,6 @@ const { answersData } = storeToRefs(useCategoryAnswerStore());
 const { quizQuestions, quizQuestion, quizQuestionsLength, answeredQuizQuestions, quizMode, userScore, machineScore } =
   storeToRefs(useQuizStore());
 const { updateUserAnsweredQuestions } = useCategoryAnswerStore();
-const { decreaseQuestionsToGoal } = useEverydayGoalStore();
 const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore, saveQuizResult } =
   useQuizStore();
 
@@ -219,7 +217,6 @@ const sendAnswer = () => {
 
       if (resp.status !== "success") {
         chosenQuizAnswer.value = null;
-        decreaseQuestionsToGoal(status.value);
 
         f7.toast.show({
           text: resp.message,

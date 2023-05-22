@@ -1,12 +1,10 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-// import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useQuizStore } from "@/js/stores/quiz";
 import api from "@/js/api";
 
 export const useCategoryAnswerStore = defineStore("category-answer", () => {
-  // const everydayGoalStore = useEverydayGoalStore();
   const questionStore = useQuestionsStore();
   const quizStore = useQuizStore();
 
@@ -50,8 +48,6 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
           if (mode === "topic") {
             questionStore.answeredQuestions.push(answer.question);
           }
-
-          // everydayGoalStore.decreaseQuestionsToGoal(answer.status);
 
           return { status: "success" };
         } else {
