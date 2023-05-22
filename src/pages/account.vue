@@ -647,6 +647,19 @@ const nicknamedUserLogout = () => {
     // });
   });
 };
+
+onMounted(() => {
+  document.addEventListener("backbutton", onBackKeyDown, false);
+});
+
+function onBackKeyDown() {
+  if (successPopup.value || accountLeavePopup.value) {
+    successPopup.value = false;
+    accountLeavePopup.value = false;
+    return false;
+  }
+  props.f7router.back();
+}
 </script>
 
 <style lang="scss">
