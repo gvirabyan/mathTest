@@ -13,7 +13,9 @@
         `${user.everyday_goal} ${$t("top-bar.questions")}`
       }}</template>
     </topbar>
+
     <slot />
+
     <main class="activity-tab-content">
       <Transition name="fade">
         <component :is="currentActivityComponent" :req-loading="isLoading" />
@@ -74,14 +76,14 @@ const activityTabs = ref([
 ]);
 
 const topBar = ref(null);
+const isLoading = ref(false);
+const currentActivityComponent = ref(null);
+let active = null;
 
 const loadFirstTab = () => {
   topBar.value.selectFirstTab(activityTabs.value, false);
 };
 
-const isLoading = ref(false);
-const currentActivityComponent = ref(null);
-let active = null;
 const setActiveComponent = id => {
   active = activityTabs.value.find(t => t.id === id);
   currentActivityComponent.value = active?.component;

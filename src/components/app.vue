@@ -3,42 +3,41 @@
     <!-- Left panel with cover effect-->
     <f7-panel left cover dark>
       <f7-page>
-        <f7-navbar title="Menu"></f7-navbar>
+        <f7-navbar title="Menu" />
 
         <main-menu />
       </f7-page>
     </f7-panel>
+
     <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/" />
+
     <Loading v-if="!loaded" />
   </f7-app>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
 import { f7, f7ready } from "framework7-vue";
-import { storeToRefs } from "pinia";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
 import { useAuthStore } from "@/js/stores/auth";
-import { useEverydayGoalStore } from "@/js/stores/everyday-goal";
 import { useUserStats } from "@/js/stores/user-stats";
-import { isYesterday } from "@/js/utils/date-check";
 import MainMenu from "./main-menu.vue";
 import Loading from "@/components/loading.vue";
 
 const authStore = useAuthStore();
-
-const { everydayGoal } = storeToRefs(useEverydayGoalStore());
-const { restartEverydayGoal } = useEverydayGoalStore();
 const userStatsStore = useUserStats();
-const { getUserStatus } = userStatsStore;
+
 const { getUser } = authStore;
+const { getUserStatus } = userStatsStore;
 
 const f7params = {
   name: "Mathe App", // App name
   theme: "auto", // Automatic theme detection
   routes: routes, // App routes
 };
+
+const loaded = ref(false);
 
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
@@ -59,22 +58,6 @@ const addGmapsScript = () => {
     }&callback=Function.prototype&libraries=places`,
   );
   document.head.appendChild(gmapsScript);
-};
-
-const loaded = ref(false);
-
-const checkEverydayGoalPassingDate = () => {
-  if (!everydayGoal.value?.passingDatetime) {
-    return;
-  }
-
-  const passingDatetime = new Date(everydayGoal.value?.passingDatetime);
-
-  if (!isYesterday(passingDatetime)) {
-    return;
-  }
-
-  restartEverydayGoal();
 };
 
 onMounted(async () => {
@@ -101,7 +84,6 @@ onMounted(async () => {
   }
 
   addGmapsScript();
-  checkEverydayGoalPassingDate();
 });
 </script>
 
