@@ -8,9 +8,46 @@
     </f7-navbar>
 
     <div ref="circles" class="circles" style="">
-      <Circle v-for="point in getPoints" :key="point.point" ref="circles" :point="point.point" :status="point.status" />
+      <Circle
+        v-for="point in getPoints"
+        :key="point.point"
+        ref="circles"
+        :point="point.point"
+        :status="point.status"
+        @click="showHistory(point.point)"
+      />
     </div>
-    <div v-if="question" id="elementId" class="questions-content">
+    <div v-if="questionHistory" id="element" class="questions-content">
+      <div>
+        <f7-block-title
+          ><math-jax :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax
+        ></f7-block-title>
+        <f7-list>
+          <f7-list-item
+            v-for="(answer, index) in [questionHistory.answer, ...questionHistory.wrong_answers]"
+            :key="answer"
+            :class="{
+              'hg-correct-answer': `${questionHistory.answer}` === `${answer}`,
+              'hg-wrong-answer':
+                questionHistory.user_answer?.status === 'wrong' &&
+                `${questionHistory.user_answer?.answer}` === `${answer}`,
+            }"
+            :checked="true"
+            :disabled="true"
+            name="demo-radio-end"
+            radio
+          >
+            <f7-col>
+              <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <math-jax :latex="'\\sf' + answer"></math-jax>
+            </f7-col>
+          </f7-list-item>
+        </f7-list>
+      </div>
+
+      <f7-button class="question-continue-btn" @click="goPresentQuestion">{{ $t("question.continue") }}</f7-button>
+    </div>
+    <div v-else-if="question" id="elementId" class="questions-content">
       <div>
         <f7-block-title
           ><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax
@@ -260,13 +297,53 @@ const sendAnswer = () => {
 
       if (resp.status !== "success") {
         clearChosenData();
-
         f7.toast.show({
           text: resp.message,
           closeButton: true,
         });
+      } else {
+        //save user answer
+        questions.value.find(q => q.id === question.value.id).user_answer = {
+          status: status.value,
+          answer: chosenAnswer.value,
+        };
       }
     });
+  }
+};
+
+const indexQuestionHistory = ref(null);
+const questionHistory = ref(null);
+
+const showHistory = point => {
+  const index = Number(point) - 1;
+  indexQuestionHistory.value = index;
+  if (index < history.value.length) {
+    questionHistory.value = history.value[index];
+  } else if (
+    questions.value[index - history.value.length] &&
+    !questions.value[index - history.value.length].user_answer &&
+    index < presentIndex.value
+  ) {
+    questionHistory.value = null;
+    indexQuestionHistory.value = null;
+    question.value = questions.value[index - history.value.length];
+    getPoints.value[presentIndex.value].status = "normal";
+    presentIndex.value = index;
+    getPoints.value[presentIndex.value].status = "present";
+  } else if (
+    questions.value[index - history.value.length] &&
+    questions.value[index - history.value.length].user_answer
+  ) {
+    questionHistory.value = questions.value[index - history.value.length];
+  } else if (index === presentIndex.value) {
+    questionHistory.value = null;
+    indexQuestionHistory.value = null;
+  }
+  //circle go on the point
+  if (index < presentIndex.value) {
+    circles.value.scrollLeft +=
+      circles.value.children[index].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
 
@@ -302,6 +379,13 @@ const checkSkipPopup = ref(false);
 const goBack = () => {
   checkSkipPopup.value = false;
   props.f7router.back();
+};
+
+const goPresentQuestion = () => {
+  questionHistory.value = null;
+  indexQuestionHistory.value = null;
+  circles.value.scrollLeft +=
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
 
 const i18n = useI18n();
@@ -380,7 +464,15 @@ watch(questionsAreOver, async val => {
 });
 
 const onOrientationChange = () => {
-  if (circles.value.clientWidth / 2 !== circles.value.children[presentIndex.value].getBoundingClientRect().left - 2) {
+  if (indexQuestionHistory.value) {
+    circles.value.scrollLeft +=
+      circles.value.children[indexQuestionHistory.value].getBoundingClientRect().left -
+      2 -
+      circles.value.clientWidth / 2;
+  } else if (
+    circles.value.clientWidth / 2 !==
+    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2
+  ) {
     circles.value.scrollLeft +=
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }

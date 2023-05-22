@@ -83,7 +83,7 @@
           />
         </svg>
 
-        Notifications
+        {{ $t("top-bar.notifications") }}
       </h2>
     </template>
 

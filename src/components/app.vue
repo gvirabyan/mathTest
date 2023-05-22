@@ -66,23 +66,15 @@ onMounted(async () => {
   });
 
   if (localStorage.getItem("user-id") && localStorage.getItem("token")) {
-    await getUserStatus()
-      .then(() => {
-        loaded.value = true;
-
-        getUser().then(data => {
-          if (data.status === "error") {
-            return false;
-          }
-        });
-      })
-      .catch(() => {
-        localStorage.removeItem("user-id");
-        localStorage.removeItem("token");
-        setTimeout(() => {
-          loaded.value = true;
-        }, 2000);
+    await getUserStatus().then(() => {
+      loaded.value = true;
+      getUser().then(data => {
+        if (data.status === "error") {
+          localStorage.removeItem("user-id");
+          localStorage.removeItem("token");
+        }
       });
+    });
   } else {
     localStorage.removeItem("user-id");
     localStorage.removeItem("token");

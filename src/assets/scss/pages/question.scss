@@ -335,6 +335,20 @@
     }
   }
 
+  .question-continue-btn {
+    padding: 20px 0;
+    text-transform: revert !important;
+    text-align: center;
+    width: calc(100vw - 48px);
+    height: 48px;
+    margin: 0 auto;
+    color: #fff;
+    background-color: #FFC700 !important;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-image: url("../assets/images/pointsBtns.svg");
+  }
+
   .hg-actions-btns-content {
     padding: 0 16px;
     display: flex;
@@ -343,7 +357,6 @@
       width: 100%;
       flex-wrap: nowrap !important;
     }
-
     .button {
       padding: 20px 0;
       text-transform: revert !important;
