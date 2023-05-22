@@ -22,14 +22,14 @@
     </f7-list>
 
     <f7-block v-else-if="!notifications?.length" class="no-margin-top no-padding">
-      <p>There are no notifications yet</p>
+      <p>{{ $t("notification.there-arnt-notification") }}</p>
     </f7-block>
 
     <loading-small v-else />
 
     <f7-block class="welcome-block">
-      <h3 class="title">Welcome to the MatheApp</h3>
-      <p class="text">Play more games, improve your skills & the first in the World!</p>
+      <h3 class="title">{{ $t("notification.welcome-app") }}</h3>
+      <p class="text">{{ $t("notification.play-more-games") }}</p>
     </f7-block>
 
     <teleport to=".framework7-modals">
@@ -37,7 +37,8 @@
         v-if="isPopupOpened"
         :title="currentNotification.attributes?.title || currentNotification.title"
         :text="currentNotification.attributes?.text || currentNotification.text"
-        btn-text="Close"
+        :date="formatDate(currentNotification.attributes?.createdAt) || formatDate(currentNotification.createdAt)"
+        :btn-text="$t('buttons.close')"
         @appeared="readNotification(currentNotification.id)"
         @close="currentNotification = null"
       />

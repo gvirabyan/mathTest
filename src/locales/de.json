@@ -1,14 +1,16 @@
 {
   "top-bar": {
     "questions": "questions",
-    "today-goal": "Today's Goal"
+    "today-goal": "Today's Goal",
+    "notifications": "Notifications"
   },
   "buttons": {
     "skip": "überspringen",
     "send": "abgeben",
     "next": "nächstes",
     "wrong-answer": "wrong answer",
-    "save": "save"
+    "save": "save",
+    "close": "Close"
   },
   "inputs": {
     "E-mail-address": "E-mail address",
@@ -230,7 +232,11 @@
       "yes": "Yes"
     }
   },
-
+  "notification": {
+    "there-arnt-notification": "There are no notifications yet",
+    "welcome-app": "Welcome to the MatheApp",
+    "play-more-games": "Play more games, improve your skills & the first in the World!"
+  },
   "not-found": {
     "mathematics": [
       {
