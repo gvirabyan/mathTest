@@ -27,9 +27,7 @@
             v-for="(answer, index) in [questionHistory.answer, ...questionHistory.wrong_answers]"
             :key="answer"
             :class="{
-              'hg-correct-answer':
-                questionHistory.user_answer?.status === 'correct' &&
-                `${questionHistory.user_answer?.answer}` === `${answer}`,
+              'hg-correct-answer': `${questionHistory.answer}` === `${answer}`,
               'hg-wrong-answer':
                 questionHistory.user_answer?.status === 'wrong' &&
                 `${questionHistory.user_answer?.answer}` === `${answer}`,
@@ -46,7 +44,8 @@
           </f7-list-item>
         </f7-list>
       </div>
-      <f7-button class="question-continue-text" @click="goPresentQuestion">Continue </f7-button>
+
+      <f7-button class="question-continue-btn" @click="goPresentQuestion">{{ $t("question.continue") }}</f7-button>
     </div>
     <div v-else-if="question" id="elementId" class="questions-content">
       <div>

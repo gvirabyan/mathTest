@@ -138,6 +138,7 @@
 
   "question": {
     "question": "question",
+    "continue": "Continue",
     "point": "point",
     "start-practice": "Start Practice",
     "right-answered": "right answered",
