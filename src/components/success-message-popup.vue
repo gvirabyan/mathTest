@@ -1,6 +1,7 @@
 <template>
   <div class="success-popup-background" @click="emit('close')">
     <f7-block class="success-popup-body" @click.stop>
+      <p v-if="date" class="success-popup-date">{{ date }}</p>
       <img class="close-icon" src="@/assets/icons/x.svg" alt="close" @click="emit('close')" />
       <f7-block-title>{{ title }}</f7-block-title>
 
@@ -26,6 +27,10 @@ defineProps({
   btnText: {
     type: String,
     default: "",
+  },
+  date: {
+    type: [String, null],
+    default: null,
   },
 });
 
