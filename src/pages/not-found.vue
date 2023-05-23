@@ -6,9 +6,10 @@
           Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends
           and human relationships. Enjoy)).
         </f7-block-title>
+
         <div v-if="mathematician" class="mathematician">
           <div class="mathematician-avatar">
-            <img :src="`assets/images/mathematicians/${mathematician.img}.jpg`" :alt="`${mathematician.img}`" />
+            <img :src="`/images/mathematicians/${mathematician.img}.jpg`" :alt="`${mathematician.img}`" />
             <p class="mathematician-name">{{ mathematician.name }}</p>
           </div>
 
@@ -16,14 +17,15 @@
         </div>
       </f7-block>
     </div>
+
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import BottomMenu from "@/components/bottom-menu.vue";
 import { useI18n } from "vue-i18n";
+import BottomMenu from "@/components/bottom-menu.vue";
 
 defineProps({
   f7route: {
