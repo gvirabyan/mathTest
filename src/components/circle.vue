@@ -1,11 +1,21 @@
 <template>
-  <div :class="`circle ${status}`">
+  <div
+    :class="{
+      circle: true,
+      wrong: status === 'wrong',
+      correct: status === 'correct',
+      normal: status === 'normal',
+      present: status === 'present',
+      'bg-wrong': status === 'wrong' && checkPoint(),
+      'bg-correct': status === 'correct' && checkPoint(),
+    }"
+  >
     {{ point }}
   </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   point: { type: Number, default: 0 },
   status: {
     type: String,
@@ -14,7 +24,12 @@ defineProps({
       return ["present", "correct", "wrong", "skip", "normal"].includes(value);
     },
   },
+  historyCircle: {
+    default: null,
+  },
 });
+
+const checkPoint = () => props.historyCircle !== null && props.point === Number(props.historyCircle) + 1;
 </script>
 
 <style lang="scss" scoped>
@@ -46,9 +61,19 @@ defineProps({
     border: 2px solid #ff0000;
   }
 
+  &.bg-wrong {
+    color: #fff;
+    background: #ff0000;
+  }
+
   &.correct {
     color: #2ee56b;
     border: 2px solid #2ee56b;
+  }
+
+  &.bg-correct {
+    color: #fff;
+    background: #2ee56b;
   }
 }
 </style>

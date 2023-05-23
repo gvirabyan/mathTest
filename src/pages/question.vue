@@ -14,6 +14,7 @@
         ref="circles"
         :point="point.point"
         :status="point.status"
+        :history-circle="indexQuestionHistory"
         @click="showHistory(point.point)"
       />
     </div>
@@ -24,7 +25,7 @@
         ></f7-block-title>
         <f7-list>
           <f7-list-item
-            v-for="(answer, index) in [questionHistory.answer, ...questionHistory.wrong_answers]"
+            v-for="(answer, index) in shuffle([questionHistory.answer, ...questionHistory.wrong_answers])"
             :key="answer"
             :class="{
               'hg-correct-answer': `${questionHistory.answer}` === `${answer}`,
@@ -315,37 +316,50 @@ const sendAnswer = () => {
 const indexQuestionHistory = ref(null);
 const questionHistory = ref(null);
 
+const indexHistory = ref(null);
 const showHistory = point => {
-  const index = Number(point) - 1;
-  indexQuestionHistory.value = index;
-  if (index < history.value.length) {
-    questionHistory.value = history.value[index];
-  } else if (
-    questions.value[index - history.value.length] &&
-    !questions.value[index - history.value.length].user_answer &&
-    index < presentIndex.value
+  indexHistory.value = Number(point) - 1;
+  if (
+    indexHistory.value <= keepPresentIndex.value ||
+    (indexHistory.value <= presentIndex.value && !keepPresentIndex.value)
   ) {
-    questionHistory.value = null;
-    indexQuestionHistory.value = null;
-    question.value = questions.value[index - history.value.length];
+    indexQuestionHistory.value = indexHistory.value;
     getPoints.value[presentIndex.value].status = "normal";
-    presentIndex.value = index;
-    getPoints.value[presentIndex.value].status = "present";
-  } else if (
-    questions.value[index - history.value.length] &&
-    questions.value[index - history.value.length].user_answer
-  ) {
-    questionHistory.value = questions.value[index - history.value.length];
-  } else if (index === presentIndex.value) {
-    questionHistory.value = null;
-    indexQuestionHistory.value = null;
-  }
-  //circle go on the point
-  if (index < presentIndex.value) {
+    if (indexHistory.value < history.value.length) {
+      questionHistory.value = history.value[indexHistory.value];
+    } else if (
+      (questions.value[indexHistory.value - history.value.length] &&
+        !questions.value[indexHistory.value - history.value.length].user_answer &&
+        indexHistory.value < keepPresentIndex.value) ||
+      indexHistory.value === keepPresentIndex.value
+    ) {
+      questionHistory.value = null;
+      indexQuestionHistory.value = null;
+      question.value = questions.value[indexHistory.value - history.value.length];
+      presentIndex.value = indexHistory.value;
+      getPoints.value[presentIndex.value].status = "present";
+    } else if (
+      questions.value[indexHistory.value - history.value.length] &&
+      questions.value[indexHistory.value - history.value.length].user_answer
+    ) {
+      questionHistory.value = questions.value[indexHistory.value - history.value.length];
+    }
+    //circle go on the point
     circles.value.scrollLeft +=
-      circles.value.children[index].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+      circles.value.children[indexHistory.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 };
+
+function shuffle(a) {
+  let j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
+  }
+  return a;
+}
 
 const skippedPoints = ref([]);
 
@@ -381,9 +395,16 @@ const goBack = () => {
   props.f7router.back();
 };
 
+const keepPresentIndex = ref(null);
+
 const goPresentQuestion = () => {
   questionHistory.value = null;
   indexQuestionHistory.value = null;
+  if (keepPresentIndex.value) {
+    getPoints.value[presentIndex.value].status = "normal";
+    presentIndex.value = keepPresentIndex.value;
+  }
+  getPoints.value[presentIndex.value].status = "present";
   circles.value.scrollLeft +=
     circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
@@ -429,6 +450,9 @@ const next = async () => {
   presentIndex.value++;
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].status = "present";
+    if (!keepPresentIndex.value || presentIndex.value > keepPresentIndex.value) {
+      keepPresentIndex.value = presentIndex.value;
+    }
   }
   circles.value.scrollLeft +=
     circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
