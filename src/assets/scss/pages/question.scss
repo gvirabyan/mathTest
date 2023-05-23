@@ -323,6 +323,10 @@
   .hg-wrong-answer {
     color: #fff !important;
     background: #FF0000;
+    .list-number {
+      color: #fff !important;
+      opacity: 1 !important;
+    }
   }
 
   .hg-correct-answer {
