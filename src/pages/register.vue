@@ -110,17 +110,17 @@
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>
+          <!--          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>-->
           <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
       </f7-block>
 
-      <f7-block class="f7-content-btn">
-        <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>
-          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>
-        </f7-row>
-      </f7-block>
+      <!--      <f7-block class="f7-content-btn">-->
+      <!--        <f7-row class="justify-content-space-between">-->
+      <!--          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>-->
+      <!--          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>-->
+      <!--        </f7-row>-->
+      <!--      </f7-block>-->
 
       <f7-block class="f7-content-footer">
         <p>
@@ -242,11 +242,7 @@ const fbLoginHandler = async function () {
           props.f7router.navigate("/");
           return;
         }
-
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
+        error.message = resp.error.message;
       });
     } else {
       alert(i18n.t("login-register.user-cancelled-register"));

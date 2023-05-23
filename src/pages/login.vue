@@ -54,6 +54,7 @@
         >
           {{ $t("login-register.sign-in") }}
         </f7-button>
+        <p class="error-message">{{ error.message }}</p>
       </f7-block>
     </f7-list>
 
@@ -66,17 +67,17 @@
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>
+          <!--          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>-->
           <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
       </f7-block>
 
-      <f7-block class="f7-content-btn">
-        <f7-row class="justify-content-space-between">
-          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>
-          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>
-        </f7-row>
-      </f7-block>
+      <!--      <f7-block class="f7-content-btn">-->
+      <!--        <f7-row class="justify-content-space-between">-->
+      <!--          <f7-button class="f7-btn">{{ $t("login-register.tiktok") }}</f7-button>-->
+      <!--          <f7-button class="f7-btn">{{ $t("login-register.apple") }}</f7-button>-->
+      <!--        </f7-row>-->
+      <!--      </f7-block>-->
 
       <f7-block class="f7-content-footer">
         <p>
@@ -135,16 +136,14 @@ const startLogin = () => {
       props.f7router.navigate("/");
     } else {
       error.identifier = "";
+      error.message = "";
       error.password = "";
       if (resp.error.details.errors) {
         resp.error.details.errors.forEach(err => {
           error[err.path[0]] = err.message;
         });
       } else {
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
+        error.message = resp.error.message;
       }
     }
   });
@@ -154,17 +153,16 @@ const i18n = useI18n();
 
 const fbLoginHandler = async function () {
   await fbHandler.login().then(response => {
+    error.identifier = "";
+    error.message = "";
+    error.password = "";
     if (response.authResponse) {
       loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
         if (resp.status === "success") {
           props.f7router.navigate("/");
           return;
         }
-
-        f7.toast.show({
-          text: resp.error.message,
-          closeButton: true,
-        });
+        error.message = resp.error.message;
       });
     } else {
       alert(i18n.t("login-register.user-cancelled-login"));
@@ -335,6 +333,15 @@ userData.password = suggestedCredentials.value.suggestedPassword;
 
       .button {
         @include form-button;
+      }
+
+      .error-message {
+        color: red;
+        font-family: "Rubik";
+        font-size: 12px;
+        margin-top: 10px;
+        min-height: 14px;
+        text-align: center;
       }
 
       .f7-btn {
