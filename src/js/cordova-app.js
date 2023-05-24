@@ -16,17 +16,21 @@ const cordovaApp = {
       "backbutton",
       function (e) {
         const currentView = f7.views.current;
-        const panel = f7.panel.get(".panel-right");
+        const panelRightEl = document.querySelector(".notifications-panel");
+        const panelRight = f7.panel ? f7.panel.get(panelRightEl) : null;
 
-        if (panel && panel.opened) {
-          panel.close();
-          return;
-        }
-
-        if (currentView && currentView.router && currentView.router.history.length > 1) {
+        if (f7.panel && panelRight && Object.prototype.hasOwnProperty.call(panelRight, "opened") && panelRight.opened) {
+          e.preventDefault();
+          panelRight.close(panelRightEl);
+          panelRight.on("close", function () {
+            e.preventDefault();
+            return false;
+          });
+        } else if (currentView && currentView.router && currentView.router.history.length > 1) {
           currentView.router.back();
           e.preventDefault();
-          return false;
+        } else {
+          navigator.app.exitApp();
         }
       },
       false,
