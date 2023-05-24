@@ -1,14 +1,12 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-import api from "@/js/api";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
+import api from "@/js/api";
 
 export const useQuizStore = defineStore("quiz", () => {
   const categoryAnswersStore = useCategoryAnswerStore();
 
-  const quizQuestions = ref(
-    localStorage.getItem("quizQuestions") ? JSON.parse(localStorage.getItem("quizQuestions")) : [],
-  );
+  const quizQuestions = ref([]);
   const quizQuestion = ref(null);
   const quizQuestionIndex = ref(0);
   const quizQuestionsLength = ref(0);
