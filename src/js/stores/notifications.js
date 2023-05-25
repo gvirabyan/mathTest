@@ -17,7 +17,7 @@ export const useNotifications = defineStore("notifications", () => {
         )}&sort[0]=read&sort[1]=createdAt:desc`,
       )
       .then(data => {
-        notifications.value = data?.data;
+        notifications.value = data?.data || [];
       });
   };
 
