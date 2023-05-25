@@ -1,5 +1,6 @@
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "./stores/auth";
+import { storeToRefs } from "pinia/dist/pinia";
 
 const exceptionUrls = ["notifications"];
 
@@ -17,7 +18,9 @@ const defaultOptions = () => {
 
 let prevUrl = "";
 const get = async url => {
-  const { logout } = useAuthStore();
+  const authStore = useAuthStore();
+  const { checkLogout } = storeToRefs(authStore);
+  const { logout } = authStore;
   if (prevUrl && prevUrl.split("&")[0] === url.split("&")[0]) {
     if (window.controller) {
       window.controller.abort();
@@ -30,18 +33,23 @@ const get = async url => {
     .then(res => res.json())
     .then(data => {
       if (data.error) throw data.error;
-      else if (!exceptionUrls.includes(url.split("?")[0]) && Object.keys(data).length === 0) {
+      else if (!exceptionUrls.includes(url.split("?")[0]) && Object.keys(data).length === 0 && checkLogout.value) {
         f7.views.main.router.navigate("/error");
       }
       return data;
     })
     .catch(async err => {
       if (err.status === 401) {
+        checkLogout.value = false;
         return await logout().then(() => {
           f7.views.main.router.navigate("/login/");
           return err;
         });
-      } else if (!exceptionUrls.includes(url.split("?")[0]) && err.status) {
+      } else if (
+        !exceptionUrls.includes(url.split("?")[0]) &&
+        err.message.indexOf("aborted") === -1 &&
+        checkLogout.value
+      ) {
         f7.views.main.router.navigate("/error");
       }
       return err;

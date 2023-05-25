@@ -202,8 +202,6 @@ const saveParentsEmailsHandler = async () => {
     errorMsg.value = "";
 
     await saveParentsEmails(parentsEmailsInputs).then(res => {
-      console.log(res);
-
       if (res.status === "success") {
         successPopup.value = true;
         successPopupText.value = i18n.t("profile.send-reports.saved-successfully");

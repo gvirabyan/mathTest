@@ -13,6 +13,9 @@ export const useAuthStore = defineStore("auth", () => {
       : { suggestedLogin: "", suggestedPassword: "" },
   );
 
+  //for logout
+  const checkLogout = ref(true);
+
   // for security page
   const checkPassSave = ref(false);
   const checkAccountData = ref(false);
@@ -57,6 +60,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const login = async (userData, rememberUser = false) => {
+    checkLogout.value = true;
     return api
       .post("auth/local?populate[0]=institution", userData)
       .then(res => res.json())
@@ -80,6 +84,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const loginViaProvider = async (provider, accessToken) => {
+    checkLogout.value = true;
     return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
       if (!data.error) {
         storeJwtAndUser(data);
@@ -92,6 +97,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const register = async (userData, rememberUser = false) => {
+    checkLogout.value = true;
     return api
       .post("auth/local/register", userData)
       .then(res => res.json())
@@ -115,13 +121,13 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const registerByNickname = async userData => {
+    checkLogout.value = true;
     return api
       .post("auth/local/register-nicknamed-user", userData)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
           storeJwtAndUser(data);
-
           return { status: "success" };
         } else {
           return { status: "error", message: data.error };
@@ -130,6 +136,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const forgotPassword = async email => {
+    checkLogout.value = true;
     return api
       .post("auth/forgot-password", { email })
       .then(res => res.json())
@@ -143,6 +150,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const resetPassword = async resetPasswordData => {
+    checkLogout.value = true;
     return api
       .post("auth/reset-password", resetPasswordData)
       .then(res => res.json())
@@ -163,7 +171,6 @@ export const useAuthStore = defineStore("auth", () => {
       .then(data => {
         if (!data.error) {
           user.value = data;
-
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };
@@ -298,6 +305,7 @@ export const useAuthStore = defineStore("auth", () => {
     securityLeavePopup,
     accountLeavePopup,
     accountPath,
+    checkLogout,
     checkAccountData,
     securityPath,
     changeCheckAccountData,
