@@ -1,4 +1,7 @@
 import { f7 } from "framework7-vue";
+import { useAuthStore } from "./stores/auth";
+
+const exceptionUrls = ["notifications"];
 
 const defaultOptions = () => {
   let options = {
@@ -14,6 +17,7 @@ const defaultOptions = () => {
 
 let prevUrl = "";
 const get = async url => {
+  const { logout } = useAuthStore();
   if (prevUrl && prevUrl.split("&")[0] === url.split("&")[0]) {
     if (window.controller) {
       window.controller.abort();
@@ -25,10 +29,22 @@ const get = async url => {
   const request = await fetch(`${import.meta.env.VITE_API_URL}${url}`, { signal: window.signal, ...defaultOptions() })
     .then(res => res.json())
     .then(data => {
-      if (Object.keys(data).length === 0) {
+      if (data.error) throw data.error;
+      else if (!exceptionUrls.includes(url.split("?")[0]) && Object.keys(data).length === 0) {
         f7.views.main.router.navigate("/error");
       }
       return data;
+    })
+    .catch(async err => {
+      if (err.status === 401) {
+        return await logout().then(() => {
+          f7.views.main.router.navigate("/login/");
+          return err;
+        });
+      } else if (!exceptionUrls.includes(url.split("?")[0]) && err.status) {
+        f7.views.main.router.navigate("/error");
+      }
+      return err;
     });
   return request;
 };

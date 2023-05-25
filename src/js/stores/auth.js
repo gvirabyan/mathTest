@@ -252,7 +252,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const logout = async () => {
-    await sendAppInfo(true);
+    // await sendAppInfo(true);
 
     user.value = null;
 
