@@ -26,6 +26,8 @@ const cordovaApp = {
             e.preventDefault();
             return false;
           });
+        } else if (panelRight) {
+          console.log("boop");
         } else if (currentView && currentView.router && currentView.router.history.length > 1) {
           currentView.router.back();
           e.preventDefault();

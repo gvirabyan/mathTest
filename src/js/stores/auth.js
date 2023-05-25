@@ -227,31 +227,22 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const sendAppInfo = async (logout = false) => {
-    if (!window.cordova) return;
-
     const appInfo = {
-      app_opened_datetime: new Date(),
-      user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      app_opened_datetime: logout ? null : new Date(),
+      user_timezone: logout ? null : Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
-    // eslint-disable-next-line no-undef
-    WonderPush.getInstallationId(async function (installationId) {
-      if (logout) {
-        appInfo.app_opened_datetime = null;
-        appInfo.user_timezone = null;
-
-        await updateUser({ ...appInfo });
-        await Promise.all(
-          user.value.installations.map(inst => {
-            api.remove(`installations/${inst.id}`);
-          }),
-        );
-
-        return;
-      }
-
-      return updateUser({ ...appInfo, installation: installationId });
-    });
+    if (window.cordova) {
+      // eslint-disable-next-line no-undef
+      WonderPush.getInstallationId(async function (installationId) {
+        if (logout) {
+          await api.remove(`installations/${installationId}`);
+        } else {
+          appInfo.installation = installationId;
+        }
+      });
+    }
+    await updateUser({ ...appInfo });
   };
 
   const storeJwtAndUser = data => {
