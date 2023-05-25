@@ -29,7 +29,6 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
-import { useCategoryStore } from "@/js/stores/categories";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import BottomMenu from "@/components/bottom-menu.vue";

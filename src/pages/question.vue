@@ -216,6 +216,7 @@ watch(
     if (checkAnswers.value && categoryQuestion.value) {
       selectedClass.value = categoryQuestion.value.classId;
       presentIndex.value = history.value.length;
+      keepPresentIndex.value = presentIndex.value;
       checkAnswers.value = false;
       const questionsL = categoryQuestion.value.questions_amount;
       for (let i = 0; i < history.value.length; i++) {
@@ -321,7 +322,9 @@ const showHistory = point => {
   indexHistory.value = Number(point) - 1;
   if (
     indexHistory.value <= keepPresentIndex.value ||
-    (indexHistory.value <= presentIndex.value && !keepPresentIndex.value)
+    (indexHistory.value <= presentIndex.value &&
+      !keepPresentIndex.value &&
+      (indexHistory.value !== keepPresentIndex.value || questionHistory.value))
   ) {
     indexQuestionHistory.value = indexHistory.value;
     getPoints.value[presentIndex.value].status = "normal";
