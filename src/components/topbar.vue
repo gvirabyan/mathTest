@@ -104,6 +104,7 @@ import { f7 } from "framework7-vue";
 
 const categoriesClassesStore = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(categoriesClassesStore);
+const { hasUnreadNotifications } = storeToRefs(useNotifications());
 
 const props = defineProps({
   tabs: {
@@ -128,7 +129,15 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
+
 const topBarTabs = ref(null);
+const tabsResult = ref(props.tabs);
+const showTabsShadow = ref(true);
+const hasNotificationsPopup = ref(false);
+const showNotificationsPopup = ref(false);
+const activeIndex = ref(0);
+
 watch(
   () => props.changeTab,
   index => {
@@ -141,15 +150,6 @@ watch(
   },
 );
 
-const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
-
-const { hasUnreadNotifications } = storeToRefs(useNotifications());
-
-const tabsResult = ref(props.tabs);
-const showTabsShadow = ref(true);
-const hasNotificationsPopup = ref(false);
-const showNotificationsPopup = ref(false);
-
 onMounted(() => {
   if (props.firstLoadIndex !== 0) {
     selectTab(props.tabs.find((t, i) => i === props.firstLoadIndex).id, props.firstLoadIndex);
@@ -161,7 +161,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeChange);
 });
 
-const activeIndex = ref(0);
 const resizeChange = () => {
   if (
     topBarTabs.value.clientWidth / 2 !==

@@ -35,6 +35,7 @@
     <teleport to=".framework7-modals">
       <success-message-popup
         v-if="isPopupOpened"
+        ref="successMessage"
         :title="currentNotification.attributes?.title || currentNotification.title"
         :text="currentNotification.attributes?.text || currentNotification.text"
         :date="formatDate(currentNotification.attributes?.createdAt) || formatDate(currentNotification.createdAt)"
@@ -60,6 +61,7 @@ const { getNotifications, readNotification } = useNotifications();
 const isLoading = ref(false);
 const isPopupOpened = ref(false);
 const currentNotification = ref(null);
+const successMessage = ref(null);
 
 const getNotificationsHandler = async () => {
   isLoading.value = true;
@@ -90,6 +92,12 @@ watch(currentNotification, value => {
   }
 
   isPopupOpened.value = true;
+});
+
+watch(successMessage, value => {
+  if (value) return;
+
+  isPopupOpened.value = false;
 });
 
 getNotificationsHandler();

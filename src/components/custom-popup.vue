@@ -1,5 +1,5 @@
 <template>
-  <f7-panel v-model:opened="isOpened" right cover swipe swipe-only-close class="custom-popup">
+  <f7-panel ref="customPopup" v-model:opened="isOpened" right cover swipe swipe-only-close class="custom-popup">
     <f7-page>
       <header class="header">
         <div class="header-content-wrapper">
@@ -31,6 +31,7 @@ const props = defineProps({
 const emit = defineEmits(["close-popup"]);
 
 const isOpened = ref(props.isOpenedInitial);
+const customPopup = ref(null);
 
 const closePopup = () => {
   isOpened.value = false;
@@ -43,6 +44,14 @@ watch(
     isOpened.value = val;
   },
 );
+
+watch(customPopup, value => {
+  console.log(value);
+
+  if (value) return;
+
+  emit("close-popup");
+});
 </script>
 
 <style lang="scss">

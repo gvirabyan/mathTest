@@ -9,28 +9,44 @@ const cordovaApp = {
   },
   handleAndroidBackButton() {
     const f7 = this.f7;
-    // const $ = f7.$;
     if (f7.device.electron) return;
 
     document.addEventListener(
       "backbutton",
       function (e) {
-        const currentView = f7.views.current;
+        const modals = document.querySelector(".framework7-modals").children;
         const panelRightEl = document.querySelector(".notifications-panel");
         const panelRight = f7.panel ? f7.panel.get(panelRightEl) : null;
+        const currentView = f7.views.current;
 
-        if (f7.panel && panelRight && Object.prototype.hasOwnProperty.call(panelRight, "opened") && panelRight.opened) {
+        if (modals.length) {
           e.preventDefault();
+
+          for (const modal of modals) {
+            e.preventDefault();
+            modal.remove();
+          }
+
+          return false;
+        } else if (
+          f7.panel &&
+          panelRight &&
+          Object.prototype.hasOwnProperty.call(panelRight, "opened") &&
+          panelRight.opened
+        ) {
+          e.preventDefault();
+
           panelRight.close(panelRightEl);
           panelRight.on("close", function () {
             e.preventDefault();
             return false;
           });
-        } else if (panelRight) {
-          console.log("boop");
+
+          return false;
         } else if (currentView && currentView.router && currentView.router.history.length > 1) {
-          currentView.router.back();
           e.preventDefault();
+          currentView.router.back();
+          return false;
         } else {
           navigator.app.exitApp();
         }
