@@ -1,10 +1,15 @@
 <template>
-  <f7-page name="forgot-password" login-screen>
-    <f7-navbar title="Forgot Password?" back-link="Back" />
+  <f7-page class="forgot-password" name="forgot-password" login-screen>
     <f7-login-screen-title>Forgot Password?</f7-login-screen-title>
 
     <f7-list form>
-      <f7-list-input v-model:value="email" type="text" name="email" placeholder="Your email" />
+      <f7-list-input
+        v-model:value="email"
+        class="custom-list-input"
+        type="text"
+        name="email"
+        placeholder="Your email"
+      />
     </f7-list>
 
     <f7-list>
@@ -16,7 +21,7 @@
           >Send email</f7-button
         >
 
-        <f7-block-footer> <br />Click <a href="/">here</a> to back Main page </f7-block-footer>
+        <f7-block-footer> <br />Click <a class="here-text" href="/">here</a> to back Main page </f7-block-footer>
       </f7-block>
     </f7-list>
   </f7-page>
@@ -56,4 +61,6 @@ const forgotPasswordHandler = async () => {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+@import "@/assets/scss/pages/forgot-password.scss";
+</style>
