@@ -2,10 +2,11 @@
   <f7-page class="hg-dashboard-content not-found-page" @page:beforein="getAllData">
     <div class="not-found-page-content">
       <f7-block>
-        <f7-block-title>
+        <f7-block-title>404 Not Found</f7-block-title>
+        <p class="unfortunately-text">
           Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends
           and human relationships. Enjoy)).
-        </f7-block-title>
+        </p>
 
         <div v-if="mathematician" class="mathematician">
           <div class="mathematician-avatar">

@@ -14,6 +14,12 @@
         width: 150px;
       }
       .block-title {
+        color: #212121;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 32px;
+      }
+      p {
         all: unset;
         background: unset;
         margin: 0 0 30px;
@@ -32,6 +38,7 @@
           float: left;
           padding-right: 15px;
           .mathematician-name {
+            display: block;
             text-align: center;
           }
         }

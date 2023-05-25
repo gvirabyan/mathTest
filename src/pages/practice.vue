@@ -1,10 +1,5 @@
 <template>
-  <f7-page
-    class="hg-practice-page"
-    name="player-vs-machine"
-    @page:beforein="getPastCategories"
-    @page:afterin="loadFirstTab"
-  >
+  <f7-page class="hg-practice-page" name="player-vs-machine" @page:afterin="loadFirstTab">
     <topbar ref="topBar" :tabs="practiceTabs" :search="false">
       <template #title>{{ $t("practice.practice") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
@@ -49,7 +44,6 @@ const props = defineProps({
 });
 
 const { user } = storeToRefs(useAuthStore());
-const { getPastCategories } = useCategoryStore();
 const { setQuizMode } = useQuizStore();
 
 const gameModes = [
