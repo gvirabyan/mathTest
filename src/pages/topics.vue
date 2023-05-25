@@ -170,7 +170,9 @@ const touchEnd = event => {
 };
 
 const classesTabs = computed(() =>
-  categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} ${i18n.t("topics.classes")}` })),
+  categoryClasses.value
+    ? categoryClasses.value.map(c => ({ id: c.id, name: `${c.attributes.name} ${i18n.t("topics.classes")}` }))
+    : [],
 );
 
 const getAfterText = category => {
