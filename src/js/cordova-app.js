@@ -1,55 +1,65 @@
 const cordovaApp = {
   f7: null,
   handleSplashScreen() {
-    const f7 = this.f7;
+    const f7 = cordovaApp.f7;
     if (!window.navigator.splashscreen || f7.device.electron) return;
     setTimeout(() => {
       window.navigator.splashscreen.hide();
     }, 2000);
   },
   handleAndroidBackButton() {
-    const f7 = this.f7;
+    const f7 = cordovaApp.f7;
+    const $ = f7.$;
     if (f7.device.electron) return;
 
     document.addEventListener(
       "backbutton",
       function (e) {
         const modals = document.querySelector(".framework7-modals").children;
-        const panelRightEl = document.querySelector(".notifications-panel");
-        const panelRight = f7.panel ? f7.panel.get(panelRightEl) : null;
         const currentView = f7.views.current;
+        // const disablePageChange = () => {
+        //   if (!currentView || !currentView.router || !currentView.router.history.length) {
+        //     currentView.router.allowPageChange = true;
+        //   }
+        //
+        //   currentView.router.allowPageChange = false;
+        // };
 
         if (modals.length) {
-          e.preventDefault();
+          currentView.router.allowPageChange = false;
+          // disablePageChange();
 
           for (const modal of modals) {
-            e.preventDefault();
             modal.remove();
+            e.preventDefault();
           }
 
           return false;
-        } else if (
-          f7.panel &&
-          panelRight &&
-          Object.prototype.hasOwnProperty.call(panelRight, "opened") &&
-          panelRight.opened
-        ) {
-          e.preventDefault();
-
-          panelRight.close(panelRightEl);
-          panelRight.on("close", function () {
-            e.preventDefault();
-            return false;
-          });
-
-          return false;
-        } else if (currentView && currentView.router && currentView.router.history.length > 1) {
-          e.preventDefault();
-          currentView.router.back();
-          return false;
-        } else {
-          navigator.app.exitApp();
         }
+
+        if ($(".panel.panel-in").length) {
+          currentView.router.allowPageChange = false;
+
+          f7.panel && f7.panel.close(".panel.panel-in");
+          e.preventDefault();
+
+          return false;
+        }
+
+        if (
+          currentView &&
+          currentView.router &&
+          currentView.router.history.length > 1 &&
+          (!modals.length || !$(".panel.panel-in").length)
+        ) {
+          currentView.router.allowPageChange = true;
+          currentView.router.back();
+
+          e.preventDefault();
+          return false;
+        }
+
+        navigator.app.exitApp();
       },
       false,
     );
