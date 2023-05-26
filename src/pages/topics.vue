@@ -193,7 +193,7 @@ const emptyData = () => {
 };
 
 const getCategoriesByClass = async id => {
-  if (calledId !== id) {
+  if (calledId !== id && props.f7route.name === "Topics") {
     calledId = id;
     isLoading.value = true;
     await delay();
