@@ -44,7 +44,6 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
-import { f7 } from "framework7-vue";
 import { useI18n } from "vue-i18n";
 
 const { resetPassword } = useAuthStore();

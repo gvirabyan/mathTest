@@ -34,7 +34,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { f7 } from "framework7-vue";
 import { useAuthStore } from "@/js/stores/auth";
 
 const { forgotPassword } = useAuthStore();
