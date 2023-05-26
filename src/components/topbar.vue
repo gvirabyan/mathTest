@@ -17,7 +17,7 @@
           </svg>
         </f7-button>
 
-        <f7-button class="top-bar-btn" @click="toggleNotificationsPopup">
+        <f7-button class="top-bar-btn" @click="bus.emit('open-notifications', true)">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M18 9C18 10.6667 18 12.3333 18 14C18 16 18.6667 17.3333 20 18H4C5.33333 17.3333 6 16 6 14C6 12.3333 6 10.6667 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9Z"
@@ -58,52 +58,23 @@
       </div>
     </div>
   </div>
-
-  <custom-popup
-    :is-opened-initial="showNotificationsPopup"
-    class="notifications-panel"
-    @close-popup="toggleNotificationsPopup"
-  >
-    <template #title>
-      <h2 class="title">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M16.4997 8.25C16.4997 9.77778 16.4997 11.3056 16.4997 12.8333C16.4997 14.6667 17.1108 15.8889 18.333 16.5H3.66634C4.88856 15.8889 5.49968 14.6667 5.49968 12.8333C5.49968 11.3056 5.49968 9.77778 5.49968 8.25C5.49968 5.21243 7.96211 2.75 10.9997 2.75C14.0372 2.75 16.4997 5.21243 16.4997 8.25Z"
-            stroke="#8419FF"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M9.16634 17.4165C9.16634 18.429 9.98715 19.2498 10.9997 19.2498C12.0122 19.2498 12.833 18.429 12.833 17.4165"
-            stroke="#8419FF"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
-        {{ $t("top-bar.notifications") }}
-      </h2>
-    </template>
-
-    <template #content>
-      <notifications />
-    </template>
-  </custom-popup>
 </template>
 
 <script setup>
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
-import { useNotifications } from "@/js/stores/notifications";
-import CustomPopup from "@/components/custom-popup.vue";
-import Notifications from "@/components/notifications.vue";
-import { storeToRefs } from "pinia";
-import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import { f7 } from "framework7-vue";
+import { storeToRefs } from "pinia";
+import { useEventBus } from "@vueuse/core";
+import { useNotifications } from "@/js/stores/notifications";
+import { useCategoryClassesStore } from "@/js/stores/category-classes";
+import delay from "@/js/helpers/delay";
+
+const bus = useEventBus("notifications");
 
 const categoriesClassesStore = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(categoriesClassesStore);
+const { hasUnreadNotifications } = storeToRefs(useNotifications());
+const { getNotifications } = useNotifications();
 
 const props = defineProps({
   tabs: {
@@ -128,7 +99,14 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
+
 const topBarTabs = ref(null);
+const tabsResult = ref(props.tabs);
+const showTabsShadow = ref(true);
+const hasNotificationsPopup = ref(false);
+const activeIndex = ref(0);
+
 watch(
   () => props.changeTab,
   index => {
@@ -141,15 +119,6 @@ watch(
   },
 );
 
-const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
-
-const { hasUnreadNotifications } = storeToRefs(useNotifications());
-
-const tabsResult = ref(props.tabs);
-const showTabsShadow = ref(true);
-const hasNotificationsPopup = ref(false);
-const showNotificationsPopup = ref(false);
-
 onMounted(() => {
   if (props.firstLoadIndex !== 0) {
     selectTab(props.tabs.find((t, i) => i === props.firstLoadIndex).id, props.firstLoadIndex);
@@ -161,7 +130,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeChange);
 });
 
-const activeIndex = ref(0);
 const resizeChange = () => {
   if (
     topBarTabs.value.clientWidth / 2 !==
@@ -218,8 +186,9 @@ const selectFirstTab = async (tabs, selected = true) => {
   }
 };
 
-const toggleNotificationsPopup = () => {
-  showNotificationsPopup.value = !showNotificationsPopup.value;
+const getNotificationsHandler = async () => {
+  await delay(500);
+  await getNotifications();
 };
 
 watch(
@@ -240,6 +209,8 @@ onMounted(() => {
 defineExpose({
   selectFirstTab,
 });
+
+getNotificationsHandler();
 </script>
 
 <style lang="scss" scoped>

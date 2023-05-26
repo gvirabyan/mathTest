@@ -1,39 +1,59 @@
 const cordovaApp = {
   f7: null,
   handleSplashScreen() {
-    const f7 = this.f7;
+    const f7 = cordovaApp.f7;
     if (!window.navigator.splashscreen || f7.device.electron) return;
     setTimeout(() => {
       window.navigator.splashscreen.hide();
     }, 2000);
   },
   handleAndroidBackButton() {
-    const f7 = this.f7;
-    // const $ = f7.$;
+    const f7 = cordovaApp.f7;
+    const $ = f7.$;
+    const currentView = f7.views.current;
+    currentView.router.allowPageChange = false;
+
     if (f7.device.electron) return;
 
     document.addEventListener(
       "backbutton",
       function (e) {
+        const modals = document.querySelector(".framework7-modals").children;
         const currentView = f7.views.current;
-        const panelRightEl = document.querySelector(".notifications-panel");
-        const panelRight = f7.panel ? f7.panel.get(panelRightEl) : null;
 
-        if (f7.panel && panelRight && Object.prototype.hasOwnProperty.call(panelRight, "opened") && panelRight.opened) {
+        if (modals.length) {
+          for (const modal of modals) {
+            modal.remove();
+          }
+
           e.preventDefault();
-          panelRight.close(panelRightEl);
-          panelRight.on("close", function () {
-            e.preventDefault();
-            return false;
-          });
-        } else if (panelRight) {
-          console.log("boop");
-        } else if (currentView && currentView.router && currentView.router.history.length > 1) {
+          return false;
+        }
+
+        if ($(".panel.panel-in").length) {
+          f7.panel && f7.panel.close(".panel.panel-in");
+          e.preventDefault();
+
+          return false;
+        }
+
+        if (
+          currentView &&
+          currentView.router &&
+          currentView.router.history.length > 1 &&
+          (!modals.length || !$(".panel.panel-in").length)
+        ) {
+          currentView.router.allowPageChange = true;
+
           currentView.router.back();
           e.preventDefault();
-        } else {
-          navigator.app.exitApp();
+
+          currentView.router.allowPageChange = false;
+
+          return false;
         }
+
+        navigator.app.exitApp();
       },
       false,
     );

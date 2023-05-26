@@ -32,9 +32,10 @@
       <p class="text">{{ $t("notification.play-more-games") }}</p>
     </f7-block>
 
-    <teleport to=".framework7-modals">
+    <teleport v-if="isPopupOpened" to=".framework7-modals">
       <success-message-popup
         v-if="isPopupOpened"
+        ref="successMessage"
         :title="currentNotification.attributes?.title || currentNotification.title"
         :text="currentNotification.attributes?.text || currentNotification.text"
         :date="formatDate(currentNotification.attributes?.createdAt) || formatDate(currentNotification.createdAt)"
@@ -47,28 +48,22 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { defineAsyncComponent, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useElementVisibility } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
-import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue";
+
+const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const { notifications } = storeToRefs(useNotifications());
-const { getNotifications, readNotification } = useNotifications();
+const { readNotification } = useNotifications();
 
 const isLoading = ref(false);
 const isPopupOpened = ref(false);
 const currentNotification = ref(null);
-
-const getNotificationsHandler = async () => {
-  isLoading.value = true;
-
-  await delay(500);
-  await getNotifications();
-
-  isLoading.value = false;
-};
+const successMessage = ref(null);
+const successMessageIsVisible = useElementVisibility(successMessage);
 
 const selectNotification = id => {
   currentNotification.value = notifications.value.find(n => n.id === id);
@@ -92,7 +87,11 @@ watch(currentNotification, value => {
   isPopupOpened.value = true;
 });
 
-getNotificationsHandler();
+watch(successMessageIsVisible, value => {
+  if (value) return;
+
+  isPopupOpened.value = false;
+});
 </script>
 
 <style lang="scss">
