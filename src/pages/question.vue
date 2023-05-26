@@ -77,12 +77,21 @@
       </div>
       <div class="hg-actions-btns-content">
         <f7-row v-if="!sentAnswer">
-          <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">
+          <f7-button
+            :class="{
+              'button button-large button-skip': true,
+              'btn-disable': isSending,
+            }"
+            :disabled="isSending"
+            @click="skip"
+          >
             {{ $t("buttons.skip") }}
           </f7-button>
           <f7-button
-            class="button button-large button-submit"
-            :class="{ 'btn-disable': !chosenAnswer || isSending }"
+            :class="{
+              'button button-large button-submit': true,
+              'btn-disable': !chosenAnswer || isSending,
+            }"
             @click="sendAnswer"
           >
             {{ $t("buttons.send") }}
@@ -282,7 +291,7 @@ const chooseAnswer = (answer, index) => {
 
 const status = ref("normal");
 const sendAnswer = () => {
-  if (chosenAnswer.value) {
+  if (chosenAnswer.value && !isSending.value) {
     isSending.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
 
@@ -367,28 +376,30 @@ function shuffle(a) {
 const skippedPoints = ref([]);
 
 const skip = () => {
-  isSending.value = true;
-  status.value = "normal";
-  updateUserAnsweredQuestions({
-    users_permissions_user: user.value.id,
-    question: question.value.id,
-    category: categoryQuestion.value.id,
-    answer: "",
-    status: "skipped",
-    answer_type: "topic",
-  }).then(resp => {
-    isSending.value = false;
-    skippedPoints.value.push(presentIndex.value + 1);
-    if (resp.status === "success") {
-      next();
-      return;
-    }
+  if (isSending.value) {
+    isSending.value = true;
+    status.value = "normal";
+    updateUserAnsweredQuestions({
+      users_permissions_user: user.value.id,
+      question: question.value.id,
+      category: categoryQuestion.value.id,
+      answer: "",
+      status: "skipped",
+      answer_type: "topic",
+    }).then(resp => {
+      isSending.value = false;
+      skippedPoints.value.push(presentIndex.value + 1);
+      if (resp.status === "success") {
+        next();
+        return;
+      }
 
-    f7.toast.show({
-      text: resp.message,
-      closeButton: true,
+      f7.toast.show({
+        text: resp.message,
+        closeButton: true,
+      });
     });
-  });
+  }
 };
 
 const checkSkipPopup = ref(false);
