@@ -48,12 +48,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { defineAsyncComponent, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useElementVisibility } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
 import LoadingSmall from "@/components/loading-small.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue";
-import { useElementVisibility } from "@vueuse/core";
+
+const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const { notifications } = storeToRefs(useNotifications());
 const { readNotification } = useNotifications();
@@ -63,15 +64,6 @@ const isPopupOpened = ref(false);
 const currentNotification = ref(null);
 const successMessage = ref(null);
 const successMessageIsVisible = useElementVisibility(successMessage);
-
-// const getNotificationsHandler = async () => {
-//   isLoading.value = true;
-//
-//   await delay(500);
-//   await getNotifications();
-//
-//   isLoading.value = false;
-// };
 
 const selectNotification = id => {
   currentNotification.value = notifications.value.find(n => n.id === id);
@@ -100,8 +92,6 @@ watch(successMessageIsVisible, value => {
 
   isPopupOpened.value = false;
 });
-
-// getNotificationsHandler();
 </script>
 
 <style lang="scss">

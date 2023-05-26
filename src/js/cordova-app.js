@@ -10,6 +10,9 @@ const cordovaApp = {
   handleAndroidBackButton() {
     const f7 = cordovaApp.f7;
     const $ = f7.$;
+    const currentView = f7.views.current;
+    currentView.router.allowPageChange = false;
+
     if (f7.device.electron) return;
 
     document.addEventListener(
@@ -17,29 +20,17 @@ const cordovaApp = {
       function (e) {
         const modals = document.querySelector(".framework7-modals").children;
         const currentView = f7.views.current;
-        // const disablePageChange = () => {
-        //   if (!currentView || !currentView.router || !currentView.router.history.length) {
-        //     currentView.router.allowPageChange = true;
-        //   }
-        //
-        //   currentView.router.allowPageChange = false;
-        // };
 
         if (modals.length) {
-          currentView.router.allowPageChange = false;
-          // disablePageChange();
-
           for (const modal of modals) {
             modal.remove();
-            e.preventDefault();
           }
 
+          e.preventDefault();
           return false;
         }
 
         if ($(".panel.panel-in").length) {
-          currentView.router.allowPageChange = false;
-
           f7.panel && f7.panel.close(".panel.panel-in");
           e.preventDefault();
 
@@ -53,9 +44,12 @@ const cordovaApp = {
           (!modals.length || !$(".panel.panel-in").length)
         ) {
           currentView.router.allowPageChange = true;
-          currentView.router.back();
 
+          currentView.router.back();
           e.preventDefault();
+
+          currentView.router.allowPageChange = false;
+
           return false;
         }
 

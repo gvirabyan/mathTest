@@ -1,14 +1,5 @@
 <template>
   <f7-app v-bind="f7params">
-    <!-- Left panel with cover effect-->
-    <!--    <f7-panel left cover dark>-->
-    <!--      <f7-page>-->
-    <!--        <f7-navbar title="Menu" />-->
-
-    <!--        <main-menu />-->
-    <!--      </f7-page>-->
-    <!--    </f7-panel>-->
-
     <custom-popup
       ref="customPopupRef"
       :is-opened-initial="openRightPanel"

@@ -58,40 +58,6 @@
       </div>
     </div>
   </div>
-
-  <!--  <custom-popup-->
-  <!--    ref="customPopupRef"-->
-  <!--    :is-opened-initial="showNotificationsPopup"-->
-  <!--    class="notifications-panel"-->
-  <!--    @close-popup="showNotificationsPopup = false"-->
-  <!--  >-->
-  <!--    <template #title>-->
-  <!--      <h2 class="title">-->
-  <!--        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-  <!--          <path-->
-  <!--            d="M16.4997 8.25C16.4997 9.77778 16.4997 11.3056 16.4997 12.8333C16.4997 14.6667 17.1108 15.8889 18.333 16.5H3.66634C4.88856 15.8889 5.49968 14.6667 5.49968 12.8333C5.49968 11.3056 5.49968 9.77778 5.49968 8.25C5.49968 5.21243 7.96211 2.75 10.9997 2.75C14.0372 2.75 16.4997 5.21243 16.4997 8.25Z"-->
-  <!--            stroke="#8419FF"-->
-  <!--            stroke-width="2"-->
-  <!--            stroke-linecap="round"-->
-  <!--            stroke-linejoin="round"-->
-  <!--          />-->
-  <!--          <path-->
-  <!--            d="M9.16634 17.4165C9.16634 18.429 9.98715 19.2498 10.9997 19.2498C12.0122 19.2498 12.833 18.429 12.833 17.4165"-->
-  <!--            stroke="#8419FF"-->
-  <!--            stroke-width="2"-->
-  <!--            stroke-linecap="round"-->
-  <!--            stroke-linejoin="round"-->
-  <!--          />-->
-  <!--        </svg>-->
-
-  <!--        {{ $t("top-bar.notifications") }}-->
-  <!--      </h2>-->
-  <!--    </template>-->
-
-  <!--    <template #content>-->
-  <!--      <notifications />-->
-  <!--    </template>-->
-  <!--  </custom-popup>-->
 </template>
 
 <script setup>
@@ -101,8 +67,6 @@ import { storeToRefs } from "pinia";
 import { useEventBus } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
-import CustomPopup from "@/components/custom-popup.vue";
-import Notifications from "@/components/notifications.vue";
 import delay from "@/js/helpers/delay";
 
 const bus = useEventBus("notifications");
