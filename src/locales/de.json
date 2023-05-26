@@ -24,7 +24,11 @@
     "class/course": "Class/course",
     "your-class/course": "Your class/course",
     "E-mail": "E-mail",
+    "your-email": "Your email",
+    "paste-email": "Paste the code from the email",
     "password": "Password",
+    "enter-password": "Enter your password",
+    "enter-password-again": "Enter your password once again",
     "confirm-password": "confirm password",
     "new-password": "New password",
     "confirm-new-password": "Confirm new password"
@@ -71,6 +75,19 @@
     "already-have-account": "Already have an account? ",
     "user-cancelled-login": "User cancelled login or did not fully authorize.",
     "user-cancelled-register": "User cancelled register or did not fully authorize."
+  },
+
+  "forgot-password": {
+    "forgot-password": "Forgot Password ?",
+    "send-email": "Send email",
+    "click": "click",
+    "here": "here",
+    "to-back-main-page": "to back Main page"
+  },
+
+  "reset-password": {
+    "reset-password": "Reset Password",
+    "error-msg": "Password and password confirmation should match"
   },
 
   "activity": {

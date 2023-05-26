@@ -1,9 +1,9 @@
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "./stores/auth";
 import { storeToRefs } from "pinia/dist/pinia";
+import configData from "../../config";
 
-const exceptionUrls = ["notifications"];
-
+const { exceptionUrls } = configData;
 const defaultOptions = () => {
   let options = {
     headers: {
@@ -33,7 +33,11 @@ const get = async url => {
     .then(res => res.json())
     .then(data => {
       if (data.error) throw data.error;
-      else if (!exceptionUrls.includes(url.split("?")[0]) && Object.keys(data).length === 0 && checkLogout.value) {
+      else if (
+        !exceptionUrls.includes(url.split("?")[0].split("/").reverse()[0]) &&
+        Object.keys(data).length === 0 &&
+        checkLogout.value
+      ) {
         f7.views.main.router.navigate("/error");
       }
       return data;
