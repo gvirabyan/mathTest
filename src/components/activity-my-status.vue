@@ -54,7 +54,7 @@
             color="#8419FF"
             :percent="userStatus.past_categories_percent"
             ><template #percent>{{ userStatus.past_categories_percent }}</template>
-            <template #amount>{{ userStatus.past_categories_count }}/{{ userStatus.categories_count }}</template>
+            <template #amount>{{ userStatus.past_categories_count }} of {{ userStatus.categories_count }}</template>
             <template #info>{{ $t("activity.my-status.categories-were-answered") }}</template>
           </custom-gauge>
         </f7-block>
