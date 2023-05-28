@@ -376,30 +376,26 @@ function shuffle(a) {
 const skippedPoints = ref([]);
 
 const skip = () => {
-  if (isSending.value) {
-    isSending.value = true;
-    status.value = "normal";
-    updateUserAnsweredQuestions({
-      users_permissions_user: user.value.id,
-      question: question.value.id,
-      category: categoryQuestion.value.id,
-      answer: "",
-      status: "skipped",
-      answer_type: "topic",
-    }).then(resp => {
-      isSending.value = false;
-      skippedPoints.value.push(presentIndex.value + 1);
-      if (resp.status === "success") {
-        next();
-        return;
-      }
+  status.value = "normal";
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: question.value.id,
+    category: categoryQuestion.value.id,
+    answer: "",
+    status: "skipped",
+    answer_type: "topic",
+  }).then(resp => {
+    skippedPoints.value.push(presentIndex.value + 1);
+    if (resp.status === "success") {
+      next();
+      return;
+    }
 
-      f7.toast.show({
-        text: resp.message,
-        closeButton: true,
-      });
+    f7.toast.show({
+      text: resp.message,
+      closeButton: true,
     });
-  }
+  });
 };
 
 const checkSkipPopup = ref(false);
