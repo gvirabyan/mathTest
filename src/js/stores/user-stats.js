@@ -43,15 +43,18 @@ export const useUserStats = defineStore("user-stats", () => {
         .then(data => {
           if (data.error) {
             reject("error");
+            return;
           }
-          userStatus.last_quiz = data.last_quiz;
-          userStatus.last_update = data.last_update;
-          userStatus.points = data.points;
-          userStatus.time_in_app = data.time_in_app;
-          userStatus.past_categories_count = data.past_categories_count;
-          userStatus.categories_count = data.categories_count;
-          userStatus.past_categories_percent = data.past_categories_percent;
-          resolve(userStatus);
+          if (data.time_in_app !== undefined) {
+            userStatus.last_quiz = data.last_quiz;
+            userStatus.last_update = data.last_update;
+            userStatus.points = data.points;
+            userStatus.time_in_app = data.time_in_app;
+            userStatus.past_categories_count = data.past_categories_count;
+            userStatus.categories_count = data.categories_count;
+            userStatus.past_categories_percent = data.past_categories_percent;
+          }
+          resolve(data);
         })
         .catch(error => {
           reject(error);

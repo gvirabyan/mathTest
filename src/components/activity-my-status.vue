@@ -136,7 +136,17 @@ const questionsSelectDefault = computed(() =>
 const getUserStatusHandler = async () => {
   isLoading.value = true;
 
-  await getUserStatus();
+  await getUserStatus().then(data => {
+    if (userStatus.value.points === undefined) {
+      userStatus.value.last_quiz = data.last_quiz;
+      userStatus.value.last_update = data.last_update;
+      userStatus.value.points = data.points;
+      userStatus.value.time_in_app = data.time_in_app;
+      userStatus.value.past_categories_count = data.past_categories_count;
+      userStatus.value.categories_count = data.categories_count;
+      userStatus.value.past_categories_percent = data.past_categories_percent;
+    }
+  });
 
   isLoading.value = false;
 };
