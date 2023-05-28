@@ -16,11 +16,11 @@
             :percent="answersStats.topic_answers.percent"
           >
             <template #percent>{{ answersStats.topic_answers.percent }}</template>
-            <template #amount>{{ answersStats.questions_left_count }}</template>
+            <template #amount>{{ answersStats.answers_count }}</template>
             <template #info
               >{{
                 `${$t("activity.my-answers.of")} ${answersStats.questions_count} ${$t(
-                  "activity.my-answers.questions-left",
+                  "activity.my-answers.questions-passed",
                 )}`
               }}
             </template>

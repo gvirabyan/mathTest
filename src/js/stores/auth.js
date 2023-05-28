@@ -180,7 +180,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const updateUser = async userData => {
     return api
-      .put(`users/${user.value.id}`, { ...userData })
+      .put(`users/${localStorage.getItem("user-id")}`, { ...userData })
       .then(res => res.json())
       .then(data => {
         if (!data.error) {

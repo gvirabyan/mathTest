@@ -122,7 +122,8 @@ const colorWithoutSharp = computed(() => props.color.replace("#", ""));
   }
 
   .info {
-    margin: 0;
+    width: 70%;
+    margin: 0 auto;
     font-size: 12px;
     line-height: 14px;
   }

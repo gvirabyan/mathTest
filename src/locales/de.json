@@ -142,7 +142,7 @@
     },
     "my-answers": {
       "summary": "Summary",
-      "questions-left": "questions left",
+      "questions-passed": "questions passed",
       "of": "of",
       "correct-answers": "correct answers",
       "wrong-answers": "wrong answers",
