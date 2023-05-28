@@ -34,6 +34,7 @@
         }
 
         .item-title {
+          white-space: unset;
           display: flex;
           align-items: baseline;
           gap: 8px;
