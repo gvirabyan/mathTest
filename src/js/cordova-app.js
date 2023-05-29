@@ -1,3 +1,5 @@
+// import Dom7 from "dom7";
+
 const cordovaApp = {
   f7: null,
   handleSplashScreen() {
@@ -9,7 +11,7 @@ const cordovaApp = {
   },
   handleAndroidBackButton() {
     const f7 = cordovaApp.f7;
-    const $ = f7.$;
+    // const $$ = Dom7;
     const currentView = f7.views.current;
     currentView.router.allowPageChange = false;
 
@@ -18,37 +20,30 @@ const cordovaApp = {
     document.addEventListener(
       "backbutton",
       function (e) {
-        const modals = document.querySelector(".framework7-modals").children;
+        // const modals = $$(".framework7-modals").children();
+        // const panels = $$(".panel.panel-in");
         const currentView = f7.views.current;
 
-        if (modals.length) {
-          for (const modal of modals) {
-            modal.remove();
-          }
+        // if (modals.length) {
+        //   modals.each(modal => modal.remove());
+        //
+        //   e.preventDefault();
+        //   return false;
+        // }
 
-          e.preventDefault();
-          return false;
-        }
+        // if (panels.length) {
+        //   panels.each(() => {
+        //     f7.panel && f7.panel.close(".panel.panel-in");
+        //     e.preventDefault();
+        //   });
+        //
+        //   e.preventDefault();
+        //   return false;
+        // }
 
-        if ($(".panel.panel-in").length) {
-          f7.panel && f7.panel.close(".panel.panel-in");
-          e.preventDefault();
-
-          return false;
-        }
-
-        if (
-          currentView &&
-          currentView.router &&
-          currentView.router.history.length > 1 &&
-          (!modals.length || !$(".panel.panel-in").length)
-        ) {
-          currentView.router.allowPageChange = true;
-
+        if (currentView && currentView.router && currentView.router.history.length > 1) {
           currentView.router.back();
           e.preventDefault();
-
-          currentView.router.allowPageChange = false;
 
           return false;
         }

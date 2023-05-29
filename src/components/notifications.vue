@@ -35,7 +35,6 @@
     <teleport v-if="isPopupOpened" to=".framework7-modals">
       <success-message-popup
         v-if="isPopupOpened"
-        ref="successMessage"
         :title="currentNotification.attributes?.title || currentNotification.title"
         :text="currentNotification.attributes?.text || currentNotification.text"
         :date="formatDate(currentNotification.attributes?.createdAt) || formatDate(currentNotification.createdAt)"
@@ -50,7 +49,6 @@
 <script setup>
 import { defineAsyncComponent, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useElementVisibility } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
 import LoadingSmall from "@/components/loading-small.vue";
 
@@ -62,8 +60,6 @@ const { readNotification } = useNotifications();
 const isLoading = ref(false);
 const isPopupOpened = ref(false);
 const currentNotification = ref(null);
-const successMessage = ref(null);
-const successMessageIsVisible = useElementVisibility(successMessage);
 
 const selectNotification = id => {
   currentNotification.value = notifications.value.find(n => n.id === id);
@@ -85,12 +81,6 @@ watch(currentNotification, value => {
   }
 
   isPopupOpened.value = true;
-});
-
-watch(successMessageIsVisible, value => {
-  if (value) return;
-
-  isPopupOpened.value = false;
 });
 </script>
 
