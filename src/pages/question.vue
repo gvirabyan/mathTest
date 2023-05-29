@@ -105,7 +105,6 @@
     </div>
     <loading-small v-else-if="isLoading" />
   </f7-page>
-
   <leave-page-popup
     v-if="checkSkipPopup"
     title=""
@@ -218,7 +217,7 @@ const presentIndex = ref(0);
 const getPoints = ref([]);
 const circles = ref(null);
 const checkAnswers = ref(true);
-const startIndex = ref(0);
+// const startIndex = ref(0);
 watch(
   () => questions.value,
   async () => {
@@ -427,8 +426,10 @@ const next = async () => {
   if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
     const quantity = skippedPoints.value.length;
     if (quantity === 1) {
+      keepPresentIndex.value = null;
       checkSkipPopup.value = i18n.t("question.single-skipped-text");
     } else {
+      keepPresentIndex.value = null;
       checkSkipPopup.value = `${i18n.t("question.skipped-first-text")} ${quantity} ${i18n.t(
         "question.skipped-second-text",
       )}`;
@@ -437,13 +438,6 @@ const next = async () => {
   }
 
   clearChosenData();
-  startIndex.value++;
-  if (startIndex.value + 3 === questions.value.length) {
-    await getQuestions(props.f7route.params.categoryID);
-  }
-  if (startIndex.value + 1 === questions.value.length) {
-    startIndex.value = 0;
-  }
   getPoints.value[presentIndex.value].status = status.value;
   if (!skippedPoint) {
     skippedPoints.value = [];
