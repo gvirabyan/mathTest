@@ -12,8 +12,10 @@ export const useQuizStore = defineStore("quiz", () => {
   const quizQuestionsLength = ref(0);
   const answeredQuizQuestions = ref([]);
   const quizMode = ref(null);
+  const quizRivalType = ref("machine");
+  const quizRivalId = ref(null);
   const userScore = ref(0);
-  const machineScore = ref(0);
+  const rivalScore = ref(0);
 
   const currentQuizQuestionNumber = computed(() =>
     answeredQuizQuestions.value.length + 1 > quizQuestionsLength.value
@@ -21,7 +23,7 @@ export const useQuizStore = defineStore("quiz", () => {
       : answeredQuizQuestions.value.length + 1,
   );
 
-  const getQuizQuestions = async limit => {
+  const getQuizQuestions = async (limit, rival = "machine") => {
     if (quizQuestions.value.length) {
       quizQuestions.value = quizQuestions.value.filter(q => !answeredQuizQuestions.value.includes(q.id));
       quizQuestionIndex.value = 0;
@@ -29,17 +31,21 @@ export const useQuizStore = defineStore("quiz", () => {
       return;
     }
 
-    return api.get(`quiz-questions?limit=${limit}`).then(data => {
+    return api.get(`quiz-questions?limit=${limit}&rival=${rival}`).then(data => {
       quizQuestions.value = data.questions || [];
       quizQuestion.value = quizQuestions.value[quizQuestionIndex.value];
       quizQuestionsLength.value = quizQuestions.value.length;
       categoryAnswersStore.categoryAnswers = data.categories_answers || [];
+
+      if (data.rival_user) {
+        quizRivalId.value = data.rival_user;
+      }
     });
   };
 
-  const setQuizMode = mode => {
-    quizMode.value = mode;
-  };
+  const setQuizMode = mode => (quizMode.value = mode);
+
+  const setQuizRivalType = rival => (quizRivalType.value = rival);
 
   const getNextQuizQuestion = () => {
     quizQuestionIndex.value++;
@@ -50,9 +56,9 @@ export const useQuizStore = defineStore("quiz", () => {
     answeredQuizQuestions.value.push(id);
   };
 
-  const updateScore = (userAnswerStatus, machineAnswerStatus) => {
-    userScore.value = userAnswerStatus === "correct" ? userScore.value + 1 : userScore.value;
-    machineScore.value = machineAnswerStatus === "correct" ? machineScore.value + 1 : machineScore.value;
+  const updateScore = (userAnswer, rivalAnswer) => {
+    userScore.value = userAnswer === quizQuestion.value.answer ? userScore.value + 1 : userScore.value;
+    rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
   };
 
   const saveQuizResult = async data => {
@@ -79,11 +85,14 @@ export const useQuizStore = defineStore("quiz", () => {
     quizQuestionsLength,
     answeredQuizQuestions,
     quizMode,
+    quizRivalType,
+    quizRivalId,
     userScore,
-    machineScore,
+    rivalScore,
     currentQuizQuestionNumber,
     getQuizQuestions,
     setQuizMode,
+    setQuizRivalType,
     getNextQuizQuestion,
     updateAnsweredQuizQuestions,
     updateScore,

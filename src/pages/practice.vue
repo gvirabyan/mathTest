@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-practice-page" name="player-vs-machine" @page:afterin="loadFirstTab">
-    <topbar ref="topBar" :tabs="practiceTabs" :search="false">
+    <topbar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
       <template #title>{{ $t("practice.practice") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{
@@ -43,7 +43,8 @@ const props = defineProps({
 });
 
 const { user } = storeToRefs(useAuthStore());
-const { setQuizMode } = useQuizStore();
+const { quizRivalType } = storeToRefs(useQuizStore());
+const { setQuizMode, setQuizRivalType } = useQuizStore();
 
 const gameModes = [
   {
@@ -78,10 +79,12 @@ const practiceTabs = [
   {
     id: 1,
     name: i18n.t("practice.player-vs-machine"),
+    rivalType: "machine",
   },
   {
     id: 2,
     name: i18n.t("practice.play-with-friends"),
+    rivalType: "fake_user",
   },
 ];
 
@@ -94,6 +97,11 @@ const loadFirstTab = () => {
 const setMode = mode => {
   setQuizMode(mode);
   props.f7router.navigate({ name: "PlayerVsMachineQuiz", params: { modeID: mode.id } });
+};
+
+const setRivalTypeHandler = tabId => {
+  const rival = practiceTabs.find(tab => tab.id === tabId).rivalType;
+  setQuizRivalType(rival);
 };
 </script>
 

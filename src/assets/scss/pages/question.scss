@@ -219,7 +219,7 @@
               display: none;
             }
           }
-          &.hg-correct-machine-answer {
+          &.hg-correct-rival-answer {
             padding: 3px;
             border-color: #2EE56B;
             .item-inner {
@@ -233,7 +233,7 @@
               }
             }
           }
-          &.hg-wrong-machine-answer {
+          &.hg-wrong-rival-answer {
             padding: 3px;
             border-color: #FF0000;
             .item-inner {
