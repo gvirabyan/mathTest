@@ -2,7 +2,7 @@
   <f7-page
     class="hg-question-page"
     name="player-vs-machine"
-    @page:beforein="getQuizQuestionsHandler(quizMode.questions)"
+    @page:beforein="getQuizQuestionsHandler(quizMode.questions, quizRivalType)"
     @page:afterout="useQuizStore().$reset()"
   >
     <leave-page-popup
@@ -60,7 +60,7 @@
 
         <f7-block class="machine-score">
           {{ $t("practice.machine-score") }}&nbsp;
-          <span>{{ machineScore }}</span>
+          <span>{{ rivalScore }}</span>
         </f7-block>
       </f7-row>
 
@@ -77,10 +77,14 @@
               :checked="chosenQuizAnswer === answer"
               :disabled="!!sentAnswer"
               :class="{
-                'hg-correct-machine-answer':
-                  sentAnswer && quizQuestion.machine_answer === 'correct' && answer === quizQuestion.answer,
-                'hg-wrong-machine-answer':
-                  sentAnswer && quizQuestion.machine_answer === 'wrong' && answer === machineWrongAnswer,
+                'hg-correct-rival-answer':
+                  sentAnswer &&
+                  String(quizQuestion.rival_answer) === quizQuestion.answer &&
+                  answer === quizQuestion.answer,
+                'hg-wrong-rival-answer':
+                  sentAnswer &&
+                  String(quizQuestion.rival_answer) !== quizQuestion.answer &&
+                  answer === String(quizQuestion.rival_answer),
               }"
               name="demo-radio-end"
               radio
@@ -126,7 +130,7 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -135,8 +139,9 @@ import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import Circle from "@/components/circle.vue";
-import LeavePagePopup from "@/components/leave-page-popup.vue";
-import SuccessMessagePopup from "@/components/success-message-popup.vue";
+
+const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
+const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -145,8 +150,17 @@ const props = defineProps({
 
 const { user } = storeToRefs(useAuthStore());
 const { answersData } = storeToRefs(useCategoryAnswerStore());
-const { quizQuestions, quizQuestion, quizQuestionsLength, answeredQuizQuestions, quizMode, userScore, machineScore } =
-  storeToRefs(useQuizStore());
+const {
+  quizQuestions,
+  quizQuestion,
+  quizRivalType,
+  quizRivalId,
+  quizQuestionsLength,
+  answeredQuizQuestions,
+  quizMode,
+  userScore,
+  rivalScore,
+} = storeToRefs(useQuizStore());
 const { updateUserAnsweredQuestions } = useCategoryAnswerStore();
 const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore, saveQuizResult } =
   useQuizStore();
@@ -170,20 +184,20 @@ const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
 
-const machineWrongAnswer = computed(() => {
-  return answersData.value.find(d => d !== quizQuestion.value.answer);
-});
+// const machineWrongAnswer = computed(() => {
+//   return answersData.value.find(d => d !== quizQuestion.value.answer);
+// });
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
   return String.fromCharCode(letterCode);
 };
 
-const getQuizQuestionsHandler = async limit => {
+const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
 
   await delay();
-  await getQuizQuestions(limit, answeredQuizQuestions.value);
+  await getQuizQuestions(limit, rivalType);
 
   isLoading.value = false;
 };
@@ -202,7 +216,7 @@ const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
-    updateScore(status.value, quizQuestion.value.machine_answer);
+    updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer);
 
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
@@ -243,7 +257,7 @@ const clearChosenData = () => {
 
 const skip = () => {
   isSending.value = true;
-  updateScore("skipped", quizQuestion.value.machine_answer);
+  updateScore("skipped", quizQuestion.value.rival_answer);
   isSending.value = false;
   sentAnswer.value = true;
   status.value = "wrong";
@@ -310,8 +324,9 @@ const endQuiz = async () => {
 
   await saveQuizResult({
     user_score: userScore.value,
-    rival_score: machineScore.value,
+    rival_score: rivalScore.value,
     mode: quizMode.value,
+    ...(quizRivalId.value && { rival_id: quizRivalId.value }),
   }).then(({ data }) => {
     const result = data?.attributes?.result;
     finishGame.value = result && alertTextObj[result].title;
@@ -327,9 +342,10 @@ const breakQuiz = () => {
 const leavePage = async () => {
   await saveQuizResult({
     user_score: userScore.value,
-    rival_score: machineScore.value,
+    rival_score: rivalScore.value,
     mode: quizMode.value,
     result: "lose",
+    ...(quizRivalId.value && { rival_id: quizRivalId.value }),
   }).then(() => {
     useQuizStore().$reset();
     leavePopupPageText.value = "";
