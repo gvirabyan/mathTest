@@ -8,7 +8,7 @@
       }}</template>
     </topbar>
 
-    <f7-list>
+    <f7-list v-if="activeTabId === 1 || (activeTabId === 2 && startPracticeVsFriend)">
       <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
         <template #title>
           <f7-row class="justify-content-space-between align-items-center">
@@ -22,20 +22,74 @@
       </f7-list-item>
     </f7-list>
 
+    <f7-block v-else-if="activeTabId === 2 && !startPracticeVsFriend" class="can-practice">
+      <div v-if="!isLoading && !lastFriendPractice" class="can-practice-content">
+        <h2 class="can-practice-title">{{ $t("practice.can-practice-with-friends") }}</h2>
+        <p class="can-practice-subtitle">{{ $t("practice.practice-with-friends-questions") }}</p>
+        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{ $t("buttons.start") }}</f7-button>
+      </div>
+
+      <div v-else-if="!isLoading && lastFriendPractice" class="score-block-wrapper">
+        <div class="score-blocks">
+          <div class="score-block">
+            <f7-row class="justify-content-space-between">
+              <f7-block-title>
+                {{ $t("question.your-score-on-this-topic") }}
+              </f7-block-title>
+              <p class="place-txt">
+                {{ lastFriendPractice.user_result }}
+                {{ pluralizeWord(lastFriendPractice.user_result, $t("question.point")) }}
+              </p>
+            </f7-row>
+
+            <f7-row class="justify-content-space-between align-items-center">
+              <p class="from-txt">
+                {{ lastFriendPractice.user_score }}/{{ lastFriendPractice.mode.questions }}
+                {{ $t("question.right-answered") }}
+              </p>
+            </f7-row>
+          </div>
+
+          <div class="score-block">
+            <f7-row class="justify-content-space-between">
+              <f7-block-title>
+                {{ $t("question.friends-score-on-this-topic") }}
+              </f7-block-title>
+              <p class="place-txt">
+                {{ lastFriendPractice.rival_result }}
+                {{ pluralizeWord(lastFriendPractice.rival_result, $t("question.point")) }}
+              </p>
+            </f7-row>
+
+            <f7-row class="justify-content-space-between align-items-center">
+              <p class="from-txt">
+                {{ lastFriendPractice.rival_score }}/{{ lastFriendPractice.mode.questions }}
+                {{ $t("question.right-answered") }}
+              </p>
+            </f7-row>
+          </div>
+        </div>
+
+        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{
+          $t("practice.try-again")
+        }}</f7-button>
+      </div>
+    </f7-block>
+
     <bottom-menu :current-path="props.f7route.path" />
   </f7-page>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
-import BottomMenu from "@/components/bottom-menu.vue";
 import Topbar from "@/components/topbar.vue";
-import { useI18n } from "vue-i18n";
-
-import { storeToRefs } from "pinia";
+import BottomMenu from "@/components/bottom-menu.vue";
+import pluralizeWord from "@/js/utils/pluralize-word";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -43,8 +97,8 @@ const props = defineProps({
 });
 
 const { user } = storeToRefs(useAuthStore());
-const { quizRivalType } = storeToRefs(useQuizStore());
-const { setQuizMode, setQuizRivalType } = useQuizStore();
+const { lastFriendPractice } = storeToRefs(useQuizStore());
+const { getLastFriendPractice, setQuizMode, setQuizRivalType } = useQuizStore();
 
 const gameModes = [
   {
@@ -88,7 +142,10 @@ const practiceTabs = [
   },
 ];
 
+const isLoading = ref(false);
 const topBar = ref(null);
+const activeTabId = ref(practiceTabs[0].id);
+const startPracticeVsFriend = ref(false);
 
 const loadFirstTab = () => {
   topBar.value.selectFirstTab(practiceTabs, false);
@@ -101,8 +158,26 @@ const setMode = mode => {
 
 const setRivalTypeHandler = tabId => {
   const rival = practiceTabs.find(tab => tab.id === tabId).rivalType;
+
+  activeTabId.value = tabId;
+  startPracticeVsFriend.value = false;
+
   setQuizRivalType(rival);
 };
+
+const getLastFriendPracticeHandler = async () => {
+  isLoading.value = true;
+
+  await getLastFriendPractice();
+
+  isLoading.value = false;
+};
+
+watch(activeTabId, async value => {
+  if (value === 1) return;
+
+  await getLastFriendPracticeHandler();
+});
 </script>
 
 <style lang="scss">

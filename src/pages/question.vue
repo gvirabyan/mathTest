@@ -219,6 +219,7 @@ const getPoints = ref([]);
 const circles = ref(null);
 const checkAnswers = ref(true);
 const startIndex = ref(0);
+
 watch(
   () => questions.value,
   async () => {
@@ -269,7 +270,7 @@ watch(
   },
 );
 
-const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
+const correctAnswers = computed(() => answeredQuestionsData.value?.filter(q => q.attributes.status === "correct"));
 
 const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);

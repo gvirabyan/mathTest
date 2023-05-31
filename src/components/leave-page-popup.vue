@@ -8,7 +8,7 @@
           v-html="
             $sanitize(
               title ||
-                `${$t('popups.leave-page-popup.first-title')}  <br> ${i18n.t('popups.leave-page-popup.second-title')}`,
+                `${$t('popups.leave-page-popup.first-title')}  <br> ${$t('popups.leave-page-popup.second-title')}`,
             )
           "
         />

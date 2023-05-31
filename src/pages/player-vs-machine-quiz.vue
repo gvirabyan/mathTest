@@ -43,7 +43,7 @@
           </a>
         </div>
 
-        <div class="title">{{ $t("practice.player-vs-machine") }}</div>
+        <div class="title">{{ practiceTitle }}</div>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
         </f7-block>
 
         <f7-block class="machine-score">
-          {{ $t("practice.machine-score") }}&nbsp;
+          {{ rivalScoreTitle }}&nbsp;
           <span>{{ rivalScore }}</span>
         </f7-block>
       </f7-row>
@@ -124,7 +124,9 @@
       <f7-block v-else-if="allQuizQuestionAnswered">{{ $t("practice.answered-all-text") }}</f7-block>
     </template>
 
-    <loading-small v-else />
+    <loading-small v-else>
+      <template v-if="quizRivalType !== 'machine'">{{ $t("practice.practice-with-friends-load") }}</template>
+    </loading-small>
   </f7-page>
 </template>
 
@@ -138,10 +140,12 @@ import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
-import Circle from "@/components/circle.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
+const Circle = defineAsyncComponent(() => import("@/components/circle.vue"));
+
+const i18n = useI18n();
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -178,15 +182,16 @@ const isSending = ref(false);
 const sentAnswer = ref(false);
 const finishGame = ref("");
 
-const i18n = useI18n();
-
 const allQuizQuestionAnswered = computed(
   () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
 );
-
-// const machineWrongAnswer = computed(() => {
-//   return answersData.value.find(d => d !== quizQuestion.value.answer);
-// });
+const practiceTitle = computed(() =>
+  quizRivalType.value !== "machine" ? i18n.t("practice.player-vs-friend") : i18n.t("practice.player-vs-machine"),
+);
+const rivalScoreTitle = computed(() =>
+  quizRivalType.value !== "machine" ? i18n.t("practice.friend-score") : i18n.t("practice.machine-score"),
+);
+const questionHandlerDelay = computed(() => (quizRivalType.value !== "machine" ? 2000 : 0));
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -196,7 +201,7 @@ const getLetterByIndex = index => {
 const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
 
-  await delay();
+  await delay(questionHandlerDelay.value);
   await getQuizQuestions(limit, rivalType);
 
   isLoading.value = false;
@@ -326,6 +331,7 @@ const endQuiz = async () => {
     user_score: userScore.value,
     rival_score: rivalScore.value,
     mode: quizMode.value,
+    rival_type: quizRivalType.value,
     ...(quizRivalId.value && { rival_id: quizRivalId.value }),
   }).then(({ data }) => {
     const result = data?.attributes?.result;
@@ -345,6 +351,7 @@ const leavePage = async () => {
     rival_score: rivalScore.value,
     mode: quizMode.value,
     result: "lose",
+    rival_type: quizRivalType.value,
     ...(quizRivalId.value && { rival_id: quizRivalId.value }),
   }).then(() => {
     useQuizStore().$reset();

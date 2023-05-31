@@ -16,6 +16,7 @@ export const useQuizStore = defineStore("quiz", () => {
   const quizRivalId = ref(null);
   const userScore = ref(0);
   const rivalScore = ref(0);
+  const lastFriendPractice = ref(null);
 
   const currentQuizQuestionNumber = computed(() =>
     answeredQuizQuestions.value.length + 1 > quizQuestionsLength.value
@@ -40,6 +41,17 @@ export const useQuizStore = defineStore("quiz", () => {
       if (data.rival_user) {
         quizRivalId.value = data.rival_user;
       }
+    });
+  };
+
+  const getLastFriendPractice = async () => {
+    return api.get("get-last-friend-practice").then(data => {
+      if (!data?.data) {
+        lastFriendPractice.value = null;
+        return;
+      }
+
+      lastFriendPractice.value = data.data;
     });
   };
 
@@ -89,8 +101,10 @@ export const useQuizStore = defineStore("quiz", () => {
     quizRivalId,
     userScore,
     rivalScore,
+    lastFriendPractice,
     currentQuizQuestionNumber,
     getQuizQuestions,
+    getLastFriendPractice,
     setQuizMode,
     setQuizRivalType,
     getNextQuizQuestion,
