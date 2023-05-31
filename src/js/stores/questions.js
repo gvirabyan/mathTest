@@ -34,7 +34,9 @@ export const useQuestionsStore = defineStore("questions", () => {
         questions_amount: data?.meta?.total + data?.data?.history.length,
       };
       const resData = data?.data?.results;
-      history.value = data?.data?.history;
+      if (history.value.length === 0) {
+        history.value = data?.data?.history;
+      }
       questionsAreLoaded.value = true;
       if (categoryID === selectedCategoryId.value) {
         questions.value = resData.length ? [...questions.value, ...resData.sort(() => 0.5 - Math.random())] : [];
