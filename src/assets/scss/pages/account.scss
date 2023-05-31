@@ -1,3 +1,5 @@
+@import "@/assets/scss/mixins/lg-yellow-btn";
+
 .logout-popup {
   display: block;
   height: 100vh !important;
@@ -395,13 +397,8 @@
       }
 
       .button-save {
+        @include lg-yellow-btn;
         margin-top: auto;
-        width: 100% !important;
-        color: #fff !important;
-        background-color: #FFC700 !important;
-        background-repeat: no-repeat;
-        background-position: right;
-        background-image: url("../../images/pointsBtns.svg");
 
         &.button-disabled-fill {
           opacity: 0.5;
