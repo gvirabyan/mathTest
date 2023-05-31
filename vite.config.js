@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import path from "path";
 import vue from "@vitejs/plugin-vue";
 import eslintPlugin from "vite-plugin-eslint";
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 
 import { createHtmlPlugin } from "vite-plugin-html";
 
@@ -19,7 +19,7 @@ export default ({ mode }) => {
   return defineConfig({
     plugins: [
       VueI18nPlugin({
-        include: [path.resolve(__dirname, './locales/**')],
+        include: [path.resolve(__dirname, "./locales/**")],
       }),
       eslintPlugin(),
       vue(),
@@ -40,7 +40,7 @@ export default ({ mode }) => {
       assetsInlineLimit: 0,
       emptyOutDir: true,
       rollupOptions: {
-        treeshake: false,
+        treeshake: true,
         output: {
           format: "iife",
           inlineDynamicImports: true,

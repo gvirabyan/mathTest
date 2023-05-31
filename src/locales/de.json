@@ -10,6 +10,7 @@
     "next": "nächstes",
     "wrong-answer": "wrong answer",
     "save": "save",
+    "start": "Start",
     "close": "Close"
   },
   "inputs": {
@@ -162,6 +163,7 @@
     "start-practice": "Start Practice",
     "right-answered": "right answered",
     "your-score-on-this-topic": "Your score on this topic",
+    "friends-score-on-this-topic": "Friend's score on this topic",
     "check-skipped": "Check skipped",
     "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
     "leave-for-now": "Leave for now",
@@ -171,10 +173,16 @@
 
   "practice": {
     "practice": "Practice",
-    "player-vs-machine": "Player vs Machine",
+    "player-vs-machine": "Player VS Machine",
+    "player-vs-friend": "Player VS Friend",
     "play-with-friends": "Play with Friends",
+    "can-practice-with-friends": "You can practice with a student\nwho has a similar rating",
+    "practice-with-friends-questions": "Questions quantity: 10-30",
+    "try-again": "Try again",
+    "practice-with-friends-load": "The game will start in few minutes..",
     "your-score": "Your score:",
     "machine-score": "Machine score:",
+    "friend-score": "Friend score:",
     "answered-all-text": "You have answered all questions",
     "popup-go-topic": {
       "Oops": "Oops!",
