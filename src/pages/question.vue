@@ -332,7 +332,11 @@ const showHistory = point => {
     const previousQuestion = getPoints.value.find(p => p.status === "present");
     if (
       previousQuestion &&
-      getPoints.value.find(p => p.status === "skipped" || p.status === "correct" || p.status === "wrong")
+      getPoints.value.find(
+        point =>
+          (point.status === "skipped" || point.status === "correct" || point.status === "wrong") &&
+          Number(point.point) > Number(previousQuestion.point),
+      )
     ) {
       getPoints.value.find(p => p.status === "present").status = "skipped";
     } else if (previousQuestion) {
@@ -350,7 +354,7 @@ const showHistory = point => {
       questionHistory.value = questions.value[indexHistory.value - history.value.length];
     }
     //circle go on the point
-    onOrientationChange(indexHistory.value || getPoints.value.find(p => p.status === "present").point);
+    onOrientationChange();
   }
 };
 
@@ -365,8 +369,6 @@ function shuffle(a) {
   return a;
 }
 
-const skippedPoints = ref([]);
-
 const skip = () => {
   status.value = "skipped";
   updateUserAnsweredQuestions({
@@ -377,7 +379,6 @@ const skip = () => {
     status: "skipped",
     answer_type: "topic",
   }).then(resp => {
-    skippedPoints.value.push(getPoints.value.find(p => p.status === "present").point);
     if (resp.status === "success") {
       next();
       return;
@@ -407,35 +408,38 @@ const goPresentQuestion = () => {
   } else {
     getPoints.value.find(p => p.status === "skipped").status = "present";
   }
-  onOrientationChange(getPoints.value.find(v => v.status === "present").point - 1);
+  onOrientationChange();
 };
 
 const i18n = useI18n();
 
 const checkSkipped = () => {
   checkSkipPopup.value = null;
-  skippedPoints.value = [];
   next();
 };
 
 const next = async () => {
-  if (getPoints.value.find(v => v.status === "present")) {
-    //give status answered question
+  const previousPoint = getPoints.value.find(v => v.status === "present");
+  if (previousPoint) {
+    //update status of answered question
     getPoints.value.find(v => v.status === "present").status = status.value;
   }
   clearChosenData();
 
   const nextPoint = getPoints.value.find(v => v.status === "normal");
   const skippedPoint = getPoints.value.find(
-    v => (v.status === "normal" || v.status === "skipped") && !skippedPoints.value.includes(v.point),
+    v =>
+      (v.status === "normal" || v.status === "skipped") &&
+      (!previousPoint || Number(v.point) > Number(previousPoint.point)),
   );
-  console.log(skippedPoint, skippedPoints.value, 426);
   const checkFinished = getPoints.value.find(v => v.status === "normal" || v.status === "skipped");
   if (checkFinished === undefined) {
+    //game is finished, open result popup
     isAllAnsweredPopup.value = true;
     await getAnsweredQuestions(props.f7route.params.categoryID);
-  } else if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
-    const quantity = skippedPoints.value.length;
+  } else if (!skippedPoint && !checkSkipPopup.value) {
+    // open popup with amount of skipped questions
+    const quantity = getPoints.value.filter(v => v.status === "skipped").length;
     if (quantity === 1) {
       checkSkipPopup.value = i18n.t("question.single-skipped-text");
     } else {
@@ -444,14 +448,17 @@ const next = async () => {
       )}`;
     }
   } else if (nextPoint) {
-    // get next normal question and show it
+    // go to next normal question
     getNextQuestion(nextPoint.id);
     getPoints.value.find(v => v.status === "normal").status = "present";
-    onOrientationChange(nextPoint.point - 1);
+    onOrientationChange();
   } else {
+    // go to next skipped question
     getNextQuestion(skippedPoint.id);
-    getPoints.value.find(v => v.status === "skipped" && !skippedPoints.value.includes(v.point)).status = "present";
-    onOrientationChange(skippedPoint.point - 1);
+    getPoints.value.find(
+      v => v.status === "skipped" && (!previousPoint || Number(v.point) > Number(previousPoint.point)),
+    ).status = "present";
+    onOrientationChange();
   }
 };
 
@@ -482,7 +489,12 @@ watch(questionsAreOver, async val => {
   await getAnsweredQuestions(props.f7route.params.categoryID);
 });
 
-const onOrientationChange = index => {
+const onOrientationChange = () => {
+  const presentPoint = getPoints.value.find(p => p.status === "present");
+  let index = indexHistory.value;
+  if (presentPoint) {
+    index = Number(presentPoint.point) - 1;
+  }
   circles.value.scrollLeft +=
     circles.value.children[index].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
