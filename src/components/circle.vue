@@ -4,7 +4,7 @@
       circle: true,
       wrong: status === 'wrong',
       correct: status === 'correct',
-      normal: status === 'normal',
+      normal: status === 'normal' || status === 'skipped',
       present: status === 'present',
       'bg-wrong': status === 'wrong' && checkPoint(),
       'bg-correct': status === 'correct' && checkPoint(),
@@ -21,7 +21,7 @@ const props = defineProps({
     type: String,
     default: "normal",
     validator(value) {
-      return ["present", "correct", "wrong", "skip", "normal"].includes(value);
+      return ["present", "correct", "wrong", "skipped", "normal"].includes(value);
     },
   },
   historyCircle: {
