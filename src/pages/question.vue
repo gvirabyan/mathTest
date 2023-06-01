@@ -14,8 +14,8 @@
         ref="circles"
         :point="point.point"
         :status="point.status"
-        :history-circle="indexQuestionHistory"
-        @click="showHistory(point.point)"
+        :history-circle="indexHistory"
+        @click="showHistory(point)"
       />
     </div>
     <div v-if="questionHistory" id="element" class="questions-content">
@@ -111,9 +111,9 @@
     :text="checkSkipPopup"
     :leave-btn="$t('question.leave-for-now')"
     :save-btn="$t('question.check-skipped')"
-    @close="next"
+    @close="checkSkipped"
     @leave-changes="goBack"
-    @save-changes="next"
+    @save-changes="checkSkipped"
   />
 
   <teleport to=".hg-question-page">
@@ -229,7 +229,7 @@ watch(
       const questionsL = categoryQuestion.value.questions_amount;
       for (let i = 0; i < history.value.length; i++) {
         getPoints.value.push({
-          id: null,
+          id: history.value[i] ? history.value[i].id : null,
           answer: null,
           history: history.value[i] ?? [],
           point: i + 1,
@@ -322,42 +322,39 @@ const sendAnswer = () => {
   }
 };
 
-const indexQuestionHistory = ref(null);
 const questionHistory = ref(null);
-
 const indexHistory = ref(null);
+
 const showHistory = point => {
-  indexHistory.value = Number(point) - 1;
-  if (
-    indexHistory.value <= keepPresentIndex.value ||
-    (indexHistory.value <= presentIndex.value &&
-      !keepPresentIndex.value &&
-      (indexHistory.value !== keepPresentIndex.value || questionHistory.value))
-  ) {
-    indexQuestionHistory.value = indexHistory.value;
-    getPoints.value[presentIndex.value].status = "normal";
+  if (point.status !== "normal") {
+    indexHistory.value = Number(point.point) - 1;
+    // previous question status change
+    const previousQuestion = getPoints.value.find(p => p.status === "present");
+    if (
+      previousQuestion &&
+      getPoints.value.find(
+        point =>
+          (point.status === "skipped" || point.status === "correct" || point.status === "wrong") &&
+          Number(point.point) > Number(previousQuestion.point),
+      )
+    ) {
+      getPoints.value.find(p => p.status === "present").status = "skipped";
+    } else if (previousQuestion) {
+      getPoints.value.find(p => p.status === "present").status = "normal";
+    }
+    // show chosen question
     if (indexHistory.value < history.value.length) {
       questionHistory.value = history.value[indexHistory.value];
-    } else if (
-      (questions.value[indexHistory.value - history.value.length] &&
-        !questions.value[indexHistory.value - history.value.length].user_answer &&
-        indexHistory.value < keepPresentIndex.value) ||
-      indexHistory.value === keepPresentIndex.value
-    ) {
+    } else if (point.status === "skipped") {
+      getNextQuestion(point.id);
+      getPoints.value[indexHistory.value].status = "present";
       questionHistory.value = null;
-      indexQuestionHistory.value = null;
-      question.value = questions.value[indexHistory.value - history.value.length];
-      presentIndex.value = indexHistory.value;
-      getPoints.value[presentIndex.value].status = "present";
-    } else if (
-      questions.value[indexHistory.value - history.value.length] &&
-      questions.value[indexHistory.value - history.value.length].user_answer
-    ) {
+      indexHistory.value = null;
+    } else {
       questionHistory.value = questions.value[indexHistory.value - history.value.length];
     }
     //circle go on the point
-    circles.value.scrollLeft +=
-      circles.value.children[indexHistory.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+    onOrientationChange();
   }
 };
 
@@ -372,10 +369,8 @@ function shuffle(a) {
   return a;
 }
 
-const skippedPoints = ref([]);
-
 const skip = () => {
-  status.value = "normal";
+  status.value = "skipped";
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: question.value.id,
@@ -384,7 +379,6 @@ const skip = () => {
     status: "skipped",
     answer_type: "topic",
   }).then(resp => {
-    skippedPoints.value.push(presentIndex.value + 1);
     if (resp.status === "success") {
       next();
       return;
@@ -408,60 +402,64 @@ const keepPresentIndex = ref(null);
 
 const goPresentQuestion = () => {
   questionHistory.value = null;
-  indexQuestionHistory.value = null;
-  if (keepPresentIndex.value) {
-    getPoints.value[presentIndex.value].status = "normal";
-    presentIndex.value = keepPresentIndex.value;
+  indexHistory.value = null;
+  if (getPoints.value.find(p => p.status === "normal")) {
+    getPoints.value.find(p => p.status === "normal").status = "present";
+  } else {
+    getPoints.value.find(p => p.status === "skipped").status = "present";
   }
-  getPoints.value[presentIndex.value].status = "present";
-  circles.value.scrollLeft +=
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  onOrientationChange();
 };
 
 const i18n = useI18n();
 
+const checkSkipped = () => {
+  checkSkipPopup.value = null;
+  next();
+};
+
 const next = async () => {
-  let skippedPoint = getPoints.value.find(v => v.status === "normal" && !skippedPoints.value.includes(v.point));
-  //check when open popup, for skip
-  if (!skippedPoint && skippedPoints.value.length > 0 && !checkSkipPopup.value) {
-    const quantity = skippedPoints.value.length;
+  const previousPoint = getPoints.value.find(v => v.status === "present");
+  if (previousPoint) {
+    //update status of answered question
+    getPoints.value.find(v => v.status === "present").status = status.value;
+  }
+  clearChosenData();
+
+  const nextPoint = getPoints.value.find(v => v.status === "normal");
+  const skippedPoint = getPoints.value.find(
+    v =>
+      (v.status === "normal" || v.status === "skipped") &&
+      (!previousPoint || Number(v.point) > Number(previousPoint.point)),
+  );
+  const checkFinished = getPoints.value.find(v => v.status === "normal" || v.status === "skipped");
+  if (checkFinished === undefined) {
+    //game is finished, open result popup
+    isAllAnsweredPopup.value = true;
+    await getAnsweredQuestions(props.f7route.params.categoryID);
+  } else if (!skippedPoint && !checkSkipPopup.value) {
+    // open popup with amount of skipped questions
+    const quantity = getPoints.value.filter(v => v.status === "skipped").length;
     if (quantity === 1) {
-      keepPresentIndex.value = null;
       checkSkipPopup.value = i18n.t("question.single-skipped-text");
     } else {
-      keepPresentIndex.value = null;
       checkSkipPopup.value = `${i18n.t("question.skipped-first-text")} ${quantity} ${i18n.t(
         "question.skipped-second-text",
       )}`;
     }
-    return;
-  }
-
-  clearChosenData();
-  getPoints.value[presentIndex.value].status = status.value;
-  if (!skippedPoint) {
-    skippedPoints.value = [];
-    skippedPoint = getPoints.value.find(v => v.status === "normal");
-  }
-  if (skippedPoint) {
-    presentIndex.value = skippedPoint.point - 2;
+  } else if (nextPoint) {
+    // go to next normal question
+    getNextQuestion(nextPoint.id);
+    getPoints.value.find(v => v.status === "normal").status = "present";
+    onOrientationChange();
   } else {
-    isAllAnsweredPopup.value = true;
-    await getAnsweredQuestions(props.f7route.params.categoryID);
-    return;
+    // go to next skipped question
+    getNextQuestion(skippedPoint.id);
+    getPoints.value.find(
+      v => v.status === "skipped" && (!previousPoint || Number(v.point) > Number(previousPoint.point)),
+    ).status = "present";
+    onOrientationChange();
   }
-  getNextQuestion(skippedPoint ? skippedPoint.id : null);
-  presentIndex.value++;
-  if (presentIndex.value < getPoints.value.length) {
-    getPoints.value[presentIndex.value].status = "present";
-    if (!keepPresentIndex.value || presentIndex.value > keepPresentIndex.value) {
-      keepPresentIndex.value = presentIndex.value;
-    }
-  }
-  circles.value.scrollLeft +=
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
-
-  checkSkipPopup.value = false;
 };
 
 const clearChosenData = () => {
@@ -492,18 +490,13 @@ watch(questionsAreOver, async val => {
 });
 
 const onOrientationChange = () => {
-  if (indexQuestionHistory.value) {
-    circles.value.scrollLeft +=
-      circles.value.children[indexQuestionHistory.value].getBoundingClientRect().left -
-      2 -
-      circles.value.clientWidth / 2;
-  } else if (
-    circles.value.clientWidth / 2 !==
-    circles.value.children[presentIndex.value].getBoundingClientRect().left - 2
-  ) {
-    circles.value.scrollLeft +=
-      circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
+  const presentPoint = getPoints.value.find(p => p.status === "present");
+  let index = indexHistory.value;
+  if (presentPoint) {
+    index = Number(presentPoint.point) - 1;
   }
+  circles.value.scrollLeft +=
+    circles.value.children[index].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
 };
 
 const outPage = () => {
