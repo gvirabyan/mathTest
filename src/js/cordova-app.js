@@ -1,4 +1,4 @@
-// import Dom7 from "dom7";
+import Dom7 from "dom7";
 
 const cordovaApp = {
   f7: null,
@@ -11,7 +11,7 @@ const cordovaApp = {
   },
   handleAndroidBackButton() {
     const f7 = cordovaApp.f7;
-    // const $$ = Dom7;
+    const $$ = Dom7;
     const currentView = f7.views.current;
     currentView.router.allowPageChange = false;
 
@@ -42,6 +42,7 @@ const cordovaApp = {
         // }
 
         if (currentView && currentView.router && currentView.router.history.length > 1) {
+          $$(".popup-backdrop.backdrop-in").remove();
           currentView.router.back();
           e.preventDefault();
 
