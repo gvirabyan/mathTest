@@ -5,7 +5,7 @@
       wrong: status === 'wrong',
       correct: status === 'correct',
       normal: status === 'normal' || status === 'skipped',
-      present: status === 'present',
+      present: props.present,
       'bg-wrong': status === 'wrong' && checkPoint(),
       'bg-correct': status === 'correct' && checkPoint(),
     }"
@@ -17,6 +17,10 @@
 <script setup>
 const props = defineProps({
   point: { type: Number, default: 0 },
+  present: {
+    type: Boolean,
+    default: false,
+  },
   status: {
     type: String,
     default: "normal",
