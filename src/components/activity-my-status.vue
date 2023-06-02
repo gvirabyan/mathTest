@@ -28,6 +28,40 @@
           </f7-block>
         </template>
 
+        <f7-block v-if="userStatus.daily_statics && userStatus.daily_statics.length" class="experience">
+          <h3 class="experience-title">{{ $t("activity.my-status.today-activity") }}</h3>
+          <custom-gauge-three
+            :width="customGaugeOptions.width"
+            :height="customGaugeOptions.height"
+            :radius="customGaugeOptions.radius"
+            :stroke-width="customGaugeOptions.strokeWidth"
+            color="#8419FF"
+            :percent-green="staticInfo('correct').percent"
+            :percent-gray="staticInfo('skipped').percent + staticInfo('correct').percent"
+            ><template #amount>{{ amountAnswered }}</template>
+            <template #info>
+              <p>
+                {{ $t("activity.my-status.correct") }}
+                <span class="correct-answered">
+                  {{ staticInfo("correct").count }}
+                </span>
+              </p>
+              <p>
+                {{ $t("activity.my-status.skipped") }}
+                <span class="skipped-answered">
+                  {{ staticInfo("skipped").count }}
+                </span>
+              </p>
+              <p>
+                {{ $t("activity.my-status.wrong") }}
+                <span class="wrong-answered">
+                  {{ staticInfo("wrong").count }}
+                </span>
+              </p>
+            </template>
+          </custom-gauge-three>
+        </f7-block>
+
         <f7-block class="experience">
           <h3 class="experience-title">{{ $t("activity.my-status.experience-points") }}</h3>
 
@@ -86,6 +120,7 @@ import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
 import CustomGauge from "@/components/custom-gauge.vue";
+import CustomGaugeThree from "@/components/custom-gauge-three.vue";
 
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
@@ -126,6 +161,29 @@ const showSelectGoalSuccess = ref(false);
 const lastUpdate = computed(() =>
   userStatus.value.last_update ? timeAgo(new Date(userStatus.value.last_update)) : null,
 );
+
+const amountAnswered = computed(() => {
+  let amount = 0;
+  if (userStatus.value && userStatus.value.daily_statics) {
+    amount = userStatus.value.daily_statics.reduce((acc, statistic) => {
+      acc += Number(statistic.count);
+      return acc;
+    }, 0);
+  }
+  return amount;
+});
+
+const staticInfo = computed(() => status => {
+  let staticInfo = {
+    count: 0,
+    percent: 0,
+  };
+  if (amountAnswered.value && userStatus.value.daily_statics.find(s => s.status === status)) {
+    staticInfo = userStatus.value.daily_statics.find(s => s.status === status);
+    staticInfo.percent = (Number(staticInfo.count) * 100) / amountAnswered.value;
+  }
+  return staticInfo;
+});
 
 const questionsSelectDefault = computed(() =>
   user.value && user.value?.everyday_goal
