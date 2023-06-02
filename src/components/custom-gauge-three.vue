@@ -17,7 +17,6 @@
         :stroke-dasharray="dashArray"
         :stroke-width="strokeWidthComp"
         stroke-linecap="round"
-        :stroke-dashoffset="offsetRed"
         :transform="transform"
         opacity="1"
       />
@@ -29,10 +28,10 @@
         stroke="#89838F"
         fill="transparent"
         :stroke-dasharray="dashArray"
-        :stroke-width="strokeWidthComp"
-        stroke-linecap="round"
         :stroke-dashoffset="offsetGray"
+        :stroke-width="strokeWidthComp"
         :transform="transform"
+        stroke-linecap="round"
         opacity="1"
       />
 
@@ -48,14 +47,13 @@
         :stroke-width="strokeWidthComp"
         :transform="transform"
         stroke-linecap="round"
-        style="transition: stroke-dasharray 0.3s"
+        opacity="1"
       />
     </svg>
 
     <div class="custom-gauge-content">
       <h3 class="amount"><slot name="amount" /></h3>
-      <p class="percent"><slot name="percent" />%</p>
-      <p class="info"><slot name="info" /></p>
+      <div class="info"><slot name="info" /></div>
     </div>
   </div>
 </template>
@@ -92,10 +90,6 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  percentRed: {
-    type: Number,
-    default: 0,
-  },
   color: {
     type: String,
     default: "#000",
@@ -115,12 +109,10 @@ const colorWithoutSharp = computed(() => props.color.replace("#", ""));
 const offsetGreen = computed(() => {
   return arc.value - (props.percentGreen / 100) * arc.value;
 });
+
 const offsetGray = computed(() => {
-  return arc.value - offsetGreen.value - (props.percentGray / 100) * (arc.value - offsetGreen.value);
+  return arc.value - (props.percentGray / 100) * arc.value;
 });
-// const offsetRed = computed(() => {
-//   return arc.value - offsetGreen.value - offsetGray.value - (props.percentRed / 100) * (arc.value - offsetGreen.value - offsetGray.value);
-// });
 </script>
 
 <style lang="scss">
@@ -158,6 +150,18 @@ const offsetGray = computed(() => {
     margin: 0 auto;
     font-size: 12px;
     line-height: 14px;
+    .correct-answered {
+      color: #2ee56b;
+      font-weight: bold;
+    }
+    .skipped-answered {
+      color: #89838f;
+      font-weight: bold;
+    }
+    .wrong-answered {
+      color: #ff0000;
+      font-weight: bold;
+    }
   }
 }
 </style>

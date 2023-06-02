@@ -109,7 +109,10 @@
       "you-are-in": "You are in Math App",
       "welcome-app": "Welcome to the Mathe App!\uD83D\uDC4B",
       "no-goal": "No goal",
-      "today-activity": "Today’s activity"
+      "today-activity": "Today’s activity",
+      "wrong": "Wrong",
+      "skipped": "Skipped",
+      "correct": "Correct"
     },
     "top-list": {
      "lists": [

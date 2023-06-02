@@ -37,11 +37,28 @@
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#8419FF"
             :percent-green="staticInfo('correct').percent"
-            :percent-gray="staticInfo('skipped').percent"
-            :percent-red="staticInfo('wrong').percent"
+            :percent-gray="staticInfo('skipped').percent + staticInfo('correct').percent"
             ><template #amount>{{ amountAnswered }}</template>
-            <template #percent>{{ userStatus.past_categories_percent }}</template>
-            <template #info>{{ $t("activity.my-status.categories-were-answered") }}</template>
+            <template #info>
+              <p>
+                {{ $t("activity.my-status.correct") }}
+                <span class="correct-answered">
+                  {{ staticInfo("correct").count }}
+                </span>
+              </p>
+              <p>
+                {{ $t("activity.my-status.skipped") }}
+                <span class="skipped-answered">
+                  {{ staticInfo("skipped").count }}
+                </span>
+              </p>
+              <p>
+                {{ $t("activity.my-status.wrong") }}
+                <span class="wrong-answered">
+                  {{ staticInfo("wrong").count }}
+                </span>
+              </p>
+            </template>
           </custom-gauge-three>
         </f7-block>
 
