@@ -14,6 +14,7 @@
         ref="circles"
         :point="point.point"
         :status="point.status"
+        :present="!!point.present"
         :history-circle="indexHistory"
         @click="showHistory(point)"
       />
@@ -242,7 +243,8 @@ watch(
           answer: questions.value[i] ? questions.value[i].answer : null,
           history: [],
           point: history.value.length + 1 + i,
-          status: i === 0 ? "present" : "normal",
+          status: "normal",
+          present: i === 0,
         });
       }
     }
@@ -326,28 +328,20 @@ const questionHistory = ref(null);
 const indexHistory = ref(null);
 
 const showHistory = point => {
-  if (point.status !== "normal") {
+  const getFirstPoint = getPoints.value.find(p => p.status === "normal");
+  if (point.status !== "normal" || Number(getFirstPoint.point) === Number(point.point)) {
     indexHistory.value = Number(point.point) - 1;
     // previous question status change
-    const previousQuestion = getPoints.value.find(p => p.status === "present");
-    if (
-      previousQuestion &&
-      getPoints.value.find(
-        point =>
-          (point.status === "skipped" || point.status === "correct" || point.status === "wrong") &&
-          Number(point.point) > Number(previousQuestion.point),
-      )
-    ) {
-      getPoints.value.find(p => p.status === "present").status = "skipped";
-    } else if (previousQuestion) {
-      getPoints.value.find(p => p.status === "present").status = "normal";
+    const previousQuestion = getPoints.value.find(p => p.present);
+    if (previousQuestion) {
+      getPoints.value.find(p => p.present).present = false;
     }
     // show chosen question
     if (indexHistory.value < history.value.length) {
       questionHistory.value = history.value[indexHistory.value];
-    } else if (point.status === "skipped") {
+    } else if (point.status === "skipped" || point.status === "normal") {
       getNextQuestion(point.id);
-      getPoints.value[indexHistory.value].status = "present";
+      getPoints.value[indexHistory.value].present = true;
       questionHistory.value = null;
       indexHistory.value = null;
     } else {
@@ -404,9 +398,9 @@ const goPresentQuestion = () => {
   questionHistory.value = null;
   indexHistory.value = null;
   if (getPoints.value.find(p => p.status === "normal")) {
-    getPoints.value.find(p => p.status === "normal").status = "present";
+    getPoints.value.find(p => p.status === "normal").present = true;
   } else {
-    getPoints.value.find(p => p.status === "skipped").status = "present";
+    getPoints.value.find(p => p.status === "skipped").present = true;
   }
   onOrientationChange();
 };
@@ -419,10 +413,11 @@ const checkSkipped = () => {
 };
 
 const next = async () => {
-  const previousPoint = getPoints.value.find(v => v.status === "present");
+  const previousPoint = getPoints.value.find(v => v.present);
   if (previousPoint) {
     //update status of answered question
-    getPoints.value.find(v => v.status === "present").status = status.value;
+    getPoints.value.find(v => v.present).status = status.value;
+    getPoints.value.find(v => v.present).present = false;
   }
   clearChosenData();
 
@@ -450,14 +445,14 @@ const next = async () => {
   } else if (nextPoint) {
     // go to next normal question
     getNextQuestion(nextPoint.id);
-    getPoints.value.find(v => v.status === "normal").status = "present";
+    getPoints.value.find(v => v.status === "normal").present = true;
     onOrientationChange();
   } else {
     // go to next skipped question
     getNextQuestion(skippedPoint.id);
     getPoints.value.find(
       v => v.status === "skipped" && (!previousPoint || Number(v.point) > Number(previousPoint.point)),
-    ).status = "present";
+    ).present = true;
     onOrientationChange();
   }
 };
@@ -490,7 +485,7 @@ watch(questionsAreOver, async val => {
 });
 
 const onOrientationChange = () => {
-  const presentPoint = getPoints.value.find(p => p.status === "present");
+  const presentPoint = getPoints.value.find(p => p.present);
   let index = indexHistory.value;
   if (presentPoint) {
     index = Number(presentPoint.point) - 1;
