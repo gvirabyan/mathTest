@@ -13,9 +13,9 @@
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
             color="#8419FF"
-            :percent="answersStats.topic_answers.percent"
+            :percent="answersStats.answers_percent"
           >
-            <template #percent>{{ answersStats.topic_answers.percent }}</template>
+            <template #percent>{{ answersStats.answers_percent }}</template>
             <template #amount>{{ answersStats.answers_count }}</template>
             <template #info
               >{{
