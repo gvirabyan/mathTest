@@ -54,12 +54,14 @@
     <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
-          {{ $t("practice.your-score") }}&nbsp;
+          <span class="nickname">{{ userScoreTitle }}</span
+          >&nbsp;
           <span>{{ userScore }}</span>
         </f7-block>
 
         <f7-block class="machine-score">
-          {{ rivalScoreTitle }}&nbsp;
+          <span class="nickname">{{ rivalScoreTitle }}</span
+          >&nbsp;
           <span>{{ rivalScore }}</span>
         </f7-block>
       </f7-row>
@@ -159,6 +161,7 @@ const {
   quizQuestion,
   quizRivalType,
   quizRivalId,
+  quizRivalUsername,
   quizQuestionsLength,
   answeredQuizQuestions,
   quizMode,
@@ -188,8 +191,11 @@ const allQuizQuestionAnswered = computed(
 const practiceTitle = computed(() =>
   quizRivalType.value !== "machine" ? i18n.t("practice.player-vs-friend") : i18n.t("practice.player-vs-machine"),
 );
+const userScoreTitle = computed(() =>
+  quizRivalType.value !== "machine" ? `${user.value.username}:` : i18n.t("practice.your-score"),
+);
 const rivalScoreTitle = computed(() =>
-  quizRivalType.value !== "machine" ? i18n.t("practice.friend-score") : i18n.t("practice.machine-score"),
+  quizRivalType.value !== "machine" ? `${quizRivalUsername.value}:` : i18n.t("practice.machine-score"),
 );
 const questionHandlerDelay = computed(() => (quizRivalType.value !== "machine" ? 2000 : 0));
 

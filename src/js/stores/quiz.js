@@ -14,6 +14,7 @@ export const useQuizStore = defineStore("quiz", () => {
   const quizMode = ref(null);
   const quizRivalType = ref("machine");
   const quizRivalId = ref(null);
+  const quizRivalUsername = ref(null);
   const userScore = ref(0);
   const rivalScore = ref(0);
   const lastFriendPractice = ref(null);
@@ -39,19 +40,9 @@ export const useQuizStore = defineStore("quiz", () => {
       categoryAnswersStore.categoryAnswers = data.categories_answers || [];
 
       if (data.rival_user) {
-        quizRivalId.value = data.rival_user;
+        quizRivalId.value = data.rival_user.id;
+        quizRivalUsername.value = data.rival_user.username;
       }
-    });
-  };
-
-  const getLastFriendPractice = async () => {
-    return api.get("get-last-friend-practice").then(data => {
-      if (!data?.data) {
-        lastFriendPractice.value = null;
-        return;
-      }
-
-      lastFriendPractice.value = data.data;
     });
   };
 
@@ -99,12 +90,12 @@ export const useQuizStore = defineStore("quiz", () => {
     quizMode,
     quizRivalType,
     quizRivalId,
+    quizRivalUsername,
     userScore,
     rivalScore,
     lastFriendPractice,
     currentQuizQuestionNumber,
     getQuizQuestions,
-    getLastFriendPractice,
     setQuizMode,
     setQuizRivalType,
     getNextQuizQuestion,

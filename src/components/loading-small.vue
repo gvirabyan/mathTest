@@ -22,5 +22,6 @@
   margin: 40px 0 0;
   font-size: 18px;
   line-height: 22px;
+  white-space: pre-line;
 }
 </style>

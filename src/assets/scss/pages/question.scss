@@ -156,6 +156,14 @@
       }
       span {
         font-weight: bold;
+
+        &.nickname {
+          max-width: 128px;
+          font-weight: 400;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
       }
     }
   }
