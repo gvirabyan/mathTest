@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -98,7 +98,7 @@ const props = defineProps({
 
 const { user } = storeToRefs(useAuthStore());
 const { lastFriendPractice } = storeToRefs(useQuizStore());
-const { getLastFriendPractice, setQuizMode, setQuizRivalType } = useQuizStore();
+const { setQuizMode, setQuizRivalType } = useQuizStore();
 
 const gameModes = [
   {
@@ -164,20 +164,6 @@ const setRivalTypeHandler = tabId => {
 
   setQuizRivalType(rival);
 };
-
-const getLastFriendPracticeHandler = async () => {
-  isLoading.value = true;
-
-  await getLastFriendPractice();
-
-  isLoading.value = false;
-};
-
-watch(activeTabId, async value => {
-  if (value === 1) return;
-
-  await getLastFriendPracticeHandler();
-});
 </script>
 
 <style lang="scss">
