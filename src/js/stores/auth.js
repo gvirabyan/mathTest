@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // getters
   const userData = computed(() => user.value);
-  const isLoggedIn = computed(() => !!(user.value && token.value));
+  // const isLoggedIn = computed(() => !!(user.value && token.value));
   const isNicknamedOnlyUser = computed(() => {
     return user.value && user.value?.username && !user.value?.email;
   });
@@ -76,6 +76,8 @@ export const useAuthStore = defineStore("auth", () => {
             suggestedCredentials.suggestedPassword = "";
           }
 
+          sendAppInfo();
+
           return { status: "success" };
         } else {
           return { status: "error", error: data.error };
@@ -88,6 +90,8 @@ export const useAuthStore = defineStore("auth", () => {
     return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
       if (!data.error) {
         storeJwtAndUser(data);
+
+        sendAppInfo();
 
         return { status: "success" };
       } else {
@@ -113,6 +117,8 @@ export const useAuthStore = defineStore("auth", () => {
             suggestedCredentials.suggestedPassword = "";
           }
 
+          sendAppInfo();
+
           return { status: "success" };
         } else {
           return { status: "error", error: data.error };
@@ -128,6 +134,8 @@ export const useAuthStore = defineStore("auth", () => {
       .then(data => {
         if (!data.error) {
           storeJwtAndUser(data);
+          sendAppInfo();
+
           return { status: "success" };
         } else {
           return { status: "error", message: data.error };
@@ -155,9 +163,10 @@ export const useAuthStore = defineStore("auth", () => {
       .post("auth/reset-password", resetPasswordData)
       .then(res => res.json())
       .then(data => {
-        storeJwtAndUser(data);
-
         if (!data.error) {
+          storeJwtAndUser(data);
+          sendAppInfo();
+
           return { status: "success" };
         } else {
           return { status: "error", message: data.error?.message };
@@ -241,15 +250,19 @@ export const useAuthStore = defineStore("auth", () => {
 
     if (window.cordova) {
       // eslint-disable-next-line no-undef
-      WonderPush.getInstallationId(async function (installationId) {
+      await WonderPush.getInstallationId(async function (installationId) {
         if (logout) {
-          await api.remove(`installations/${installationId}`);
+          const installationToRemoveId = user.value.installations.find(
+            inst => inst.installation_id === installationId,
+          ).id;
+          await api.remove(`installations/${installationToRemoveId}`);
         } else {
           appInfo.installation = installationId;
         }
       });
     }
-    await updateUser({ ...appInfo });
+
+    await updateUser(appInfo);
   };
 
   const storeJwtAndUser = data => {
@@ -269,16 +282,18 @@ export const useAuthStore = defineStore("auth", () => {
     return { status: "success" };
   };
 
-  watch(
-    isLoggedIn,
-    async value => {
-      if (!value) return;
-
-      await sendAppInfo();
-      await checkEverydayGoal();
-    },
-    { immediate: true },
-  );
+  // watch(
+  //   isLoggedIn,
+  //   async value => {
+  //     console.log("Is logged in:", value);
+  //
+  //     if (!value) return;
+  //
+  //     await sendAppInfo();
+  //     await checkEverydayGoal();
+  //   },
+  //   { immediate: true },
+  // );
 
   watch(
     () => suggestedCredentials,
@@ -298,7 +313,7 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     suggestedCredentials,
     userData,
-    isLoggedIn,
+    // isLoggedIn,
     isNicknamedOnlyUser,
     passwords,
     checkPassSave,
@@ -324,6 +339,7 @@ export const useAuthStore = defineStore("auth", () => {
     updateUser,
     updateNicknamedUser,
     deleteNicknamedUser,
+    checkEverydayGoal,
     sendAppInfo,
     storeJwtAndUser,
     logout,
