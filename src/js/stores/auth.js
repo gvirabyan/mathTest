@@ -262,14 +262,6 @@ export const useAuthStore = defineStore("auth", () => {
       });
     }
 
-    // const hardcodedId = "2e04bf3d0c4ed795c0485e9bfb9898cf287493fb";
-    // if (logout) {
-    //   const installationToRemoveId = user.value.installations.find(inst => inst.installation_id === hardcodedId).id;
-    //   await api.remove(`installations/${installationToRemoveId}`);
-    // } else {
-    //   appInfo.installation = hardcodedId;
-    // }
-
     await updateUser(appInfo);
   };
 
