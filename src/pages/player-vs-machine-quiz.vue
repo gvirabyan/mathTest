@@ -48,7 +48,13 @@
     </div>
 
     <div v-if="quizQuestions?.length >= quizMode?.questions" ref="circles" class="circles machine-player-circle">
-      <Circle v-for="point in getPoints" :key="point.point" :point="point.point" :status="point.status" />
+      <Circle
+        v-for="point in getPoints"
+        :key="point.point"
+        :point="point.point"
+        :status="point.status"
+        :present="!!point.present"
+      />
     </div>
 
     <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
@@ -281,10 +287,11 @@ const skip = () => {
 const next = () => {
   clearChosenData();
   getPoints.value[presentIndex.value].status = status.value;
+  getPoints.value[presentIndex.value].present = false;
   ++presentIndex.value;
 
   if (presentIndex.value < getPoints.value.length) {
-    getPoints.value[presentIndex.value].status = "present";
+    getPoints.value[presentIndex.value].present = true;
   }
 
   if (
@@ -374,7 +381,8 @@ watch(
         id: q.id,
         answer: q.answer,
         point: i + 1,
-        status: i === presentIndex.value ? "present" : "normal",
+        status: "normal",
+        present: i === 0,
       };
     });
   },
