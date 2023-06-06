@@ -1,7 +1,7 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
-import { isYesterday } from "@/js/utils/date-check";
+// import { isYesterday } from "@/js/utils/date-check";
 
 export const useAuthStore = defineStore("auth", () => {
   // state properties
@@ -77,6 +77,7 @@ export const useAuthStore = defineStore("auth", () => {
           }
 
           sendAppInfo();
+          checkEverydayGoal();
 
           return { status: "success" };
         } else {
@@ -90,8 +91,8 @@ export const useAuthStore = defineStore("auth", () => {
     return api.get(`auth/${provider}/callback${accessToken}`).then(data => {
       if (!data.error) {
         storeJwtAndUser(data);
-
         sendAppInfo();
+        checkEverydayGoal();
 
         return { status: "success" };
       } else {
@@ -118,6 +119,7 @@ export const useAuthStore = defineStore("auth", () => {
           }
 
           sendAppInfo();
+          checkEverydayGoal();
 
           return { status: "success" };
         } else {
@@ -135,6 +137,7 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           storeJwtAndUser(data);
           sendAppInfo();
+          checkEverydayGoal();
 
           return { status: "success" };
         } else {
@@ -166,6 +169,7 @@ export const useAuthStore = defineStore("auth", () => {
         if (!data.error) {
           storeJwtAndUser(data);
           sendAppInfo();
+          checkEverydayGoal();
 
           return { status: "success" };
         } else {
@@ -233,9 +237,13 @@ export const useAuthStore = defineStore("auth", () => {
       return;
     }
 
-    const passingDatetime = new Date(user.value?.everyday_goal_passed);
+    const passingDate = user.value?.everyday_goal_passed.split("T")[0];
+    const todayDate = new Date().toLocaleString("sv-SE", {
+      dateStyle: "short",
+      timeZone: user.value?.user_timezone,
+    });
 
-    if (!isYesterday(passingDatetime)) {
+    if (new Date(passingDate) === new Date(todayDate)) {
       return;
     }
 
@@ -282,19 +290,6 @@ export const useAuthStore = defineStore("auth", () => {
     return { status: "success" };
   };
 
-  // watch(
-  //   isLoggedIn,
-  //   async value => {
-  //     console.log("Is logged in:", value);
-  //
-  //     if (!value) return;
-  //
-  //     await sendAppInfo();
-  //     await checkEverydayGoal();
-  //   },
-  //   { immediate: true },
-  // );
-
   watch(
     () => suggestedCredentials,
     val => {
@@ -313,7 +308,6 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     suggestedCredentials,
     userData,
-    // isLoggedIn,
     isNicknamedOnlyUser,
     passwords,
     checkPassSave,
