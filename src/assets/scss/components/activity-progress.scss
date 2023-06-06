@@ -1,43 +1,65 @@
-.diagram-main {
-  display: flex;
-  .diagram-y-scale {
-    margin-right: 2px;
-    transform: rotate(360deg);
-    div {
-      margin-top: -5px;
+.progress {
+  .diagram-main {
+    display: flex;
+    .diagram-y-scale {
+      margin-right: 2px;
+      transform: rotate(360deg);
+      text-align: right;
+      div {
+        margin-top: -5px;
+      }
     }
-  }
-  .diagram-container {
-    width: 100%;
-    .diagram {
+    .diagram-container {
       width: 100%;
-      height: 55vh;
-      border-left: 4px solid #212121;
-      border-bottom: 4px solid #212121;
-      position: relative;
-      .diagram-days {
-        position: absolute;
-        bottom: 0;
-        display: flex;
+      .diagram {
         width: 100%;
-        > div {
-          transform: rotate(180deg);
-          .diagram-answer-wrong {
-            background: #dc1212;
-          }
-          .diagram-answer-skipped {
-            background: #89838f;
-          }
-          .diagram-answer-correct {
-            background: #2ee56b;
+        height: 55vh;
+        border-left: 3px solid #212121;
+        border-bottom: 3px solid #212121;
+        position: relative;
+        .diagram-days {
+          position: absolute;
+          bottom: 0;
+          display: flex;
+          width: 100%;
+          > div {
+            transform: rotate(180deg);
+            .diagram-answer-wrong {
+              background: #dc1212;
+            }
+            .diagram-answer-skipped {
+              background: #89838f;
+            }
+            .diagram-answer-correct {
+              background: #2ee56b;
+            }
           }
         }
       }
-    }
-    .diagram-x-scale {
-      display: flex;
-      justify-content: space-between;
+      .diagram-x-scale {
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
-
+  .progress-week-months {
+    display: flex;
+    margin-bottom: 20px;
+    .button {
+      text-transform: capitalize;
+      font-family: "Rubik", sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 0;
+      color: #8419ff;
+    }
+    span {
+      text-transform: capitalize;
+      font-family: "Rubik", sans-serif;
+      font-size: 18px;
+      padding: 0 5px;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+  }
 }

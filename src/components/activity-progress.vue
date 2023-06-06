@@ -2,6 +2,11 @@
   <div class="progress">
     <transition name="activity-fade" mode="out-in" appear>
       <div>
+        <div class="progress-week-months">
+          <f7-button @click="unitOfTime = 'week'">week</f7-button>
+          <span>/</span>
+          <f7-button @click="unitOfTime = 'month'">month</f7-button>
+        </div>
         <div class="diagram-main">
           <div class="diagram-y-scale">
             <div
@@ -59,7 +64,7 @@
 <script setup>
 import { useUserStats } from "@/js/stores/user-stats";
 import moment from "moment";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
 
 moment.updateLocale("en", {
@@ -69,25 +74,44 @@ moment.updateLocale("en", {
 });
 
 // Get the current date
+const unitOfTime = ref("week");
 const currentDate = moment();
-const startDay = currentDate.clone().startOf("week").format("YYYY-MM-DD");
-const endDay = currentDate.clone().endOf("week").format("YYYY-MM-DD");
+const startDay = ref();
+const endDay = ref();
 
 const userStore = useUserStats();
 const { userProgress } = storeToRefs(userStore);
-const days = ref([startDay]);
-
-onMounted(() => {
-  userStore.getProgressByDays(startDay, endDay);
-});
-
-for (let day = 1; day < 7; day++) {
-  days.value.push(currentDate.clone().startOf("week").add(day, "day").format("YYYY-MM-DD"));
-}
+const days = ref([]);
 const topValueOfAmount = ref(0);
-let amountLargest = 0;
+const amountLargest = ref(0);
 
-const getAnsweredPercent = computed(() => (day, status) => {
+watch(
+  () => unitOfTime.value,
+  async unitTime => {
+    //  reset previous data before get new data
+    userProgress.value = [];
+    amountLargest.value = 0;
+    topValueOfAmount.value = 0;
+
+    // get statistics by startDay and endDay
+    startDay.value = currentDate.clone().startOf(unitTime).format("YYYY-MM-DD");
+    endDay.value = currentDate.clone().endOf(unitTime).format("YYYY-MM-DD");
+    await userStore.getProgressByDays(startDay.value, endDay.value);
+
+    // get days
+    days.value = [];
+    days.value[0] = startDay.value;
+    let lengthDays = Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
+    for (let day = 1; day <= lengthDays; day++) {
+      days.value.push(currentDate.clone().startOf(unitOfTime.value).add(day, "day").format("YYYY-MM-DD"));
+    }
+  },
+  {
+    immediate: true,
+  },
+);
+
+const getAnsweredPercent = (day, status) => {
   if (!userProgress.value[day] || !userProgress.value[day][status]) {
     return 0;
   }
@@ -96,13 +120,13 @@ const getAnsweredPercent = computed(() => (day, status) => {
   for (const statusKey in userProgress.value[day]) {
     amount += Number(userProgress.value[day][statusKey]);
   }
-  if (amountLargest < amount) {
-    amountLargest = amount;
+  if (amountLargest.value < amount) {
+    amountLargest.value = amount;
   }
   // round amountLargest
-  topValueOfAmount.value = amountLargest + 5 - (amountLargest % 5);
+  topValueOfAmount.value = amountLargest.value + 5 - (amountLargest.value % 5);
   return (userProgress.value[day][status] * 55) / topValueOfAmount.value;
-});
+};
 
 const scaleNumber = computed(() => i => topValueOfAmount.value - (topValueOfAmount.value * (i - 1)) / 5);
 </script>
