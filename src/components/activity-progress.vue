@@ -3,9 +3,9 @@
     <transition name="activity-fade" mode="out-in" appear>
       <div>
         <div class="progress-week-months">
-          <f7-button @click="unitOfTime = 'week'">week</f7-button>
+          <f7-button @click="getActualProgress('week')">week</f7-button>
           <span>/</span>
-          <f7-button @click="unitOfTime = 'month'">month</f7-button>
+          <f7-button @click="getActualProgress('month')">month</f7-button>
         </div>
         <div class="diagram-main">
           <div class="diagram-y-scale">
@@ -56,6 +56,10 @@
             </div>
           </div>
         </div>
+        <div class="next-prev-block">
+          <f7-button @click="prevDate">{{ `<- prev` }}</f7-button>
+          <f7-button @click="nextDate">{{ `next ->` }}</f7-button>
+        </div>
       </div>
     </transition>
   </div>
@@ -64,7 +68,7 @@
 <script setup>
 import { useUserStats } from "@/js/stores/user-stats";
 import moment from "moment";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, computed, watch, reactive } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
 
 moment.updateLocale("en", {
@@ -74,8 +78,11 @@ moment.updateLocale("en", {
 });
 
 // Get the current date
-const unitOfTime = ref("week");
-const currentDate = moment();
+const rules = reactive({
+  unitOfTime: "week",
+  currentDate: moment(),
+});
+
 const startDay = ref();
 const endDay = ref();
 
@@ -85,34 +92,64 @@ const days = ref([]);
 const topValueOfAmount = ref(0);
 const amountLargest = ref(0);
 
+const getActualProgress = async unitOfTime => {
+  rules.currentDate = moment();
+  rules.unitOfTime = unitOfTime;
+  await updateProgress();
+};
+
+const prevDate = async () => {
+  console.log(7, rules.unitOfTime === "week");
+  if (rules.unitOfTime === "week") {
+    rules.currentDate = rules.currentDate.startOf("week").subtract(1, "day");
+  } else {
+    rules.currentDate = rules.currentDate.subtract(1, "month").startOf("month");
+  }
+  await updateProgress();
+};
+
+const nextDate = async () => {
+  if (rules.unitOfTime === "week") {
+    rules.currentDate = rules.currentDate.add(1, rules.unitOfTime);
+  } else {
+    rules.currentDate = rules.currentDate.add(1, "month").startOf("month");
+  }
+  await updateProgress();
+};
+
 watch(
-  () => unitOfTime.value,
-  async unitTime => {
-    //  reset previous data before get new data
-    userProgress.value = [];
-    amountLargest.value = 0;
-    topValueOfAmount.value = 0;
-
-    // get statistics by startDay and endDay
-    startDay.value = currentDate.clone().startOf(unitTime).format("YYYY-MM-DD");
-    endDay.value = currentDate.clone().endOf(unitTime).format("YYYY-MM-DD");
-    await userStore.getProgressByDays(startDay.value, endDay.value);
-
-    // get days
-    days.value = [];
-    days.value[0] = startDay.value;
-    let lengthDays = Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
-    for (let day = 1; day <= lengthDays; day++) {
-      days.value.push(currentDate.clone().startOf(unitOfTime.value).add(day, "day").format("YYYY-MM-DD"));
-    }
+  () => rules,
+  async () => {
+    await updateProgress();
   },
   {
     immediate: true,
+    deep: true,
   },
 );
 
+async function updateProgress() {
+  //  reset previous data before get new data
+  userProgress.value = {};
+  amountLargest.value = 0;
+  topValueOfAmount.value = 0;
+
+  // get statistics by startDay and endDay
+  startDay.value = rules.currentDate.startOf(rules.unitOfTime).format("YYYY-MM-DD");
+  endDay.value = rules.currentDate.endOf(rules.unitOfTime).format("YYYY-MM-DD");
+  await userStore.getProgressByDays(startDay.value, endDay.value);
+
+  // get days
+  days.value = [];
+  days.value[0] = startDay.value;
+  let lengthDays = Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
+  for (let day = 1; day <= lengthDays; day++) {
+    days.value.push(rules.currentDate.clone().startOf(rules.unitOfTime).add(day, "day").format("YYYY-MM-DD"));
+  }
+}
+
 const getAnsweredPercent = (day, status) => {
-  if (!userProgress.value[day] || !userProgress.value[day][status]) {
+  if (!userProgress.value || !userProgress.value[day] || !userProgress.value[day][status]) {
     return 0;
   }
   //calculate amount of exact day

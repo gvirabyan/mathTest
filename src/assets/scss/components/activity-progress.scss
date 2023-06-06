@@ -58,8 +58,21 @@
       font-family: "Rubik", sans-serif;
       font-size: 18px;
       padding: 0 5px;
-      margin-top: 5px;
+      margin-top: 2px;
       font-weight: 500;
+    }
+  }
+  .next-prev-block {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    .button {
+      text-transform: capitalize;
+      font-family: "Rubik", sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 0;
+      color: #8419ff;
     }
   }
 }
