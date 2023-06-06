@@ -18,7 +18,7 @@
 
     <main class="activity-tab-content">
       <Transition name="fade">
-        <component :is="currentActivityComponent" :req-loading="isLoading" />
+        <component :is="currentActivityComponent" :req-loading="isLoading" @go-progress-tab="goProgressTab" />
       </Transition>
     </main>
 
@@ -38,6 +38,7 @@ import BottomMenu from "@/components/bottom-menu.vue";
 
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
+const Progress = defineAsyncComponent(() => import("@/components/activity-progress.vue"));
 
 defineProps({
   f7route: {
@@ -73,12 +74,21 @@ const activityTabs = ref([
     name: i18n.t("activity.tabs.My Answers"),
     component: markRaw(MyAnswers),
   },
+  {
+    id: 4,
+    name: i18n.t("activity.tabs.Progress"),
+    component: markRaw(Progress),
+  },
 ]);
 
 const topBar = ref(null);
 const isLoading = ref(false);
 const currentActivityComponent = ref(null);
 let active = null;
+
+const goProgressTab = () => {
+  document.getElementsByClassName("top-bar-tab")[3].click();
+};
 
 const loadFirstTab = () => {
   topBar.value.selectFirstTab(activityTabs.value, false);

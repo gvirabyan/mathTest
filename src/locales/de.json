@@ -96,7 +96,8 @@
     "tabs": {
       "My Status": "My Status",
       "Top List": "Top List",
-      "My Answers": "My Answers"
+      "My Answers": "My Answers",
+      "Progress": "Progress"
     },
     "my-status": {
       "set-everyday-goal": "Set everyday goal",
@@ -112,7 +113,8 @@
       "today-activity": "Today’s activity",
       "wrong": "Wrong",
       "skipped": "Skipped",
-      "correct": "Correct"
+      "correct": "Correct",
+      "check-progress": "Check Progress"
     },
     "top-list": {
      "lists": [

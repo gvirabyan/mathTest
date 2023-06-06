@@ -46,6 +46,7 @@
     "framework7-vue": "^7.0.8",
     "material-icons": "^1.12.0",
     "mathjax-vue3": "^1.0.1",
+    "moment": "^2.29.4",
     "pinia": "^2.0.25",
     "skeleton-elements": "^4.0.1",
     "swiper": "^8.4.4",
