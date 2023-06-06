@@ -60,6 +60,9 @@
               </p>
             </template>
           </custom-gauge-three>
+          <f7-button class="check-progress-text" @click="$emit('go-progress-tab')">{{
+            $t("activity.my-status.check-progress")
+          }}</f7-button>
         </f7-block>
 
         <f7-block class="experience">

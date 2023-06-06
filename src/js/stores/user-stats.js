@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 
@@ -34,6 +34,8 @@ export const useUserStats = defineStore("user-stats", () => {
     daily_statics: null,
   });
 
+  const userProgress = ref({});
+
   const getUserStatus = async () => {
     return new Promise((resolve, reject) => {
       api
@@ -61,6 +63,12 @@ export const useUserStats = defineStore("user-stats", () => {
     });
   };
 
+  const getProgressByDays = async (start, end) => {
+    return api.get(`user-daily-activities?start=${start}&end=${end}`).then(data => {
+      userProgress.value = data.data;
+    });
+  };
+
   const getAnswersStats = async () => {
     return api.get("get-answers-stats").then(data => {
       answersStats.questions_count = data.questions_count;
@@ -80,7 +88,9 @@ export const useUserStats = defineStore("user-stats", () => {
   return {
     userStatus,
     answersStats,
+    userProgress,
     getUserStatus,
     getAnswersStats,
+    getProgressByDays,
   };
 });
