@@ -3,17 +3,16 @@
     display: flex;
     .diagram-y-scale {
       margin-right: 2px;
-      transform: rotate(360deg);
+      margin-top: -5px;
       text-align: right;
-      div {
-        margin-top: -5px;
-      }
+      min-width: 23px;
+      font-weight: 700;
     }
     .diagram-container {
       width: 100%;
       .diagram {
         width: 100%;
-        height: 55vh;
+        height: 35vh;
         border-left: 3px solid #212121;
         border-bottom: 3px solid #212121;
         position: relative;
@@ -23,7 +22,7 @@
           display: flex;
           width: 100%;
           transition: height;
-          > div {
+          .day-parent {
             position: relative;
             transform: rotate(180deg);
             .diagram-answer-wrong {
@@ -94,7 +93,7 @@
             }
             &:hover {
               position: relative;
-              z-index:555555 !important;
+              z-index:100 !important;
               .diagram-day-info {
                 display: block;
               }
@@ -105,11 +104,13 @@
       .diagram-x-scale {
         display: flex;
         justify-content: space-between;
+        font-weight: 700;
       }
     }
   }
   .progress-week-months {
     display: flex;
+    justify-content: space-evenly;
     margin-bottom: 20px;
     .button {
       text-transform: capitalize;
@@ -142,6 +143,8 @@
     }
   }
   .info-about-diagram {
+    display: flex;
+    justify-content: space-between;
     > div {
       display: flex;
       align-items: center;

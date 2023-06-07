@@ -13,7 +13,7 @@
               v-for="i in 5"
               :key="i"
               :style="{
-                height: `${55 / 5}vh`,
+                height: `${35 / 5}vh`,
               }"
             >
               {{ scaleNumber(i) }}
@@ -21,10 +21,11 @@
           </div>
           <div class="diagram-container">
             <div class="diagram">
-              <div class="diagram-days">
+              <div class="diagram-days" :style="[rules.unitOfTime === 'week' ? 'gap:10px' : 'gap:3px']">
                 <div
                   v-for="day in days"
                   :key="day"
+                  class="day-parent"
                   :style="{
                     width: `${100 / days.length}%`,
                   }"
@@ -72,10 +73,6 @@
             </div>
           </div>
         </div>
-        <div class="next-prev-block">
-          <f7-button @click="prevDate">{{ `<- prev` }}</f7-button>
-          <f7-button @click="nextDate">{{ `next ->` }}</f7-button>
-        </div>
         <div class="info-about-diagram">
           <div>
             <div class="point point-correct" />
@@ -89,6 +86,10 @@
             <div class="point point-wrong" />
             <p>Wrong</p>
           </div>
+        </div>
+        <div class="next-prev-block">
+          <f7-button @click="prevDate">{{ `<- prev` }}</f7-button>
+          <f7-button @click="nextDate">{{ `next ->` }}</f7-button>
         </div>
       </div>
     </transition>
@@ -193,8 +194,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
   const element = document.getElementsByClassName("activity-tab-content")[0];
-  element.removeEventListener("touchstart", touchStart);
-  element.removeEventListener("touchend", touchEnd);
+  if (element) {
+    element.removeEventListener("touchstart", touchStart);
+    element.removeEventListener("touchend", touchEnd);
+  }
 });
 
 async function updateProgress() {
@@ -233,7 +236,7 @@ const getAnsweredPercent = computed(() => (day, status) => {
   }
   // round amountLargest
   topValueOfAmount.value = amountLargest.value + 5 - (amountLargest.value % 5);
-  return (userProgress.value[day][status] * 55) / topValueOfAmount.value;
+  return (userProgress.value[day][status] * 35) / topValueOfAmount.value;
 });
 
 const scaleNumber = computed(() => i => topValueOfAmount.value - (topValueOfAmount.value * (i - 1)) / 5);
