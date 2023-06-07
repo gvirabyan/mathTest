@@ -47,6 +47,10 @@
                       height: `${getAnsweredPercent(day, 'correct')}vh`,
                     }"
                   />
+                  <div class="diagram-day-info">
+                    sasdadsad
+                    <div class="diagram-day-info-slag"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -68,7 +72,7 @@
 <script setup>
 import { useUserStats } from "@/js/stores/user-stats";
 import moment from "moment";
-import { ref, computed, watch, reactive } from "vue";
+import { ref, computed, watch, reactive, onMounted } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
 
 moment.updateLocale("en", {
@@ -99,7 +103,6 @@ const getActualProgress = async unitOfTime => {
 };
 
 const prevDate = async () => {
-  console.log(7, rules.unitOfTime === "week");
   if (rules.unitOfTime === "week") {
     rules.currentDate = rules.currentDate.startOf("week").subtract(1, "day");
   } else {
@@ -109,13 +112,51 @@ const prevDate = async () => {
 };
 
 const nextDate = async () => {
-  if (rules.unitOfTime === "week") {
-    rules.currentDate = rules.currentDate.add(1, rules.unitOfTime);
-  } else {
+  if (rules.unitOfTime === "week" && moment() > rules.currentDate.clone().add(7, "day").startOf("week")) {
+    rules.currentDate = rules.currentDate.add(7, "day").startOf("week");
+    await updateProgress();
+  } else if (
+    rules.unitOfTime === "month" &&
+    moment() > rules.currentDate.clone().add(1, rules.unitOfTime).startOf("month")
+  ) {
     rules.currentDate = rules.currentDate.add(1, "month").startOf("month");
+    await updateProgress();
   }
-  await updateProgress();
 };
+
+// swipe functionality
+let start = null;
+const touchStart = event => {
+  if (event.touches.length === 1) {
+    //just one finger touched
+    start = event.touches.item(0).clientX;
+  } else {
+    //a second finger hit the screen, abort the touch
+    start = null;
+  }
+};
+
+const touchEnd = event => {
+  let offset = 50; //at least 50px are a swipe
+  if (start) {
+    //the only finger that hit the screen left it
+    let end = event.changedTouches.item(0).clientX;
+    if (end > start + offset) {
+      //a left -> right swipe
+      prevDate();
+    }
+    if (end < start - offset) {
+      //a right -> left swipe
+      nextDate();
+    }
+  }
+};
+
+onMounted(() => {
+  const element = document.getElementsByClassName("activity-tab-content")[0];
+  element.addEventListener("touchstart", touchStart);
+  element.addEventListener("touchend", touchEnd);
+});
 
 watch(
   () => rules,

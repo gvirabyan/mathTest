@@ -33,6 +33,33 @@
             .diagram-answer-correct {
               background: #2ee56b;
             }
+            .diagram-day-info {
+              position: absolute;
+              top: 10px;
+              -webkit-backdrop-filter: saturate(180%) blur(var(--f7-bars-translucent-blur));
+              backdrop-filter: saturate(180%) blur(var(--f7-bars-translucent-blur));
+              box-shadow: 0px 0px 17px rgba(0, 0, 0, 0.2);
+              border-radius: 10px;
+              background: #fff;
+              width: 100px;
+              display: none;
+              .diagram-day-info-slag {
+                position: absolute;
+                top: -10px;
+                right: 40px;
+                display: inline-block;
+                width: unset;
+                height: unset;
+                transform: rotate(135deg);
+                border-bottom: 20px solid #fff;
+                border-right: 20px solid transparent;
+              }
+            }
+            &:hover {
+              .diagram-day-info {
+                display: block;
+              }
+            }
           }
         }
       }
