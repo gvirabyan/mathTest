@@ -47,8 +47,20 @@
                       height: `${getAnsweredPercent(day, 'correct')}vh`,
                     }"
                   />
-                  <div class="diagram-day-info">
-                    sasdadsad
+                  <div v-if="userProgress && userProgress[day]" class="diagram-day-info">
+                    <div class="diagram-day-status">
+                      <div class="point-wrong" />
+                      <p>{{ userProgress[day].wrong || 0 }}</p>
+                    </div>
+                    <div class="diagram-day-status">
+                      <div class="point-skipped" />
+                      <p>{{ userProgress[day].skipped || 0 }}</p>
+                    </div>
+                    <div class="diagram-day-status">
+                      <div class="point-correct" />
+                      <p>{{ userProgress[day].correct || 0 }}</p>
+                    </div>
+                    <p class="diagram-day-date">{{ day }}</p>
                     <div class="diagram-day-info-slag"></div>
                   </div>
                 </div>
@@ -63,6 +75,20 @@
         <div class="next-prev-block">
           <f7-button @click="prevDate">{{ `<- prev` }}</f7-button>
           <f7-button @click="nextDate">{{ `next ->` }}</f7-button>
+        </div>
+        <div class="info-about-diagram">
+          <div>
+            <div class="point point-correct" />
+            <p>Correct</p>
+          </div>
+          <div>
+            <div class="point point-skipped" />
+            <p>Skipped</p>
+          </div>
+          <div>
+            <div class="point point-wrong" />
+            <p>Wrong</p>
+          </div>
         </div>
       </div>
     </transition>
