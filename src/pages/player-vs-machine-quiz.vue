@@ -83,14 +83,14 @@
               v-for="(answer, index) in answersData"
               :key="index"
               :checked="chosenQuizAnswer === answer"
-              :disabled="!!sentAnswer"
+              :disabled="!!isAnswerSent || !!isRivalAnswerSent"
               :class="{
                 'hg-correct-rival-answer':
-                  sentAnswer &&
+                  isRivalAnswerSent &&
                   String(quizQuestion.rival_answer) === quizQuestion.answer &&
                   answer === quizQuestion.answer,
                 'hg-wrong-rival-answer':
-                  sentAnswer &&
+                  isRivalAnswerSent &&
                   String(quizQuestion.rival_answer) !== quizQuestion.answer &&
                   answer === String(quizQuestion.rival_answer),
               }"
@@ -101,8 +101,8 @@
               <f7-col
                 :class="{
                   'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                  'hg-correct-answer': sentAnswer && quizQuestion?.answer === answer,
-                  'hg-wrong-answer': sentAnswer && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                  'hg-correct-answer': isAnswerSent && quizQuestion?.answer === answer,
+                  'hg-wrong-answer': isAnswerSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
                 }"
               >
                 <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
@@ -112,7 +112,7 @@
           </f7-list>
         </div>
         <div class="hg-actions-btns-content">
-          <f7-row v-if="!sentAnswer">
+          <f7-row v-if="!isAnswerSent || !isRivalAnswerSent">
             <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">{{
               $t("buttons.wrong-answer")
             }}</f7-button>
@@ -166,8 +166,7 @@ const {
   quizQuestions,
   quizQuestion,
   quizRivalType,
-  quizRivalId,
-  quizRivalUsername,
+  quizRivalPlayer,
   quizQuestionsLength,
   answeredQuizQuestions,
   quizMode,
@@ -188,7 +187,8 @@ const status = ref("normal");
 const finishGameText = ref("");
 const leavePopupPageText = ref("");
 const isSending = ref(false);
-const sentAnswer = ref(false);
+const isAnswerSent = ref(false);
+const isRivalAnswerSent = ref(false);
 const finishGame = ref("");
 
 const allQuizQuestionAnswered = computed(
@@ -201,9 +201,18 @@ const userScoreTitle = computed(() =>
   quizRivalType.value !== "machine" ? `${user.value.username}:` : i18n.t("practice.your-score"),
 );
 const rivalScoreTitle = computed(() =>
-  quizRivalType.value !== "machine" ? `${quizRivalUsername.value}:` : i18n.t("practice.machine-score"),
+  quizRivalType.value !== "machine" ? `${quizRivalPlayer.value.username}:` : i18n.t("practice.machine-score"),
 );
 const questionHandlerDelay = computed(() => (quizRivalType.value !== "machine" ? 2000 : 0));
+const rivalAnswerDelay = computed(() => {
+  if (quizRivalType.value === "machine") {
+    return 0;
+  }
+
+  const basicMs = 5000;
+
+  return basicMs - basicMs * quizRivalPlayer.value.coefficient + 500;
+});
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -233,7 +242,7 @@ const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
-    updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer);
+    updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer, rivalAnswerDelay.value);
 
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
@@ -244,7 +253,15 @@ const sendAnswer = () => {
       status: status.value,
     }).then(resp => {
       isSending.value = false;
-      sentAnswer.value = true;
+      isAnswerSent.value = true;
+
+      if (rivalAnswerDelay.value) {
+        setTimeout(() => {
+          isRivalAnswerSent.value = true;
+        }, rivalAnswerDelay.value);
+      } else {
+        isRivalAnswerSent.value = true;
+      }
 
       if (resp.status !== "success") {
         chosenQuizAnswer.value = null;
@@ -256,8 +273,15 @@ const sendAnswer = () => {
       }
     });
   }
+
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz();
+    if (rivalAnswerDelay.value) {
+      setTimeout(() => {
+        endQuiz();
+      }, rivalAnswerDelay.value);
+    } else {
+      endQuiz();
+    }
   }
 };
 
@@ -269,14 +293,18 @@ const clearChosenData = () => {
   chosenQuizAnswer.value = null;
   chosenQuizAnswerIndex.value = null;
   isSending.value = false;
-  sentAnswer.value = false;
+  isAnswerSent.value = false;
+  isRivalAnswerSent.value = false;
 };
 
 const skip = () => {
   isSending.value = true;
-  updateScore("skipped", quizQuestion.value.rival_answer);
+
+  updateScore("skipped", quizQuestion.value.rival_answer, rivalAnswerDelay.value);
+
   isSending.value = false;
-  sentAnswer.value = true;
+  isAnswerSent.value = true;
+  isRivalAnswerSent.value = true;
   status.value = "wrong";
 
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
@@ -345,7 +373,7 @@ const endQuiz = async () => {
     rival_score: rivalScore.value,
     mode: quizMode.value,
     rival_type: quizRivalType.value,
-    ...(quizRivalId.value && { rival_id: quizRivalId.value }),
+    ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
   }).then(({ data }) => {
     const result = data?.attributes?.result;
     finishGame.value = result && alertTextObj[result].title;
@@ -365,7 +393,7 @@ const leavePage = async () => {
     mode: quizMode.value,
     result: "lose",
     rival_type: quizRivalType.value,
-    ...(quizRivalId.value && { rival_id: quizRivalId.value }),
+    ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
   }).then(() => {
     useQuizStore().$reset();
     leavePopupPageText.value = "";

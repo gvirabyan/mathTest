@@ -51,7 +51,6 @@ import { useUserStats } from "@/js/stores/user-stats";
 import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
 import CustomPopup from "@/components/custom-popup.vue";
-import { storeToRefs } from "pinia";
 
 const bus = useEventBus("notifications");
 bus.on((e, payload) => {
@@ -61,7 +60,6 @@ bus.on((e, payload) => {
 const authStore = useAuthStore();
 const userStatsStore = useUserStats();
 
-const { user } = storeToRefs(authStore);
 const { getUser, sendAppInfo, checkEverydayGoal } = authStore;
 const { getUserStatus } = userStatsStore;
 
@@ -119,12 +117,7 @@ onMounted(async () => {
       });
     });
 
-    await sendAppInfo().then(() => {
-      console.log(
-        "installation id: ",
-        user.value.installations.map(inst => inst.id)[user.value.installations.length - 1],
-      );
-    });
+    await sendAppInfo();
     await checkEverydayGoal();
   } else {
     localStorage.removeItem("user-id");
