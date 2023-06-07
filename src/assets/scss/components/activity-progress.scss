@@ -75,26 +75,20 @@
                   font-size: 12px;
                   margin: 0px;
                 }
-                .point-correct {
-                  background: #2EE56B;
+                .status-point {
                   height: 8px;
                   width: 8px;
                   border-radius: 50%;
                   margin-right: 5px;
-                }
-                .point-skipped {
-                  background: #89838f;
-                  height: 8px;
-                  width: 8px;
-                  border-radius: 50%;
-                  margin-right: 5px;
-                }
-                .point-wrong {
-                  background: #dc1212;
-                  height: 8px;
-                  width: 8px;
-                  border-radius: 50%;
-                  margin-right: 5px;
+                  &.point-correct {
+                    background: #2EE56B;
+                  }
+                  &.point-skipped {
+                    background: #89838f;
+                  }
+                  &.point-wrong {
+                    background: #dc1212;
+                  }
                 }
               }
             }

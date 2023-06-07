@@ -30,36 +30,38 @@
 
         <f7-block v-if="userStatus.daily_statics && userStatus.daily_statics.length" class="experience">
           <h3 class="experience-title">{{ $t("activity.my-status.today-activity") }}</h3>
-          <custom-gauge-three
-            :width="customGaugeOptions.width"
-            :height="customGaugeOptions.height"
-            :radius="customGaugeOptions.radius"
-            :stroke-width="customGaugeOptions.strokeWidth"
-            color="#8419FF"
-            :percent-green="staticInfo('correct').percent"
-            :percent-gray="staticInfo('skipped').percent + staticInfo('correct').percent"
-            ><template #amount>{{ amountAnswered }}</template>
-            <template #info>
-              <p>
-                {{ $t("activity.my-status.correct") }}
-                <span class="correct-answered">
-                  {{ staticInfo("correct").count }}
-                </span>
-              </p>
-              <p>
-                {{ $t("activity.my-status.skipped") }}
-                <span class="skipped-answered">
-                  {{ staticInfo("skipped").count }}
-                </span>
-              </p>
-              <p>
-                {{ $t("activity.my-status.wrong") }}
-                <span class="wrong-answered">
-                  {{ staticInfo("wrong").count }}
-                </span>
-              </p>
-            </template>
-          </custom-gauge-three>
+          <f7-button class="daily-statistic-btn" @click="$emit('go-progress-tab')">
+            <custom-gauge-three
+              :width="customGaugeOptions.width"
+              :height="customGaugeOptions.height"
+              :radius="customGaugeOptions.radius"
+              :stroke-width="customGaugeOptions.strokeWidth"
+              color="#8419FF"
+              :percent-green="staticInfo('correct').percent"
+              :percent-gray="staticInfo('skipped').percent + staticInfo('correct').percent"
+              ><template #amount>{{ amountAnswered }}</template>
+              <template #info>
+                <p>
+                  {{ $t("activity.my-status.correct") }}
+                  <span class="correct-answered">
+                    {{ staticInfo("correct").count }}
+                  </span>
+                </p>
+                <p>
+                  {{ $t("activity.my-status.skipped") }}
+                  <span class="skipped-answered">
+                    {{ staticInfo("skipped").count }}
+                  </span>
+                </p>
+                <p>
+                  {{ $t("activity.my-status.wrong") }}
+                  <span class="wrong-answered">
+                    {{ staticInfo("wrong").count }}
+                  </span>
+                </p>
+              </template>
+            </custom-gauge-three>
+          </f7-button>
           <f7-button class="check-progress-text" @click="$emit('go-progress-tab')">{{
             $t("activity.my-status.check-progress")
           }}</f7-button>

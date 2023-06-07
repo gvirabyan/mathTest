@@ -49,15 +49,15 @@
                   />
                   <div v-if="userProgress && userProgress[day]" class="diagram-day-info">
                     <div class="diagram-day-status">
-                      <div class="point-wrong" />
+                      <div class="status-point point-wrong" />
                       <p>{{ userProgress[day].wrong || 0 }}</p>
                     </div>
                     <div class="diagram-day-status">
-                      <div class="point-skipped" />
+                      <div class="status-point point-skipped" />
                       <p>{{ userProgress[day].skipped || 0 }}</p>
                     </div>
                     <div class="diagram-day-status">
-                      <div class="point-correct" />
+                      <div class="status-point point-correct" />
                       <p>{{ userProgress[day].correct || 0 }}</p>
                     </div>
                     <p class="diagram-day-date">{{ day }}</p>
@@ -97,8 +97,9 @@
 
 <script setup>
 import { useUserStats } from "@/js/stores/user-stats";
+import { useAuthStore } from "@/js/stores/auth";
 import moment from "moment";
-import { ref, computed, watch, reactive, onMounted } from "vue";
+import { ref, computed, watch, reactive, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
 
 moment.updateLocale("en", {
@@ -118,6 +119,7 @@ const endDay = ref();
 
 const userStore = useUserStats();
 const { userProgress } = storeToRefs(userStore);
+const { user } = storeToRefs(useAuthStore());
 const days = ref([]);
 const topValueOfAmount = ref(0);
 const amountLargest = ref(0);
@@ -129,12 +131,16 @@ const getActualProgress = async unitOfTime => {
 };
 
 const prevDate = async () => {
+  let date = 0;
   if (rules.unitOfTime === "week") {
-    rules.currentDate = rules.currentDate.startOf("week").subtract(1, "day");
+    date = rules.currentDate.clone().startOf("week").subtract(1, "day");
   } else {
-    rules.currentDate = rules.currentDate.subtract(1, "month").startOf("month");
+    date = rules.currentDate.clone().subtract(1, "month").startOf("month");
   }
-  await updateProgress();
+  if (date.endOf(rules.unitOfTime) > new Date(user.value.createdAt)) {
+    rules.currentDate = date;
+    await updateProgress();
+  }
 };
 
 const nextDate = async () => {
@@ -178,22 +184,18 @@ const touchEnd = event => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   const element = document.getElementsByClassName("activity-tab-content")[0];
   element.addEventListener("touchstart", touchStart);
   element.addEventListener("touchend", touchEnd);
+  await updateProgress();
 });
 
-watch(
-  () => rules,
-  async () => {
-    await updateProgress();
-  },
-  {
-    immediate: true,
-    deep: true,
-  },
-);
+onUnmounted(() => {
+  const element = document.getElementsByClassName("activity-tab-content")[0];
+  element.removeEventListener("touchstart", touchStart);
+  element.removeEventListener("touchend", touchEnd);
+});
 
 async function updateProgress() {
   //  reset previous data before get new data
@@ -204,18 +206,20 @@ async function updateProgress() {
   // get statistics by startDay and endDay
   startDay.value = rules.currentDate.startOf(rules.unitOfTime).format("YYYY-MM-DD");
   endDay.value = rules.currentDate.endOf(rules.unitOfTime).format("YYYY-MM-DD");
+
   await userStore.getProgressByDays(startDay.value, endDay.value);
 
   // get days
   days.value = [];
   days.value[0] = startDay.value;
-  let lengthDays = Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
+  let lengthDays =
+    rules.unitOfTime === "week" ? 7 : Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
   for (let day = 1; day <= lengthDays; day++) {
     days.value.push(rules.currentDate.clone().startOf(rules.unitOfTime).add(day, "day").format("YYYY-MM-DD"));
   }
 }
 
-const getAnsweredPercent = (day, status) => {
+const getAnsweredPercent = computed(() => (day, status) => {
   if (!userProgress.value || !userProgress.value[day] || !userProgress.value[day][status]) {
     return 0;
   }
@@ -230,7 +234,7 @@ const getAnsweredPercent = (day, status) => {
   // round amountLargest
   topValueOfAmount.value = amountLargest.value + 5 - (amountLargest.value % 5);
   return (userProgress.value[day][status] * 55) / topValueOfAmount.value;
-};
+});
 
 const scaleNumber = computed(() => i => topValueOfAmount.value - (topValueOfAmount.value * (i - 1)) / 5);
 </script>

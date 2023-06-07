@@ -65,7 +65,10 @@ export const useUserStats = defineStore("user-stats", () => {
 
   const getProgressByDays = async (start, end) => {
     return api.get(`user-daily-activities?start=${start}&end=${end}`).then(data => {
-      userProgress.value = data.data;
+      if (data.data) {
+        userProgress.value = data.data;
+      }
+      return data.data;
     });
   };
 
