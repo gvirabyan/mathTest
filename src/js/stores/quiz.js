@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import api from "@/js/api";
@@ -13,8 +13,11 @@ export const useQuizStore = defineStore("quiz", () => {
   const answeredQuizQuestions = ref([]);
   const quizMode = ref(null);
   const quizRivalType = ref("machine");
-  const quizRivalId = ref(null);
-  const quizRivalUsername = ref(null);
+  const quizRivalPlayer = reactive({
+    id: null,
+    username: null,
+    coefficient: null,
+  });
   const userScore = ref(0);
   const rivalScore = ref(0);
   const lastFriendPractice = ref(null);
@@ -40,8 +43,9 @@ export const useQuizStore = defineStore("quiz", () => {
       categoryAnswersStore.categoryAnswers = data.categories_answers || [];
 
       if (data.rival_user) {
-        quizRivalId.value = data.rival_user.id;
-        quizRivalUsername.value = data.rival_user.username;
+        quizRivalPlayer.id = data.rival_user.id;
+        quizRivalPlayer.username = data.rival_user.username;
+        quizRivalPlayer.coefficient = data.rival_user.coefficient;
       }
     });
   };
@@ -59,9 +63,16 @@ export const useQuizStore = defineStore("quiz", () => {
     answeredQuizQuestions.value.push(id);
   };
 
-  const updateScore = (userAnswer, rivalAnswer) => {
+  const updateScore = (userAnswer, rivalAnswer, delay = 0) => {
     userScore.value = userAnswer === quizQuestion.value.answer ? userScore.value + 1 : userScore.value;
-    rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
+
+    if (delay) {
+      setTimeout(() => {
+        rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
+      }, delay);
+    } else {
+      rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
+    }
   };
 
   const saveQuizResult = async data => {
@@ -89,8 +100,7 @@ export const useQuizStore = defineStore("quiz", () => {
     answeredQuizQuestions,
     quizMode,
     quizRivalType,
-    quizRivalId,
-    quizRivalUsername,
+    quizRivalPlayer,
     userScore,
     rivalScore,
     lastFriendPractice,
