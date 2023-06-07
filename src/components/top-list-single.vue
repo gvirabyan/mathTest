@@ -221,6 +221,10 @@ const goBack = () => {
             opacity: 0.4;
           }
           .name {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
             font-family: "Rubik";
             font-style: normal;
             font-weight: 500;
