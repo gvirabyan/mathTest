@@ -235,7 +235,7 @@ const chooseQuizAnswer = (answer, index) => {
 
 const closeFinishPopup = () => {
   finishGame.value = "";
-  props.f7router.navigate("/practice/");
+  props.f7router.navigate("/practice/", { props: { foo: "bar", bar: true } });
 };
 
 const sendAnswer = () => {
@@ -252,15 +252,16 @@ const sendAnswer = () => {
       answer_type: "practice-vs-machine",
       status: status.value,
     }).then(resp => {
-      isSending.value = false;
       isAnswerSent.value = true;
 
       if (rivalAnswerDelay.value) {
         setTimeout(() => {
           isRivalAnswerSent.value = true;
+          isSending.value = false;
         }, rivalAnswerDelay.value);
       } else {
         isRivalAnswerSent.value = true;
+        isSending.value = false;
       }
 
       if (resp.status !== "success") {

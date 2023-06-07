@@ -87,9 +87,9 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
+import pluralizeWord from "@/js/utils/pluralize-word";
 import Topbar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import pluralizeWord from "@/js/utils/pluralize-word";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
