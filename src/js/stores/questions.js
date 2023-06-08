@@ -68,6 +68,7 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
 
     answeredQuestions.value = questionsIds;
+    return questionsIds;
   };
 
   const getNextQuestion = (id = null) => {
