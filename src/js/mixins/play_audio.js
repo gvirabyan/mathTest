@@ -7,10 +7,12 @@ const playAudioMixin = {
       audio.load();
       audio
         .play()
-        .then(function () {
+        .then(function (r) {
           // Automatic playback started!
+          console.log(r, 12);
         })
         .catch(function (error) {
+          console.log(error, 12);
           // Automatic playback failed.
           // Show a UI element to let the user manually start playback.
         });
