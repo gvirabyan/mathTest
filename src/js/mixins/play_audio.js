@@ -1,10 +1,10 @@
 const playAudioMixin = {
   setup() {
-    const playAudio = async name => {
-      const audio = new Audio(
-        `assets/audios/${name}.${["lose", "skipped", "notification"].includes(name) ? "mp3" : "wav"}`,
-      );
-      return await audio.play().then(r => r);
+    const playAudio = name => {
+      const audio = new Audio();
+      audio.src = `audios/${name}.${["lose", "skipped", "notification"].includes(name) ? "mp3" : "wav"}`;
+      audio.load();
+      audio.play();
     };
     return {
       playAudio,

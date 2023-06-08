@@ -240,11 +240,11 @@ const closeFinishPopup = () => {
   props.f7router.navigate("/practice/", { props: { foo: "bar", bar: true } });
 };
 
-const sendAnswer = async () => {
+const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
-    await playAudio(status.value);
+    playAudio(status.value);
     updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer, rivalAnswerDelay.value);
 
     updateUserAnsweredQuestions({
@@ -301,7 +301,7 @@ const clearChosenData = () => {
   isRivalAnswerSent.value = false;
 };
 
-const skip = async () => {
+const skip = () => {
   isSending.value = true;
 
   updateScore("skipped", quizQuestion.value.rival_answer, rivalAnswerDelay.value);
@@ -310,9 +310,9 @@ const skip = async () => {
   isAnswerSent.value = true;
   isRivalAnswerSent.value = true;
   status.value = "wrong";
-  await playAudio("wrong");
+  playAudio("wrong");
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    await endQuiz();
+    endQuiz();
   }
 };
 
@@ -352,7 +352,7 @@ const onOrientationChange = () => {
   }
 };
 
-const endQuiz = async () => {
+const endQuiz = () => {
   const alertTextObj = {
     win: {
       title: i18n.t("practice.finish-game-popup.win.title"),
@@ -372,16 +372,16 @@ const endQuiz = async () => {
     },
   };
 
-  await saveQuizResult({
+  saveQuizResult({
     user_score: userScore.value,
     rival_score: rivalScore.value,
     mode: quizMode.value,
     rival_type: quizRivalType.value,
     ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
-  }).then(async ({ data }) => {
+  }).then(({ data }) => {
     const result = data?.attributes?.result;
 
-    if (result) await playAudio(result);
+    if (result) playAudio(result);
 
     finishGame.value = result && alertTextObj[result].title;
     finishGameText.value = result && alertTextObj[result].text;

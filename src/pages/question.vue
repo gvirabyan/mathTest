@@ -293,11 +293,11 @@ const chooseAnswer = (answer, index) => {
 };
 
 const status = ref("normal");
-const sendAnswer = async () => {
+const sendAnswer = () => {
   if (chosenAnswer.value && !isSending.value) {
     isSending.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
-    await playAudio(status.value);
+    playAudio(status.value);
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: question.value.id,
@@ -365,7 +365,7 @@ function shuffle(a) {
   return a;
 }
 
-const skip = async () => {
+const skip = () => {
   status.value = "skipped";
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
@@ -374,10 +374,10 @@ const skip = async () => {
     answer: "",
     status: "skipped",
     answer_type: "topic",
-  }).then(async resp => {
+  }).then(resp => {
     if (resp.status === "success") {
-      await playAudio("skipped");
-      await next();
+      playAudio("skipped");
+      next();
       return;
     }
 
