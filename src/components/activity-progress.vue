@@ -216,7 +216,7 @@ async function updateProgress() {
   days.value = [];
   days.value[0] = startDay.value;
   let lengthDays =
-    rules.unitOfTime === "week" ? 7 : Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
+    rules.unitOfTime === "week" ? 6 : Number(endDay.value.split("-")[2]) - Number(startDay.value.split("-")[2]);
   for (let day = 1; day <= lengthDays; day++) {
     days.value.push(rules.currentDate.clone().startOf(rules.unitOfTime).add(day, "day").format("YYYY-MM-DD"));
   }
