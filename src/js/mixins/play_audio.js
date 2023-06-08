@@ -3,7 +3,7 @@ const playAudioMixin = {
     const playAudio = name => {
       const audio = new Audio();
       console.log(audio, 111);
-      audio.src = `src/assets/audios/${name}.${["lose", "skipped", "notification"].includes(name) ? "mp3" : "wav"}`;
+      audio.src = `assets/audios/${name}.${["lose", "skipped", "notification"].includes(name) ? "mp3" : "wav"}`;
       audio.load();
       audio
         .play()
