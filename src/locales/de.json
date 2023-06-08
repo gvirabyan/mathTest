@@ -225,7 +225,8 @@
       "Account",
       "Security",
       "About Us",
-      "Send Reports"
+      "Send Reports",
+      "Sound"
     ],
     "account": {
       "logout-warning": "Logout Warning",
@@ -262,6 +263,9 @@
       "successfully-updated": "Successfully updated",
       "no": "No",
       "yes": "Yes"
+    },
+    "sound": {
+      "sound": "Sound"
     }
   },
   "notification": {
