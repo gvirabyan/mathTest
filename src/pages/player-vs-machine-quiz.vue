@@ -148,6 +148,7 @@ import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
@@ -160,6 +161,7 @@ const props = defineProps({
   f7route: { type: Object, default: () => {} },
 });
 
+const { playAudio } = playAudioMixin.setup();
 const { user } = storeToRefs(useAuthStore());
 const { answersData } = storeToRefs(useCategoryAnswerStore());
 const {
@@ -238,10 +240,11 @@ const closeFinishPopup = () => {
   props.f7router.navigate("/practice/", { props: { foo: "bar", bar: true } });
 };
 
-const sendAnswer = () => {
+const sendAnswer = async () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
+    await playAudio(status.value);
     updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer, rivalAnswerDelay.value);
 
     updateUserAnsweredQuestions({
@@ -298,7 +301,7 @@ const clearChosenData = () => {
   isRivalAnswerSent.value = false;
 };
 
-const skip = () => {
+const skip = async () => {
   isSending.value = true;
 
   updateScore("skipped", quizQuestion.value.rival_answer, rivalAnswerDelay.value);
@@ -307,9 +310,9 @@ const skip = () => {
   isAnswerSent.value = true;
   isRivalAnswerSent.value = true;
   status.value = "wrong";
-
+  await playAudio("wrong");
   if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz();
+    await endQuiz();
   }
 };
 
@@ -375,8 +378,11 @@ const endQuiz = async () => {
     mode: quizMode.value,
     rival_type: quizRivalType.value,
     ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
-  }).then(({ data }) => {
+  }).then(async ({ data }) => {
     const result = data?.attributes?.result;
+
+    if (result) await playAudio(result);
+
     finishGame.value = result && alertTextObj[result].title;
     finishGameText.value = result && alertTextObj[result].text;
   });

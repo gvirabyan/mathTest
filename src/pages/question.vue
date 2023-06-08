@@ -172,8 +172,10 @@ import pluralizeWord from "../js/utils/pluralize-word";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 import { useI18n } from "vue-i18n";
 
+const { playAudio } = playAudioMixin.setup();
 const storeCategoryClass = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(storeCategoryClass);
 
@@ -291,11 +293,11 @@ const chooseAnswer = (answer, index) => {
 };
 
 const status = ref("normal");
-const sendAnswer = () => {
+const sendAnswer = async () => {
   if (chosenAnswer.value && !isSending.value) {
     isSending.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
-
+    await playAudio(status.value);
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: question.value.id,
@@ -363,7 +365,7 @@ function shuffle(a) {
   return a;
 }
 
-const skip = () => {
+const skip = async () => {
   status.value = "skipped";
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
@@ -372,9 +374,10 @@ const skip = () => {
     answer: "",
     status: "skipped",
     answer_type: "topic",
-  }).then(resp => {
+  }).then(async resp => {
     if (resp.status === "success") {
-      next();
+      await playAudio("skipped");
+      await next();
       return;
     }
 
