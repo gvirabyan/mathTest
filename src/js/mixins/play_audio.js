@@ -1,7 +1,7 @@
 const playAudioMixin = {
   setup() {
     const playAudio = name => {
-      console.log(4);
+      alert(4);
       const audio = new Audio(
         `@/assets/audios/${name}.${["lose", "skipped", "notification"].includes(name) ? "mp3" : "wav"}`,
       );
