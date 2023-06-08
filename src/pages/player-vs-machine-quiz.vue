@@ -140,7 +140,7 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -211,9 +211,8 @@ const rivalAnswerDelay = computed(() => {
     return 0;
   }
 
-  const basicMs = 5000;
-
-  return basicMs - basicMs * quizRivalPlayer.value.coefficient + 500;
+  // const basicMs = 5000;
+  return (Math.random() * 9 + 1) * 1000;
 });
 
 const getLetterByIndex = index => {
@@ -356,19 +355,15 @@ const endQuiz = () => {
   const alertTextObj = {
     win: {
       title: i18n.t("practice.finish-game-popup.win.title"),
-      text: `${i18n.t("practice.finish-game-popup.win.text")} ${presentIndex.value + 1} ${i18n.t("over.points")}`,
+      text: `${i18n.t("practice.finish-game-popup.win.text")} ${quizMode.value.winPoints} ${i18n.t("over.points")}`,
     },
     draw: {
       title: i18n.t("practice.finish-game-popup.draw.title"),
-      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${(presentIndex.value + 1) / 2} ${i18n.t(
-        "over.points",
-      )}`,
+      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${quizMode.value.drawPoints} ${i18n.t("over.points")}`,
     },
     lose: {
       title: i18n.t("practice.finish-game-popup.lose.title"),
-      text: `${i18n.t("practice.finish-game-popup.lose.text")} -${(presentIndex.value + 1) / 5} ${i18n.t(
-        "over.points",
-      )}`,
+      text: `${i18n.t("practice.finish-game-popup.lose.text")} ${quizMode.value.losePoints} ${i18n.t("over.points")}`,
     },
   };
 
