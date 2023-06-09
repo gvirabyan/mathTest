@@ -1,5 +1,10 @@
 <template>
-  <f7-page class="hg-practice-page" name="player-vs-machine" @page:afterin="loadFirstTab">
+  <f7-page
+    class="hg-practice-page"
+    name="player-vs-machine"
+    @page:afterin="loadTab"
+    @page:afterout="clearLastFriendPractice"
+  >
     <topbar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
       <template #title>{{ $t("practice.practice") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
@@ -23,56 +28,56 @@
     </f7-list>
 
     <f7-block v-else-if="activeTabId === 2 && !startPracticeVsFriend" class="can-practice">
-      <div v-if="!isLoading && !lastFriendPractice" class="can-practice-content">
-        <h2 class="can-practice-title">{{ $t("practice.can-practice-with-friends") }}</h2>
-        <p class="can-practice-subtitle">{{ $t("practice.practice-with-friends-questions") }}</p>
-        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{ $t("buttons.start") }}</f7-button>
-      </div>
-
-      <div v-else-if="!isLoading && lastFriendPractice" class="score-block-wrapper">
+      <div v-if="!isLoading && isLastFriendPractice" class="score-block-wrapper">
         <div class="score-blocks">
           <div class="score-block">
             <f7-row class="justify-content-space-between">
               <f7-block-title>
-                {{ $t("question.your-score-on-this-topic") }}
+                {{ lastFriendPractice.firstPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
               </f7-block-title>
               <p class="place-txt">
-                {{ lastFriendPractice.user_result }}
-                {{ pluralizeWord(lastFriendPractice.user_result, $t("question.point")) }}
+                {{ lastFriendPractice.firstPlayer.score }}
+                {{ pluralizeWord(lastFriendPractice.firstPlayer.score, $t("question.point")) }}
               </p>
             </f7-row>
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ lastFriendPractice.user_score }}/{{ lastFriendPractice.mode.questions }}
+                {{ lastFriendPractice.firstPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
                 {{ $t("question.right-answered") }}
               </p>
+              <p class="result-txt">{{ getResultText(lastFriendPractice.firstPlayer.result) }}</p>
             </f7-row>
           </div>
 
           <div class="score-block">
             <f7-row class="justify-content-space-between">
               <f7-block-title>
-                {{ $t("question.friends-score-on-this-topic") }}
+                {{ lastFriendPractice.secondPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
               </f7-block-title>
               <p class="place-txt">
-                {{ lastFriendPractice.rival_result }}
-                {{ pluralizeWord(lastFriendPractice.rival_result, $t("question.point")) }}
+                {{ lastFriendPractice.secondPlayer.score }}
+                {{ pluralizeWord(lastFriendPractice.secondPlayer.score, $t("question.point")) }}
               </p>
             </f7-row>
 
             <f7-row class="justify-content-space-between align-items-center">
               <p class="from-txt">
-                {{ lastFriendPractice.rival_score }}/{{ lastFriendPractice.mode.questions }}
+                {{ lastFriendPractice.secondPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
                 {{ $t("question.right-answered") }}
               </p>
+              <p class="result-txt">{{ getResultText(lastFriendPractice.secondPlayer.result) }}</p>
             </f7-row>
           </div>
         </div>
 
-        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{
-          $t("practice.try-again")
-        }}</f7-button>
+        <f7-button class="can-practice-btn" @click="tryAgainHandler">{{ $t("practice.try-again") }}</f7-button>
+      </div>
+
+      <div v-else-if="!isLoading" class="can-practice-content">
+        <h2 class="can-practice-title">{{ $t("practice.can-practice-with-friends") }}</h2>
+        <p class="can-practice-subtitle">{{ $t("practice.practice-with-friends-questions") }}</p>
+        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{ $t("buttons.start") }}</f7-button>
       </div>
     </f7-block>
 
@@ -81,13 +86,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import pluralizeWord from "@/js/utils/pluralize-word";
+import { isNullish } from "@/js/utils/objects-utils";
 import Topbar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 
@@ -98,7 +104,7 @@ const props = defineProps({
 
 const { user } = storeToRefs(useAuthStore());
 const { lastFriendPractice } = storeToRefs(useQuizStore());
-const { setQuizMode, setQuizRivalType } = useQuizStore();
+const { setQuizMode, setQuizRivalType, clearLastFriendPractice } = useQuizStore();
 
 const gameModes = [
   {
@@ -147,7 +153,22 @@ const topBar = ref(null);
 const activeTabId = ref(practiceTabs[0].id);
 const startPracticeVsFriend = ref(false);
 
-const loadFirstTab = () => {
+const isLastFriendPractice = computed(
+  () =>
+    !isNullish(lastFriendPractice.value.firstPlayer) &&
+    !isNullish(lastFriendPractice.value.firstPlayer) &&
+    !isNullish(lastFriendPractice.value.mode),
+);
+
+const loadTab = () => {
+  if (isLastFriendPractice.value) {
+    const playWithFriendTabId = 2;
+    const playWithFriendTabIndex = practiceTabs.findIndex(tab => tab.id === playWithFriendTabId);
+
+    topBar.value.selectTab(playWithFriendTabId, playWithFriendTabIndex);
+    return;
+  }
+
   topBar.value.selectFirstTab(practiceTabs, false);
 };
 
@@ -163,6 +184,21 @@ const setRivalTypeHandler = tabId => {
   startPracticeVsFriend.value = false;
 
   setQuizRivalType(rival);
+};
+
+const getResultText = result => {
+  const resultObj = {
+    win: i18n.t("practice.result-win"),
+    draw: i18n.t("practice.result-draw"),
+    lose: i18n.t("practice.result-lose"),
+  };
+
+  return resultObj[result];
+};
+
+const tryAgainHandler = () => {
+  startPracticeVsFriend.value = true;
+  clearLastFriendPractice();
 };
 </script>
 
