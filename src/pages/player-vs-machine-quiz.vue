@@ -120,7 +120,7 @@
             <f7-button
               class="button button-large button-submit"
               :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
-              @click="sendAnswer"
+              @click.once="sendAnswer"
               >{{ $t("buttons.send") }}</f7-button
             >
           </f7-row>
