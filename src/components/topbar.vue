@@ -208,6 +208,7 @@ onMounted(() => {
 
 defineExpose({
   selectFirstTab,
+  selectTab,
 });
 
 getNotificationsHandler();

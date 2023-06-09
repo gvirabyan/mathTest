@@ -62,7 +62,7 @@
               </template>
             </custom-gauge-three>
           </f7-button>
-          <f7-button class="check-progress-text" @click="$emit('go-progress-tab')">{{
+          <f7-button class="check-progress-text" @click="emit('go-progress-tab')">{{
             $t("activity.my-status.check-progress")
           }}</f7-button>
         </f7-block>
@@ -124,9 +124,11 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
-import CustomGauge from "@/components/custom-gauge.vue";
-import CustomGaugeThree from "@/components/custom-gauge-three.vue";
+// import CustomGauge from "@/components/custom-gauge.vue";
+// import CustomGaugeThree from "@/components/custom-gauge-three.vue";
 
+const CustomGauge = defineAsyncComponent(() => import("@/components/custom-gauge.vue"));
+const CustomGaugeThree = defineAsyncComponent(() => import("@/components/custom-gauge-three.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const authStore = useAuthStore();
@@ -145,6 +147,8 @@ const props = defineProps({
     type: Boolean,
   },
 });
+
+const emit = defineEmits(["go-progress-tab"]);
 
 const customGaugeOptions = {
   width: 186,
