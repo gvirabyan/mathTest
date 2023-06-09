@@ -3,7 +3,7 @@
     class="hg-question-page"
     name="player-vs-machine"
     @page:beforein="getQuizQuestionsHandler(quizMode.questions, quizRivalType)"
-    @page:afterout="useQuizStore().$reset()"
+    @page:afterout="clearStore"
   >
     <leave-page-popup
       v-if="leavePopupPageText"
@@ -186,6 +186,7 @@ const {
   quizMode,
   userScore,
   rivalScore,
+  lastFriendPractice,
 } = storeToRefs(useQuizStore());
 const { updateUserAnsweredQuestions } = useCategoryAnswerStore();
 const {
@@ -195,6 +196,7 @@ const {
   updateUserScore,
   updateRivalScore,
   saveQuizResult,
+  clearStore,
 } = useQuizStore();
 
 const isLoading = ref(false);
@@ -213,7 +215,11 @@ const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
 
 const allQuizQuestionAnswered = computed(
-  () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
+  () =>
+    quizQuestions?.value?.length &&
+    quizQuestionsLength?.value === answeredQuizQuestions?.value?.length &&
+    isAnswerSent.value &&
+    isRivalAnswerSent.value,
 );
 const practiceTitle = computed(() =>
   quizRivalType.value !== "machine" ? i18n.t("practice.player-vs-friend") : i18n.t("practice.player-vs-machine"),
@@ -264,7 +270,7 @@ const chooseQuizAnswer = (answer, index) => {
 
 const closeFinishPopup = () => {
   finishGame.value = "";
-  props.f7router.navigate("/practice/", { props: { foo: "bar", bar: true } });
+  props.f7router.navigate("/practice/", { query: { "last-practice": true } });
 };
 
 const sendAnswer = () => {
@@ -301,9 +307,9 @@ const sendAnswer = () => {
     });
   }
 
-  if (isAnswerSent.value && isRivalAnswerSent.value && quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz();
-  }
+  // if (isAnswerSent.value && isRivalAnswerSent.value && quizQuestions.value.length - Number(presentIndex.value) === 1) {
+  //   endQuiz();
+  // }
 };
 
 const sendRivalAnswer = () => {
@@ -341,9 +347,10 @@ const skip = () => {
 
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   playAudio("wrong");
-  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz();
-  }
+
+  // if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+  //   endQuiz();
+  // }
 };
 
 const next = () => {
@@ -364,7 +371,6 @@ const next = () => {
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 
-  // updateAnsweredQuizQuestions(quizQuestion.value.id);
   getNextQuizQuestion();
 };
 
@@ -407,7 +413,31 @@ const endQuiz = () => {
   }).then(({ data }) => {
     const result = data?.attributes?.result;
 
-    if (result) playAudio(result);
+    if (result) {
+      playAudio(result);
+    }
+
+    if (quizRivalType.value !== "machine") {
+      lastFriendPractice.value.firstPlayer.nickname = user.value.username;
+      lastFriendPractice.value.firstPlayer.score =
+        result === "win"
+          ? quizMode.value.winPoints
+          : result === "lose"
+          ? quizMode.value.losePoints
+          : quizMode.value.drawPoints;
+      lastFriendPractice.value.firstPlayer.rightAnswers = userScore.value;
+      lastFriendPractice.value.firstPlayer.result = result;
+      lastFriendPractice.value.secondPlayer.nickname = quizRivalPlayer.value.username;
+      lastFriendPractice.value.secondPlayer.score =
+        result === "win"
+          ? quizMode.value.losePoints
+          : result === "lose"
+          ? quizMode.value.winPoints
+          : quizMode.value.drawPoints;
+      lastFriendPractice.value.secondPlayer.rightAnswers = rivalScore.value;
+      lastFriendPractice.value.secondPlayer.result = result === "win" ? "lose" : result === "lose" ? "win" : "draw";
+      lastFriendPractice.value.mode.questions = quizMode.value.questions;
+    }
 
     finishGame.value = result && alertTextObj[result].title;
     finishGameText.value = result && alertTextObj[result].text;

@@ -168,8 +168,7 @@
     "point": "point",
     "start-practice": "Start Practice",
     "right-answered": "right answered",
-    "your-score-on-this-topic": "Your score on this topic",
-    "friends-score-on-this-topic": "Friend's score on this topic",
+    "score-on-this-topic": "score on this topic",
     "check-skipped": "Check skipped",
     "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
     "leave-for-now": "Leave for now",
@@ -217,7 +216,10 @@
         "title": "You have lost",
         "text": "You lost"
       }
-    }
+    },
+    "result-win": "Won",
+    "result-draw": "Draw",
+    "result-lose": "Lost"
   },
 
   "profile": {
