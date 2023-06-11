@@ -87,7 +87,11 @@ const currentActivityComponent = ref(null);
 let active = null;
 
 const goProgressTab = () => {
-  document.getElementsByClassName("top-bar-tab")[3].click();
+  // document.getElementsByClassName("top-bar-tab")[3].click();
+  const progressTabId = 4;
+  const progressTabIndex = activityTabs.value.findIndex(t => t.id === progressTabId);
+
+  topBar.value.selectTab(progressTabId, progressTabIndex);
 };
 
 const loadFirstTab = () => {

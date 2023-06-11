@@ -20,13 +20,31 @@ export const useQuizStore = defineStore("quiz", () => {
   });
   const userScore = ref(0);
   const rivalScore = ref(0);
-  const lastFriendPractice = ref(null);
+  const lastFriendPractice = reactive({
+    firstPlayer: {
+      nickname: null,
+      score: null,
+      rightAnswers: null,
+      result: null,
+    },
+    secondPlayer: {
+      nickname: null,
+      score: null,
+      rightAnswers: null,
+      result: null,
+    },
+    mode: {
+      questions: null,
+    },
+  });
 
   const currentQuizQuestionNumber = computed(() =>
     answeredQuizQuestions.value.length + 1 > quizQuestionsLength.value
       ? answeredQuizQuestions.value.length
       : answeredQuizQuestions.value.length + 1,
   );
+
+  const currentQuizQuestionId = computed(() => quizQuestion.value?.id);
 
   const getQuizQuestions = async (limit, rival = "machine") => {
     if (quizQuestions.value.length) {
@@ -63,16 +81,17 @@ export const useQuizStore = defineStore("quiz", () => {
     answeredQuizQuestions.value.push(id);
   };
 
+  const updateUserScore = userAnswer => {
+    userScore.value = userAnswer === quizQuestion.value.answer ? userScore.value + 1 : userScore.value;
+  };
+
+  const updateRivalScore = rivalAnswer => {
+    rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
+  };
+
   const updateScore = (userAnswer, rivalAnswer, delay = 0) => {
     userScore.value = userAnswer === quizQuestion.value.answer ? userScore.value + 1 : userScore.value;
-
-    if (delay) {
-      setTimeout(() => {
-        rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
-      }, delay);
-    } else {
-      rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
-    }
+    rivalScore.value = rivalAnswer === quizQuestion.value.answer ? rivalScore.value + 1 : rivalScore.value;
   };
 
   const saveQuizResult = async data => {
@@ -92,6 +111,33 @@ export const useQuizStore = defineStore("quiz", () => {
     answeredQuizQuestions.value = [];
   };
 
+  const clearLastFriendPractice = () => {
+    lastFriendPractice.firstPlayer.nickname = null;
+    lastFriendPractice.firstPlayer.score = null;
+    lastFriendPractice.firstPlayer.rightAnswers = null;
+    lastFriendPractice.firstPlayer.result = null;
+    lastFriendPractice.secondPlayer.nickname = null;
+    lastFriendPractice.secondPlayer.score = null;
+    lastFriendPractice.secondPlayer.rightAnswers = null;
+    lastFriendPractice.secondPlayer.result = null;
+    lastFriendPractice.mode.questions = null;
+  };
+
+  const clearStore = () => {
+    quizQuestions.value = [];
+    quizQuestion.value = null;
+    quizQuestionIndex.value = 0;
+    quizQuestionsLength.value = 0;
+    answeredQuizQuestions.value = [];
+    quizMode.value = null;
+    quizRivalType.value = "machine";
+    quizRivalPlayer.id = null;
+    quizRivalPlayer.username = null;
+    quizRivalPlayer.coefficient = null;
+    userScore.value = 0;
+    rivalScore.value = 0;
+  };
+
   return {
     quizQuestions,
     quizQuestion,
@@ -105,13 +151,18 @@ export const useQuizStore = defineStore("quiz", () => {
     rivalScore,
     lastFriendPractice,
     currentQuizQuestionNumber,
+    currentQuizQuestionId,
     getQuizQuestions,
     setQuizMode,
     setQuizRivalType,
     getNextQuizQuestion,
     updateAnsweredQuizQuestions,
+    updateUserScore,
+    updateRivalScore,
     updateScore,
     saveQuizResult,
     clearAnsweredQuizQuestions,
+    clearLastFriendPractice,
+    clearStore,
   };
 });

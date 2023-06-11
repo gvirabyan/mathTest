@@ -3,7 +3,7 @@
     class="hg-question-page"
     name="player-vs-machine"
     @page:beforein="getQuizQuestionsHandler(quizMode.questions, quizRivalType)"
-    @page:afterout="useQuizStore().$reset()"
+    @page:afterout="clearStore"
   >
     <leave-page-popup
       v-if="leavePopupPageText"
@@ -70,6 +70,8 @@
           >&nbsp;
           <span>{{ rivalScore }}</span>
         </f7-block>
+
+        <p class="rival-state width-100 text-align-center">{{ rivalStateText }}</p>
       </f7-row>
 
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
@@ -78,38 +80,47 @@
             <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
           </f7-block-title>
 
-          <f7-list>
-            <f7-list-item
-              v-for="(answer, index) in answersData"
-              :key="index"
-              :checked="chosenQuizAnswer === answer"
-              :disabled="!!isAnswerSent || !!isRivalAnswerSent"
-              :class="{
-                'hg-correct-rival-answer':
-                  isRivalAnswerSent &&
-                  String(quizQuestion.rival_answer) === quizQuestion.answer &&
-                  answer === quizQuestion.answer,
-                'hg-wrong-rival-answer':
-                  isRivalAnswerSent &&
-                  String(quizQuestion.rival_answer) !== quizQuestion.answer &&
-                  answer === String(quizQuestion.rival_answer),
-              }"
-              name="demo-radio-end"
-              radio
-              @change="chooseQuizAnswer(answer, index)"
-            >
-              <f7-col
+          <div class="list-wrapper">
+            <div v-if="isAnswerSent && !isRivalAnswerSent" class="rival-loader">
+              <div class="loader-circle"></div>
+            </div>
+
+            <f7-list class="m-0">
+              <f7-list-item
+                v-for="(answer, index) in answersData"
+                :key="index"
+                :checked="chosenQuizAnswer === answer"
+                :disabled="isAnswerSent && isRivalAnswerSent"
                 :class="{
-                  'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                  'hg-correct-answer': isAnswerSent && quizQuestion?.answer === answer,
-                  'hg-wrong-answer': isAnswerSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                  'hg-correct-rival-answer':
+                    isAnswerSent &&
+                    isRivalAnswerSent &&
+                    String(quizQuestion.rival_answer) === quizQuestion.answer &&
+                    answer === quizQuestion.answer,
+                  'hg-wrong-rival-answer':
+                    isAnswerSent &&
+                    isRivalAnswerSent &&
+                    String(quizQuestion.rival_answer) !== quizQuestion.answer &&
+                    answer === String(quizQuestion.rival_answer),
                 }"
+                name="demo-radio-end"
+                radio
+                @change="chooseQuizAnswer(answer, index)"
               >
-                <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-                <math-jax :latex="'\\sf' + answer"></math-jax>
-              </f7-col>
-            </f7-list-item>
-          </f7-list>
+                <f7-col
+                  :class="{
+                    'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
+                    'hg-correct-answer': isAnswerSent && quizQuestion?.answer === answer,
+                    'hg-wrong-answer':
+                      isAnswerSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                  }"
+                >
+                  <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+                  <math-jax :latex="'\\sf' + answer"></math-jax>
+                </f7-col>
+              </f7-list-item>
+            </f7-list>
+          </div>
         </div>
         <div class="hg-actions-btns-content">
           <f7-row v-if="!isAnswerSent || !isRivalAnswerSent">
@@ -119,8 +130,8 @@
 
             <f7-button
               class="button button-large button-submit"
-              :class="{ 'btn-disable': !chosenQuizAnswer || isSending }"
-              @click="sendAnswer"
+              :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
+              @click.once="sendAnswer"
               >{{ $t("buttons.send") }}</f7-button
             >
           </f7-row>
@@ -140,7 +151,7 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -170,14 +181,23 @@ const {
   quizRivalType,
   quizRivalPlayer,
   quizQuestionsLength,
+  currentQuizQuestionId,
   answeredQuizQuestions,
   quizMode,
   userScore,
   rivalScore,
+  lastFriendPractice,
 } = storeToRefs(useQuizStore());
 const { updateUserAnsweredQuestions } = useCategoryAnswerStore();
-const { getQuizQuestions, getNextQuizQuestion, updateAnsweredQuizQuestions, updateScore, saveQuizResult } =
-  useQuizStore();
+const {
+  getQuizQuestions,
+  getNextQuizQuestion,
+  updateAnsweredQuizQuestions,
+  updateUserScore,
+  updateRivalScore,
+  saveQuizResult,
+  clearStore,
+} = useQuizStore();
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
@@ -192,9 +212,14 @@ const isSending = ref(false);
 const isAnswerSent = ref(false);
 const isRivalAnswerSent = ref(false);
 const finishGame = ref("");
+const rivalAnswerDelayRefreshKey = ref(0);
 
 const allQuizQuestionAnswered = computed(
-  () => quizQuestions?.value?.length && quizQuestionsLength?.value === answeredQuizQuestions?.value?.length,
+  () =>
+    quizQuestions?.value?.length &&
+    quizQuestionsLength?.value === answeredQuizQuestions?.value?.length &&
+    isAnswerSent.value &&
+    isRivalAnswerSent.value,
 );
 const practiceTitle = computed(() =>
   quizRivalType.value !== "machine" ? i18n.t("practice.player-vs-friend") : i18n.t("practice.player-vs-machine"),
@@ -211,9 +236,17 @@ const rivalAnswerDelay = computed(() => {
     return 0;
   }
 
-  const basicMs = 5000;
+  rivalAnswerDelayRefreshKey.value;
 
-  return basicMs - basicMs * quizRivalPlayer.value.coefficient + 500;
+  const maxMs = 10000;
+  const randomMs = Math.trunc(((Math.random() * 9 + 1) / quizRivalPlayer.value.coefficient) * 1000);
+
+  return randomMs < maxMs ? randomMs : maxMs;
+});
+const rivalStateText = computed(() => {
+  if (quizRivalType.value === "machine") return "";
+
+  return isRivalAnswerSent.value ? "" : i18n.t("practice.friend-think", { nickname: quizRivalPlayer.value.username });
 });
 
 const getLetterByIndex = index => {
@@ -236,7 +269,7 @@ const chooseQuizAnswer = (answer, index) => {
 
 const closeFinishPopup = () => {
   finishGame.value = "";
-  props.f7router.navigate("/practice/", { props: { foo: "bar", bar: true } });
+  props.f7router.navigate("/practice/", { query: { "last-practice": true } });
 };
 
 const sendAnswer = () => {
@@ -244,7 +277,17 @@ const sendAnswer = () => {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
     playAudio(status.value);
-    updateScore(chosenQuizAnswer.value, quizQuestion.value.rival_answer, rivalAnswerDelay.value);
+    updateUserScore(chosenQuizAnswer.value);
+
+    if (quizRivalType.value === "machine") {
+      updateRivalScore(quizQuestion.value.rival_answer);
+      isRivalAnswerSent.value = true;
+    }
+
+    isSending.value = false;
+    isAnswerSent.value = true;
+
+    updateAnsweredQuizQuestions(quizQuestion.value.id);
 
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
@@ -254,21 +297,7 @@ const sendAnswer = () => {
       answer_type: "practice-vs-machine",
       status: status.value,
     }).then(resp => {
-      isAnswerSent.value = true;
-
-      if (rivalAnswerDelay.value) {
-        setTimeout(() => {
-          isRivalAnswerSent.value = true;
-          isSending.value = false;
-        }, rivalAnswerDelay.value);
-      } else {
-        isRivalAnswerSent.value = true;
-        isSending.value = false;
-      }
-
-      if (resp.status !== "success") {
-        chosenQuizAnswer.value = null;
-
+      if (resp.status !== "success" && resp.error.status !== 500) {
         f7.toast.show({
           text: resp.message,
           closeButton: true,
@@ -277,15 +306,16 @@ const sendAnswer = () => {
     });
   }
 
-  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    if (rivalAnswerDelay.value) {
-      setTimeout(() => {
-        endQuiz();
-      }, rivalAnswerDelay.value);
-    } else {
-      endQuiz();
-    }
-  }
+  // if (isAnswerSent.value && isRivalAnswerSent.value && quizQuestions.value.length - Number(presentIndex.value) === 1) {
+  //   endQuiz();
+  // }
+};
+
+const sendRivalAnswer = () => {
+  setTimeout(() => {
+    updateRivalScore(quizQuestion.value?.rival_answer);
+    isRivalAnswerSent.value = true;
+  }, rivalAnswerDelay.value);
 };
 
 const closeEmptyPopup = () => {
@@ -303,16 +333,23 @@ const clearChosenData = () => {
 const skip = () => {
   isSending.value = true;
 
-  updateScore("skipped", quizQuestion.value.rival_answer, rivalAnswerDelay.value);
+  updateUserScore("skipped");
+
+  if (quizRivalType.value === "machine") {
+    updateRivalScore(quizQuestion.value.rival_answer);
+  }
 
   isSending.value = false;
   isAnswerSent.value = true;
   isRivalAnswerSent.value = true;
   status.value = "wrong";
+
+  updateAnsweredQuizQuestions(quizQuestion.value.id);
   playAudio("wrong");
-  if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-    endQuiz();
-  }
+
+  // if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
+  //   endQuiz();
+  // }
 };
 
 const next = () => {
@@ -333,7 +370,6 @@ const next = () => {
       circles.value.children[presentIndex.value].getBoundingClientRect().left - 2 - circles.value.clientWidth / 2;
   }
 
-  updateAnsweredQuizQuestions(quizQuestion.value.id);
   getNextQuizQuestion();
 };
 
@@ -355,19 +391,15 @@ const endQuiz = () => {
   const alertTextObj = {
     win: {
       title: i18n.t("practice.finish-game-popup.win.title"),
-      text: `${i18n.t("practice.finish-game-popup.win.text")} ${presentIndex.value + 1} ${i18n.t("over.points")}`,
+      text: `${i18n.t("practice.finish-game-popup.win.text")} ${quizMode.value.winPoints} ${i18n.t("over.points")}`,
     },
     draw: {
       title: i18n.t("practice.finish-game-popup.draw.title"),
-      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${(presentIndex.value + 1) / 2} ${i18n.t(
-        "over.points",
-      )}`,
+      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${quizMode.value.drawPoints} ${i18n.t("over.points")}`,
     },
     lose: {
       title: i18n.t("practice.finish-game-popup.lose.title"),
-      text: `${i18n.t("practice.finish-game-popup.lose.text")} -${(presentIndex.value + 1) / 5} ${i18n.t(
-        "over.points",
-      )}`,
+      text: `${i18n.t("practice.finish-game-popup.lose.text")} ${quizMode.value.losePoints} ${i18n.t("over.points")}`,
     },
   };
 
@@ -380,12 +412,37 @@ const endQuiz = () => {
   }).then(({ data }) => {
     const result = data?.attributes?.result;
 
-    if (result) playAudio(result);
+    if (result) {
+      playAudio(result);
+    }
+
+    if (quizRivalType.value !== "machine") {
+      lastFriendPractice.value.firstPlayer.nickname = user.value.username;
+      lastFriendPractice.value.firstPlayer.score =
+        result === "win"
+          ? quizMode.value.winPoints
+          : result === "lose"
+          ? quizMode.value.losePoints
+          : quizMode.value.drawPoints;
+      lastFriendPractice.value.firstPlayer.rightAnswers = userScore.value;
+      lastFriendPractice.value.firstPlayer.result = result;
+      lastFriendPractice.value.secondPlayer.nickname = quizRivalPlayer.value.username;
+      lastFriendPractice.value.secondPlayer.score =
+        result === "win"
+          ? quizMode.value.losePoints
+          : result === "lose"
+          ? quizMode.value.winPoints
+          : quizMode.value.drawPoints;
+      lastFriendPractice.value.secondPlayer.rightAnswers = rivalScore.value;
+      lastFriendPractice.value.secondPlayer.result = result === "win" ? "lose" : result === "lose" ? "win" : "draw";
+      lastFriendPractice.value.mode.questions = quizMode.value.questions;
+    }
 
     finishGame.value = result && alertTextObj[result].title;
     finishGameText.value = result && alertTextObj[result].text;
   });
 };
+
 const breakQuiz = () => {
   leavePopupPageText.value = `${i18n.t("practice.leave-page-popup.first-text")} ${Math.abs(
     quizMode.value.losePoints,
@@ -421,6 +478,13 @@ watch(
     });
   },
 );
+
+watch(currentQuizQuestionId, value => {
+  if (quizRivalType.value === "machine" || !value) return;
+
+  rivalAnswerDelayRefreshKey.value++;
+  sendRivalAnswer();
+});
 
 watch(allQuizQuestionAnswered, val => {
   if (!val) {

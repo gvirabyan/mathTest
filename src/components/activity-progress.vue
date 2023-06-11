@@ -3,9 +3,13 @@
     <transition name="activity-fade" mode="out-in" appear>
       <div>
         <div class="progress-week-months">
-          <f7-button @click="getActualProgress('week')">week</f7-button>
+          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'week' }" @click="getActualProgress('week')"
+            >week</f7-button
+          >
           <span>/</span>
-          <f7-button @click="getActualProgress('month')">month</f7-button>
+          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'month' }" @click="getActualProgress('month')"
+            >month</f7-button
+          >
         </div>
         <div class="diagram-main">
           <div class="diagram-y-scale">
@@ -49,19 +53,21 @@
                     }"
                   />
                   <div v-if="userProgress && userProgress[day]" class="diagram-day-info">
-                    <div class="diagram-day-status">
-                      <div class="status-point point-wrong" />
-                      <p>{{ userProgress[day].wrong || 0 }}</p>
-                    </div>
-                    <div class="diagram-day-status">
-                      <div class="status-point point-skipped" />
-                      <p>{{ userProgress[day].skipped || 0 }}</p>
-                    </div>
-                    <div class="diagram-day-status">
-                      <div class="status-point point-correct" />
-                      <p>{{ userProgress[day].correct || 0 }}</p>
-                    </div>
                     <p class="diagram-day-date">{{ day }}</p>
+                    <div class="diagram-statuses">
+                      <div class="diagram-day-status">
+                        <div class="status-point point-wrong" />
+                        <p>{{ userProgress[day].wrong || 0 }}</p>
+                      </div>
+                      <div class="diagram-day-status">
+                        <div class="status-point point-skipped" />
+                        <p>{{ userProgress[day].skipped || 0 }}</p>
+                      </div>
+                      <div class="diagram-day-status">
+                        <div class="status-point point-correct" />
+                        <p>{{ userProgress[day].correct || 0 }}</p>
+                      </div>
+                    </div>
                     <div class="diagram-day-info-slag"></div>
                   </div>
                 </div>
@@ -88,8 +94,28 @@
           </div>
         </div>
         <div class="next-prev-block">
-          <f7-button @click="prevDate">{{ `<- prev` }}</f7-button>
-          <f7-button @click="nextDate">{{ `next ->` }}</f7-button>
+          <f7-button
+            v-if="
+              (rules.unitOfTime === 'week' &&
+                rules.currentDate.clone().startOf('week').subtract(1, 'day').endOf(rules.unitOfTime) >
+                  new Date(user.createdAt)) ||
+              (rules.unitOfTime === 'month' &&
+                rules.currentDate.clone().subtract(1, 'month').startOf('month').endOf(rules.unitOfTime) >
+                  new Date(user.createdAt))
+            "
+            @click="prevDate"
+            >{{ `prev` }} {{ rules.unitOfTime }}</f7-button
+          >
+          <span v-else>You have registered on {{ user.createdAt.substring(0, 10) }}</span>
+          <f7-button
+            v-if="
+              (rules.unitOfTime === 'week' && moment() > rules.currentDate.clone().add(7, 'day').startOf('week')) ||
+              (rules.unitOfTime === 'month' &&
+                moment() > rules.currentDate.clone().add(1, rules.unitOfTime).startOf('month'))
+            "
+            @click="nextDate"
+            >{{ `next` }} {{ rules.unitOfTime }}</f7-button
+          >
         </div>
       </div>
     </transition>
