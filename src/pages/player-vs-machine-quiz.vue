@@ -256,7 +256,6 @@ const getLetterByIndex = index => {
 
 const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
-
   await delay(questionHandlerDelay.value);
   await getQuizQuestions(limit, rivalType);
 

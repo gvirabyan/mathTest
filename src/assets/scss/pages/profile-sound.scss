@@ -1,0 +1,31 @@
+.profile-sound {
+  .list {
+    margin-top: -20px;
+    ul {
+      &:before {
+        display: none !important;
+      }
+      .item-content {
+        margin-top: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        height: 20px;
+        .item-inner {
+          min-height: unset !important;
+          padding: 0;
+          display: unset;
+          .item-title {
+            .info-title {
+              all: unset;
+              font-family: 'Rubik';
+              font-style: normal;
+              font-weight: 400;
+              font-size: 18px;
+              line-height: 22px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

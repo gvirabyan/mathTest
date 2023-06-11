@@ -298,6 +298,11 @@ const profileTabs = ref([
     name: i18n.t("profile.tabs.3"),
     path: "/profile/send-reports/",
   },
+  {
+    id: 5,
+    name: i18n.t("profile.tabs.4"),
+    path: "/profile/profile-sound/",
+  },
 ]);
 
 const topBar = ref(null);
