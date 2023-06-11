@@ -2,7 +2,6 @@
   <label class="switch" for="checkbox">
     <input id="checkbox" v-model="value" type="checkbox" />
     <div class="slider round" />
-    {{ switchValue }}
   </label>
 </template>
 
@@ -53,7 +52,7 @@ watch(
 }
 
 .slider {
-  background-color: #ccc;
+  background-color: #e7e6e9;
   bottom: 0;
   cursor: pointer;
   left: 0;
@@ -75,7 +74,7 @@ watch(
 }
 
 input:checked + .slider {
-  background-color: #66bb6a;
+  background-color: #8419ff;
 }
 
 input:checked + .slider:before {
