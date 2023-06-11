@@ -15,7 +15,7 @@
             <template #title>
               <f7-row class="justify-content-space-between align-items-center">
                 <p class="info-title">{{ $t("profile.sound.sound") }}</p>
-                <img src="@/assets/icons/arrow-right.svg" alt="" />
+                <switch-button :switch-value="!!user.sound" @change-switch-value="changeSoundValue" />
               </f7-row>
             </template>
           </f7-list-item>
@@ -35,6 +35,7 @@ import { useAuthStore } from "@/js/stores/auth";
 import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
+import SwitchButton from "@/components/switch-button.vue";
 
 const props = defineProps({
   f7route: {
@@ -50,7 +51,7 @@ const props = defineProps({
 const authStore = useAuthStore();
 
 const { user } = storeToRefs(authStore);
-const { getUser } = authStore;
+const { getUser, updateUser } = authStore;
 
 const i18n = useI18n();
 
@@ -90,6 +91,13 @@ const setProfileComponent = id => {
 const getAllData = async () => {
   await delay();
   await Promise.all([getUser()]);
+};
+
+const changeSoundValue = () => {
+  updateUser({
+    sound: !user.value.sound,
+  });
+  user.value.sound = !user.value.sound;
 };
 </script>
 
