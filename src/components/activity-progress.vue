@@ -3,13 +3,13 @@
     <transition name="activity-fade" mode="out-in" appear>
       <div>
         <div class="progress-week-months">
-          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'week' }" @click="getActualProgress('week')"
-            >week</f7-button
-          >
+          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'week' }" @click="getActualProgress('week')">{{
+            $t("over.week")
+          }}</f7-button>
           <span>/</span>
-          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'month' }" @click="getActualProgress('month')"
-            >month</f7-button
-          >
+          <f7-button :class="{ 'opacity-1': rules.unitOfTime === 'month' }" @click="getActualProgress('month')">{{
+            $t("over.month")
+          }}</f7-button>
         </div>
         <div class="diagram-main">
           <div class="diagram-y-scale">
@@ -27,7 +27,7 @@
             <div class="diagram">
               <div class="diagram-days" :style="[rules.unitOfTime === 'week' ? 'gap:10px' : 'gap:3px']">
                 <div
-                  v-for="day in days"
+                  v-for="(day, index) in days"
                   :key="day"
                   class="day-parent"
                   :style="{
@@ -52,7 +52,13 @@
                       height: `${getAnsweredPercent(day, 'correct')}vh`,
                     }"
                   />
-                  <div v-if="userProgress && userProgress[day]" class="diagram-day-info">
+                  <div
+                    v-if="userProgress && userProgress[day]"
+                    :class="{
+                      'diagram-day-info': true,
+                      'diagram-day-info-last': rules.unitOfTime === 'month' ? index + 4 >= days.length : index === 6,
+                    }"
+                  >
                     <p class="diagram-day-date">{{ day }}</p>
                     <div class="diagram-statuses">
                       <div class="diagram-day-status">
@@ -68,7 +74,12 @@
                         <p>{{ userProgress[day].correct || 0 }}</p>
                       </div>
                     </div>
-                    <div class="diagram-day-info-slag"></div>
+                    <div
+                      :class="{
+                        'diagram-day-info-slag': true,
+                        'info-slag-for-month': rules.unitOfTime === 'month',
+                      }"
+                    />
                   </div>
                 </div>
               </div>
@@ -82,15 +93,15 @@
         <div class="info-about-diagram">
           <div>
             <div class="point point-correct" />
-            <p>Correct</p>
+            <p>{{ $t("activity.my-status.correct") }}</p>
           </div>
           <div>
             <div class="point point-skipped" />
-            <p>Skipped</p>
+            <p>{{ $t("activity.my-status.skipped") }}</p>
           </div>
           <div>
             <div class="point point-wrong" />
-            <p>Wrong</p>
+            <p>{{ $t("activity.my-status.wrong") }}</p>
           </div>
         </div>
         <div class="next-prev-block">

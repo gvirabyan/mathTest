@@ -48,7 +48,9 @@
     }
   },
   "over": {
-    "points": "points"
+    "points": "points",
+    "week": "week",
+    "month": "month"
   },
 
   "home": {

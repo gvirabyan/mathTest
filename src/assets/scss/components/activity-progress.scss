@@ -96,6 +96,18 @@
                   }
                 }
               }
+              &.diagram-day-info-last {
+                left: 0;
+                transform: unset;
+                .diagram-day-info-slag {
+                  right: calc(100% - 26px);
+                  &.info-slag-for-month {
+                    right: calc(100% - 20px);
+                    top: -6px;
+                    transform: unset;
+                  }
+                }
+              }
             }
             &:hover {
               position: relative;
