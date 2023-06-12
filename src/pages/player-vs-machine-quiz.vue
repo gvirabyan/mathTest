@@ -26,6 +26,14 @@
     />
 
     <success-message-popup
+      v-if="!isRivalAvailable"
+      :title="$t('practice.no-available-player-title')"
+      :text="$t('practice.no-available-player-text')"
+      :btn-text="$t('practice.no-players-popup.go-to-practice')"
+      @close="f7router.navigate('/practice/')"
+    />
+
+    <success-message-popup
       v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
       :title="$t('practice.popup-go-topic.Oops')"
       :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
@@ -243,6 +251,7 @@ const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
 const isTimerRunning = ref(false);
 const timerValue = ref(4);
+const isRivalAvailable = ref(true);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -288,10 +297,63 @@ const rivalStateText = computed(() => {
 const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
 const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
 const areSkipSendButtonsDisabled = computed(() => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value);
+const currentBerlinTime = computed(() => {
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+    .format(new Date())
+    .split(" ")[1];
+});
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
   return String.fromCharCode(letterCode);
+};
+
+const checkAvailability = () => {
+  if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.9;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.4;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.6;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
+
+  return true;
 };
 
 const runTimer = () => {
@@ -313,6 +375,14 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
 
   await delay(questionHandlerDelay.value);
   await getQuizQuestions(limit, rivalType);
+
+  if (quizRivalType.value !== "machine") {
+    checkAvailability();
+
+    if (!isRivalAvailable.value) {
+      return;
+    }
+  }
 
   isLoading.value = false;
 

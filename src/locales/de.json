@@ -192,6 +192,8 @@
     "practice-with-friends-questions": "Questions quantity: 10-30",
     "try-again": "Try again",
     "practice-with-friends-load": "We are searching for your opponent \n Please wait a bit",
+    "no-available-player-title": "There is no available Player",
+    "no-available-player-text": "Sorry, there is no available Player at this moment. Please try later.",
     "your-score": "Your score:",
     "machine-score": "Machine score:",
     "nickname-score": "{nickname} score:",
@@ -203,6 +205,9 @@
       "first-text": "You need to answer at least",
       "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
       "go-to-topics": "Go to topics"
+    },
+    "no-players-popup": {
+      "go-to-practice": "Go to practice page"
     },
     "leave-page-popup": {
       "first-text": "Your progress will be lost and you will lose",
