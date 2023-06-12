@@ -2,7 +2,7 @@
   <f7-page
     class="hg-practice-page"
     name="player-vs-machine"
-    @page:afterin="loadTab"
+    @page:beforein="loadTab"
     @page:afterout="clearLastFriendPractice"
   >
     <topbar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
@@ -166,6 +166,7 @@ const loadTab = () => {
     const playWithFriendTabIndex = practiceTabs.findIndex(tab => tab.id === playWithFriendTabId);
 
     topBar.value.selectTab(playWithFriendTabId, playWithFriendTabIndex);
+    setRivalTypeHandler(playWithFriendTabId);
     return;
   }
 
@@ -197,8 +198,8 @@ const getResultText = result => {
 };
 
 const tryAgainHandler = () => {
-  startPracticeVsFriend.value = true;
   clearLastFriendPractice();
+  startPracticeVsFriend.value = true;
 };
 </script>
 
