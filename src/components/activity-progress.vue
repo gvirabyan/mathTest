@@ -233,10 +233,11 @@ async function updateProgress() {
   topValueOfAmount.value = 0;
 
   // get statistics by startDay and endDay
-  startDay.value = rules.currentDate.startOf(rules.unitOfTime).format("YYYY-MM-DD");
-  endDay.value = rules.currentDate.endOf(rules.unitOfTime).format("YYYY-MM-DD");
+  startDay.value = rules.currentDate.clone().startOf(rules.unitOfTime).format("YYYY-MM-DD");
+  endDay.value = rules.currentDate.clone().endOf(rules.unitOfTime).format("YYYY-MM-DD");
 
-  await userStore.getProgressByDays(startDay.value, endDay.value);
+  const sendingEndDate = rules.currentDate.clone().endOf(rules.unitOfTime).add(1, "day").format("YYYY-MM-DD");
+  await userStore.getProgressByDays(startDay.value, sendingEndDate);
 
   // get days
   days.value = [];
