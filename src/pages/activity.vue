@@ -31,6 +31,7 @@ import { ref, markRaw, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
+import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
 import Topbar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
@@ -57,6 +58,7 @@ const authStore = useAuthStore();
 
 const { user } = storeToRefs(authStore);
 const { getUser } = authStore;
+const { getUserStatus } = useUserStats();
 
 const activityTabs = ref([
   {
@@ -106,7 +108,7 @@ const setActiveComponent = id => {
 const getAllData = async () => {
   await delay();
   await Promise.all([getUser()]);
-
+  await getUserStatus();
   isLoading.value = false;
 };
 </script>
