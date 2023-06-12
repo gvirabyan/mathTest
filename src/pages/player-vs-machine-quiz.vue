@@ -40,7 +40,7 @@
         'practice.popup-go-topic.second-text',
       )}`"
       :btn-text="$t('practice.popup-go-topic.go-to-topics')"
-      @close="closeEmptyPopup"
+      @close="f7router.navigate('/topics/')"
     />
 
     <div class="navbar players-machine">
@@ -85,7 +85,7 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title>
-            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
+            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true" />
           </f7-block-title>
 
           <div class="list-wrapper">
@@ -440,10 +440,6 @@ const sendRivalAnswer = () => {
     updateRivalScore(quizQuestion.value?.rival_answer);
     isRivalAnswerSent.value = true;
   }, rivalAnswerDelay.value);
-};
-
-const closeEmptyPopup = () => {
-  props.f7router.navigate("/topics/");
 };
 
 const clearChosenData = () => {
