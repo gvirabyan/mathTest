@@ -296,7 +296,13 @@ const status = ref("normal");
 const sendAnswer = () => {
   if (chosenAnswer.value && !isSending.value) {
     isSending.value = true;
+    sentAnswer.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
+    //save user answer
+    questions.value.find(q => q.id === question.value.id).user_answer = {
+      status: status.value,
+      answer: chosenAnswer.value,
+    };
     playAudio(status.value);
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
@@ -307,20 +313,12 @@ const sendAnswer = () => {
       answer_type: "topic",
     }).then(resp => {
       isSending.value = false;
-      sentAnswer.value = true;
-
       if (resp.status !== "success") {
         clearChosenData();
         f7.toast.show({
           text: resp.message,
           closeButton: true,
         });
-      } else {
-        //save user answer
-        questions.value.find(q => q.id === question.value.id).user_answer = {
-          status: status.value,
-          answer: chosenAnswer.value,
-        };
       }
     });
   }
@@ -433,6 +431,9 @@ const next = async () => {
   const checkFinished = getPoints.value.find(v => v.status === "normal" || v.status === "skipped");
   if (checkFinished === undefined) {
     //game is finished, open result popup
+    await getQuestions(props.f7route.params.categoryID, false).then(data => {
+      console.log(data);
+    });
     isAllAnsweredPopup.value = true;
     await getAnsweredQuestions(props.f7route.params.categoryID);
   } else if (!skippedPoint && !checkSkipPopup.value) {
