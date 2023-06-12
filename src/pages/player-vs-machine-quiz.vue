@@ -27,9 +27,17 @@
 
     <success-message-popup
       v-if="!isRivalAvailable"
-      :title="$t('practice.no-available-player-title')"
-      :text="$t('practice.no-available-player-text')"
+      :title="$t('practice.no-players-popup.title')"
+      :text="$t('practice.no-players-popup.text')"
       :btn-text="$t('practice.no-players-popup.go-to-practice')"
+      @close="f7router.navigate('/practice/')"
+    />
+
+    <success-message-popup
+      v-if="isLeftByRival"
+      :title="$t('practice.left-by-rival-popup.title')"
+      :text="$t('practice.left-by-rival-popup.text')"
+      :btn-text="$t('buttons.ok')"
       @close="f7router.navigate('/practice/')"
     />
 
@@ -55,7 +63,11 @@
       </div>
     </div>
 
-    <div v-if="quizQuestions?.length >= quizMode?.questions" ref="circles" class="circles machine-player-circle">
+    <div
+      v-if="quizQuestions?.length >= quizMode?.questions && isRivalAvailable"
+      ref="circles"
+      class="circles machine-player-circle"
+    >
       <Circle
         v-for="point in getPoints"
         :key="point.point"
@@ -186,13 +198,13 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
-import LoadingSmall from "@/components/loading-small.vue";
 import playAudioMixin from "@/js/mixins/play_audio";
-import CustomGauge from "@/components/custom-gauge.vue";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 const Circle = defineAsyncComponent(() => import("@/components/circle.vue"));
+const CustomGauge = defineAsyncComponent(() => import("@/components/custom-gauge.vue"));
 
 const i18n = useI18n();
 
@@ -207,6 +219,7 @@ const { answersData } = storeToRefs(useCategoryAnswerStore());
 const {
   quizQuestions,
   quizQuestion,
+  quizQuestionIndex,
   quizRivalType,
   quizRivalPlayer,
   quizQuestionsLength,
@@ -252,6 +265,7 @@ const rivalAnswerDelayRefreshKey = ref(0);
 const isTimerRunning = ref(false);
 const timerValue = ref(4);
 const isRivalAvailable = ref(true);
+const isLeftByRival = ref(true);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -580,6 +594,12 @@ const leavePage = async () => {
   });
 };
 
+const leftGameByRivalHandler = () => {
+  if (Math.random() > 0.1) return;
+
+  isLeftByRival.value = true;
+};
+
 watch(
   () => quizQuestions.value,
   () => {
@@ -608,6 +628,14 @@ watch(allQuizQuestionAnswered, val => {
   }
 
   endQuiz();
+});
+
+watch(quizQuestionIndex, value => {
+  const middleIndex = quizQuestionsLength.value / 2;
+
+  if (value !== middleIndex) return;
+
+  leftGameByRivalHandler();
 });
 
 onMounted(() => {

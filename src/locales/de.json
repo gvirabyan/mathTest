@@ -11,7 +11,8 @@
     "wrong-answer": "wrong answer",
     "save": "save",
     "start": "Start",
-    "close": "Close"
+    "close": "Close",
+    "ok": "OK"
   },
   "inputs": {
     "E-mail-address": "E-mail address",
@@ -192,8 +193,6 @@
     "practice-with-friends-questions": "Questions quantity: 10-30",
     "try-again": "Try again",
     "practice-with-friends-load": "We are searching for your opponent \n Please wait a bit",
-    "no-available-player-title": "There is no available Player",
-    "no-available-player-text": "Sorry, there is no available Player at this moment. Please try later.",
     "your-score": "Your score:",
     "machine-score": "Machine score:",
     "nickname-score": "{nickname} score:",
@@ -207,7 +206,13 @@
       "go-to-topics": "Go to topics"
     },
     "no-players-popup": {
+      "title": "There is no available Player",
+      "text": "Sorry, there is no available Player at this moment. Please try later.",
       "go-to-practice": "Go to practice page"
+    },
+    "left-by-rival-popup": {
+      "title": "Oops!",
+      "text": "Your opponent has left the game. You are the winner."
     },
     "leave-page-popup": {
       "first-text": "Your progress will be lost and you will lose",
