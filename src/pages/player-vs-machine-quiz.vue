@@ -26,7 +26,7 @@
     />
 
     <success-message-popup
-      v-if="!isLoading && quizQuestions.length < quizMode?.questions"
+      v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
       :title="$t('practice.popup-go-topic.Oops')"
       :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
         'practice.popup-go-topic.second-text',
@@ -57,7 +57,7 @@
       />
     </div>
 
-    <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
+    <template v-if="!isLoading && !isTimerRunning && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           <span class="nickname">{{ userScoreTitle }}</span
@@ -119,29 +119,21 @@
           </div>
         </div>
         <div class="hg-actions-btns-content">
-          <f7-row v-if="!isAnswerSent || !isRivalAnswerSent">
-            <f7-button
-              class="button button-large button-skip"
-              :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
-              @click="skip"
-            >
+          <f7-row v-if="notAllAnswersAreSent">
+            <f7-button class="button button-large button-skip" :disabled="areSkipSendButtonsDisabled" @click="skip">
               {{ $t("buttons.wrong-answer") }}
             </f7-button>
 
             <f7-button
               class="button button-large button-submit"
-              :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
+              :disabled="areSkipSendButtonsDisabled"
               @click="sendAnswer"
             >
               {{ $t("buttons.send") }}
             </f7-button>
           </f7-row>
 
-          <f7-button
-            v-else-if="isAnswerSent && isRivalAnswerSent"
-            class="button button-large button-next"
-            @click="next"
-          >
+          <f7-button v-else-if="allAnswersAreSent" class="button button-large button-next" @click="next">
             {{ $t("buttons.next") }}
           </f7-button>
         </div>
@@ -150,9 +142,24 @@
       <f7-block v-else-if="allQuizQuestionAnswered">{{ $t("practice.answered-all-text") }}</f7-block>
     </template>
 
-    <loading-small v-else>
+    <loading-small v-else-if="isLoading && !isTimerRunning">
       <template v-if="quizRivalType !== 'machine'">{{ $t("practice.practice-with-friends-load") }}</template>
     </loading-small>
+
+    <transition v-else-if="!isLoading && isTimerRunning">
+      <div class="timer-wrapper">
+        <custom-gauge
+          :width="customGaugeOptions.width"
+          :height="customGaugeOptions.height"
+          :radius="customGaugeOptions.radius"
+          :stroke-width="customGaugeOptions.strokeWidth"
+          :percent="25 * timerValue"
+          color="#8419FF"
+        >
+          <template #amount>{{ timerValue }}</template>
+        </custom-gauge>
+      </div>
+    </transition>
 
     <teleport v-if="isAnswerSent && !isRivalAnswerSent" to=".list-wrapper">
       <div class="rival-loader">
@@ -173,6 +180,7 @@ import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
 import LoadingSmall from "@/components/loading-small.vue";
 import playAudioMixin from "@/js/mixins/play_audio";
+import CustomGauge from "@/components/custom-gauge.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
@@ -212,6 +220,13 @@ const {
   clearStore,
 } = useQuizStore();
 
+const customGaugeOptions = {
+  width: 186,
+  height: 186,
+  radius: 93,
+  strokeWidth: 10,
+};
+
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
@@ -226,6 +241,8 @@ const isAnswerSent = ref(false);
 const isRivalAnswerSent = ref(false);
 const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
+const isTimerRunning = ref(false);
+const timerValue = ref(4);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -243,7 +260,14 @@ const userScoreTitle = computed(() =>
 const rivalScoreTitle = computed(() =>
   quizRivalType.value !== "machine" ? `${quizRivalPlayer.value.username}:` : i18n.t("practice.machine-score"),
 );
-const questionHandlerDelay = computed(() => (quizRivalType.value !== "machine" ? 2000 : 0));
+const questionHandlerDelay = computed(() => {
+  if (quizRivalType.value === "machine") return;
+
+  const minMs = 5000;
+  const maxMs = 20000;
+
+  return Math.floor(Math.random() * (maxMs - minMs + 1) + minMs);
+});
 const rivalAnswerDelay = computed(() => {
   if (quizRivalType.value === "machine") {
     return 0;
@@ -261,18 +285,40 @@ const rivalStateText = computed(() => {
 
   return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
 });
+const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
+const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
+const areSkipSendButtonsDisabled = computed(() => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value);
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
   return String.fromCharCode(letterCode);
 };
 
+const runTimer = () => {
+  playAudio("achtung_short");
+  isTimerRunning.value = true;
+
+  const interval = setInterval(() => {
+    timerValue.value--;
+
+    if (timerValue.value === 0) {
+      clearInterval(interval);
+      isTimerRunning.value = false;
+    }
+  }, 1000);
+};
+
 const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
+
   await delay(questionHandlerDelay.value);
   await getQuizQuestions(limit, rivalType);
 
   isLoading.value = false;
+
+  if (quizRivalType.value !== "machine") {
+    runTimer();
+  }
 };
 
 const chooseQuizAnswer = (answer, index) => {
@@ -282,7 +328,7 @@ const chooseQuizAnswer = (answer, index) => {
 
 const closeFinishPopup = () => {
   finishGame.value = "";
-  props.f7router.navigate("/practice/", { query: { "last-practice": true } });
+  props.f7router.navigate("/practice/");
 };
 
 const sendAnswer = () => {
@@ -301,7 +347,6 @@ const sendAnswer = () => {
     isAnswerSent.value = true;
 
     updateAnsweredQuizQuestions(quizQuestion.value.id);
-
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: quizQuestion.value.id,
@@ -318,10 +363,6 @@ const sendAnswer = () => {
       }
     });
   }
-
-  // if (isAnswerSent.value && isRivalAnswerSent.value && quizQuestions.value.length - Number(presentIndex.value) === 1) {
-  //   endQuiz();
-  // }
 };
 
 const sendRivalAnswer = () => {
@@ -359,10 +400,6 @@ const skip = () => {
 
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   playAudio("wrong");
-
-  // if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-  //   endQuiz();
-  // }
 };
 
 const next = () => {

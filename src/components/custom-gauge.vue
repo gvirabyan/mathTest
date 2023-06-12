@@ -38,7 +38,7 @@
     </svg>
 
     <div class="custom-gauge-content">
-      <p class="percent"><slot name="percent" />%</p>
+      <p v-if="hasPercentSlot" class="percent"><slot name="percent" />%</p>
       <h3 class="amount"><slot name="amount" /></h3>
       <p class="info"><slot name="info" /></p>
     </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 
 const props = defineProps({
   width: {
@@ -79,6 +79,8 @@ const props = defineProps({
   },
 });
 
+const slots = useSlots();
+
 const widthComp = computed(() => (props.width ? props.width : props.radius * 2));
 const heightComp = computed(() => (props.height ? props.height : props.radius * 2));
 const strokeWidthComp = computed(() => (props.strokeWidth ? props.strokeWidth : props.radius * 0.2));
@@ -89,6 +91,7 @@ const dashArray = computed(() => `${arc.value} ${circumference.value}`);
 const transform = computed(() => `rotate(135, ${props.radius}, ${props.radius})`);
 const offset = computed(() => arc.value - (props.percent / 100) * arc.value);
 const colorWithoutSharp = computed(() => props.color.replace("#", ""));
+const hasPercentSlot = computed(() => !!slots.percent);
 </script>
 
 <style lang="scss">
