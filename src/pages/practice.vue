@@ -166,7 +166,6 @@ const loadTab = () => {
     const playWithFriendTabIndex = practiceTabs.findIndex(tab => tab.id === playWithFriendTabId);
 
     topBar.value.selectTab(playWithFriendTabId, playWithFriendTabIndex);
-    setRivalTypeHandler(playWithFriendTabId);
     return;
   }
 
@@ -199,6 +198,7 @@ const getResultText = result => {
 
 const tryAgainHandler = () => {
   clearLastFriendPractice();
+  setQuizRivalType("fake_user");
   startPracticeVsFriend.value = true;
 };
 </script>
