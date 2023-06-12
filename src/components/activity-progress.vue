@@ -115,7 +115,7 @@
                   new Date(user.createdAt))
             "
             @click="prevDate"
-            >{{ `prev` }} {{ rules.unitOfTime }}</f7-button
+            >{{ `${$t("over.prev")} ${$t(`over.${rules.unitOfTime}`)}` }}</f7-button
           >
           <span v-else>You have registered on {{ user.createdAt.substring(0, 10) }}</span>
           <f7-button
@@ -125,7 +125,7 @@
                 moment() > rules.currentDate.clone().add(1, rules.unitOfTime).startOf('month'))
             "
             @click="nextDate"
-            >{{ `next` }} {{ rules.unitOfTime }}</f7-button
+            >{{ `${$t("over.next")} ${$t(`over.${rules.unitOfTime}`)}` }}</f7-button
           >
         </div>
       </div>

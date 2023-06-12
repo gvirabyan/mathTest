@@ -50,7 +50,9 @@
   "over": {
     "points": "points",
     "week": "week",
-    "month": "month"
+    "month": "month",
+    "next": "next",
+    "prev": "prev"
   },
 
   "home": {
@@ -156,6 +158,9 @@
       "correct-answers": "correct answers",
       "wrong-answers": "wrong answers",
       "skipped-answers": "skipped answers"
+    },
+    "progress": {
+      "you-have-registered": "You have registered on"
     }
   },
 
