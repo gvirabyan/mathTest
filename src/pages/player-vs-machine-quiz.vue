@@ -81,10 +81,6 @@
           </f7-block-title>
 
           <div class="list-wrapper">
-            <div v-if="isAnswerSent && !isRivalAnswerSent" class="rival-loader">
-              <div class="loader-circle"></div>
-            </div>
-
             <f7-list class="m-0">
               <f7-list-item
                 v-for="(answer, index) in answersData"
@@ -124,19 +120,30 @@
         </div>
         <div class="hg-actions-btns-content">
           <f7-row v-if="!isAnswerSent || !isRivalAnswerSent">
-            <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">{{
-              $t("buttons.wrong-answer")
-            }}</f7-button>
+            <f7-button
+              class="button button-large button-skip"
+              :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
+              @click="skip"
+            >
+              {{ $t("buttons.wrong-answer") }}
+            </f7-button>
 
             <f7-button
               class="button button-large button-submit"
               :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
-              @click.once="sendAnswer"
-              >{{ $t("buttons.send") }}</f7-button
+              @click="sendAnswer"
             >
+              {{ $t("buttons.send") }}
+            </f7-button>
           </f7-row>
 
-          <f7-button v-else class="button button-large button-next" @click="next">{{ $t("buttons.next") }}</f7-button>
+          <f7-button
+            v-else-if="isAnswerSent && isRivalAnswerSent"
+            class="button button-large button-next"
+            @click="next"
+          >
+            {{ $t("buttons.next") }}
+          </f7-button>
         </div>
       </f7-block>
 
@@ -146,6 +153,12 @@
     <loading-small v-else>
       <template v-if="quizRivalType !== 'machine'">{{ $t("practice.practice-with-friends-load") }}</template>
     </loading-small>
+
+    <teleport v-if="isAnswerSent && !isRivalAnswerSent" to=".list-wrapper">
+      <div class="rival-loader">
+        <div class="loader-circle"></div>
+      </div>
+    </teleport>
   </f7-page>
 </template>
 
@@ -246,7 +259,7 @@ const rivalAnswerDelay = computed(() => {
 const rivalStateText = computed(() => {
   if (quizRivalType.value === "machine") return "";
 
-  return isRivalAnswerSent.value ? "" : i18n.t("practice.friend-think", { nickname: quizRivalPlayer.value.username });
+  return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
 });
 
 const getLetterByIndex = index => {
