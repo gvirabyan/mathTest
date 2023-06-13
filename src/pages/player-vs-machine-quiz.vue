@@ -278,7 +278,7 @@ const allQuizQuestionAnswered = computed(
     isRivalAnswerSent.value,
 );
 const practiceTitle = computed(() =>
-  quizRivalType.value !== "machine" ? i18n.t("practice.player-vs-friend") : i18n.t("practice.player-vs-machine"),
+  quizRivalType.value !== "machine" ? i18n.t("practice.play-with-friends") : i18n.t("practice.player-vs-machine"),
 );
 const userScoreTitle = computed(() =>
   quizRivalType.value !== "machine" ? `${user.value.username}:` : i18n.t("practice.your-score"),
@@ -422,10 +422,9 @@ const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
-    playAudio(status.value);
 
     if (quizRivalType.value === "machine") {
-      updateRivalScore(quizQuestion.value.rival_answer);
+      // updateRivalScore(quizQuestion.value.rival_answer);
       isRivalAnswerSent.value = true;
     }
 
@@ -471,9 +470,9 @@ const skip = () => {
 
   updateUserScore("skipped");
 
-  if (quizRivalType.value === "machine") {
-    updateRivalScore(quizQuestion.value.rival_answer);
-  }
+  // if (quizRivalType.value === "machine") {
+  //   updateRivalScore(quizQuestion.value.rival_answer);
+  // }
 
   isSending.value = false;
   isAnswerSent.value = true;
@@ -652,6 +651,7 @@ watch(currentQuizQuestionId, value => {
 watch(allAnswersAreSent, value => {
   if (!value) return;
 
+  playAudio(status.value);
   updateUserScore(chosenQuizAnswer.value);
   updateRivalScore(quizQuestion.value.rival_answer);
 });
@@ -667,7 +667,7 @@ watch(allQuizQuestionAnswered, val => {
 watch(quizQuestionIndex, value => {
   const middleIndex = quizQuestionsLength.value / 2;
 
-  if (quizRivalType === "machine" || value !== middleIndex) return;
+  if (quizRivalType.value === "machine" || value !== middleIndex) return;
 
   leftGameByRivalHandler();
 });
