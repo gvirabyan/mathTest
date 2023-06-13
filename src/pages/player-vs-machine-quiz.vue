@@ -33,13 +33,13 @@
       @close="f7router.navigate('/practice/')"
     />
 
-    <!--    <success-message-popup-->
-    <!--      v-if="isLeftByRival"-->
-    <!--      :title="$t('practice.left-by-rival-popup.title')"-->
-    <!--      :text="$t('practice.left-by-rival-popup.text')"-->
-    <!--      :btn-text="$t('buttons.ok')"-->
-    <!--      @close="f7router.navigate('/practice/')"-->
-    <!--    />-->
+    <success-message-popup
+      v-if="isLeftByRival"
+      :title="$t('practice.left-by-rival-popup.title')"
+      :text="$t('practice.left-by-rival-popup.text')"
+      :btn-text="$t('buttons.ok')"
+      @close="closeLeftGameByRivalPopup"
+    />
 
     <success-message-popup
       v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
@@ -194,7 +194,7 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineAsyncComponent, ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -268,7 +268,7 @@ const rivalAnswerDelayRefreshKey = ref(0);
 const isTimerRunning = ref(false);
 const timerValue = ref(4);
 const isRivalAvailable = ref(true);
-// const isLeftByRival = ref(true);
+const isLeftByRival = ref(false);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -423,7 +423,6 @@ const sendAnswer = () => {
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
     playAudio(status.value);
-    updateUserScore(chosenQuizAnswer.value);
 
     if (quizRivalType.value === "machine") {
       updateRivalScore(quizQuestion.value.rival_answer);
@@ -454,7 +453,7 @@ const sendAnswer = () => {
 
 const sendRivalAnswer = () => {
   setTimeout(() => {
-    updateRivalScore(quizQuestion.value?.rival_answer);
+    // updateRivalScore(quizQuestion.value?.rival_answer);
     isRivalAnswerSent.value = true;
   }, rivalAnswerDelay.value);
 };
@@ -597,11 +596,36 @@ const leavePage = async () => {
   });
 };
 
-// const leftGameByRivalHandler = () => {
-//   if (Math.random() > 0.1) return;
-//
-//   isLeftByRival.value = true;
-// };
+const leftGameByRivalHandler = () => {
+  if (Math.random() > 0.1) return;
+
+  isLeftByRival.value = true;
+};
+
+const closeLeftGameByRivalPopup = async () => {
+  await saveQuizResult({
+    user_score: userScore.value,
+    rival_score: rivalScore.value,
+    mode: quizMode.value,
+    result: "win",
+    rival_type: quizRivalType.value,
+    ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
+  }).then(() => {
+    playAudio("win");
+
+    lastFriendPractice.value.firstPlayer.nickname = user.value.username;
+    lastFriendPractice.value.firstPlayer.score = quizMode.value.winPoints;
+    lastFriendPractice.value.firstPlayer.rightAnswers = userScore.value;
+    lastFriendPractice.value.firstPlayer.result = "win";
+    lastFriendPractice.value.secondPlayer.nickname = quizRivalPlayer.value.username;
+    lastFriendPractice.value.secondPlayer.score = quizMode.value.losePoints;
+    lastFriendPractice.value.secondPlayer.rightAnswers = rivalScore.value;
+    lastFriendPractice.value.secondPlayer.result = "lose";
+    lastFriendPractice.value.mode.questions = quizMode.value.questions;
+
+    props.f7router.navigate("/practice/");
+  });
+};
 
 watch(
   () => quizQuestions.value,
@@ -625,6 +649,13 @@ watch(currentQuizQuestionId, value => {
   sendRivalAnswer();
 });
 
+watch(allAnswersAreSent, value => {
+  if (!value) return;
+
+  updateUserScore(chosenQuizAnswer.value);
+  updateRivalScore(quizQuestion.value.rival_answer);
+});
+
 watch(allQuizQuestionAnswered, val => {
   if (!val) {
     return false;
@@ -633,13 +664,13 @@ watch(allQuizQuestionAnswered, val => {
   endQuiz();
 });
 
-// watch(quizQuestionIndex, value => {
-//   const middleIndex = quizQuestionsLength.value / 2;
-//
-//   if (value !== middleIndex) return;
-//
-//   leftGameByRivalHandler();
-// });
+watch(quizQuestionIndex, value => {
+  const middleIndex = quizQuestionsLength.value / 2;
+
+  if (quizRivalType === "machine" || value !== middleIndex) return;
+
+  leftGameByRivalHandler();
+});
 
 onMounted(() => {
   window.addEventListener("resize", onOrientationChange);
