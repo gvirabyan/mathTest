@@ -5,7 +5,6 @@
     .navbar-inner {
       position: unset;
       padding: 40px 24px 30px 30px;
-
       .left {
         margin-right: 18px;
 
@@ -81,6 +80,8 @@
       margin-right: auto !important;
       text-align: left;
       white-space: unset;
+      display: flex;
+      align-items: center;
     }
   }
 }
@@ -542,7 +543,6 @@
     font-weight: 500;
     font-size: 20px;
     line-height: 32px;
-
     span {
       color: #8419FF;
     }

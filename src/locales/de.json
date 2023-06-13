@@ -53,7 +53,8 @@
     "week": "week",
     "month": "month",
     "next": "next",
-    "prev": "prev"
+    "prev": "prev",
+    "loading": "Loading"
   },
 
   "home": {
