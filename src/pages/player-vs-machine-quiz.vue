@@ -33,13 +33,13 @@
       @close="f7router.navigate('/practice/')"
     />
 
-    <success-message-popup
-      v-if="isLeftByRival"
-      :title="$t('practice.left-by-rival-popup.title')"
-      :text="$t('practice.left-by-rival-popup.text')"
-      :btn-text="$t('buttons.ok')"
-      @close="f7router.navigate('/practice/')"
-    />
+    <!--    <success-message-popup-->
+    <!--      v-if="isLeftByRival"-->
+    <!--      :title="$t('practice.left-by-rival-popup.title')"-->
+    <!--      :text="$t('practice.left-by-rival-popup.text')"-->
+    <!--      :btn-text="$t('buttons.ok')"-->
+    <!--      @close="f7router.navigate('/practice/')"-->
+    <!--    />-->
 
     <success-message-popup
       v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
@@ -126,9 +126,12 @@
                 <f7-col
                   :class="{
                     'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                    'hg-correct-answer': isAnswerSent && quizQuestion?.answer === answer,
+                    'hg-correct-answer': isAnswerSent && isRivalAnswerSent && quizQuestion?.answer === answer,
                     'hg-wrong-answer':
-                      isAnswerSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer,
+                      isAnswerSent &&
+                      isRivalAnswerSent &&
+                      chosenQuizAnswerIndex === index &&
+                      quizQuestion?.answer !== answer,
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
@@ -140,9 +143,9 @@
         </div>
         <div class="hg-actions-btns-content">
           <f7-row v-if="notAllAnswersAreSent">
-            <f7-button class="button button-large button-skip" :disabled="areSkipSendButtonsDisabled" @click="skip">
-              {{ $t("buttons.wrong-answer") }}
-            </f7-button>
+            <!--            <f7-button class="button button-large button-skip" :disabled="areSkipSendButtonsDisabled" @click="skip">-->
+            <!--              {{ $t("buttons.wrong-answer") }}-->
+            <!--            </f7-button>-->
 
             <f7-button
               class="button button-large button-submit"
@@ -265,7 +268,7 @@ const rivalAnswerDelayRefreshKey = ref(0);
 const isTimerRunning = ref(false);
 const timerValue = ref(4);
 const isRivalAvailable = ref(true);
-const isLeftByRival = ref(true);
+// const isLeftByRival = ref(true);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -594,11 +597,11 @@ const leavePage = async () => {
   });
 };
 
-const leftGameByRivalHandler = () => {
-  if (Math.random() > 0.1) return;
-
-  isLeftByRival.value = true;
-};
+// const leftGameByRivalHandler = () => {
+//   if (Math.random() > 0.1) return;
+//
+//   isLeftByRival.value = true;
+// };
 
 watch(
   () => quizQuestions.value,
@@ -630,13 +633,13 @@ watch(allQuizQuestionAnswered, val => {
   endQuiz();
 });
 
-watch(quizQuestionIndex, value => {
-  const middleIndex = quizQuestionsLength.value / 2;
-
-  if (value !== middleIndex) return;
-
-  leftGameByRivalHandler();
-});
+// watch(quizQuestionIndex, value => {
+//   const middleIndex = quizQuestionsLength.value / 2;
+//
+//   if (value !== middleIndex) return;
+//
+//   leftGameByRivalHandler();
+// });
 
 onMounted(() => {
   window.addEventListener("resize", onOrientationChange);
