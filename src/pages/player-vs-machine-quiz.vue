@@ -26,13 +26,29 @@
     />
 
     <success-message-popup
-      v-if="!isLoading && quizQuestions.length < quizMode?.questions"
+      v-if="!isRivalAvailable"
+      :title="$t('practice.no-players-popup.title')"
+      :text="$t('practice.no-players-popup.text')"
+      :btn-text="$t('practice.no-players-popup.go-to-practice')"
+      @close="f7router.navigate('/practice/')"
+    />
+
+    <success-message-popup
+      v-if="isLeftByRival"
+      :title="$t('practice.left-by-rival-popup.title')"
+      :text="$t('practice.left-by-rival-popup.text')"
+      :btn-text="$t('buttons.ok')"
+      @close="f7router.navigate('/practice/')"
+    />
+
+    <success-message-popup
+      v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
       :title="$t('practice.popup-go-topic.Oops')"
       :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
         'practice.popup-go-topic.second-text',
       )}`"
       :btn-text="$t('practice.popup-go-topic.go-to-topics')"
-      @close="closeEmptyPopup"
+      @close="f7router.navigate('/topics/')"
     />
 
     <div class="navbar players-machine">
@@ -47,7 +63,11 @@
       </div>
     </div>
 
-    <div v-if="quizQuestions?.length >= quizMode?.questions" ref="circles" class="circles machine-player-circle">
+    <div
+      v-if="quizQuestions?.length >= quizMode?.questions && isRivalAvailable"
+      ref="circles"
+      class="circles machine-player-circle"
+    >
       <Circle
         v-for="point in getPoints"
         :key="point.point"
@@ -57,7 +77,7 @@
       />
     </div>
 
-    <template v-if="!isLoading && quizQuestions?.length >= quizMode?.questions">
+    <template v-if="!isLoading && !isTimerRunning && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           <span class="nickname">{{ userScoreTitle }}</span
@@ -77,14 +97,10 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title>
-            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true"></math-jax>
+            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true" />
           </f7-block-title>
 
           <div class="list-wrapper">
-            <div v-if="isAnswerSent && !isRivalAnswerSent" class="rival-loader">
-              <div class="loader-circle"></div>
-            </div>
-
             <f7-list class="m-0">
               <f7-list-item
                 v-for="(answer, index) in answersData"
@@ -123,29 +139,53 @@
           </div>
         </div>
         <div class="hg-actions-btns-content">
-          <f7-row v-if="!isAnswerSent || !isRivalAnswerSent">
-            <f7-button class="button button-large button-skip" :disabled="isSending" @click="skip">{{
-              $t("buttons.wrong-answer")
-            }}</f7-button>
+          <f7-row v-if="notAllAnswersAreSent">
+            <f7-button class="button button-large button-skip" :disabled="areSkipSendButtonsDisabled" @click="skip">
+              {{ $t("buttons.wrong-answer") }}
+            </f7-button>
 
             <f7-button
               class="button button-large button-submit"
-              :disabled="!chosenQuizAnswer || isSending || isAnswerSent"
-              @click.once="sendAnswer"
-              >{{ $t("buttons.send") }}</f7-button
+              :disabled="areSkipSendButtonsDisabled"
+              @click="sendAnswer"
             >
+              {{ $t("buttons.send") }}
+            </f7-button>
           </f7-row>
 
-          <f7-button v-else class="button button-large button-next" @click="next">{{ $t("buttons.next") }}</f7-button>
+          <f7-button v-else-if="allAnswersAreSent" class="button button-large button-next" @click="next">
+            {{ $t("buttons.next") }}
+          </f7-button>
         </div>
       </f7-block>
 
       <f7-block v-else-if="allQuizQuestionAnswered">{{ $t("practice.answered-all-text") }}</f7-block>
     </template>
 
-    <loading-small v-else>
+    <loading-small v-else-if="isLoading && !isTimerRunning">
       <template v-if="quizRivalType !== 'machine'">{{ $t("practice.practice-with-friends-load") }}</template>
     </loading-small>
+
+    <transition v-else-if="!isLoading && isTimerRunning">
+      <div class="timer-wrapper">
+        <custom-gauge
+          :width="customGaugeOptions.width"
+          :height="customGaugeOptions.height"
+          :radius="customGaugeOptions.radius"
+          :stroke-width="customGaugeOptions.strokeWidth"
+          :percent="25 * timerValue"
+          color="#8419FF"
+        >
+          <template #amount>{{ timerValue }}</template>
+        </custom-gauge>
+      </div>
+    </transition>
+
+    <teleport v-if="isAnswerSent && !isRivalAnswerSent" to=".list-wrapper">
+      <div class="rival-loader">
+        <div class="loader-circle"></div>
+      </div>
+    </teleport>
   </f7-page>
 </template>
 
@@ -158,12 +198,13 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuizStore } from "@/js/stores/quiz";
 import delay from "@/js/helpers/delay";
-import LoadingSmall from "@/components/loading-small.vue";
 import playAudioMixin from "@/js/mixins/play_audio";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 const Circle = defineAsyncComponent(() => import("@/components/circle.vue"));
+const CustomGauge = defineAsyncComponent(() => import("@/components/custom-gauge.vue"));
 
 const i18n = useI18n();
 
@@ -178,6 +219,7 @@ const { answersData } = storeToRefs(useCategoryAnswerStore());
 const {
   quizQuestions,
   quizQuestion,
+  quizQuestionIndex,
   quizRivalType,
   quizRivalPlayer,
   quizQuestionsLength,
@@ -199,6 +241,13 @@ const {
   clearStore,
 } = useQuizStore();
 
+const customGaugeOptions = {
+  width: 186,
+  height: 186,
+  radius: 93,
+  strokeWidth: 10,
+};
+
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
 const chosenQuizAnswerIndex = ref(0);
@@ -213,6 +262,10 @@ const isAnswerSent = ref(false);
 const isRivalAnswerSent = ref(false);
 const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
+const isTimerRunning = ref(false);
+const timerValue = ref(4);
+const isRivalAvailable = ref(true);
+const isLeftByRival = ref(true);
 
 const allQuizQuestionAnswered = computed(
   () =>
@@ -230,7 +283,14 @@ const userScoreTitle = computed(() =>
 const rivalScoreTitle = computed(() =>
   quizRivalType.value !== "machine" ? `${quizRivalPlayer.value.username}:` : i18n.t("practice.machine-score"),
 );
-const questionHandlerDelay = computed(() => (quizRivalType.value !== "machine" ? 2000 : 0));
+const questionHandlerDelay = computed(() => {
+  if (quizRivalType.value === "machine") return;
+
+  const minMs = 5000;
+  const maxMs = 20000;
+
+  return Math.floor(Math.random() * (maxMs - minMs + 1) + minMs);
+});
 const rivalAnswerDelay = computed(() => {
   if (quizRivalType.value === "machine") {
     return 0;
@@ -246,7 +306,24 @@ const rivalAnswerDelay = computed(() => {
 const rivalStateText = computed(() => {
   if (quizRivalType.value === "machine") return "";
 
-  return isRivalAnswerSent.value ? "" : i18n.t("practice.friend-think", { nickname: quizRivalPlayer.value.username });
+  return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
+});
+const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
+const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
+const areSkipSendButtonsDisabled = computed(() => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value);
+const currentBerlinTime = computed(() => {
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+    .format(new Date())
+    .split(" ")[1];
 });
 
 const getLetterByIndex = index => {
@@ -254,12 +331,78 @@ const getLetterByIndex = index => {
   return String.fromCharCode(letterCode);
 };
 
+const checkAvailability = () => {
+  if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.9;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.4;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.6;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
+
+  return true;
+};
+
+const runTimer = () => {
+  playAudio("achtung_short");
+  isTimerRunning.value = true;
+
+  const interval = setInterval(() => {
+    timerValue.value--;
+
+    if (timerValue.value === 0) {
+      clearInterval(interval);
+      isTimerRunning.value = false;
+    }
+  }, 1000);
+};
+
 const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
+
   await delay(questionHandlerDelay.value);
   await getQuizQuestions(limit, rivalType);
 
+  if (quizRivalType.value !== "machine") {
+    checkAvailability();
+
+    if (!isRivalAvailable.value) {
+      return;
+    }
+  }
+
   isLoading.value = false;
+
+  if (quizRivalType.value !== "machine") {
+    runTimer();
+  }
 };
 
 const chooseQuizAnswer = (answer, index) => {
@@ -269,7 +412,7 @@ const chooseQuizAnswer = (answer, index) => {
 
 const closeFinishPopup = () => {
   finishGame.value = "";
-  props.f7router.navigate("/practice/", { query: { "last-practice": true } });
+  props.f7router.navigate("/practice/");
 };
 
 const sendAnswer = () => {
@@ -288,7 +431,6 @@ const sendAnswer = () => {
     isAnswerSent.value = true;
 
     updateAnsweredQuizQuestions(quizQuestion.value.id);
-
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
       question: quizQuestion.value.id,
@@ -305,10 +447,6 @@ const sendAnswer = () => {
       }
     });
   }
-
-  // if (isAnswerSent.value && isRivalAnswerSent.value && quizQuestions.value.length - Number(presentIndex.value) === 1) {
-  //   endQuiz();
-  // }
 };
 
 const sendRivalAnswer = () => {
@@ -316,10 +454,6 @@ const sendRivalAnswer = () => {
     updateRivalScore(quizQuestion.value?.rival_answer);
     isRivalAnswerSent.value = true;
   }, rivalAnswerDelay.value);
-};
-
-const closeEmptyPopup = () => {
-  props.f7router.navigate("/topics/");
 };
 
 const clearChosenData = () => {
@@ -346,10 +480,6 @@ const skip = () => {
 
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   playAudio("wrong");
-
-  // if (quizQuestions.value.length - Number(presentIndex.value) === 1) {
-  //   endQuiz();
-  // }
 };
 
 const next = () => {
@@ -464,6 +594,12 @@ const leavePage = async () => {
   });
 };
 
+const leftGameByRivalHandler = () => {
+  if (Math.random() > 0.1) return;
+
+  isLeftByRival.value = true;
+};
+
 watch(
   () => quizQuestions.value,
   () => {
@@ -492,6 +628,14 @@ watch(allQuizQuestionAnswered, val => {
   }
 
   endQuiz();
+});
+
+watch(quizQuestionIndex, value => {
+  const middleIndex = quizQuestionsLength.value / 2;
+
+  if (value !== middleIndex) return;
+
+  leftGameByRivalHandler();
 });
 
 onMounted(() => {

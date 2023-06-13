@@ -134,6 +134,24 @@
     }
   }
 
+  .timer-wrapper {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+
+    .custom-gauge-content {
+      padding-top: 64px;
+    }
+
+    .amount {
+      color: #8419FF;
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 43px;;
+    }
+  }
+
   .scores-block {
     position: relative;
     margin: 0;
@@ -441,7 +459,7 @@
 
       &.button-skip {
         min-width: 130px;
-        opacity: 0.5;
+        opacity: 0.3 !important;
         border: 1px solid #212121 !important;
         color: #212121 !important;
         width: unset;

@@ -2,7 +2,7 @@
   <f7-page
     class="hg-practice-page"
     name="player-vs-machine"
-    @page:afterin="loadTab"
+    @page:beforein="loadTab"
     @page:afterout="clearLastFriendPractice"
   >
     <topbar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
@@ -197,8 +197,9 @@ const getResultText = result => {
 };
 
 const tryAgainHandler = () => {
-  startPracticeVsFriend.value = true;
   clearLastFriendPractice();
+  setQuizRivalType("fake_user");
+  startPracticeVsFriend.value = true;
 };
 </script>
 
