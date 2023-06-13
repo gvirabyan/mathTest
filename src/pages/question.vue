@@ -494,7 +494,6 @@ const clearChosenData = () => {
 };
 
 const clearStores = async () => {
-  console.log(77777);
   props.f7router.navigate(`${props.f7router.history[props.f7router.history.length - 2]}`);
   if (isSending.value) return;
   isAllAnsweredPopup.value = false;
