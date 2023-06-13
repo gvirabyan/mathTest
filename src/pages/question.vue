@@ -130,13 +130,13 @@
           <h2 class="title"><span>Mathe</span>App</h2>
           <f7-block>
             <f7-row class="justify-content-space-between align-items-center">
-              <f7-block-title> {{ $t("question.your-score-on-this-topic") }} </f7-block-title>
-              <p class="place-txt">
+              <f7-block-title> {{ dataYetNotUpdating || $t("question.your-score-on-this-topic") }} </f7-block-title>
+              <p v-if="!dataYetNotUpdating" class="place-txt">
                 {{ answeredQuestionsPoints }} {{ pluralizeWord(correctAnswers.length, $t("question.point")) }}
               </p>
             </f7-row>
 
-            <f7-row class="justify-content-space-between align-items-center">
+            <f7-row v-if="!dataYetNotUpdating" class="justify-content-space-between align-items-center">
               <p class="from-txt">
                 {{
                   `${correctAnswers.length} / ${categoryQuestion?.questions_amount}  ${$t("question.right-answered")}
@@ -413,6 +413,8 @@ const checkSkipped = () => {
   next();
 };
 
+const dataYetNotUpdating = ref("");
+
 const next = async () => {
   const previousPoint = getPoints.value.find(v => v.present);
   if (previousPoint) {
@@ -431,11 +433,27 @@ const next = async () => {
   const checkFinished = getPoints.value.find(v => v.status === "normal" || v.status === "skipped");
   if (checkFinished === undefined) {
     //game is finished, open result popup
-    await getQuestions(props.f7route.params.categoryID, false).then(data => {
-      console.log(data);
+    await getQuestions(props.f7route.params.categoryID, false).then(async data => {
+      isAllAnsweredPopup.value = true;
+      if (data.data.results.length) {
+        questions.value.forEach(question => {
+          const answeredData = data.data.results.find(r => r.id === question.id);
+          if (answeredData) {
+            updateUserAnsweredQuestions({
+              users_permissions_user: user.value.id,
+              question: question.id,
+              category: categoryQuestion.value.id,
+              answer: question.user_answer.answer,
+              status: question.user_answer.status,
+              answer_type: "topic",
+            });
+          }
+        });
+        dataYetNotUpdating.value = i18n.t("question.will-be-update");
+      } else {
+        await getAnsweredQuestions(props.f7route.params.categoryID);
+      }
     });
-    isAllAnsweredPopup.value = true;
-    await getAnsweredQuestions(props.f7route.params.categoryID);
   } else if (!skippedPoint && !checkSkipPopup.value) {
     // open popup with amount of skipped questions
     const quantity = getPoints.value.filter(v => v.status === "skipped").length;
@@ -478,6 +496,7 @@ const clearStores = async () => {
 const closeAndNavigate = href => {
   clearStores();
   isAllAnsweredPopup.value = false;
+  dataYetNotUpdating.value = "";
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
 };
 

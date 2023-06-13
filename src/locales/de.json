@@ -180,6 +180,8 @@
     "check-skipped": "Check skipped",
     "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
     "leave-for-now": "Leave for now",
+    "your-score-on-this-topic": "Your score on this topic",
+    "will-be-update": "You have finished this topic. Your achievements will be updated soon.",
     "skipped-first-text": "You have passed most of the topic but you have skipped",
     "skipped-second-text": "questions. You can check them one more time or leave them for now."
   },
