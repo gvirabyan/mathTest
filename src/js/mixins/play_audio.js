@@ -10,7 +10,6 @@ const playAudioMixin = {
         audio.src = `audios/${name}.${
           ["lose", "skipped", "notification", "achtung_short"].includes(name) ? "mp3" : "wav"
         }`;
-        audio.load();
         audio.play();
       }
     };

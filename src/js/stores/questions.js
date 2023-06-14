@@ -12,6 +12,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   const answeredQuestionsData = ref([]);
   const answeredQuestionsCount = ref(null);
   const answeredQuestionsPoints = ref(0);
+  const offline = ref(false);
 
   const questionsData = computed(() => questions.value);
   const questionData = computed(() => question.value);
@@ -108,6 +109,7 @@ export const useQuestionsStore = defineStore("questions", () => {
     questionData,
     questionsAreOver,
     categoryQuestion,
+    offline,
     clearCategory,
     getQuestions,
     getAnsweredQuestions,
