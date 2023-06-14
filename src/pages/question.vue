@@ -210,6 +210,7 @@ const {
   answeredQuestionsData,
   answeredQuestionsPoints,
   questionsAreOver,
+  offline,
 } = storeToRefs(questionStore);
 const { answersData } = storeToRefs(categoryAnswerStore);
 
@@ -319,16 +320,21 @@ const sendAnswer = () => {
       answer: chosenAnswer.value,
       status: status.value,
       answer_type: "topic",
-    }).then(resp => {
-      isSending.value = false;
-      if (resp.status !== "success") {
-        clearChosenData();
-        f7.toast.show({
-          text: resp.message,
-          closeButton: true,
-        });
-      }
-    });
+    })
+      .then(resp => {
+        isSending.value = false;
+        if (resp.status !== "success") {
+          clearChosenData();
+          f7.toast.show({
+            text: resp.message,
+            closeButton: true,
+          });
+        }
+      })
+      .catch(() => {
+        offline.value = true;
+        isSending.value = false;
+      });
   }
 };
 
@@ -373,6 +379,7 @@ function shuffle(a) {
 
 const skip = () => {
   status.value = "skipped";
+  playAudio("skipped");
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: question.value.id,
@@ -382,7 +389,6 @@ const skip = () => {
     answer_type: "topic",
   }).then(resp => {
     if (resp.status === "success") {
-      playAudio("skipped");
       next();
       return;
     }
@@ -441,27 +447,32 @@ const next = async () => {
   const checkFinished = getPoints.value.find(v => v.status === "normal" || v.status === "skipped");
   if (checkFinished === undefined) {
     //game is finished, open result popup
-    await getQuestions(props.f7route.params.categoryID, false).then(async data => {
-      isAllAnsweredPopup.value = true;
-      if (data.data.results.length) {
-        questions.value.forEach(question => {
-          const answeredData = data.data.results.find(r => r.id === question.id);
-          if (answeredData) {
-            updateUserAnsweredQuestions({
-              users_permissions_user: user.value.id,
-              question: question.id,
-              category: categoryQuestion.value.id,
-              answer: question.user_answer.answer,
-              status: question.user_answer.status,
-              answer_type: "topic",
-            });
-          }
-        });
+    await getQuestions(props.f7route.params.categoryID, false)
+      .then(async data => {
+        isAllAnsweredPopup.value = true;
+        if (data.data.results.length) {
+          questions.value.forEach(question => {
+            const answeredData = data.data.results.find(r => r.id === question.id);
+            if (answeredData) {
+              updateUserAnsweredQuestions({
+                users_permissions_user: user.value.id,
+                question: question.id,
+                category: categoryQuestion.value.id,
+                answer: question.user_answer.answer,
+                status: question.user_answer.status,
+                answer_type: "topic",
+              });
+            }
+          });
+          dataYetNotUpdating.value = i18n.t("question.will-be-update");
+        } else {
+          await getAnsweredQuestions(props.f7route.params.categoryID);
+        }
+      })
+      .catch(() => {
         dataYetNotUpdating.value = i18n.t("question.will-be-update");
-      } else {
-        await getAnsweredQuestions(props.f7route.params.categoryID);
-      }
-    });
+        offline.value = true;
+      });
   } else if (!skippedPoint && !checkSkipPopup.value) {
     // open popup with amount of skipped questions
     const quantity = getPoints.value.filter(v => v.status === "skipped").length;
@@ -497,9 +508,11 @@ const clearStores = async () => {
   props.f7router.navigate(`${props.f7router.history[props.f7router.history.length - 2]}`);
   if (isSending.value) return;
   isAllAnsweredPopup.value = false;
-  questionStore.$reset();
-  categoryAnswerStore.$reset();
-  clearCategory();
+  if (!offline.value) {
+    questionStore.$reset();
+    categoryAnswerStore.$reset();
+    clearCategory();
+  }
 };
 
 const closeAndNavigate = href => {
