@@ -14,6 +14,7 @@ const playAudioMixin = {
     const userStore = useAuthStore();
     const { user } = storeToRefs(userStore);
     const playAudio = name => {
+      correct.play();
       eval(name + ".play()");
     };
     return {
