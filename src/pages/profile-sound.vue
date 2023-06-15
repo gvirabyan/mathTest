@@ -17,6 +17,10 @@
                 <p class="info-title">{{ $t("profile.sound.sound") }}</p>
                 <switch-button :switch-value="!!user.sound" @change-switch-value="changeSoundValue" />
               </f7-row>
+              <f7-row class="justify-content-space-between align-items-center sound-volume">
+                <p class="info-title">{{ $t("profile.sound.sound-volume") }}</p>
+                <input class="volume" type="range" min="0" max="100" :value="user.volume_sound" />
+              </f7-row>
             </template>
           </f7-list-item>
         </f7-list>
