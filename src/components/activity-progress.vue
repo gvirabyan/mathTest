@@ -92,16 +92,27 @@
         </div>
         <div class="info-about-diagram">
           <div>
-            <div class="point point-correct" />
-            <p>{{ $t("activity.my-status.correct") }}</p>
+            <div class="info-status-block">
+              <div class="point point-correct" />
+              <p>{{ $t("activity.my-status.correct") }}</p>
+            </div>
+            <p class="info-status-quantity quantity-correct">{{ getCountByStatus("correct") }}</p>
           </div>
+
           <div>
-            <div class="point point-skipped" />
-            <p>{{ $t("activity.my-status.skipped") }}</p>
+            <div class="info-status-block">
+              <div class="point point-skipped" />
+              <p>{{ $t("activity.my-status.skipped") }}</p>
+            </div>
+            <p class="info-status-quantity quantity-skipped">{{ getCountByStatus("skipped") }}</p>
           </div>
+
           <div>
-            <div class="point point-wrong" />
-            <p>{{ $t("activity.my-status.wrong") }}</p>
+            <div class="info-status-block">
+              <div class="point point-wrong" />
+              <p>{{ $t("activity.my-status.wrong") }}</p>
+            </div>
+            <p class="info-status-quantity quantity-wrong">{{ getCountByStatus("wrong") }}</p>
           </div>
         </div>
         <div class="next-prev-block">
@@ -161,6 +172,14 @@ const { user } = storeToRefs(useAuthStore());
 const days = ref([]);
 const topValueOfAmount = ref(0);
 const amountLargest = ref(0);
+
+const getCountByStatus = computed(() => status => {
+  let quantity = 0;
+  for (const key in userProgress.value) {
+    if (userProgress.value[key][status]) quantity += Number(userProgress.value[key][status]);
+  }
+  return quantity;
+});
 
 const getActualProgress = async unitOfTime => {
   rules.currentDate = moment();
