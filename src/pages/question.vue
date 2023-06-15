@@ -304,7 +304,6 @@ const chooseAnswer = (answer, index) => {
 const status = ref("normal");
 const sendAnswer = () => {
   if (chosenAnswer.value && !isSending.value) {
-    isSending.value = true;
     sentAnswer.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
     //save user answer
@@ -322,7 +321,6 @@ const sendAnswer = () => {
       answer_type: "topic",
     })
       .then(resp => {
-        isSending.value = false;
         if (resp.status !== "success") {
           clearChosenData();
           f7.toast.show({
@@ -333,7 +331,6 @@ const sendAnswer = () => {
       })
       .catch(() => {
         offline.value = true;
-        isSending.value = false;
       });
   }
 };
