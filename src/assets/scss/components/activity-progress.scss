@@ -181,7 +181,23 @@
   .info-about-diagram {
     display: flex;
     justify-content: space-between;
-    > div {
+    margin-top: 10px;
+    .info-status-quantity {
+      margin: 0;
+      text-align: center;
+      font-family: "Rubik", sans-serif;
+      font-size: 18px;
+      &.quantity-correct {
+        color: #2EE56B;
+      }
+      &.quantity-skipped {
+        color: #89838f;
+      }
+      &.quantity-wrong {
+        color: #dc1212;
+      }
+    }
+    .info-status-block {
       display: flex;
       align-items: center;
       .point {
@@ -197,6 +213,9 @@
         &.point-wrong {
           background: #dc1212;
         }
+      }
+      p {
+        margin: 0;
       }
     }
   }
