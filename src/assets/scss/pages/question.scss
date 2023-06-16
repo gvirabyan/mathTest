@@ -17,6 +17,25 @@
           }
         }
       }
+
+      .countdown-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 4px 8px;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 8px;
+      }
+
+      .countdown {
+        margin: 0;
+        font-size: 18px;
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
+        line-height: 24px;
+      }
     }
   }
 

@@ -60,6 +60,27 @@
         </div>
 
         <div class="title">{{ practiceTitle }}</div>
+
+        <div class="countdown-wrapper">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M8.00033 14.0002C10.9458 14.0002 13.3337 11.6123 13.3337 8.66683C13.3337 5.72131 10.9458 3.3335 8.00033 3.3335C5.05481 3.3335 2.66699 5.72131 2.66699 8.66683C2.66699 11.6123 5.05481 14.0002 8.00033 14.0002Z"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 1.3335H6M8 6.00016V8.66683V6.00016ZM12 4.66683L13.3333 3.3335L12 4.66683Z"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <p class="countdown">{{ timeToAnswerFormatted }}</p>
+        </div>
       </div>
     </div>
 
@@ -269,7 +290,14 @@ const isTimerRunning = ref(false);
 const timerValue = ref(4);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
+const isCountdown = ref(false);
+const timeForAnswer = ref(65);
 
+const timeToAnswerFormatted = computed(() => {
+  const minutes = `${Math.floor(timeForAnswer.value / 60)}`;
+  const seconds = `${timeForAnswer.value - minutes * 60}`.padStart(2, "0");
+  return `${minutes}:${seconds}`;
+});
 const allQuizQuestionAnswered = computed(
   () =>
     quizQuestions?.value?.length &&
@@ -328,6 +356,19 @@ const currentBerlinTime = computed(() => {
     .format(new Date())
     .split(" ")[1];
 });
+
+const runCountdown = () => {
+  isCountdown.value = true;
+
+  const interval = setInterval(() => {
+    timeForAnswer.value--;
+
+    if (timeForAnswer.value === 0) {
+      clearInterval(interval);
+      isCountdown.value = false;
+    }
+  }, 1000);
+};
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -424,7 +465,6 @@ const sendAnswer = () => {
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
 
     if (quizRivalType.value === "machine") {
-      // updateRivalScore(quizQuestion.value.rival_answer);
       isRivalAnswerSent.value = true;
     }
 
@@ -452,7 +492,6 @@ const sendAnswer = () => {
 
 const sendRivalAnswer = () => {
   setTimeout(() => {
-    // updateRivalScore(quizQuestion.value?.rival_answer);
     isRivalAnswerSent.value = true;
   }, rivalAnswerDelay.value);
 };
@@ -465,23 +504,19 @@ const clearChosenData = () => {
   isRivalAnswerSent.value = false;
 };
 
-const skip = () => {
-  isSending.value = true;
-
-  updateUserScore("skipped");
-
-  // if (quizRivalType.value === "machine") {
-  //   updateRivalScore(quizQuestion.value.rival_answer);
-  // }
-
-  isSending.value = false;
-  isAnswerSent.value = true;
-  isRivalAnswerSent.value = true;
-  status.value = "wrong";
-
-  updateAnsweredQuizQuestions(quizQuestion.value.id);
-  playAudio("wrong");
-};
+// const skip = () => {
+//   isSending.value = true;
+//
+//   updateUserScore("skipped");
+//
+//   isSending.value = false;
+//   isAnswerSent.value = true;
+//   isRivalAnswerSent.value = true;
+//   status.value = "wrong";
+//
+//   updateAnsweredQuizQuestions(quizQuestion.value.id);
+//   playAudio("wrong");
+// };
 
 const next = () => {
   clearChosenData();
@@ -641,11 +676,22 @@ watch(
   },
 );
 
+const countdownEndHandler = () => {
+  console.log("time is up");
+};
+
 watch(currentQuizQuestionId, value => {
+  runCountdown();
   if (quizRivalType.value === "machine" || !value) return;
 
   rivalAnswerDelayRefreshKey.value++;
   sendRivalAnswer();
+});
+
+watch(isCountdown, value => {
+  if (!value) return;
+
+  countdownEndHandler();
 });
 
 watch(allAnswersAreSent, value => {
