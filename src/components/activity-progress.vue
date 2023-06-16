@@ -117,7 +117,7 @@
               <p>{{ $t("activity.my-status.wrong") }}</p>
             </div>
             <p class="info-status-quantity quantity-wrong">
-              {{ getCountByStatus("wrong") || "" }}
+              {{ getCountByStatus("wrong") || " " }}
             </p>
           </div>
         </div>
