@@ -23,6 +23,7 @@ const playAudioMixin = {
     const { user } = storeToRefs(userStore);
     const playAudio = name => {
       if (eval(name) && user.value.sound) {
+        eval(name + `.volume = ${Number(user.value.volume_sound) / 100}`);
         eval(name + ".play()");
       }
     };

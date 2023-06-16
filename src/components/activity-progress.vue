@@ -96,7 +96,9 @@
               <div class="point point-correct" />
               <p>{{ $t("activity.my-status.correct") }}</p>
             </div>
-            <p class="info-status-quantity quantity-correct">{{ getCountByStatus("correct") }}</p>
+            <p class="info-status-quantity quantity-correct">
+              {{ getCountByStatus("correct") || " " }}
+            </p>
           </div>
 
           <div>
@@ -104,7 +106,9 @@
               <div class="point point-skipped" />
               <p>{{ $t("activity.my-status.skipped") }}</p>
             </div>
-            <p class="info-status-quantity quantity-skipped">{{ getCountByStatus("skipped") }}</p>
+            <p class="info-status-quantity quantity-skipped">
+              {{ getCountByStatus("skipped") || " " }}
+            </p>
           </div>
 
           <div>
@@ -112,7 +116,9 @@
               <div class="point point-wrong" />
               <p>{{ $t("activity.my-status.wrong") }}</p>
             </div>
-            <p class="info-status-quantity quantity-wrong">{{ getCountByStatus("wrong") }}</p>
+            <p class="info-status-quantity quantity-wrong">
+              {{ getCountByStatus("wrong") || " " }}
+            </p>
           </div>
         </div>
         <div class="next-prev-block">

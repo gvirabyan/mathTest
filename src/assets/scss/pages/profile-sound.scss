@@ -23,6 +23,52 @@
               font-size: 18px;
               line-height: 22px;
             }
+            .sound-volume {
+              margin-top: 30px;
+            }
+            .volume {
+              height: 3px;
+              width: 53%;
+              -webkit-appearance: none;
+              background: #d3d3d3;
+              outline: none;
+              border-radius: 10px;
+              -webkit-transition: .2s;
+              transition: opacity .2s;
+            }
+            .volume::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              transform: translateY(-38%);
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #8419ff;
+              cursor: pointer;
+            }
+            .volume::-webkit-slider-thumb {
+              background-color: #8419FF; /* Set the thumb color to red */
+            }
+            .volume::-moz-range-thumb {
+              background-color: #8419FF;
+            }
+            .volume::-ms-thumb {
+              background-color: #8419FF;
+            }
+            .volume::-webkit-slider-runnable-track {
+              background-color: #8419FF; /* Set the track color to red */
+            }
+            .volume {
+              --track-color: #8419FF; /* Set the track color variable */
+            }
+            .volume::-webkit-slider-thumb {
+              background-color: #8419FF; /* Set the thumb color to red */
+            }
+            .volume::-webkit-slider-runnable-track {
+              height: 3px;
+              border-radius: 10px;
+              background: linear-gradient(to right, var(--track-color) 0%, var(--track-color) calc((var(--value, 50) / 100) * 100%), #E7E6E9 calc((var(--value, 50) / 100) * 100%), #E7E6E9 100%); /* Use gradient to set the track color */
+            }
           }
         }
       }

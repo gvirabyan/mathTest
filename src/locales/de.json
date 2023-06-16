@@ -288,7 +288,8 @@
       "yes": "Yes"
     },
     "sound": {
-      "sound": "Sound"
+      "sound": "Sound",
+      "sound-volume": "Sound Volume"
     }
   },
   "notification": {
