@@ -60,6 +60,27 @@
         </div>
 
         <div class="title">{{ practiceTitle }}</div>
+
+        <div class="countdown-wrapper">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M8.00033 14.0002C10.9458 14.0002 13.3337 11.6123 13.3337 8.66683C13.3337 5.72131 10.9458 3.3335 8.00033 3.3335C5.05481 3.3335 2.66699 5.72131 2.66699 8.66683C2.66699 11.6123 5.05481 14.0002 8.00033 14.0002Z"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 1.3335H6M8 6.00016V8.66683V6.00016ZM12 4.66683L13.3333 3.3335L12 4.66683Z"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <p class="countdown">{{ timeToAnswerFormatted }}</p>
+        </div>
       </div>
     </div>
 
@@ -156,7 +177,12 @@
             </f7-button>
           </f7-row>
 
-          <f7-button v-else-if="allAnswersAreSent" class="button button-large button-next" @click="next">
+          <f7-button
+            v-else-if="allAnswersAreSent"
+            :disabled="!timeForAnswer"
+            class="button button-large button-next"
+            @click="next"
+          >
             {{ $t("buttons.next") }}
           </f7-button>
         </div>
@@ -250,6 +276,7 @@ const customGaugeOptions = {
   radius: 93,
   strokeWidth: 10,
 };
+const timeForAnswerInitial = 65;
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
@@ -269,7 +296,15 @@ const isTimerRunning = ref(false);
 const timerValue = ref(4);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
+const isCountdown = ref(false);
+const timeForAnswer = ref(timeForAnswerInitial);
+const timeForAnswerInterval = ref(null);
 
+const timeToAnswerFormatted = computed(() => {
+  const minutes = `${Math.floor(timeForAnswer.value / 60)}`;
+  const seconds = `${timeForAnswer.value - minutes * 60}`.padStart(2, "0");
+  return `${minutes}:${seconds}`;
+});
 const allQuizQuestionAnswered = computed(
   () =>
     quizQuestions?.value?.length &&
@@ -313,7 +348,9 @@ const rivalStateText = computed(() => {
 });
 const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
 const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
-const areSkipSendButtonsDisabled = computed(() => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value);
+const areSkipSendButtonsDisabled = computed(
+  () => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || !timeForAnswer.value,
+);
 const currentBerlinTime = computed(() => {
   return new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Europe/Berlin",
@@ -328,6 +365,47 @@ const currentBerlinTime = computed(() => {
     .format(new Date())
     .split(" ")[1];
 });
+
+const runCountdown = () => {
+  clearInterval(timeForAnswerInterval.value);
+
+  timeForAnswer.value = timeForAnswerInitial;
+  isCountdown.value = true;
+
+  if (!isRivalAvailable.value) return;
+
+  if (timerValue.value && quizRivalType.value !== "machine") {
+    setTimeout(() => {
+      timeForAnswerInterval.value = setInterval(() => {
+        timeForAnswer.value--;
+
+        if (timeForAnswer.value === 5) {
+          playAudio("achtung_short");
+        }
+
+        if (timeForAnswer.value === 0) {
+          clearInterval(timeForAnswerInterval.value);
+          isCountdown.value = false;
+          sendAnswerOnCountdownEnd();
+        }
+      }, 1000);
+    }, timerValue.value * 1000);
+  } else if (timerValue.value && quizRivalType.value === "machine") {
+    timeForAnswerInterval.value = setInterval(() => {
+      timeForAnswer.value--;
+
+      if (timeForAnswer.value === 5) {
+        playAudio("achtung_short");
+      }
+
+      if (timeForAnswer.value === 0) {
+        clearInterval(timeForAnswerInterval.value);
+        isCountdown.value = false;
+        sendAnswerOnCountdownEnd();
+      }
+    }, 1000);
+  }
+};
 
 const getLetterByIndex = index => {
   const letterCode = "a".charCodeAt(0) + index;
@@ -424,12 +502,13 @@ const sendAnswer = () => {
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
 
     if (quizRivalType.value === "machine") {
-      // updateRivalScore(quizQuestion.value.rival_answer);
       isRivalAnswerSent.value = true;
     }
 
     isSending.value = false;
     isAnswerSent.value = true;
+
+    clearInterval(timeForAnswerInterval.value);
 
     updateAnsweredQuizQuestions(quizQuestion.value.id);
     updateUserAnsweredQuestions({
@@ -452,7 +531,6 @@ const sendAnswer = () => {
 
 const sendRivalAnswer = () => {
   setTimeout(() => {
-    // updateRivalScore(quizQuestion.value?.rival_answer);
     isRivalAnswerSent.value = true;
   }, rivalAnswerDelay.value);
 };
@@ -465,22 +543,27 @@ const clearChosenData = () => {
   isRivalAnswerSent.value = false;
 };
 
-const skip = () => {
-  isSending.value = true;
+const sendAnswerOnCountdownEnd = () => {
+  if (quizRivalType.value === "machine") {
+    isRivalAnswerSent.value = true;
+  }
 
-  updateUserScore("skipped");
-
-  // if (quizRivalType.value === "machine") {
-  //   updateRivalScore(quizQuestion.value.rival_answer);
-  // }
-
-  isSending.value = false;
-  isAnswerSent.value = true;
-  isRivalAnswerSent.value = true;
   status.value = "wrong";
+  isAnswerSent.value = true;
 
   updateAnsweredQuizQuestions(quizQuestion.value.id);
-  playAudio("wrong");
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: quizQuestion.value.id,
+    category: quizQuestion.value.category,
+    answer: "",
+    answer_type: "practice-vs-machine",
+    status: status.value,
+  });
+
+  setTimeout(() => {
+    next();
+  }, 5000);
 };
 
 const next = () => {
@@ -533,6 +616,8 @@ const endQuiz = () => {
       text: `${i18n.t("practice.finish-game-popup.lose.text")} ${quizMode.value.losePoints} ${i18n.t("over.points")}`,
     },
   };
+
+  clearInterval(timeForAnswerInterval.value);
 
   saveQuizResult({
     user_score: userScore.value,
@@ -641,7 +726,17 @@ watch(
   },
 );
 
+watch(timeForAnswer, value => {
+  if (value) return;
+
+  if (!value && chosenQuizAnswer.value) {
+    chosenQuizAnswer.value = null;
+  }
+});
+
 watch(currentQuizQuestionId, value => {
+  runCountdown();
+
   if (quizRivalType.value === "machine" || !value) return;
 
   rivalAnswerDelayRefreshKey.value++;
@@ -652,7 +747,7 @@ watch(allAnswersAreSent, value => {
   if (!value) return;
 
   playAudio(status.value);
-  updateUserScore(chosenQuizAnswer.value);
+  updateUserScore(chosenQuizAnswer.value || "");
   updateRivalScore(quizQuestion.value.rival_answer);
 });
 
