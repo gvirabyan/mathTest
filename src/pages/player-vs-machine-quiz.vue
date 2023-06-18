@@ -177,7 +177,12 @@
             </f7-button>
           </f7-row>
 
-          <f7-button v-else-if="allAnswersAreSent" class="button button-large button-next" @click="next">
+          <f7-button
+            v-else-if="allAnswersAreSent"
+            :disabled="!timeForAnswer"
+            class="button button-large button-next"
+            @click="next"
+          >
             {{ $t("buttons.next") }}
           </f7-button>
         </div>
@@ -271,6 +276,7 @@ const customGaugeOptions = {
   radius: 93,
   strokeWidth: 10,
 };
+const timeForAnswerInitial = 65;
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
@@ -291,7 +297,8 @@ const timerValue = ref(4);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
 const isCountdown = ref(false);
-const timeForAnswer = ref(65);
+const timeForAnswer = ref(timeForAnswerInitial);
+const timeForAnswerInterval = ref(null);
 
 const timeToAnswerFormatted = computed(() => {
   const minutes = `${Math.floor(timeForAnswer.value / 60)}`;
@@ -341,7 +348,9 @@ const rivalStateText = computed(() => {
 });
 const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
 const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
-const areSkipSendButtonsDisabled = computed(() => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value);
+const areSkipSendButtonsDisabled = computed(
+  () => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || !timeForAnswer.value,
+);
 const currentBerlinTime = computed(() => {
   return new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Europe/Berlin",
@@ -358,16 +367,44 @@ const currentBerlinTime = computed(() => {
 });
 
 const runCountdown = () => {
+  clearInterval(timeForAnswerInterval.value);
+
+  timeForAnswer.value = timeForAnswerInitial;
   isCountdown.value = true;
 
-  const interval = setInterval(() => {
-    timeForAnswer.value--;
+  if (!isRivalAvailable.value) return;
 
-    if (timeForAnswer.value === 0) {
-      clearInterval(interval);
-      isCountdown.value = false;
-    }
-  }, 1000);
+  if (timerValue.value && quizRivalType.value !== "machine") {
+    setTimeout(() => {
+      timeForAnswerInterval.value = setInterval(() => {
+        timeForAnswer.value--;
+
+        if (timeForAnswer.value === 5) {
+          playAudio("achtung_short");
+        }
+
+        if (timeForAnswer.value === 0) {
+          clearInterval(timeForAnswerInterval.value);
+          isCountdown.value = false;
+          sendAnswerOnCountdownEnd();
+        }
+      }, 1000);
+    }, timerValue.value * 1000);
+  } else if (timerValue.value && quizRivalType.value === "machine") {
+    timeForAnswerInterval.value = setInterval(() => {
+      timeForAnswer.value--;
+
+      if (timeForAnswer.value === 5) {
+        playAudio("achtung_short");
+      }
+
+      if (timeForAnswer.value === 0) {
+        clearInterval(timeForAnswerInterval.value);
+        isCountdown.value = false;
+        sendAnswerOnCountdownEnd();
+      }
+    }, 1000);
+  }
 };
 
 const getLetterByIndex = index => {
@@ -471,6 +508,8 @@ const sendAnswer = () => {
     isSending.value = false;
     isAnswerSent.value = true;
 
+    clearInterval(timeForAnswerInterval.value);
+
     updateAnsweredQuizQuestions(quizQuestion.value.id);
     updateUserAnsweredQuestions({
       users_permissions_user: user.value.id,
@@ -504,19 +543,28 @@ const clearChosenData = () => {
   isRivalAnswerSent.value = false;
 };
 
-// const skip = () => {
-//   isSending.value = true;
-//
-//   updateUserScore("skipped");
-//
-//   isSending.value = false;
-//   isAnswerSent.value = true;
-//   isRivalAnswerSent.value = true;
-//   status.value = "wrong";
-//
-//   updateAnsweredQuizQuestions(quizQuestion.value.id);
-//   playAudio("wrong");
-// };
+const sendAnswerOnCountdownEnd = () => {
+  if (quizRivalType.value === "machine") {
+    isRivalAnswerSent.value = true;
+  }
+
+  status.value = "wrong";
+  isAnswerSent.value = true;
+
+  updateAnsweredQuizQuestions(quizQuestion.value.id);
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: quizQuestion.value.id,
+    category: quizQuestion.value.category,
+    answer: "",
+    answer_type: "practice-vs-machine",
+    status: status.value,
+  });
+
+  setTimeout(() => {
+    next();
+  }, 5000);
+};
 
 const next = () => {
   clearChosenData();
@@ -568,6 +616,8 @@ const endQuiz = () => {
       text: `${i18n.t("practice.finish-game-popup.lose.text")} ${quizMode.value.losePoints} ${i18n.t("over.points")}`,
     },
   };
+
+  clearInterval(timeForAnswerInterval.value);
 
   saveQuizResult({
     user_score: userScore.value,
@@ -676,29 +726,28 @@ watch(
   },
 );
 
-const countdownEndHandler = () => {
-  console.log("time is up");
-};
+watch(timeForAnswer, value => {
+  if (value) return;
+
+  if (!value && chosenQuizAnswer.value) {
+    chosenQuizAnswer.value = null;
+  }
+});
 
 watch(currentQuizQuestionId, value => {
   runCountdown();
+
   if (quizRivalType.value === "machine" || !value) return;
 
   rivalAnswerDelayRefreshKey.value++;
   sendRivalAnswer();
 });
 
-watch(isCountdown, value => {
-  if (!value) return;
-
-  countdownEndHandler();
-});
-
 watch(allAnswersAreSent, value => {
   if (!value) return;
 
   playAudio(status.value);
-  updateUserScore(chosenQuizAnswer.value);
+  updateUserScore(chosenQuizAnswer.value || "");
   updateRivalScore(quizQuestion.value.rival_answer);
 });
 
