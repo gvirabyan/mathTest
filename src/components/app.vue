@@ -34,16 +34,25 @@
       </template>
     </custom-popup>
 
+    <success-message-popup
+      v-if="isNoConnectionPopup"
+      :title="$t('messages.no-connection-title')"
+      :text="$t('messages.no-connection-text')"
+      :btn-text="$t('buttons.ok')"
+      @close="closeNoConnectionPopupHandler"
+    />
+
     <!-- Your main view, should have "view-main" class -->
-    <f7-view main class="safe-areas" url="/" />
+    <f7-view main class="safe-areas" :url="defaultUrl" />
 
     <Loading v-if="!loaded" />
   </f7-app>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { f7, f7ready } from "framework7-vue";
-import { useElementVisibility, useEventBus } from "@vueuse/core";
+import { useNetwork, useElementVisibility, useEventBus } from "@vueuse/core";
+import { useI18n } from "vue-i18n";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
 import { useAuthStore } from "@/js/stores/auth";
@@ -51,6 +60,9 @@ import { useUserStats } from "@/js/stores/user-stats";
 import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
 import CustomPopup from "@/components/custom-popup.vue";
+import SuccessMessagePopup from "@/components/success-message-popup.vue";
+
+const i18n = useI18n();
 
 const bus = useEventBus("notifications");
 bus.on((e, payload) => {
@@ -69,10 +81,15 @@ const f7params = {
   routes: routes, // App routes
 };
 
+const slowConnectionTypes = ["slow-2g", "2g", "3g"];
+
+const defaultUrl = ref("/");
 const loaded = ref(false);
 const openRightPanel = ref(false);
 const customPopupRef = ref(null);
 const customPopupIsVisible = useElementVisibility(customPopupRef);
+const isNoConnectionPopup = ref(false);
+const network = reactive(useNetwork());
 
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
@@ -95,11 +112,35 @@ const addGmapsScript = () => {
   document.head.appendChild(gmapsScript);
 };
 
+const closeNoConnectionPopupHandler = () => {
+  isNoConnectionPopup.value = false;
+  f7.views.main.router.navigate("/error");
+};
+
 watch(customPopupIsVisible, value => {
   if (value) return;
 
   openRightPanel.value = false;
 });
+
+watch(
+  network,
+  value => {
+    if (slowConnectionTypes.includes(value.effectiveType)) {
+      f7.toast.show({
+        text: i18n.t("messages.slow-connection"),
+        closeButton: true,
+      });
+
+      return;
+    }
+
+    if (!value.isOnline && f7.views.main.router.currentRoute.name !== "Topics") {
+      isNoConnectionPopup.value = true;
+    }
+  },
+  { deep: true },
+);
 
 onMounted(async () => {
   f7ready(() => {
