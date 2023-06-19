@@ -42,7 +42,7 @@
     />
 
     <success-message-popup
-      v-if="!isLoading && !isTimerRunning && quizQuestions.length < quizMode?.questions"
+      v-if="!isLoading && !isStartGameTimer && quizQuestions.length < quizMode?.questions"
       :title="$t('practice.popup-go-topic.Oops')"
       :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
         'practice.popup-go-topic.second-text',
@@ -98,7 +98,7 @@
       />
     </div>
 
-    <template v-if="!isLoading && !isTimerRunning && quizQuestions?.length >= quizMode?.questions">
+    <template v-if="!isLoading && !isStartGameTimer && quizQuestions?.length >= quizMode?.questions">
       <f7-row class="scores-block">
         <f7-block class="my-score">
           <span class="nickname">{{ userScoreTitle }}</span
@@ -191,21 +191,21 @@
       <f7-block v-else-if="allQuizQuestionAnswered">{{ $t("practice.answered-all-text") }}</f7-block>
     </template>
 
-    <loading-small v-else-if="isLoading && !isTimerRunning">
+    <loading-small v-else-if="isLoading && !isStartGameTimer">
       <template v-if="quizRivalType !== 'machine'">{{ $t("practice.practice-with-friends-load") }}</template>
     </loading-small>
 
-    <transition v-else-if="!isLoading && isTimerRunning">
+    <transition v-else-if="!isLoading && isStartGameTimer">
       <div class="timer-wrapper">
         <custom-gauge
           :width="customGaugeOptions.width"
           :height="customGaugeOptions.height"
           :radius="customGaugeOptions.radius"
           :stroke-width="customGaugeOptions.strokeWidth"
-          :percent="25 * timerValue"
+          :percent="25 * timeForGameStart"
           color="#8419FF"
         >
-          <template #amount>{{ timerValue }}</template>
+          <template #amount>{{ timeForGameStart }}</template>
         </custom-gauge>
       </div>
     </transition>
@@ -276,7 +276,7 @@ const customGaugeOptions = {
   radius: 93,
   strokeWidth: 10,
 };
-const timeForAnswerInitial = 65;
+const timeForAnswerInitial = 60;
 
 const isLoading = ref(false);
 const chosenQuizAnswer = ref(null);
@@ -292,11 +292,11 @@ const isAnswerSent = ref(false);
 const isRivalAnswerSent = ref(false);
 const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
-const isTimerRunning = ref(false);
-const timerValue = ref(4);
+const isStartGameTimer = ref(false);
+const timeForGameStart = ref(4);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
-const isCountdown = ref(false);
+const isAnswerTimer = ref(false);
 const timeForAnswer = ref(timeForAnswerInitial);
 const timeForAnswerInterval = ref(null);
 
@@ -368,43 +368,24 @@ const currentBerlinTime = computed(() => {
 
 const runCountdown = () => {
   clearInterval(timeForAnswerInterval.value);
-
-  timeForAnswer.value = timeForAnswerInitial;
-  isCountdown.value = true;
-
   if (!isRivalAvailable.value) return;
 
-  if (timerValue.value && quizRivalType.value !== "machine") {
-    setTimeout(() => {
-      timeForAnswerInterval.value = setInterval(() => {
-        timeForAnswer.value--;
+  timeForAnswer.value = timeForAnswerInitial;
+  isAnswerTimer.value = true;
 
-        if (timeForAnswer.value === 5) {
-          playAudio("achtung_short");
-        }
+  timeForAnswerInterval.value = setInterval(() => {
+    timeForAnswer.value--;
 
-        if (timeForAnswer.value === 0) {
-          clearInterval(timeForAnswerInterval.value);
-          isCountdown.value = false;
-          sendAnswerOnCountdownEnd();
-        }
-      }, 1000);
-    }, timerValue.value * 1000);
-  } else if (timerValue.value && quizRivalType.value === "machine") {
-    timeForAnswerInterval.value = setInterval(() => {
-      timeForAnswer.value--;
+    if (timeForAnswer.value === 5) {
+      playAudio("achtung_short");
+    }
 
-      if (timeForAnswer.value === 5) {
-        playAudio("achtung_short");
-      }
-
-      if (timeForAnswer.value === 0) {
-        clearInterval(timeForAnswerInterval.value);
-        isCountdown.value = false;
-        sendAnswerOnCountdownEnd();
-      }
-    }, 1000);
-  }
+    if (timeForAnswer.value === 0) {
+      clearInterval(timeForAnswerInterval.value);
+      isAnswerTimer.value = false;
+      sendAnswerOnCountdownEnd();
+    }
+  }, 1000);
 };
 
 const getLetterByIndex = index => {
@@ -453,14 +434,14 @@ const checkAvailability = () => {
 
 const runTimer = () => {
   playAudio("achtung_short");
-  isTimerRunning.value = true;
+  isStartGameTimer.value = true;
 
   const interval = setInterval(() => {
-    timerValue.value--;
+    timeForGameStart.value--;
 
-    if (timerValue.value === 0) {
+    if (timeForGameStart.value === 0) {
       clearInterval(interval);
-      isTimerRunning.value = false;
+      isStartGameTimer.value = false;
     }
   }, 1000);
 };
@@ -481,7 +462,7 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
 
   isLoading.value = false;
 
-  if (quizRivalType.value !== "machine") {
+  if (quizRivalType.value !== "machine" && isRivalAvailable.value) {
     runTimer();
   }
 };
@@ -507,8 +488,6 @@ const sendAnswer = () => {
 
     isSending.value = false;
     isAnswerSent.value = true;
-
-    clearInterval(timeForAnswerInterval.value);
 
     updateAnsweredQuizQuestions(quizQuestion.value.id);
     updateUserAnsweredQuestions({
@@ -617,8 +596,6 @@ const endQuiz = () => {
     },
   };
 
-  clearInterval(timeForAnswerInterval.value);
-
   saveQuizResult({
     user_score: userScore.value,
     rival_score: rivalScore.value,
@@ -656,6 +633,8 @@ const endQuiz = () => {
 
     finishGame.value = result && alertTextObj[result].title;
     finishGameText.value = result && alertTextObj[result].text;
+
+    clearInterval(timeForAnswerInterval.value);
   });
 };
 
@@ -735,12 +714,27 @@ watch(timeForAnswer, value => {
 });
 
 watch(currentQuizQuestionId, value => {
-  runCountdown();
+  if (!value) {
+    clearInterval(timeForAnswerInterval.value);
+    timeForAnswer.value = timeForAnswerInitial;
+    return;
+  }
 
-  if (quizRivalType.value === "machine" || !value) return;
+  if (!answeredQuizQuestions.value.length && quizRivalType.value !== "machine") {
+    setTimeout(() => {
+      runCountdown();
 
-  rivalAnswerDelayRefreshKey.value++;
-  sendRivalAnswer();
+      rivalAnswerDelayRefreshKey.value++;
+      sendRivalAnswer();
+    }, timeForGameStart.value * 1000);
+  } else if (answeredQuizQuestions.value.length) {
+    runCountdown();
+
+    if (quizRivalType.value === "machine" || !value) return;
+
+    rivalAnswerDelayRefreshKey.value++;
+    sendRivalAnswer();
+  }
 });
 
 watch(allAnswersAreSent, value => {
@@ -749,12 +743,11 @@ watch(allAnswersAreSent, value => {
   playAudio(status.value);
   updateUserScore(chosenQuizAnswer.value || "");
   updateRivalScore(quizQuestion.value.rival_answer);
+  clearInterval(timeForAnswerInterval.value);
 });
 
 watch(allQuizQuestionAnswered, val => {
-  if (!val) {
-    return false;
-  }
+  if (!val) return false;
 
   endQuiz();
 });

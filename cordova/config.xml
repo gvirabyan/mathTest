@@ -67,6 +67,5 @@
     <preference name="Allow3DTouchLinkPreview" value="false" />
     <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <preference name="AllowInlineMediaPlayback" value="true" />
-    <engine name="ios" />
     <engine name="android" />
 </widget>
