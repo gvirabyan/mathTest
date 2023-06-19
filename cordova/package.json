@@ -46,8 +46,8 @@
       "cordova-clarity": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "dependencies": {
