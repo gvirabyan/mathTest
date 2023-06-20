@@ -36,7 +36,6 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
-import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SwitchButton from "@/components/switch-button.vue";
@@ -53,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const { playAudio } = playAudioMixin.setup();
+const { playAudio, correct } = playAudioMixin.setup();
 
 const authStore = useAuthStore();
 
@@ -96,7 +95,7 @@ const setProfileComponent = id => {
   props.f7router.navigate(profileTabs.value.find(t => t.id === id).path);
 };
 
-const getAllData = async () => {
+const getAllData = () => {
   soundVolume.value = user.value.sound ? user.value.volume_sound : 0;
   document.documentElement.style.setProperty("--value", soundVolume.value);
 };
@@ -106,11 +105,15 @@ const changeSoundValue = () => {
   if (!user.value.sound) {
     soundVolume.value = 0;
     document.documentElement.style.setProperty("--value", soundVolume.value);
+    correct.pause();
+    correct.currentTime = 0;
     playAudio("correct");
   } else if (Number(soundVolume.value) === 0) {
     soundVolume.value = user.value.volume_sound || 10;
     document.documentElement.style.setProperty("--value", soundVolume.value);
     user.value.volume_sound = Number(soundVolume.value);
+    correct.pause();
+    correct.currentTime = 0;
     playAudio("correct");
     updateUser({
       volume_sound: soundVolume.value,
@@ -126,7 +129,6 @@ const changeSoundValue = () => {
 function updateSoundVolume() {
   const volume = Number(user.value.volume_sound);
   document.documentElement.style.setProperty("--value", soundVolume.value);
-  playAudio("correct");
   if (volume === 0 || Number(soundVolume.value) === 0 || !user.value.sound) {
     updateUser({
       sound: !user.value.sound,
@@ -134,6 +136,9 @@ function updateSoundVolume() {
     user.value.sound = !user.value.sound;
   }
   user.value.volume_sound = Number(soundVolume.value);
+  correct.pause();
+  correct.currentTime = 0;
+  playAudio("correct");
   updateUser({
     volume_sound: soundVolume.value,
   });

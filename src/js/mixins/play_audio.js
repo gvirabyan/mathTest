@@ -28,6 +28,7 @@ const playAudioMixin = {
       }
     };
     return {
+      correct,
       playAudio,
     };
   },
