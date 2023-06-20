@@ -5,6 +5,7 @@
       :key="`menu-link_${index + 1}`"
       :href="link.href"
       :class="{ active: link.active }"
+      @click="resetPage(link.name)"
     >
       <div class="icon-container">
         <svg
@@ -198,6 +199,15 @@ const menuLinksRes = computed(() => {
         : link.href === props.currentPath,
   }));
 });
+
+const resetPage = linkName => {
+  // actually this will work for activity page
+  if (linkName === "Activity" && document.getElementsByClassName("top-bar-tabs")[1]) {
+    document.getElementsByClassName("top-bar-tabs")[1].children[0].click();
+  } else if (linkName === "Activity") {
+    document.getElementsByClassName("top-bar-tabs")[0].children[0].click();
+  }
+};
 </script>
 
 <style lang="scss">
