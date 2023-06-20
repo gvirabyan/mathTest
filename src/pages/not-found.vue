@@ -2,15 +2,11 @@
   <f7-page class="hg-dashboard-content not-found-page" @page:beforein="getAllData">
     <div class="not-found-page-content">
       <f7-block>
-        <f7-block-title>404 Not Found</f7-block-title>
-        <p class="unfortunately-text">
-          Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends
-          and human relationships. Enjoy)).
-        </p>
+        <f7-block-title>{{ pageTitle }}</f7-block-title>
+        <p class="unfortunately-text">{{ pageText }}</p>
 
         <div v-if="mathematician" class="mathematician">
           <div class="mathematician-avatar">
-            <!--            <img :src="`/images/mathematicians/${mathematician.img}.jpg`" :alt="`${mathematician.img}`" />-->
             <img :src="mathematicianImg" :alt="`${mathematician.img}`" />
             <p class="mathematician-name">{{ mathematician.name }}</p>
           </div>
@@ -46,6 +42,8 @@ const mathematician = reactive({
 });
 const network = reactive(useNetwork());
 
+const pageTitle = computed(() => (network.isOnline ? i18n.t("not-found.title") : i18n.t("not-found.title-offline")));
+const pageText = computed(() => (network.isOnline ? i18n.t("not-found.text") : i18n.t("not-found.text-offline")));
 const mathematicianImg = computed(() => {
   if (!network.isOnline) {
     // load base64 when offline
