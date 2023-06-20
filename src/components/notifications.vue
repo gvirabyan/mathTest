@@ -49,11 +49,15 @@
 <script setup>
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/js/stores/auth";
 import { useNotifications } from "@/js/stores/notifications";
+import { DEFAULT_TIMEZONE } from "@/js/constants/common";
+import { createDatetimeString } from "@/js/utils/dates";
 import LoadingSmall from "@/components/loading-small.vue";
 
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
+const { user } = storeToRefs(useAuthStore());
 const { notifications, currentPage, querySending, pageCount } = storeToRefs(useNotifications());
 const { readNotification, getNotifications } = useNotifications();
 
@@ -66,7 +70,7 @@ const selectNotification = id => {
 };
 
 const formatDate = date => {
-  const objectDate = new Date(date);
+  const objectDate = new Date(createDatetimeString(date, user.user_timezone || DEFAULT_TIMEZONE));
   const day = objectDate.getDate();
   const month = objectDate.getMonth() + 1;
   const year = objectDate.getFullYear();
