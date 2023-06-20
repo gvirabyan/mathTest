@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, watch } from "vue";
+import { defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import { useNotifications } from "@/js/stores/notifications";
@@ -58,8 +58,8 @@ import LoadingSmall from "@/components/loading-small.vue";
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
 
 const { user } = storeToRefs(useAuthStore());
-const { notifications } = storeToRefs(useNotifications());
-const { readNotification } = useNotifications();
+const { notifications, currentPage, querySending, pageCount } = storeToRefs(useNotifications());
+const { readNotification, getNotifications } = useNotifications();
 
 const isLoading = ref(false);
 const isPopupOpened = ref(false);
@@ -86,6 +86,27 @@ watch(currentNotification, value => {
 
   isPopupOpened.value = true;
 });
+
+let mainScrollElem = null;
+onMounted(() => {
+  mainScrollElem = document.getElementsByClassName("page-content")[0];
+  mainScrollElem.addEventListener("scroll", handelScroll);
+});
+
+onBeforeUnmount(() => {
+  mainScrollElem.removeEventListener("scroll", handelScroll);
+});
+
+const handelScroll = () => {
+  if (
+    mainScrollElem.offsetHeight + mainScrollElem.scrollTop > mainScrollElem.scrollHeight - 300 &&
+    !querySending.value &&
+    currentPage.value < pageCount.value
+  ) {
+    currentPage.value++;
+    getNotifications(true);
+  }
+};
 </script>
 
 <style lang="scss">
