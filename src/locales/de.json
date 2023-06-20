@@ -4,6 +4,11 @@
     "today-goal": "Today's Goal",
     "notifications": "Notifications"
   },
+  "messages": {
+    "slow-connection": "It looks like your internet connection is slow. Please be patient.",
+    "no-connection-title": "No Connection",
+    "no-connection-text": "You have internet connection problem, we need to wait until it's stable."
+  },
   "buttons": {
     "skip": "überspringen",
     "send": "abgeben",

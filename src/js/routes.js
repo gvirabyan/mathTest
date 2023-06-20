@@ -1,5 +1,6 @@
 import HomePage from "../pages/home.vue";
 import Activity from "../pages/activity.vue";
+import NotFound from "@/pages/not-found.vue";
 import { useAuthStore } from "./stores/auth";
 import { storeToRefs } from "pinia/dist/pinia";
 
@@ -240,7 +241,9 @@ const routes = [
   },
   {
     path: "(.*)",
-    asyncComponent: () => import("../pages/not-found.vue"),
+    name: "NotFound",
+    component: NotFound,
+    keepAlive: true,
   },
 ];
 
