@@ -12,9 +12,11 @@
           <f7-block-title>
             {{ category.title }}
           </f7-block-title>
-          <p class="place-txt">
-            {{ `${category.place}  ${$t("activity.top-list.place")}` }}
-          </p>
+          <f7-button class="my-place-btn" @click="goMyPlace">
+            <p class="place-txt">
+              {{ `${category.place}  ${$t("activity.top-list.place")}` }}
+            </p>
+          </f7-button>
         </f7-row>
 
         <f7-row class="justify-content-space-between">
@@ -112,6 +114,11 @@ watch(
 const goBack = () => {
   emit("empty-category");
 };
+
+const goMyPlace = () => {
+  document.getElementsByClassName("list-scroll")[0].children[0].scrollTop =
+    document.getElementsByClassName("my-score")[0].offsetHeight * (props.category.place - 1);
+};
 </script>
 
 <style lang="scss">
@@ -177,21 +184,16 @@ const goBack = () => {
         font-weight: bold;
       }
     }
-    .place-txt {
-      margin: 0;
-      font-family: "Rubik";
-      font-style: normal;
-      font-weight: 500;
-      font-size: 14px;
-      color: #8419ff;
-    }
-    .points-txt {
-      margin: 0;
-      font-family: "Rubik";
-      font-style: normal;
-      font-weight: 500;
-      font-size: 14px;
-      color: #8419ff;
+    .my-place-btn {
+      all: unset;
+      .place-txt {
+        margin: 0;
+        font-family: "Rubik";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        color: #8419ff;
+      }
     }
     .from-txt {
       margin-bottom: 0;
