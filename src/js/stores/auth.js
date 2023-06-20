@@ -270,7 +270,6 @@ export const useAuthStore = defineStore("auth", () => {
       });
     }
 
-    appInfo.installation = "6c2cfc229e19599ecd7e4504bfc91fb0d692d5cf";
     await updateUser(appInfo);
   };
 
