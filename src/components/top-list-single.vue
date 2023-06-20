@@ -24,7 +24,6 @@
           <p class="from-txt">{{ `${userPoints}  ${$t("over.points")}` }}</p>
         </f7-row>
       </f7-block>
-
       <f7-list v-if="topList.length" class="top-list list-scroll">
         <f7-list-item
           v-for="({ id, username, points }, index) in topList"
@@ -44,6 +43,9 @@
           </template>
         </f7-list-item>
       </f7-list>
+      <div v-else class="list-loading-bg">
+        <loading-small />
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +53,7 @@
 <script setup>
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopList } from "@/js/stores/top-list";
+import LoadingSmall from "@/components/loading-small.vue";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 const props = defineProps({
@@ -131,6 +134,17 @@ const goBack = () => {
       line-height: 17px;
       display: flex;
       align-items: center;
+    }
+  }
+  .list-loading-bg {
+    .loading-container {
+      background: #fff;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100%;
+      z-index: 60;
+      position: fixed;
     }
   }
   .block {
