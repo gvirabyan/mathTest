@@ -6,6 +6,7 @@
   },
   "messages": {
     "slow-connection": "It looks like your internet connection is slow. Please be patient.",
+    "stable-connection": "Your internet is stable now, let's continue",
     "no-connection-title": "No Connection",
     "no-connection-text": "You have internet connection problem, we need to wait until it's stable."
   },
@@ -303,6 +304,10 @@
     "play-more-games": "Play more games, improve your skills & the first in the World!"
   },
   "not-found": {
+    "title": "404 Not Found",
+    "text": "Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "title-offline": "No Internet",
+    "text-offline": "You don't have internet",
     "mathematics": [
       {
         "name": "Pythagoras",

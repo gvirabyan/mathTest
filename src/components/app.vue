@@ -49,7 +49,7 @@
   </f7-app>
 </template>
 <script setup>
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch, onMounted, computed } from "vue";
 import { f7, f7ready } from "framework7-vue";
 import { useNetwork, useElementVisibility, useEventBus } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
@@ -90,6 +90,17 @@ const customPopupIsVisible = useElementVisibility(customPopupRef);
 const isNoConnectionPopup = ref(false);
 const network = reactive(useNetwork());
 
+const isInternet = computed({
+  get() {
+    return network.isOnline;
+  },
+  set(newValue) {
+    if (!newValue && f7.views.main.router.currentRoute.name !== "Question") {
+      isNoConnectionPopup.value = true;
+    }
+  },
+});
+
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
   const gmapsScriptId = "gm-script";
@@ -123,9 +134,13 @@ watch(customPopupIsVisible, value => {
 });
 
 watch(
-  network,
-  value => {
-    if (slowConnectionTypes.includes(value.effectiveType)) {
+  () => network.effectiveType,
+  (value, oldValue) => {
+    if (slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
+      return;
+    }
+
+    if (slowConnectionTypes.includes(value) && !slowConnectionTypes.includes(oldValue)) {
       f7.toast.show({
         text: i18n.t("messages.slow-connection"),
         closeButton: true,
@@ -134,11 +149,13 @@ watch(
       return;
     }
 
-    if (!value.isOnline && f7.views.main.router.currentRoute.name !== "Question") {
-      isNoConnectionPopup.value = true;
+    if (!slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
+      f7.toast.show({
+        text: i18n.t("messages.stable-connection"),
+        closeButton: true,
+      });
     }
   },
-  { deep: true },
 );
 
 onMounted(async () => {
