@@ -43,7 +43,7 @@
     />
 
     <!-- Your main view, should have "view-main" class -->
-    <f7-view main class="safe-areas" :url="defaultUrl" />
+    <f7-view main class="safe-areas" url="/" />
 
     <Loading v-if="!loaded" />
   </f7-app>
@@ -83,7 +83,6 @@ const f7params = {
 
 const slowConnectionTypes = ["slow-2g", "2g", "3g"];
 
-const defaultUrl = ref("/");
 const loaded = ref(false);
 const openRightPanel = ref(false);
 const customPopupRef = ref(null);
@@ -135,7 +134,7 @@ watch(
       return;
     }
 
-    if (!value.isOnline && f7.views.main.router.currentRoute.name !== "Topics") {
+    if (!value.isOnline && f7.views.main.router.currentRoute.name !== "Question") {
       isNoConnectionPopup.value = true;
     }
   },

@@ -40,9 +40,14 @@
     }
 
     .close-icon {
+      all: unset;
       position: absolute;
       top: 15px;
       right: 15px;
+      display: grid;
+      place-items: center;
+      width: 15px;
+      height: 15px;
     }
 
     .button {
