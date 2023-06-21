@@ -1,0 +1,11 @@
+@mixin top-list-item-name {
+  width: 100%;
+  color: #212121;
+  font-family: "Rubik", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

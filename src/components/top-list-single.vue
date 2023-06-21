@@ -34,7 +34,11 @@
         <f7-list-item
           v-for="({ id, username, points }, index) in topList"
           :key="`list-item_${index + 1}`"
-          :class="{ 'my-score': id === user.id, last: index === topList.length - 1 }"
+          :class="{
+            'my-score': id === user.id,
+            last: index === topList.length - 1,
+            'selected-item': id === selectedTopListUserId,
+          }"
         >
           <template #before-title>
             <span class="inline-block number mr-8">{{ `${index + 1}.` }}</span>
@@ -58,7 +62,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useEventBus } from "@vueuse/core";
 import { useAuthStore } from "@/js/stores/auth";
@@ -75,7 +79,7 @@ const props = defineProps({
 const emit = defineEmits(["empty-category"]);
 
 const { user } = storeToRefs(useAuthStore());
-const { topList } = storeToRefs(useTopListStore());
+const { topList, selectedTopListUserId } = storeToRefs(useTopListStore());
 const { getTopList } = useTopListStore();
 
 const bus = useEventBus("toplist-search");
@@ -115,6 +119,18 @@ watch(
   },
 );
 
+watch(selectedTopListUserId, value => {
+  nextTick(() => {
+    const selectedItem = document.querySelector(".selected-item");
+    setTimeout(function () {
+      selectedItem.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 500);
+  });
+});
+
 onMounted(() => {
   onOrientationChange();
   window.addEventListener("orientationchange", onOrientationChange);
@@ -128,6 +144,9 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/mixins/top-list-item-name";
+@import "@/assets/scss/mixins/top-list-item-points";
+
 .single-list {
   height: calc(100vh - 290px);
 
@@ -235,6 +254,13 @@ onUnmounted(() => {
         display: none;
       }
 
+      li {
+        &.selected-item {
+          border-top: 2px solid #8419ff;
+          border-bottom: 2px solid #8419ff;
+        }
+      }
+
       .item-content {
         padding-left: 0;
 
@@ -256,25 +282,11 @@ onUnmounted(() => {
           }
 
           .name {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            width: 100%;
-            font-family: "Rubik", sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            line-height: 22px;
-            color: #212121;
+            @include top-list-item-name;
           }
 
           .points {
-            align-items: center;
-            color: #8419ff;
-            font-family: "Rubik", sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            font-feature-settings: "tnum";
-            font-variant-numeric: tabular-nums;
+            @include top-list-item-points;
           }
         }
       }

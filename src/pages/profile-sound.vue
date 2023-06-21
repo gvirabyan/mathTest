@@ -96,7 +96,6 @@ const profileTabs = ref([
     path: "/profile/profile-sound/",
   },
 ]);
-const isLoading = ref(false);
 const soundVolume = ref(50);
 
 const setProfileComponent = id => {

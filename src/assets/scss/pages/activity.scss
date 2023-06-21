@@ -1,11 +1,17 @@
+@import "../mixins/search-popup";
+@import "../mixins/top-list-item-name";
+@import "../mixins/top-list-item-points";
+
 .ripple-wave {
   display: none;
 }
+
 .active {
   animation-name: shake;
   animation-duration: 0.5s;
   animation-iteration-count: 1;
 }
+
 @keyframes shake {
   0% {
     transform: rotate(0deg);
@@ -41,13 +47,16 @@
     transform: rotate(-3deg);
   }
 }
+
 .hg-dashboard-content {
   background-color: #fff;
+
   .list {
     .item-content {
       height: 60px;
     }
   }
+
   .page-content {
     overflow: unset;
     display: flex;
@@ -57,6 +66,7 @@
       flex: 1;
       padding: 30px 24px;
       overflow: auto;
+
       &.overflow-unset {
         overflow: hidden;
       }
@@ -65,6 +75,7 @@
 
   .hg-statistics-content {
     flex: 1;
+
     .hg-statistic-item {
       .card {
         margin-top: 0;
@@ -84,6 +95,7 @@
             font-weight: 700;
           }
         }
+
         .hg-content-title {
           color: #6c6c6c;
           text-align: right;
@@ -95,21 +107,25 @@
           color: #31caa0;
         }
       }
+
       &.hg-answered-questions-content {
         .hg-content-icon {
           color: #008eff;
         }
       }
+
       &.hg-experience-points-content {
         .hg-content-icon {
           color: #bd00ff;
         }
       }
+
       &.hg-active-categories-content {
         .hg-content-icon {
           color: #31caa0;
         }
       }
+
       &.hg-categories-list-content {
         .hg-content-icon {
           color: #dc1212;
@@ -125,4 +141,27 @@
   }
 }
 
+.search-popup {
+  @include search-popup;
 
+  .list {
+    margin-top: 0;
+
+    .item-content {
+      height: 60px;
+      padding-left: 0;
+
+      .item-inner {
+        padding: 20px 0;
+
+        .item-title .name {
+          @include top-list-item-name
+        }
+
+        .item-after .points {
+          @include top-list-item-points
+        }
+      }
+    }
+  }
+}

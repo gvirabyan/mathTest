@@ -45,28 +45,34 @@
         </div>
 
         <f7-list v-if="topListSuggestions?.length" no-hairlines-md>
-          <f7-list-item v-for="topListUser in topListSuggestions" :key="topListUser.id">
+          <f7-list-item
+            v-for="topListUser in topListSuggestions"
+            :key="topListUser.id"
+            @click="selectTopListUserHandler(topListUser.id)"
+          >
             <template #title>
-              <p>{{ topListUser.username }}</p>
+              <p class="name">{{ topListUser.username }}</p>
             </template>
 
             <template #after>
-              <p>{{ topListUser.points }}</p>
-              <!--              <p>{{ getAfterText(category) }}</p>-->
-              <!--              <span>Class {{ category.attributes.category_class.data.attributes.name }}</span>-->
+              <p class="points">{{ topListUser.points }}</p>
             </template>
           </f7-list-item>
         </f7-list>
+
+        <f7-block v-else-if="searchStr && !topListSuggestions.length" class="no-padding">
+          <p>There is no any user with this username</p>
+        </f7-block>
       </f7-page>
     </f7-popup>
   </f7-page>
 </template>
 
 <script setup>
-import { ref, markRaw, defineAsyncComponent, computed } from "vue";
+import { defineAsyncComponent, ref, markRaw, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
-// import TextClamp from "vue3-text-clamp";
+import { useEventBus } from "@vueuse/core";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopListStore } from "@/js/stores/top-list";
 import { useUserStats } from "@/js/stores/user-stats";
@@ -74,7 +80,6 @@ import delay from "@/js/helpers/delay";
 import Topbar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
-import { useEventBus } from "@vueuse/core";
 
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
@@ -100,6 +105,7 @@ bus.on((e, payload) => {
 const { user } = storeToRefs(useAuthStore());
 const { getUser } = useAuthStore();
 const { topList } = storeToRefs(useTopListStore());
+const { selectTopListUser } = useTopListStore();
 const { getUserStatus } = useUserStats();
 
 const activityTabs = ref([
@@ -168,6 +174,12 @@ const getAllData = async () => {
 
 const toggleSearchPopup = () => {
   isSearchPopup.value = !isSearchPopup.value;
+};
+
+const selectTopListUserHandler = id => {
+  selectTopListUser(id);
+  isSearchPopup.value = false;
+  searchStr.value = "";
 };
 </script>
 

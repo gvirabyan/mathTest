@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
@@ -9,6 +9,7 @@ export const useTopListStore = defineStore("top-list", () => {
   const topList = ref([]);
   const topListMeta = ref(null);
   const myStats = ref(null);
+  const selectedTopListUserId = ref(null);
 
   const emptyTopList = () => {
     topList.value = [];
@@ -40,13 +41,19 @@ export const useTopListStore = defineStore("top-list", () => {
     return api.get(`get-rankings`).then(({ rankings }) => rankings);
   };
 
+  const selectTopListUser = id => {
+    selectedTopListUserId.value = id;
+  };
+
   return {
     topList,
     topListMeta,
     myStats,
+    selectedTopListUserId,
     emptyTopList,
     getRankings,
     getTopList,
     getMyStats,
+    selectTopListUser,
   };
 });
