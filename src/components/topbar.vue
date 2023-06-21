@@ -65,16 +65,11 @@ import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useEventBus } from "@vueuse/core";
-import { useAuthStore } from "@/js/stores/auth";
 import { useNotifications } from "@/js/stores/notifications";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
-import { createDatetimeString } from "../js/utils/dates";
-import { DEFAULT_TIMEZONE } from "../js/constants/common";
 
 const bus = useEventBus("notifications");
-
-const { user } = storeToRefs(useAuthStore());
 const categoriesClassesStore = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(categoriesClassesStore);
 const { hasUnreadNotifications } = storeToRefs(useNotifications());
