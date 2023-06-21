@@ -19,7 +19,15 @@
               </f7-row>
               <f7-row class="justify-content-space-between align-items-center sound-volume">
                 <p class="info-title">{{ $t("profile.sound.sound-volume") }}</p>
-                <input v-model="soundVolume" class="volume" type="range" min="0" max="100" @input="updateSoundVolume" />
+                <input
+                  v-model="soundVolume"
+                  class="volume"
+                  type="range"
+                  min="0"
+                  max="100"
+                  @input="updateSoundVolume"
+                  @touchend="playAudio('correct')"
+                />
               </f7-row>
             </template>
           </f7-list-item>
@@ -138,7 +146,6 @@ function updateSoundVolume() {
   user.value.volume_sound = Number(soundVolume.value);
   correct.pause();
   correct.currentTime = 0;
-  playAudio("correct");
   updateUser({
     volume_sound: soundVolume.value,
   });
