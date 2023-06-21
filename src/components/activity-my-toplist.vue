@@ -4,7 +4,6 @@
       'scroll-list': category === null,
     }"
     class="top-lists"
-    name="top-lists"
   >
     <div v-if="category === null" class="blocks">
       <div class="circle-points">
@@ -51,10 +50,12 @@
 <script setup>
 import { ref, watch, reactive, onMounted } from "vue";
 import { storeToRefs } from "pinia";
-import { useAuthStore } from "@/js/stores/auth";
-import { useTopList } from "@/js/stores/top-list";
-import TopListSingle from "@/components/top-list-single.vue";
 import { useI18n } from "vue-i18n";
+import { useAuthStore } from "@/js/stores/auth";
+import { useTopListStore } from "@/js/stores/top-list";
+import TopListSingle from "@/components/top-list-single.vue";
+
+const i18n = useI18n();
 
 defineProps({
   f7route: {
@@ -63,21 +64,11 @@ defineProps({
   },
 });
 
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
+const { user } = storeToRefs(useAuthStore());
+const { getRankings, emptyTopList } = useTopListStore();
 
 const category = ref(null);
-
-const topListStore = useTopList();
-
 const rankings = ref(null);
-
-onMounted(async () => {
-  rankings.value = await topListStore.getRankings();
-});
-
-const i18n = useI18n();
-
 const linksList = reactive([
   {
     title: i18n.t("activity.top-list.lists.0.title"),
@@ -142,9 +133,13 @@ const chooseList = title => {
 };
 
 const emptyCategory = () => {
-  topListStore.emptyTopList();
+  emptyTopList();
   category.value = null;
 };
+
+onMounted(async () => {
+  rankings.value = await getRankings();
+});
 </script>
 
 <style lang="scss">

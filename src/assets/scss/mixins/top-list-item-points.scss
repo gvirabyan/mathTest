@@ -1,0 +1,9 @@
+@mixin top-list-item-points {
+  align-items: center;
+  color: #8419ff;
+  font-family: "Rubik", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}

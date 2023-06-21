@@ -3,12 +3,13 @@ import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
 
-export const useTopList = defineStore("topList", () => {
+export const useTopListStore = defineStore("top-list", () => {
   const { user } = useAuthStore();
 
   const topList = ref([]);
   const topListMeta = ref(null);
   const myStats = ref(null);
+  const selectedTopListUserId = ref(null);
 
   const emptyTopList = () => {
     topList.value = [];
@@ -40,13 +41,19 @@ export const useTopList = defineStore("topList", () => {
     return api.get(`get-rankings`).then(({ rankings }) => rankings);
   };
 
+  const selectTopListUser = id => {
+    selectedTopListUserId.value = id;
+  };
+
   return {
     topList,
     topListMeta,
     myStats,
+    selectedTopListUserId,
     emptyTopList,
     getRankings,
     getTopList,
     getMyStats,
+    selectTopListUser,
   };
 });

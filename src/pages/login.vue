@@ -91,7 +91,6 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import fbHandler from "@/js/handlers/fb-handler";

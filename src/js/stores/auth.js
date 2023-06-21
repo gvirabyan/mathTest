@@ -2,7 +2,6 @@ import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
 import { DEFAULT_TIMEZONE } from "@/js/constants/common";
-import { createDatetimeString } from "@/js/utils/dates";
 
 export const useAuthStore = defineStore("auth", () => {
   // state properties

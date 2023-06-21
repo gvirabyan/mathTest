@@ -151,11 +151,11 @@
 </template>
 
 <script setup>
-import { useUserStats } from "@/js/stores/user-stats";
-import { useAuthStore } from "@/js/stores/auth";
-import moment from "moment";
-import { ref, computed, watch, reactive, onMounted, onUnmounted } from "vue";
+import { ref, computed, reactive, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
+import moment from "moment";
+import { useAuthStore } from "@/js/stores/auth";
+import { useUserStats } from "@/js/stores/user-stats";
 
 moment.updateLocale("en", {
   week: {

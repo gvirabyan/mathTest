@@ -83,7 +83,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
-import { useTopList } from "@/js/stores/top-list";
+import { useTopListStore } from "@/js/stores/top-list";
 import { storeToRefs } from "pinia";
 import useDebouncedRef from "@/js/composables/use-debounced-ref";
 import delay from "@/js/helpers/delay";
@@ -92,9 +92,8 @@ const props = defineProps({
   f7route: { type: Object, default: () => {} },
 });
 
-const authStore = useAuthStore();
-const topListStore = useTopList();
-const { user } = storeToRefs(authStore);
+const topListStore = useTopListStore();
+const { user } = storeToRefs(useAuthStore());
 const { topList, topListMeta } = storeToRefs(topListStore);
 const { getTopList } = topListStore;
 
