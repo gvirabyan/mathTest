@@ -9,8 +9,8 @@
       v-if="leavePopupPageText"
       :text="leavePopupPageText"
       :save-btn="$t('practice.leave-page-popup.stay')"
+      \@save-changes="leavePopupPageText = ''"
       @leave-changes="leavePage"
-      @save-changes="leavePopupPageText = ''"
       @close="leavePopupPageText = ''"
     />
 

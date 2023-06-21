@@ -106,12 +106,12 @@
 <script setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useTopList } from "@/js/stores/top-list";
+import { useTopListStore } from "@/js/stores/top-list";
 import delay from "@/js/helpers/delay";
 import pluralizeWord from "@/js/utils/pluralize-word";
 
-const { myStats } = storeToRefs(useTopList());
-const { getMyStats } = useTopList();
+const { myStats } = storeToRefs(useTopListStore());
+const { getMyStats } = useTopListStore();
 
 const isLoading = ref(false);
 

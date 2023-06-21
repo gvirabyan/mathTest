@@ -1,9 +1,9 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
 
-export const useTopList = defineStore("topList", () => {
+export const useTopListStore = defineStore("top-list", () => {
   const { user } = useAuthStore();
 
   const topList = ref([]);
