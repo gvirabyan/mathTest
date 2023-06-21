@@ -1,7 +1,8 @@
 import { computed, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
-// import { isYesterday } from "@/js/utils/date-check";
+import { DEFAULT_TIMEZONE } from "@/js/constants/common";
+import { createDatetimeString } from "@/js/utils/dates";
 
 export const useAuthStore = defineStore("auth", () => {
   // state properties
@@ -240,10 +241,10 @@ export const useAuthStore = defineStore("auth", () => {
     const passingDate = user.value?.everyday_goal_passed.split("T")[0];
     const todayDate = new Date().toLocaleString("sv-SE", {
       dateStyle: "short",
-      timeZone: user.value?.user_timezone,
+      timeZone: user.value?.user_timezone || DEFAULT_TIMEZONE,
     });
 
-    if (new Date(passingDate) === new Date(todayDate)) {
+    if (new Date(passingDate).getTime() === new Date(todayDate).getTime()) {
       return;
     }
 
