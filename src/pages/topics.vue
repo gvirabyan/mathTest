@@ -2,7 +2,6 @@
   <f7-page
     class="hg-categories-page"
     name="categories"
-    @page:afterin="selectRightClass"
     @page:beforein="getCategoriesClassesHandler"
     @page:beforeout="emptyData"
   >
@@ -104,7 +103,7 @@ const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
 const { categories, searchedCategories } = storeToRefs(categoriesStore);
-const { categoryClasses } = storeToRefs(categoriesClassesStore);
+const { categoryClasses, selectedClass } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
@@ -187,14 +186,14 @@ const getCategoriesClassesHandler = async () => {
   await getCategoryClasses();
 };
 
-let calledId = null;
+const calledId = ref(null);
 const emptyData = () => {
-  calledId = null;
+  calledId.value = null;
 };
 
 const getCategoriesByClass = async id => {
-  if (calledId !== id && props.f7route.name === "Topics") {
-    calledId = id;
+  if (calledId.value !== id && props.f7route.name === "Topics") {
+    calledId.value = id;
     isLoading.value = true;
     await delay();
     await getCategoriesByCategoryClass(id);
@@ -226,6 +225,13 @@ watch(searchStr, async value => {
   clearSearchedCategories();
   value && (await getCategories(value));
 });
+
+watch(
+  () => calledId.value,
+  select => {
+    changeClass.value = select - 1;
+  },
+);
 </script>
 
 <style lang="scss">
