@@ -218,7 +218,7 @@ import { useCategoryStore } from "@/js/stores/categories";
 import { useNotifications } from "@/js/stores/notifications";
 import { useQuizStore } from "@/js/stores/quiz";
 import { useParentsEmailsStore } from "@/js/stores/parents-emails";
-import { useTopList } from "@/js/stores/top-list";
+import { useTopListStore } from "@/js/stores/top-list";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import { useUserStats } from "@/js/stores/user-stats";
@@ -551,7 +551,7 @@ const { logout, updateNicknamedUser, deleteNicknamedUser, getUser } = authStore;
 const isPopupOpened = ref(false);
 
 const storeQuestion = useQuestionsStore();
-const storeTop = useTopList();
+const storeTop = useTopListStore();
 const storeEmails = useParentsEmailsStore();
 const storeQuiz = useQuizStore();
 const storeNotification = useNotifications();

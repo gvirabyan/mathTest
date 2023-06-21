@@ -44,7 +44,7 @@
 import { ref, watch, reactive } from "vue";
 import { storeToRefs } from "pinia/dist/pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import { useTopList } from "@/js/stores/top-list";
+import { useTopListStore } from "@/js/stores/top-list";
 import TopBar from "@/components/topbar.vue";
 import TopListSingle from "@/components/top-list-single.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
@@ -72,7 +72,7 @@ const navbarLinks = [
 ];
 
 const authStore = useAuthStore();
-const topListStore = useTopList();
+const topListStore = useTopListStore();
 const { user } = storeToRefs(authStore);
 
 const category = ref(null);
