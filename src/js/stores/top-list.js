@@ -4,7 +4,7 @@ import { useAuthStore } from "@/js/stores/auth";
 import api from "@/js/api";
 
 export const useTopListStore = defineStore("top-list", () => {
-  const { user } = useAuthStore();
+  const userStore = useAuthStore();
 
   const topList = ref([]);
   const topListMeta = ref(null);
@@ -20,7 +20,7 @@ export const useTopListStore = defineStore("top-list", () => {
     if (filter === "world") {
       url = `get-points?sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     } else if (filter === "course") {
-      url = `get-points?filters[institution]=${user.institution.place_id}&filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
+      url = `get-points?filters[institution]=${userStore.user.institution.place_id}&filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     } else {
       url = `get-points?filters[${filter}]=${value}&sort=points:desc&pagination[start]=0&pagination[limit]=100`;
     }
@@ -45,6 +45,10 @@ export const useTopListStore = defineStore("top-list", () => {
     selectedTopListUserId.value = id;
   };
 
+  const clearSelectedTopUser = () => {
+    selectedTopListUserId.value = null;
+  };
+
   return {
     topList,
     topListMeta,
@@ -55,5 +59,6 @@ export const useTopListStore = defineStore("top-list", () => {
     getTopList,
     getMyStats,
     selectTopListUser,
+    clearSelectedTopUser,
   };
 });

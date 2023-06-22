@@ -80,7 +80,7 @@ const emit = defineEmits(["empty-category"]);
 
 const { user } = storeToRefs(useAuthStore());
 const { topList, selectedTopListUserId } = storeToRefs(useTopListStore());
-const { getTopList } = useTopListStore();
+const { getTopList, clearSelectedTopUser } = useTopListStore();
 
 const bus = useEventBus("toplist-search");
 const smallHeight = ref(false);
@@ -104,13 +104,14 @@ watch(
   () => props.category,
   async category => {
     if (category) {
-      if (category.key === "world") {
-        await getTopList(category.key, "");
-      } else if (category.key === "institution") {
-        await getTopList(category.key, user.value?.institution?.place_id);
-      } else {
-        await getTopList(category.key, user.value[category.key]);
-      }
+      const filterValue =
+        category.key === "world"
+          ? ""
+          : category.key === "institution"
+          ? user.value?.institution?.place_id
+          : user.value[category.key];
+
+      await getTopList(category.key, filterValue);
     }
   },
   {
@@ -120,9 +121,11 @@ watch(
 );
 
 watch(selectedTopListUserId, value => {
+  if (!value) return;
+
   nextTick(() => {
     const selectedItem = document.querySelector(".selected-item");
-    setTimeout(function () {
+    setTimeout(() => {
       selectedItem.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -140,6 +143,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("orientationchange", onOrientationChange);
   bus.emit("toggle-toplist-search", false);
+  clearSelectedTopUser();
 });
 </script>
 
