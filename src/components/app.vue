@@ -42,14 +42,13 @@
       @close="closeNoConnectionPopupHandler"
     />
 
-    <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/" />
 
     <Loading v-if="!loaded" />
   </f7-app>
 </template>
 <script setup>
-import { ref, reactive, watch, onMounted, computed } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { f7, f7ready } from "framework7-vue";
 import { useNetwork, useElementVisibility, useEventBus } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
@@ -90,17 +89,6 @@ const customPopupIsVisible = useElementVisibility(customPopupRef);
 const isNoConnectionPopup = ref(false);
 const network = reactive(useNetwork());
 
-const isInternet = computed({
-  get() {
-    return network.isOnline;
-  },
-  set(newValue) {
-    if (!newValue && f7.views.main.router.currentRoute.name !== "Question") {
-      isNoConnectionPopup.value = true;
-    }
-  },
-});
-
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
   const gmapsScriptId = "gm-script";
@@ -134,6 +122,15 @@ watch(customPopupIsVisible, value => {
 });
 
 watch(
+  () => network.isOnline,
+  value => {
+    if (!value && f7.views.main.router.currentRoute.name !== "Question") {
+      isNoConnectionPopup.value = true;
+    }
+  },
+);
+
+watch(
   () => network.effectiveType,
   (value, oldValue) => {
     if (slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
@@ -149,7 +146,7 @@ watch(
       return;
     }
 
-    if (!slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
+    if (network.isOnline && !slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
       f7.toast.show({
         text: i18n.t("messages.stable-connection"),
         closeButton: true,
