@@ -5,6 +5,7 @@
     name="dashboard"
     @page:beforein="getAllData"
     @page:afterin="loadFirstTab"
+    @page:beforeout="resetSomeDataInPage"
   >
     <topbar
       ref="topBar"
@@ -69,6 +70,7 @@
 </template>
 
 <script setup>
+import playAudioMixin from "@/js/mixins/play_audio.js";
 import { defineAsyncComponent, ref, markRaw, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
@@ -107,6 +109,7 @@ const { getUser } = useAuthStore();
 const { topList } = storeToRefs(useTopListStore());
 const { selectTopListUser } = useTopListStore();
 const { getUserStatus } = useUserStats();
+const { playAudio, tabChange } = playAudioMixin.setup();
 
 const activityTabs = ref([
   {
@@ -161,9 +164,20 @@ const loadFirstTab = () => {
   topBar.value.selectFirstTab(activityTabs.value, false);
 };
 
+const checkPageRedirect = ref(null);
 const setActiveComponent = id => {
   active = activityTabs.value.find(t => t.id === id);
   currentActivityComponent.value = active?.component;
+  if (!(checkPageRedirect.value === null && id === 1)) {
+    tabChange.pause();
+    tabChange.currentTime = 0;
+    playAudio("tabChange");
+    checkPageRedirect.value = id;
+  }
+};
+
+const resetSomeDataInPage = () => {
+  checkPageRedirect.value = null;
 };
 
 const getAllData = async () => {

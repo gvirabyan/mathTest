@@ -114,10 +114,13 @@ import delay from "@/js/helpers/delay";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 import { useI18n } from "vue-i18n";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
+
+const { playAudio } = playAudioMixin.setup();
 
 const props = defineProps({
   f7route: {
@@ -205,7 +208,7 @@ const saveParentsEmailsHandler = async () => {
   if (!btnDisabled.value) {
     isSending.value = true;
     errorMsg.value = "";
-
+    playAudio("formSubmit");
     await saveParentsEmails(parentsEmailsInputs).then(res => {
       if (res.status === "success") {
         successPopup.value = true;

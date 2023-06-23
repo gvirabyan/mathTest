@@ -17,7 +17,7 @@
           </svg>
         </f7-button>
 
-        <f7-button class="top-bar-btn" @click="bus.emit('open-notifications', true)">
+        <f7-button class="top-bar-btn" @click="openNotification">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M18 9C18 10.6667 18 12.3333 18 14C18 16 18.6667 17.3333 20 18H4C5.33333 17.3333 6 16 6 14C6 12.3333 6 10.6667 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9Z"
@@ -67,6 +67,7 @@ import { storeToRefs } from "pinia";
 import { useEventBus } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
+import playAudioMixin from "@/js/mixins/play_audio";
 import delay from "@/js/helpers/delay";
 
 const bus = useEventBus("notifications");
@@ -74,6 +75,8 @@ const categoriesClassesStore = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(categoriesClassesStore);
 const { hasUnreadNotifications } = storeToRefs(useNotifications());
 const { getNotifications } = useNotifications();
+
+const { playAudio } = playAudioMixin.setup();
 
 const props = defineProps({
   tabs: {
@@ -183,6 +186,11 @@ const selectFirstTab = async (tabs, selected = true) => {
   if (topBarTabs.value.children[tabIndex - 1]) {
     selectTab(tabIndex, tabIndex - 1);
   }
+};
+
+const openNotification = () => {
+  playAudio("notificationOpen");
+  bus.emit("open-notifications", true);
 };
 
 const getNotificationsHandler = async () => {

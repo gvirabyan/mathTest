@@ -63,9 +63,9 @@ let redirectTimes = "";
 function playAudio({ to, from, resolve }) {
   const store = useAuthStore();
   const { user } = storeToRefs(store);
-  if (redirectTimes !== to.url && to.url && Object.keys(from).length && user.value && user.value.volume_sound) {
+  if (redirectTimes !== to.url && to.url && Object.keys(from).length && user.value && user.value.sound) {
     redirectTimes = to.url;
-    const redirect = new Audio("audios/redirect.mp3");
+    const redirect = new Audio("audios/redirect.wav");
     redirect.pause();
     redirect.currentTime = 0;
     redirect.volume = Number(user.value.volume_sound) / 100;

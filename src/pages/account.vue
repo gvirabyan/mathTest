@@ -223,6 +223,7 @@ import { useQuestionsStore } from "@/js/stores/questions";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import { useUserStats } from "@/js/stores/user-stats";
 import { getCountryCode } from "@/js/helpers/country-name-to-iso";
+import playAudioMixin from "@/js/mixins/play_audio";
 import delay from "@/js/helpers/delay";
 
 import Topbar from "@/components/topbar.vue";
@@ -274,6 +275,8 @@ const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(
 const coursesCurrent = computed(() => {
   return profileData.course ? courses.value.filter(c => c.indexOf(profileData.course) !== -1) : courses.value;
 });
+
+const { playAudio } = playAudioMixin.setup();
 
 const i18n = useI18n();
 
@@ -404,6 +407,7 @@ const updateProfile = () => {
 
   // disableSubmit.value = true;
 
+  playAudio("formSubmit");
   updateUser(profileData).then(res => {
     if (res.status === "success") {
       checkAccountData.value = false;
@@ -617,6 +621,7 @@ const nicknamedUserUpdate = () => {
   nicknamedUserDataError.email = "";
   nicknamedUserDataError.password = "";
   nicknamedUserDataError.confirmPassword = "";
+  playAudio("formSubmit");
   if (nicknamedUserData.password === nicknamedUserData.confirmPassword) {
     updateNicknamedUser(nicknamedUserData).then(resp => {
       if (resp.status === "success") {
@@ -636,6 +641,7 @@ const nicknamedUserUpdate = () => {
 };
 
 const nicknamedUserLogout = () => {
+  playAudio("formSubmit");
   deleteNicknamedUser().then(resp => {
     if (resp.status === "success") {
       isPopupOpened.value = false;

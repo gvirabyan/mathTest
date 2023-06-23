@@ -89,12 +89,15 @@ import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
 import { storeToRefs } from "pinia/dist/pinia";
 import { useI18n } from "vue-i18n";
+import playAudioMixin from "@/js/mixins/play_audio";
 
 const authStore = useAuthStore();
 const { updateUser, changePasswords, changeSecurityPath, changeSecurityLeavePopup } = authStore;
 const { user, securityPath } = storeToRefs(authStore);
 const successPopup = ref(false);
 const { securityLeavePopup } = storeToRefs(authStore);
+
+const { playAudio } = playAudioMixin.setup();
 
 const props = defineProps({
   f7route: { type: Object, default: () => {} },
@@ -189,6 +192,7 @@ const validatePasswordUpdate = () => {
 const updatePasswordHandler = async () => {
   if (!disableSaveBtn.value && validatePasswordUpdate()) {
     disableSubmit.value = true;
+    playAudio("formSubmit");
     await updateUser({ password: updatePasswordData.newPassword })
       .then(res => {
         if (res.status === "success") {
