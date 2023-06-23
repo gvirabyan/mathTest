@@ -124,8 +124,11 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
 import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 // import CustomGauge from "@/components/custom-gauge.vue";
 // import CustomGaugeThree from "@/components/custom-gauge-three.vue";
+
+const { playAudio } = playAudioMixin.setup();
 
 const CustomGauge = defineAsyncComponent(() => import("@/components/custom-gauge.vue"));
 const CustomGaugeThree = defineAsyncComponent(() => import("@/components/custom-gauge-three.vue"));
@@ -221,7 +224,7 @@ const getUserStatusHandler = async () => {
 const setGoalHandler = async goal => {
   const goalValue = parseInt(goal);
   disableSelect.value = true;
-
+  playAudio("goalUpdate");
   await updateUser({ everyday_goal: goalValue }).then(res => {
     if (res.status === "success") {
       showSelectGoalSuccess.value = true;

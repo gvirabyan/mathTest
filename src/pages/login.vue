@@ -95,13 +95,16 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
 import fbHandler from "@/js/handlers/fb-handler";
 import { useI18n } from "vue-i18n";
+import playAudioMixin from "@/js/mixins/play_audio";
 
-const showPassword = ref(false);
+const { playAudio } = playAudioMixin.setup();
 
 const props = defineProps({
   f7route: { type: Object, default: () => {} },
   f7router: { type: Object, default: () => {} },
 });
+
+const showPassword = ref(false);
 
 const { suggestedCredentials } = storeToRefs(useAuthStore());
 const { login, loginViaProvider } = useAuthStore();
@@ -130,6 +133,7 @@ const inputStyle = reactive({
 const btnDisabled = computed(() => !(userData.password && userData.identifier));
 
 const startLogin = () => {
+  playAudio("formSubmit");
   login(userData, rememberUser.value).then(resp => {
     if (resp.status === "success") {
       props.f7router.navigate("/");

@@ -92,18 +92,21 @@ import useDebouncedRef from "@/js/composables/use-debounced-ref";
 import LoadingSmall from "@/components/loading-small.vue";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
   f7route: { type: Object, default: () => {} },
 });
 
+const { playAudio, tabChange } = playAudioMixin.setup();
+
 const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
 const { categories, searchedCategories } = storeToRefs(categoriesStore);
-const { categoryClasses, selectedClass } = storeToRefs(categoriesClassesStore);
+const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;
 
@@ -192,7 +195,7 @@ const emptyData = () => {
 };
 
 const getCategoriesByClass = async id => {
-  if (calledId.value !== id && props.f7route.name === "Topics") {
+  if (id && calledId.value !== id && props.f7route.name === "Topics") {
     calledId.value = id;
     isLoading.value = true;
     await delay();
@@ -225,11 +228,19 @@ watch(searchStr, async value => {
   clearSearchedCategories();
   value && (await getCategories(value));
 });
-
+const checkPageRedirect = ref(false);
 watch(
   () => calledId.value,
   select => {
-    changeClass.value = select - 1;
+    if (select) {
+      if (checkPageRedirect.value) {
+        tabChange.pause();
+        tabChange.currentTime = 0;
+        playAudio("tabChange");
+      }
+      changeClass.value = select - 1;
+      checkPageRedirect.value = true;
+    }
   },
 );
 </script>

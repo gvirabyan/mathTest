@@ -18,17 +18,28 @@ const playAudioMixin = {
     win.pause();
     const wrong = new Audio("audios/wrong.wav");
     wrong.pause();
+    const tabChange = new Audio("audios/tabChange.wav");
+    tabChange.pause();
+    const formSubmit = new Audio("audios/formSubmit.wav");
+    formSubmit.pause();
+    const goalUpdate = new Audio("audios/goalUpdate.mp3");
+    goalUpdate.pause();
+    const notificationOpen = new Audio("audios/notificationOpen.mp3");
+    notificationOpen.pause();
 
     const userStore = useAuthStore();
     const { user } = storeToRefs(userStore);
     const playAudio = name => {
-      if (eval(name) && user.value.sound) {
+      if (eval(name) && user.value && user.value.sound) {
         eval(name + `.volume = ${Number(user.value.volume_sound) / 100}`);
+        eval(name + ".play()");
+      } else if (eval(name) && !user.value) {
         eval(name + ".play()");
       }
     };
     return {
       correct,
+      tabChange,
       playAudio,
     };
   },

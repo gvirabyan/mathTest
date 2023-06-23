@@ -139,6 +139,9 @@ import fbHandler from "@/js/handlers/fb-handler";
 import { f7 } from "framework7-vue";
 import { useI18n } from "vue-i18n";
 
+import playAudioMixin from "@/js/mixins/play_audio";
+const { playAudio } = playAudioMixin.setup();
+
 const props = defineProps({
   f7route: { type: Object, default: () => {} },
   f7router: { type: Object, default: () => {} },
@@ -182,6 +185,7 @@ const startRegister = () => {
   if (btnDisabled.value) {
     return;
   }
+  playAudio("formSubmit");
   if (registerMode.value === "nickname") {
     registerByNickname({
       username: userData.username,

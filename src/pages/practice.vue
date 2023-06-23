@@ -96,6 +96,7 @@ import pluralizeWord from "@/js/utils/pluralize-word";
 import { isNullish } from "@/js/utils/objects-utils";
 import Topbar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
+import playAudioMixin from "@/js/mixins/play_audio";
 
 const props = defineProps({
   f7router: { type: Object, default: () => {} },
@@ -105,6 +106,7 @@ const props = defineProps({
 const { user } = storeToRefs(useAuthStore());
 const { lastFriendPractice } = storeToRefs(useQuizStore());
 const { setQuizMode, setQuizRivalType, clearLastFriendPractice } = useQuizStore();
+const { playAudio, tabChange } = playAudioMixin.setup();
 
 const gameModes = [
   {
@@ -177,13 +179,20 @@ const setMode = mode => {
   props.f7router.navigate({ name: "PlayerVsMachineQuiz", params: { modeID: mode.id } });
 };
 
+const checkPageRedirect = ref(0);
+
 const setRivalTypeHandler = tabId => {
   const rival = practiceTabs.find(tab => tab.id === tabId).rivalType;
 
   activeTabId.value = tabId;
   startPracticeVsFriend.value = false;
-
   setQuizRivalType(rival);
+  if (checkPageRedirect.value > 1) {
+    tabChange.pause();
+    tabChange.currentTime = 0;
+    playAudio("tabChange");
+  }
+  checkPageRedirect.value++;
 };
 
 const getResultText = result => {
