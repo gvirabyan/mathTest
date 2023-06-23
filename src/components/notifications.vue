@@ -70,10 +70,11 @@ const selectNotification = id => {
 };
 
 const formatDate = date => {
-  const objectDate = new Date(createDatetimeString(date, user.user_timezone || DEFAULT_TIMEZONE));
-  const day = objectDate.getDate();
-  const month = objectDate.getMonth() + 1;
-  const year = objectDate.getFullYear();
+  const userDate = createDatetimeString(date, user.user_timezone || DEFAULT_TIMEZONE).split("T")[0];
+  const userDateArr = userDate.split("-");
+  const day = userDateArr[2];
+  const month = userDateArr[1];
+  const year = userDateArr[0];
 
   return `${day}.${month}.${year}`;
 };

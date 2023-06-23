@@ -71,7 +71,7 @@
 
 <script setup>
 import playAudioMixin from "@/js/mixins/play_audio.js";
-import { defineAsyncComponent, ref, markRaw, computed } from "vue";
+import { defineAsyncComponent, ref, markRaw, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useEventBus } from "@vueuse/core";
@@ -107,7 +107,7 @@ bus.on((e, payload) => {
 const { user } = storeToRefs(useAuthStore());
 const { getUser } = useAuthStore();
 const { topList } = storeToRefs(useTopListStore());
-const { selectTopListUser } = useTopListStore();
+const { selectTopListUser, clearSelectedTopUser } = useTopListStore();
 const { getUserStatus } = useUserStats();
 const { playAudio, tabChange } = playAudioMixin.setup();
 
@@ -195,6 +195,12 @@ const selectTopListUserHandler = id => {
   isSearchPopup.value = false;
   searchStr.value = "";
 };
+
+watch(isSearchPopup, value => {
+  if (!value) return;
+
+  clearSelectedTopUser();
+});
 </script>
 
 <style lang="scss">

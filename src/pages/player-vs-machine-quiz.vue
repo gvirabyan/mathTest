@@ -9,7 +9,7 @@
       v-if="leavePopupPageText"
       :text="leavePopupPageText"
       :save-btn="$t('practice.leave-page-popup.stay')"
-      \@save-changes="leavePopupPageText = ''"
+      @save-changes="leavePopupPageText = ''"
       @leave-changes="leavePage"
       @close="leavePopupPageText = ''"
     />
@@ -294,6 +294,7 @@ const finishGame = ref("");
 const rivalAnswerDelayRefreshKey = ref(0);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
+const appIsInBackground = ref(false);
 const startGameTimer = reactive({
   isRunning: false,
   time: 4,
@@ -370,6 +371,10 @@ const currentBerlinTime = computed(() => {
     .split(" ")[1];
 });
 
+const toggleAppIsInBackground = () => {
+  appIsInBackground.value = !appIsInBackground.value;
+};
+
 const runCountdown = () => {
   clearInterval(answerTimer.timeInterval);
   if (!isRivalAvailable.value) return;
@@ -381,7 +386,9 @@ const runCountdown = () => {
     answerTimer.time--;
 
     if (answerTimer.time === 5) {
-      playAudio("achtung_short");
+      if (!appIsInBackground.value) {
+        playAudio("achtung_short");
+      }
     }
 
     if (answerTimer.time === 0) {
@@ -437,7 +444,10 @@ const checkAvailability = () => {
 };
 
 const runTimer = () => {
-  playAudio("achtung_short");
+  if (!appIsInBackground.value) {
+    playAudio("achtung_short");
+  }
+
   startGameTimer.isRunning = true;
 
   const interval = setInterval(() => {
@@ -610,7 +620,9 @@ const endQuiz = () => {
     const result = data?.attributes?.result;
 
     if (result) {
-      playAudio(result);
+      if (!appIsInBackground.value) {
+        playAudio(result);
+      }
     }
 
     if (quizRivalType.value !== "machine") {
@@ -678,7 +690,9 @@ const closeLeftGameByRivalPopup = async () => {
     rival_type: quizRivalType.value,
     ...(quizRivalPlayer.value && quizRivalPlayer.value.id && { rival_id: quizRivalPlayer.value.id }),
   }).then(() => {
-    playAudio("win");
+    if (!appIsInBackground.value) {
+      playAudio("win");
+    }
 
     lastFriendPractice.value.firstPlayer.nickname = user.value.username;
     lastFriendPractice.value.firstPlayer.score = quizMode.value.winPoints;
@@ -747,7 +761,9 @@ watch(currentQuizQuestionId, value => {
 watch(allAnswersAreSent, value => {
   if (!value) return;
 
-  playAudio(status.value);
+  if (!appIsInBackground.value) {
+    playAudio(status.value);
+  }
   updateUserScore(chosenQuizAnswer.value || "");
   updateRivalScore(quizQuestion.value.rival_answer);
   clearInterval(answerTimer.timeInterval);
@@ -767,10 +783,14 @@ watch(quizQuestionIndex, value => {
 
 onMounted(() => {
   window.addEventListener("resize", onOrientationChange);
+  document.addEventListener("pause", toggleAppIsInBackground, false);
+  document.addEventListener("resume", toggleAppIsInBackground, false);
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", onOrientationChange);
+  document.removeEventListener("pause", toggleAppIsInBackground, false);
+  document.removeEventListener("resume", toggleAppIsInBackground, false);
 });
 </script>
 

@@ -7,6 +7,7 @@ export const useNotifications = defineStore("notifications", () => {
   const currentPage = ref(1);
   const pageCount = ref(0);
   const querySending = ref(false);
+
   const hasUnreadNotifications = computed(() =>
     notifications.value.some(n => n?.attributes?.read === false || n?.read === false),
   );
