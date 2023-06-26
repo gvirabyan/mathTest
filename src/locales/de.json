@@ -325,9 +325,9 @@
         "img": "Hypatia"
       },
       {
-        "name": "Girolamo Cardano",
-        "bio": "Italian polymath for whom the term Renaissance man could have been invented. A doctor by profession, he was the author of 131 books. He was also a compulsive gambler. It was this last habit that led him to the first scientific analysis of probability. He realised he could win more on the dicing table if he expressed the likelihood of chance events using numbers. This was a revolutionary idea, and it led to probability theory, which in turn led to the birth of statistics, marketing, the insurance industry and the weather forecast.",
-        "img": "Girolamo"
+        "name": "Isaac Newton",
+        "bio": "Isaac Newton is one of the most famous scientists of all time, and he discovered some amazing things. He was the first to realize that white light is made up of all the colors of the rainbow. He invented calculus, the mathematics of moving things, which is used today to help us build skyscrapers and send rockets into space. He also figured out the force that pulls things to the ground – gravity. He was a strange character, who suffered from depression and rarely talked to anyone. He was also a secret alchemist, trying to turn lead into gold.",
+        "img": "Isaac"
       },
       {
         "name": "Leonhard Euler",
@@ -350,9 +350,9 @@
         "img": "Paul"
       },
       {
-        "name": "John Horton Conway",
-        "bio": "The Liverpudlian is best known for the serious maths that has come from his analyses of games and puzzles. In 1970, he came up with the rules for the Game of Life, a game in which you see how patterns of cells evolve in a grid. Early computer scientists adored playing Life, earning Conway star status. He has made important contributions to many branches of pure maths, such as group theory, number theory and geometry and, with collaborators, has also come up with wonderful-sounding concepts like surreal numbers, the grand antiprism and monstrous moonshine.",
-        "img": "John"
+        "name": "Archimedes",
+        "bio": "Archimedes of Syracuse (c. 287 – c. 212 BC) was an Ancient Greek mathematician, physicist, engineer, astronomer, and inventor from the ancient city of Syracuse in Sicily. He is generally considered to be the greatest mathematician of antiquity and one of the greatest of all time, and gave the first satisfactory explanation of the principle of the lever. He is also credited with designing innovative machines, such as his screw pump, compound pulleys, and defensive war machines to protect his native Syracuse from invasion.",
+        "img": "Archimedes"
       },
       {
         "name": "Grigori Perelman",
