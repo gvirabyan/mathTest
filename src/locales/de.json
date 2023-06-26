@@ -39,7 +39,8 @@
     "enter-password-again": "Enter your password once again",
     "confirm-password": "confirm password",
     "new-password": "New password",
-    "confirm-new-password": "Confirm new password"
+    "confirm-new-password": "Confirm new password",
+    "enter-the-keyword": "Enter the keyword"
   },
   "popups": {
     "leave-page-popup": {
@@ -60,7 +61,9 @@
     "month": "month",
     "next": "next",
     "prev": "prev",
-    "loading": "Loading"
+    "loading": "Loading",
+    "search": "search",
+    "classes": "classes"
   },
 
   "home": {
@@ -157,7 +160,8 @@
      "your": "your",
      "from": "from",
      "people": "people",
-     "back-to-the-top-list": "Back to the Top List"
+     "back-to-the-top-list": "Back to the Top List",
+     "there-is-no-any-user": "There is no any user with this username"
     },
     "my-answers": {
       "summary": "Summary",

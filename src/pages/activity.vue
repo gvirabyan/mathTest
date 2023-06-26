@@ -39,10 +39,11 @@
           </f7-button>
         </div>
 
-        <h2 class="title">Search</h2>
+        <h2 class="title">{{ $t("over.search") }}</h2>
 
         <div class="input-wrapper">
-          <f7-input v-model:value="searchStr" type="text" placeholder="Enter the keyword" />
+          <img src="@/assets/icons/slag-right.svg" alt="Search class" />
+          <f7-input v-model:value="searchStr" type="text" :placeholder="$t('inputs.enter-the-keyword')" />
         </div>
 
         <f7-list v-if="topListSuggestions?.length" no-hairlines-md>
@@ -61,8 +62,10 @@
           </f7-list-item>
         </f7-list>
 
-        <f7-block v-else-if="searchStr && !topListSuggestions.length" class="no-padding">
-          <p>There is no any user with this username</p>
+        <f7-block v-else-if="searchStr && !topListSuggestions.length" class="no-padding result-not-found">
+          <loading-small>
+            {{ $t("activity.top-list.there-is-no-any-user") }}
+          </loading-small>
         </f7-block>
       </f7-page>
     </f7-popup>
@@ -82,6 +85,7 @@ import delay from "@/js/helpers/delay";
 import Topbar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
+import LoadingSmall from "@/components/loading-small.vue";
 
 const TopList = defineAsyncComponent(() => import("@/components/activity-my-toplist.vue"));
 const MyAnswers = defineAsyncComponent(() => import("@/components/activity-my-answers.vue"));
