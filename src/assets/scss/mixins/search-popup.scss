@@ -18,17 +18,23 @@
     }
 
     .title {
+      text-transform: capitalize;
       margin: 0 auto 30px;
       font-size: 18px;
       font-weight: 500;
       line-height: 22px;
       text-align: center;
+
     }
 
     .input-wrapper {
       position: relative;
       margin-bottom: 16px;
-
+      img {
+        position: absolute;
+        right: 0;
+        top: 4px;
+      }
       .input-icon {
         position: absolute;
         top: 5px;

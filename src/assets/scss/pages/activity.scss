@@ -143,10 +143,20 @@
 
 .search-popup {
   @include search-popup;
-
+  .result-not-found {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+  }
   .list {
     margin-top: 0;
-
+    ul {
+      &::before {
+        display: none;
+      }
+    }
     .item-content {
       height: 60px;
       padding-left: 0;
