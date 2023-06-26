@@ -60,6 +60,9 @@ import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
 import CustomPopup from "@/components/custom-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
+import { storeToRefs } from "pinia/dist/pinia";
+import { useQuestionsStore } from "@/js/stores/questions";
+import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 const i18n = useI18n();
 
@@ -70,9 +73,12 @@ bus.on((e, payload) => {
 
 const authStore = useAuthStore();
 const userStatsStore = useUserStats();
+const questionStore = useQuestionsStore();
+const categoryAnswerStore = useCategoryAnswerStore();
 
 const { getUser, sendAppInfo, checkEverydayGoal } = authStore;
 const { getUserStatus } = userStatsStore;
+const { user } = storeToRefs(authStore);
 
 const f7params = {
   name: "Mathe App", // App name
@@ -121,11 +127,45 @@ watch(customPopupIsVisible, value => {
   openRightPanel.value = false;
 });
 
+const { updateUserAnsweredQuestions } = categoryAnswerStore;
+const { getQuestions, getAnsweredQuestions } = questionStore;
+const { offline, questions, categoryQuestion } = storeToRefs(questionStore);
+
 watch(
   () => network.isOnline,
   value => {
     if (!value && f7.views.main.router.currentRoute.name !== "Question") {
       isNoConnectionPopup.value = true;
+    }
+    // send answered questions when user is online
+    if (offline.value && value) {
+      offline.value = false;
+      getQuestions(categoryQuestion.value.id, false)
+        .then(data => {
+          if (data.data.results.length) {
+            return data;
+          } else {
+            getAnsweredQuestions(categoryQuestion.value.id);
+          }
+        })
+        .then(async data => {
+          for (const question of data.data.results) {
+            const answeredData = questions.value.find(r => r.id === question.id);
+            if (answeredData && answeredData.user_answer) {
+              await updateUserAnsweredQuestions({
+                users_permissions_user: user.value.id,
+                question: answeredData.id,
+                category: categoryQuestion.value.id,
+                answer: answeredData.user_answer.answer,
+                status: answeredData.user_answer.status,
+                answer_type: "topic",
+              });
+            }
+          }
+        })
+        .catch(err => {
+          offline.value = true;
+        });
     }
   },
 );

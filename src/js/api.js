@@ -21,14 +21,8 @@ const defaultOptions = () => {
 let prevUrl = "";
 const get = async url => {
   const authStore = useAuthStore();
-  const questionStore = useQuestionsStore();
-  const categoryAnswerStore = useCategoryAnswerStore();
-  const { checkLogout, user } = storeToRefs(authStore);
+  const { checkLogout } = storeToRefs(authStore);
   const { logout } = authStore;
-
-  const { updateUserAnsweredQuestions } = categoryAnswerStore;
-  const { getQuestions, getAnsweredQuestions } = questionStore;
-  const { offline, questions, categoryQuestion } = storeToRefs(questionStore);
 
   if (prevUrl && prevUrl.split("&")[0] === url.split("&")[0]) {
     if (window.controller) {
@@ -49,35 +43,6 @@ const get = async url => {
           checkLogout.value
         ) {
           f7.views.main.router.navigate("/error");
-        }
-        if (offline.value) {
-          offline.value = false;
-          getQuestions(categoryQuestion.value.id, false)
-            .then(data => {
-              if (data.data.results.length) {
-                return data;
-              } else {
-                getAnsweredQuestions(categoryQuestion.value.id);
-              }
-            })
-            .then(async data => {
-              for (const question of data.data.results) {
-                const answeredData = questions.value.find(r => r.id === question.id);
-                if (answeredData) {
-                  await updateUserAnsweredQuestions({
-                    users_permissions_user: user.value.id,
-                    question: answeredData.id,
-                    category: categoryQuestion.value.id,
-                    answer: answeredData.user_answer.answer,
-                    status: answeredData.user_answer.status,
-                    answer_type: "topic",
-                  });
-                }
-              }
-            })
-            .catch(err => {
-              offline.value = true;
-            });
         }
         return data;
       })
