@@ -17,6 +17,7 @@
       <p v-if="text">{{ text }}</p>
 
       <f7-button @click="emit('close')">{{ btnText || $t("popups.success-message-popup.got-it") }}</f7-button>
+      <f7-button v-if="secondBtnText" @click="emit('second-button-event')">{{ secondBtnText }}</f7-button>
     </f7-block>
   </div>
 </template>
@@ -40,6 +41,10 @@ defineProps({
   date: {
     type: [String, null],
     default: null,
+  },
+  secondBtnText: {
+    type: String,
+    default: "",
   },
 });
 
