@@ -2,7 +2,7 @@
   <f7-page
     class="hg-question-page"
     name="player-vs-machine"
-    @page:beforein="getQuizQuestionsHandler(quizMode.questions, quizRivalType)"
+    @page:beforein="getQuizQuestionsHandler(quizMode?.questions || [], quizRivalType)"
     @page:afterout="clearStore"
   >
     <leave-page-popup
@@ -30,7 +30,9 @@
       :title="$t('practice.no-players-popup.title')"
       :text="$t('practice.no-players-popup.text')"
       :btn-text="$t('practice.no-players-popup.go-to-practice')"
+      :second-btn-text="$t('practice.no-players-popup.try-again')"
       @close="f7router.navigate('/practice/')"
+      @second-button-event="tryAgainHandler"
     />
 
     <success-message-popup
@@ -267,6 +269,8 @@ const {
   updateUserScore,
   updateRivalScore,
   saveQuizResult,
+  setQuizRivalType,
+  clearLastFriendPractice,
   clearStore,
 } = useQuizStore();
 
@@ -370,6 +374,15 @@ const currentBerlinTime = computed(() => {
     .format(new Date())
     .split(" ")[1];
 });
+
+const tryAgainHandler = () => {
+  clearLastFriendPractice();
+  setQuizRivalType("fake_user");
+  isRivalAvailable.value = true;
+  props.f7router.navigate(props.f7router.currentRoute.url, {
+    reloadCurrent: true,
+  });
+};
 
 const toggleAppIsInBackground = () => {
   appIsInBackground.value = !appIsInBackground.value;

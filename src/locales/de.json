@@ -221,7 +221,8 @@
     "no-players-popup": {
       "title": "There is no available Player",
       "text": "Sorry, there is no available Player at this moment. Please try later.",
-      "go-to-practice": "Go to practice page"
+      "go-to-practice": "Go to practice page",
+      "try-again": "Try Again"
     },
     "left-by-rival-popup": {
       "title": "Oops!",
