@@ -21,7 +21,8 @@
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { f7 } from "framework7-vue";
+import { reactive, computed, watch } from "vue";
 import { useNetwork } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import BottomMenu from "@/components/bottom-menu.vue";
@@ -81,6 +82,15 @@ const getAllData = () => {
   mathematician.bio = i18n.t(`not-found.mathematics.${index}.bio`);
   mathematician.img = i18n.t(`not-found.mathematics.${index}.img`);
 };
+
+watch(
+  () => network.isOnline,
+  (value, oldValue) => {
+    if (oldValue === false && value === true) {
+      f7.views.main.router.navigate(f7.views.main.router.previousRoute.path);
+    }
+  },
+);
 </script>
 
 <style lang="scss">

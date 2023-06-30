@@ -50,19 +50,19 @@
 <script setup>
 import { ref, reactive, watch, onMounted } from "vue";
 import { f7, f7ready } from "framework7-vue";
+import { storeToRefs } from "pinia/dist/pinia";
 import { useNetwork, useElementVisibility, useEventBus } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
 import { useAuthStore } from "@/js/stores/auth";
+import { useCategoryAnswerStore } from "@/js/stores/category-answer";
+import { useQuestionsStore } from "@/js/stores/questions";
 import { useUserStats } from "@/js/stores/user-stats";
 import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
 import CustomPopup from "@/components/custom-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
-import { storeToRefs } from "pinia/dist/pinia";
-import { useQuestionsStore } from "@/js/stores/questions";
-import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 
 const i18n = useI18n();
 
@@ -72,13 +72,16 @@ bus.on((e, payload) => {
 });
 
 const authStore = useAuthStore();
-const userStatsStore = useUserStats();
-const questionStore = useQuestionsStore();
 const categoryAnswerStore = useCategoryAnswerStore();
+const questionStore = useQuestionsStore();
+const userStatsStore = useUserStats();
 
 const { getUser, sendAppInfo, checkEverydayGoal } = authStore;
-const { getUserStatus } = userStatsStore;
 const { user } = storeToRefs(authStore);
+const { updateUserAnsweredQuestions } = categoryAnswerStore;
+const { getQuestions, getAnsweredQuestions } = questionStore;
+const { offline, questions, categoryQuestion } = storeToRefs(questionStore);
+const { getUserStatus } = userStatsStore;
 
 const f7params = {
   name: "Mathe App", // App name
@@ -86,7 +89,7 @@ const f7params = {
   routes: routes, // App routes
 };
 
-const slowConnectionTypes = ["slow-2g", "2g", "3g"];
+const slowConnectionTypes = ["Cell 2G connection", "Cell 3G connection"];
 
 const loaded = ref(false);
 const openRightPanel = ref(false);
@@ -94,6 +97,27 @@ const customPopupRef = ref(null);
 const customPopupIsVisible = useElementVisibility(customPopupRef);
 const isNoConnectionPopup = ref(false);
 const network = reactive(useNetwork());
+const networkCurrentState = ref(null);
+
+const checkConnection = () => {
+  if (!window.cordova) return;
+
+  const networkState = navigator.connection.type;
+  const states = {};
+
+  /* eslint-disable */
+  states[Connection.UNKNOWN] = "Unknown connection";
+  states[Connection.ETHERNET] = "Ethernet connection";
+  states[Connection.WIFI] = "WiFi connection";
+  states[Connection.CELL_2G] = "Cell 2G connection";
+  states[Connection.CELL_3G] = "Cell 3G connection";
+  states[Connection.CELL_4G] = "Cell 4G connection";
+  states[Connection.CELL] = "Cell generic connection";
+  states[Connection.NONE] = "No network connection";
+  /* eslint-enable */
+
+  networkCurrentState.value = states[networkState];
+};
 
 const addGmapsScript = () => {
   // dynamic adding of Google map script on app creation
@@ -118,7 +142,6 @@ const addGmapsScript = () => {
 
 const closeNoConnectionPopupHandler = () => {
   isNoConnectionPopup.value = false;
-  f7.views.main.router.navigate("/error");
 };
 
 watch(customPopupIsVisible, value => {
@@ -126,10 +149,6 @@ watch(customPopupIsVisible, value => {
 
   openRightPanel.value = false;
 });
-
-const { updateUserAnsweredQuestions } = categoryAnswerStore;
-const { getQuestions, getAnsweredQuestions } = questionStore;
-const { offline, questions, categoryQuestion } = storeToRefs(questionStore);
 
 watch(
   () => network.isOnline,
@@ -170,30 +189,27 @@ watch(
   },
 );
 
-watch(
-  () => network.effectiveType,
-  (value, oldValue) => {
-    if (slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
-      return;
-    }
+watch(networkCurrentState, (value, oldValue) => {
+  if (slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
+    return;
+  }
 
-    if (slowConnectionTypes.includes(value) && !slowConnectionTypes.includes(oldValue)) {
-      f7.toast.show({
-        text: i18n.t("messages.slow-connection"),
-        closeButton: true,
-      });
+  if (slowConnectionTypes.includes(value) && !slowConnectionTypes.includes(oldValue)) {
+    f7.toast.show({
+      text: i18n.t("messages.slow-connection"),
+      closeButton: true,
+    });
 
-      return;
-    }
+    return;
+  }
 
-    if (network.isOnline && !slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
-      f7.toast.show({
-        text: i18n.t("messages.stable-connection"),
-        closeButton: true,
-      });
-    }
-  },
-);
+  if (network.isOnline && !slowConnectionTypes.includes(value) && slowConnectionTypes.includes(oldValue)) {
+    f7.toast.show({
+      text: i18n.t("messages.stable-connection"),
+      closeButton: true,
+    });
+  }
+});
 
 onMounted(async () => {
   f7ready(() => {
@@ -222,6 +238,7 @@ onMounted(async () => {
   }
 
   addGmapsScript();
+  setInterval(checkConnection, 2000);
 });
 </script>
 

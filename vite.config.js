@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
-import path from "path";
 import vue from "@vitejs/plugin-vue";
+import { fileURLToPath, URL } from "url";
 import eslintPlugin from "vite-plugin-eslint";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 
@@ -9,9 +9,9 @@ import { createHtmlPlugin } from "vite-plugin-html";
 process.env.TARGET = process.env.TARGET || "web";
 const isCordova = process.env.TARGET === "cordova";
 
-const SRC_DIR = path.resolve(__dirname, "./src");
-const PUBLIC_DIR = path.resolve(__dirname, "./public");
-const BUILD_DIR = path.resolve(__dirname, isCordova ? "./cordova/www" : "./www");
+const SRC_DIR = fileURLToPath(new URL("./src", import.meta.url));
+const PUBLIC_DIR = fileURLToPath(new URL("./public", import.meta.url));
+const BUILD_DIR = fileURLToPath(new URL(isCordova ? "./cordova/www" : "./www", import.meta.url));
 
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
@@ -19,7 +19,8 @@ export default ({ mode }) => {
   return defineConfig({
     plugins: [
       VueI18nPlugin({
-        include: [path.resolve(__dirname, "./locales/**")],
+        // include: [path.resolve(__dirname, "./locales/**")],
+        include: [fileURLToPath(new URL("./locales/**", import.meta.url))],
       }),
       eslintPlugin(),
       vue(),
@@ -58,7 +59,7 @@ export default ({ mode }) => {
     },
     resolve: {
       alias: {
-        "@": SRC_DIR,
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
     server: {
