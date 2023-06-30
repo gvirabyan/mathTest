@@ -133,11 +133,10 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { computed, reactive, ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
 import fbHandler from "@/js/handlers/fb-handler";
-import { f7 } from "framework7-vue";
-import { useI18n } from "vue-i18n";
 
 import playAudioMixin from "@/js/mixins/play_audio";
 const { playAudio } = playAudioMixin.setup();

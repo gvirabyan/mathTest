@@ -1,7 +1,5 @@
 import { f7 } from "framework7-vue";
 import { useAuthStore } from "./stores/auth";
-import { useQuestionsStore } from "./stores/questions";
-import { useCategoryAnswerStore } from "./stores/category-answer";
 import { storeToRefs } from "pinia/dist/pinia";
 import configData from "../../config";
 

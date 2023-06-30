@@ -308,6 +308,7 @@ const answerTimer = reactive({
   time: timeForAnswerInitial,
   timeInterval: null,
 });
+const pauseTimeout = ref(null);
 
 const timeToAnswerFormatted = computed(() => {
   const minutes = `${Math.floor(answerTimer.time / 60)}`;
@@ -721,6 +722,10 @@ const closeLeftGameByRivalPopup = async () => {
   });
 };
 
+const pauseCallback = () => {
+  leavePage();
+};
+
 watch(
   () => quizQuestions.value,
   () => {
@@ -796,8 +801,22 @@ watch(quizQuestionIndex, value => {
 
 onMounted(() => {
   window.addEventListener("resize", onOrientationChange);
-  document.addEventListener("pause", toggleAppIsInBackground, false);
-  document.addEventListener("resume", toggleAppIsInBackground, false);
+  document.addEventListener(
+    "pause",
+    () => {
+      pauseTimeout.value = setTimeout(() => {
+        leavePage();
+      }, 60000);
+    },
+    false,
+  );
+  document.addEventListener(
+    "resume",
+    () => {
+      clearTimeout(pauseTimeout.value);
+    },
+    false,
+  );
 });
 
 onUnmounted(() => {
