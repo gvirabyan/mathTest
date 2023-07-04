@@ -3,13 +3,13 @@
     <f7-navbar>
       <template v-if="isLoading" #title>
         <f7-button @click="clearStores">
-          <img src="@/assets/icons/backSlag.svg" />
+          <img src="@/assets/icons/backSlag.svg" alt="" />
         </f7-button>
         {{ `${$t("over.loading")}...` }}
       </template>
       <template v-else #title>
         <f7-button @click="clearStores">
-          <img src="@/assets/icons/backSlag.svg" />
+          <img src="@/assets/icons/backSlag.svg" alt="" />
         </f7-button>
         {{ categoryQuestion?.name }}
       </template>
@@ -68,8 +68,15 @@
             :key="answer.id"
             :class="{
               'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
-              'hg-correct-answer': sentAnswer && question?.answer === answer,
-              'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
+              'hg-correct-answer':
+                (sentAnswer && question?.answer === answer) ||
+                (sentSecondAnswer && question?.answer === answer && question.second_answer === chosenSecondAnswer),
+              'hg-wrong-answer':
+                (sentAnswer && chosenAnswerIndex === index && question?.answer !== answer) ||
+                (sentSecondAnswer &&
+                  chosenAnswerIndex === index &&
+                  question?.answer !== answer &&
+                  question.second_answer !== chosenSecondAnswer),
             }"
             :checked="chosenAnswer === answer"
             :disabled="!!sentAnswer"
@@ -85,7 +92,7 @@
         </f7-list>
       </div>
       <div class="hg-actions-btns-content">
-        <f7-row v-if="!sentAnswer">
+        <f7-row v-if="showSkipSendBtns">
           <f7-button
             :class="{
               'button button-large button-skip': true,
@@ -112,8 +119,10 @@
         </f7-button>
       </div>
     </div>
+
     <loading-small v-else-if="isLoading" />
   </f7-page>
+
   <leave-page-popup
     v-if="checkSkipPopup"
     title=""
@@ -123,6 +132,14 @@
     @close="checkSkipped"
     @leave-changes="goBack"
     @save-changes="checkSkipped"
+  />
+
+  <input-popup
+    v-if="showInputPopup"
+    :send-btn-class="secondAnswerStatus"
+    :is-sending="isSendingSecondAnswer"
+    @input-answer="sendSecondAnswer"
+    @close="closeInputPopupHandler"
   />
 
   <teleport to=".hg-question-page">
@@ -168,24 +185,28 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { f7 } from "framework7-vue";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
+import playAudioMixin from "@/js/mixins/play_audio";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
-import LeavePagePopup from "@/components/leave-page-popup.vue";
-import playAudioMixin from "@/js/mixins/play_audio";
-import { useI18n } from "vue-i18n";
+
+const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
+const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
 
 const { playAudio } = playAudioMixin.setup();
 const storeCategoryClass = useCategoryClassesStore();
 const { selectedClass } = storeToRefs(storeCategoryClass);
+
+const i18n = useI18n();
 
 const props = defineProps({
   f7router: {
@@ -224,12 +245,16 @@ const chosenAnswer = ref(null);
 const chosenAnswerIndex = ref(null);
 const sentAnswer = ref(false);
 const isAllAnsweredPopup = ref(false);
-
 const presentIndex = ref(0);
 const getPoints = ref([]);
 const circles = ref(null);
 const checkAnswers = ref(true);
-// const startIndex = ref(0);
+const showInputPopup = ref(false);
+const chosenSecondAnswer = ref(null);
+const secondAnswerStatus = ref("");
+const isSendingSecondAnswer = ref(false);
+const sentSecondAnswer = ref(false);
+
 watch(
   () => questions.value,
   async () => {
@@ -282,6 +307,13 @@ watch(
 );
 
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
+const showSkipSendBtns = computed(() => {
+  if (question.value.second_answer) {
+    return !sentSecondAnswer.value;
+  }
+
+  return !sentAnswer.value;
+});
 
 const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);
@@ -301,9 +333,55 @@ const chooseAnswer = (answer, index) => {
   chosenAnswerIndex.value = index;
 };
 
+const closeInputPopupHandler = () => {
+  showInputPopup.value = false;
+  chosenAnswer.value = null;
+  chosenAnswerIndex.value = null;
+};
+
 const status = ref("normal");
 const sendAnswer = () => {
   if (chosenAnswer.value && !isSending.value) {
+    if (question.value.second_answer) {
+      status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
+      //save user answer
+      questions.value.find(q => q.id === question.value.id).user_answer = {
+        status: status.value,
+        answer: chosenAnswer.value,
+      };
+
+      playAudio(status.value);
+
+      if (status.value === "wrong") {
+        updateUserAnsweredQuestions({
+          users_permissions_user: user.value.id,
+          question: question.value.id,
+          category: categoryQuestion.value.id,
+          answer: chosenAnswer.value,
+          status: status.value,
+          answer_type: "topic",
+        })
+          .then(resp => {
+            if (resp.status !== "success") {
+              clearChosenData();
+              f7.toast.show({
+                text: resp.message,
+                closeButton: true,
+              });
+            }
+          })
+          .catch(() => {
+            offline.value = true;
+          });
+
+        return;
+      }
+
+      showInputPopup.value = true;
+
+      return;
+    }
+
     sentAnswer.value = true;
     status.value = question.value.answer === chosenAnswer.value ? "correct" : "wrong";
     //save user answer
@@ -333,6 +411,47 @@ const sendAnswer = () => {
         offline.value = true;
       });
   }
+};
+
+const sendSecondAnswer = answer => {
+  chosenSecondAnswer.value = answer;
+
+  isSendingSecondAnswer.value = true;
+  secondAnswerStatus.value = question.value.second_answer === answer ? "correct" : "wrong";
+  //save user second answer
+  questions.value.find(q => q.id === question.value.id).user_answer = {
+    status: secondAnswerStatus.value,
+    answer: chosenAnswer.value,
+    second_answer: answer,
+  };
+  playAudio(secondAnswerStatus.value);
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: question.value.id,
+    category: categoryQuestion.value.id,
+    answer: chosenAnswer.value,
+    second_answer: answer,
+    status: secondAnswerStatus.value,
+    answer_type: "topic",
+  })
+    .then(resp => {
+      if (resp.status !== "success") {
+        clearChosenData();
+        f7.toast.show({
+          text: resp.message,
+          closeButton: true,
+        });
+      }
+    })
+    .catch(() => {
+      offline.value = true;
+    });
+
+  setTimeout(() => {
+    isSendingSecondAnswer.value = false;
+    sentSecondAnswer.value = true;
+    showInputPopup.value = false;
+  }, 500);
 };
 
 const questionHistory = ref(null);
@@ -417,8 +536,6 @@ const goPresentQuestion = () => {
   onOrientationChange();
 };
 
-const i18n = useI18n();
-
 const checkSkipped = () => {
   checkSkipPopup.value = null;
   next();
@@ -499,6 +616,10 @@ const clearChosenData = () => {
   chosenAnswer.value = null;
   chosenAnswerIndex.value = null;
   sentAnswer.value = false;
+
+  chosenSecondAnswer.value = null;
+  sentSecondAnswer.value = false;
+  secondAnswerStatus.value = "";
 };
 
 const clearStores = async () => {
