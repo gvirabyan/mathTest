@@ -57,7 +57,10 @@
       v-if="showInputPopup"
       :send-btn-class="secondQuizAnswerStatus"
       :is-sending="isSendingQuizSecondAnswer"
+      :is-sent="isSentQuizSecondAnswer"
+      :first-answer="chooseQuizAnswer"
       @input-answer="sendSecondQuizAnswer"
+      @go-next="next"
       @close="closeInputPopupHandler"
     />
 
@@ -140,9 +143,12 @@
                 :disabled="isAnswerSent && isRivalAnswerSent"
                 :class="{
                   'hg-correct-rival-answer':
-                    allAnswersAreSent &&
-                    String(quizQuestion.rival_answer) === quizQuestion.answer &&
-                    answer === quizQuestion.answer,
+                    (allAnswersAreSent &&
+                      String(quizQuestion.rival_answer) === quizQuestion.answer &&
+                      answer === quizQuestion.answer) ||
+                    (quizQuestion.second_answer &&
+                      (showInputPopup || isSentQuizSecondAnswer) &&
+                      answer === quizQuestion.answer),
                   'hg-wrong-rival-answer':
                     allAnswersAreSent &&
                     String(quizQuestion.rival_answer) !== quizQuestion.answer &&
@@ -155,16 +161,12 @@
                 <f7-col
                   :class="{
                     'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                    'hg-correct-answer':
-                      (allAnswersAreSent && quizQuestion?.answer === answer) ||
-                      (sentQuizSecondAnswer &&
-                        quizQuestion?.answer === answer &&
-                        quizQuestion.second_answer === chosenQuizSecondAnswer),
+                    'hg-correct-answer': isAnswerSent && isRivalAnswerSent && quizQuestion?.answer === answer,
                     'hg-wrong-answer':
-                      (allAnswersAreSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer) ||
-                      (sentQuizSecondAnswer &&
-                        quizQuestion?.answer !== answer &&
-                        quizQuestion.second_answer !== chosenQuizSecondAnswer),
+                      isAnswerSent &&
+                      isRivalAnswerSent &&
+                      chosenQuizAnswerIndex === index &&
+                      quizQuestion?.answer !== answer,
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
@@ -314,7 +316,7 @@ const showInputPopup = ref(false);
 const chosenQuizSecondAnswer = ref(null);
 const secondQuizAnswerStatus = ref("");
 const isSendingQuizSecondAnswer = ref(false);
-const sentQuizSecondAnswer = ref(false);
+const isSentQuizSecondAnswer = ref(false);
 
 const startGameTimer = reactive({
   isRunning: false,
@@ -336,7 +338,7 @@ const allQuizQuestionAnswered = computed(
   () =>
     quizQuestions?.value?.length &&
     quizQuestionsLength?.value === answeredQuizQuestions?.value?.length &&
-    (isAnswerSent.value || sentQuizSecondAnswer.value) &&
+    (isAnswerSent.value || isSentQuizSecondAnswer.value) &&
     isRivalAnswerSent.value,
 );
 const practiceTitle = computed(() =>
@@ -374,14 +376,18 @@ const rivalStateText = computed(() => {
   return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
 });
 const allAnswersAreSent = computed(() => {
-  return (isAnswerSent.value || sentQuizSecondAnswer.value) && isRivalAnswerSent.value;
+  return isAnswerSent.value && isRivalAnswerSent.value;
 });
 const notAllAnswersAreSent = computed(() => {
-  return (!isAnswerSent.value && !sentQuizSecondAnswer.value) || !isRivalAnswerSent.value;
+  return !isAnswerSent.value || !isRivalAnswerSent.value;
 });
 const areSkipSendButtonsDisabled = computed(
   () =>
-    !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || sentQuizSecondAnswer.value || !answerTimer.time,
+    !chosenQuizAnswer.value ||
+    isSending.value ||
+    isAnswerSent.value ||
+    isSentQuizSecondAnswer.value ||
+    !answerTimer.time,
 );
 const currentBerlinTime = computed(() => {
   return new Intl.DateTimeFormat("sv-SE", {
@@ -626,7 +632,7 @@ const sendSecondQuizAnswer = answer => {
 
   setTimeout(() => {
     isSendingQuizSecondAnswer.value = false;
-    sentQuizSecondAnswer.value = true;
+    isSentQuizSecondAnswer.value = true;
     showInputPopup.value = false;
   }, 500);
 };
@@ -644,8 +650,9 @@ const clearChosenData = () => {
   isAnswerSent.value = false;
   isRivalAnswerSent.value = false;
 
+  showInputPopup.value = false;
   chosenQuizSecondAnswer.value = null;
-  sentQuizSecondAnswer.value = false;
+  isSentQuizSecondAnswer.value = false;
   secondQuizAnswerStatus.value = "";
 };
 
@@ -819,6 +826,11 @@ const closeLeftGameByRivalPopup = async () => {
 
     props.f7router.navigate("/practice/");
   });
+};
+
+const closeInputPopupHandler = () => {
+  showInputPopup.value = false;
+  chosenQuizAnswer.value = null;
 };
 
 watch(

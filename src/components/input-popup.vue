@@ -8,6 +8,7 @@
       </f7-block-title>
 
       <f7-input
+        ref="resultInput"
         v-model:value="result"
         type="text"
         name="result"
@@ -19,9 +20,11 @@
         :placeholder="$t('inputs.enter-the-result')"
       />
 
+      <p>{{ firstAnswer }}</p>
+
       <f7-row>
-        <f7-button class="save-btn" :class="sendBtnClass" :disabled="!result || isSending" @click="sendResultHandler">
-          {{ $t("buttons.send") }}
+        <f7-button class="save-btn" :class="sendBtnClass" :disabled="!result || isSending" @click="inputPopupBtnClick">
+          {{ inputPopupBtnText }}
         </f7-button>
       </f7-row>
     </f7-block>
@@ -29,12 +32,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+const i18n = useI18n();
 
-defineProps({
+const props = defineProps({
   sendBtnClass: {
     type: String,
     default: "",
@@ -46,9 +49,17 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isSent: {
+    type: Boolean,
+    default: false,
+  },
+  firstAnswer: {
+    type: String,
+    default: "",
+  },
 });
 
-const emit = defineEmits(["input-answer", "close"]);
+const emit = defineEmits(["input-answer", "go-next", "close"]);
 
 const inputStyle = {
   padding: "0px",
@@ -57,23 +68,43 @@ const inputStyle = {
   height: "unset",
   position: "relative",
 };
-
+const resultInput = ref(null);
 const result = ref(null);
 const error = ref("");
+
+const inputPopupBtnText = computed(() => (!props.isSent ? i18n.t("buttons.send") : i18n.t("buttons.next")));
+
+const focusInput = () => {
+  const resultInputEl = resultInput.value.$el.querySelector("input");
+  resultInputEl.focus();
+};
 
 const sendResultHandler = () => {
   const hasNumbersOnly = /^\d+$/.test(result.value);
 
   if (!hasNumbersOnly) {
-    error.value = `${t("popups.input-popup.error")}`;
+    error.value = i18n.t("popups.input-popup.error");
     return;
   }
 
   emit("input-answer", result.value);
 };
 
+const inputPopupBtnClick = () => {
+  if (!props.isSent) {
+    sendResultHandler();
+    return;
+  }
+
+  emit("go-next");
+};
+
 watch(result, () => {
   error.value = "";
+});
+
+onMounted(() => {
+  focusInput();
 });
 </script>
 
