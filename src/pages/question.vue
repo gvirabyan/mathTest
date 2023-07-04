@@ -70,13 +70,8 @@
               'hg-selected-answer': chosenAnswer === (typeof answer === 'string' ? answer : String(answer)),
               'hg-correct-answer':
                 (sentAnswer && question?.answer === answer) ||
-                (sentSecondAnswer && question?.answer === answer && question.second_answer === chosenSecondAnswer),
-              'hg-wrong-answer':
-                (sentAnswer && chosenAnswerIndex === index && question?.answer !== answer) ||
-                (sentSecondAnswer &&
-                  chosenAnswerIndex === index &&
-                  question?.answer !== answer &&
-                  question.second_answer !== chosenSecondAnswer),
+                (question.second_answer && (showInputPopup || isSentSecondAnswer) && question?.answer === answer),
+              'hg-wrong-answer': sentAnswer && chosenAnswerIndex === index && question?.answer !== answer,
             }"
             :checked="chosenAnswer === answer"
             :disabled="!!sentAnswer"
@@ -138,7 +133,10 @@
     v-if="showInputPopup"
     :send-btn-class="secondAnswerStatus"
     :is-sending="isSendingSecondAnswer"
+    :is-sent="isSentSecondAnswer"
+    :first-answer="chosenAnswer"
     @input-answer="sendSecondAnswer"
+    @go-next="next"
     @close="closeInputPopupHandler"
   />
 
@@ -253,7 +251,7 @@ const showInputPopup = ref(false);
 const chosenSecondAnswer = ref(null);
 const secondAnswerStatus = ref("");
 const isSendingSecondAnswer = ref(false);
-const sentSecondAnswer = ref(false);
+const isSentSecondAnswer = ref(false);
 
 watch(
   () => questions.value,
@@ -309,7 +307,7 @@ watch(
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
 const showSkipSendBtns = computed(() => {
   if (question.value.second_answer) {
-    return !sentSecondAnswer.value;
+    return !isSentSecondAnswer.value;
   }
 
   return !sentAnswer.value;
@@ -449,9 +447,8 @@ const sendSecondAnswer = answer => {
 
   setTimeout(() => {
     isSendingSecondAnswer.value = false;
-    sentSecondAnswer.value = true;
-    showInputPopup.value = false;
-  }, 500);
+    isSentSecondAnswer.value = true;
+  }, 200);
 };
 
 const questionHistory = ref(null);
@@ -550,6 +547,7 @@ const next = async () => {
     getPoints.value.find(v => v.present).status = status.value;
     getPoints.value.find(v => v.present).present = false;
   }
+
   clearChosenData();
 
   const nextPoint = getPoints.value.find(v => v.status === "normal");
@@ -617,8 +615,9 @@ const clearChosenData = () => {
   chosenAnswerIndex.value = null;
   sentAnswer.value = false;
 
+  showInputPopup.value = false;
   chosenSecondAnswer.value = null;
-  sentSecondAnswer.value = false;
+  isSentSecondAnswer.value = false;
   secondAnswerStatus.value = "";
 };
 
