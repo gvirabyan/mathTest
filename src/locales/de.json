@@ -40,7 +40,8 @@
     "confirm-password": "confirm password",
     "new-password": "New password",
     "confirm-new-password": "Confirm new password",
-    "enter-the-keyword": "Enter the keyword"
+    "enter-the-keyword": "Enter the keyword",
+    "enter-the-result": "Enter the result"
   },
   "popups": {
     "leave-page-popup": {
@@ -53,6 +54,10 @@
     },
     "success-message-popup": {
       "got-it": "Got it"
+    },
+    "input-popup": {
+      "title": "The final result",
+      "error": "Type the numbers only"
     }
   },
   "over": {

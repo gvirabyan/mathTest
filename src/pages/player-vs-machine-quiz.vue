@@ -53,6 +53,14 @@
       @close="f7router.navigate('/topics/')"
     />
 
+    <input-popup
+      v-if="showInputPopup"
+      :send-btn-class="secondQuizAnswerStatus"
+      :is-sending="isSendingQuizSecondAnswer"
+      @input-answer="sendSecondQuizAnswer"
+      @close="closeInputPopupHandler"
+    />
+
     <div class="navbar players-machine">
       <div class="navbar-inner">
         <div class="left">
@@ -132,13 +140,11 @@
                 :disabled="isAnswerSent && isRivalAnswerSent"
                 :class="{
                   'hg-correct-rival-answer':
-                    isAnswerSent &&
-                    isRivalAnswerSent &&
+                    allAnswersAreSent &&
                     String(quizQuestion.rival_answer) === quizQuestion.answer &&
                     answer === quizQuestion.answer,
                   'hg-wrong-rival-answer':
-                    isAnswerSent &&
-                    isRivalAnswerSent &&
+                    allAnswersAreSent &&
                     String(quizQuestion.rival_answer) !== quizQuestion.answer &&
                     answer === String(quizQuestion.rival_answer),
                 }"
@@ -149,12 +155,16 @@
                 <f7-col
                   :class="{
                     'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                    'hg-correct-answer': isAnswerSent && isRivalAnswerSent && quizQuestion?.answer === answer,
+                    'hg-correct-answer':
+                      (allAnswersAreSent && quizQuestion?.answer === answer) ||
+                      (sentQuizSecondAnswer &&
+                        quizQuestion?.answer === answer &&
+                        quizQuestion.second_answer === chosenQuizSecondAnswer),
                     'hg-wrong-answer':
-                      isAnswerSent &&
-                      isRivalAnswerSent &&
-                      chosenQuizAnswerIndex === index &&
-                      quizQuestion?.answer !== answer,
+                      (allAnswersAreSent && chosenQuizAnswerIndex === index && quizQuestion?.answer !== answer) ||
+                      (sentQuizSecondAnswer &&
+                        quizQuestion?.answer !== answer &&
+                        quizQuestion.second_answer !== chosenQuizSecondAnswer),
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
@@ -234,6 +244,7 @@ import LoadingSmall from "@/components/loading-small.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const SuccessMessagePopup = defineAsyncComponent(() => import("@/components/success-message-popup.vue"));
+const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
 const Circle = defineAsyncComponent(() => import("@/components/circle.vue"));
 const CustomGauge = defineAsyncComponent(() => import("@/components/custom-gauge.vue"));
 
@@ -299,6 +310,12 @@ const rivalAnswerDelayRefreshKey = ref(0);
 const isRivalAvailable = ref(true);
 const isLeftByRival = ref(false);
 const appIsInBackground = ref(false);
+const showInputPopup = ref(false);
+const chosenQuizSecondAnswer = ref(null);
+const secondQuizAnswerStatus = ref("");
+const isSendingQuizSecondAnswer = ref(false);
+const sentQuizSecondAnswer = ref(false);
+
 const startGameTimer = reactive({
   isRunning: false,
   time: 4,
@@ -319,7 +336,7 @@ const allQuizQuestionAnswered = computed(
   () =>
     quizQuestions?.value?.length &&
     quizQuestionsLength?.value === answeredQuizQuestions?.value?.length &&
-    isAnswerSent.value &&
+    (isAnswerSent.value || sentQuizSecondAnswer.value) &&
     isRivalAnswerSent.value,
 );
 const practiceTitle = computed(() =>
@@ -356,10 +373,15 @@ const rivalStateText = computed(() => {
 
   return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
 });
-const allAnswersAreSent = computed(() => isAnswerSent.value && isRivalAnswerSent.value);
-const notAllAnswersAreSent = computed(() => !isAnswerSent.value || !isRivalAnswerSent.value);
+const allAnswersAreSent = computed(() => {
+  return (isAnswerSent.value || sentQuizSecondAnswer.value) && isRivalAnswerSent.value;
+});
+const notAllAnswersAreSent = computed(() => {
+  return (!isAnswerSent.value && !sentQuizSecondAnswer.value) || !isRivalAnswerSent.value;
+});
 const areSkipSendButtonsDisabled = computed(
-  () => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || !answerTimer.time,
+  () =>
+    !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || sentQuizSecondAnswer.value || !answerTimer.time,
 );
 const currentBerlinTime = computed(() => {
   return new Intl.DateTimeFormat("sv-SE", {
@@ -507,6 +529,42 @@ const closeFinishPopup = () => {
 
 const sendAnswer = () => {
   if (chosenQuizAnswer.value) {
+    if (quizQuestion.value.second_answer) {
+      status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
+      //save user answer
+      quizQuestions.value.find(q => q.id === quizQuestion.value.id).user_answer = {
+        status: status.value,
+        answer: chosenQuizAnswer.value,
+      };
+
+      playAudio(status.value);
+
+      if (status.value === "wrong") {
+        updateUserAnsweredQuestions({
+          users_permissions_user: user.value.id,
+          question: quizQuestion.value.id,
+          category: quizQuestion.value.category,
+          answer: chosenQuizAnswer.value,
+          status: status.value,
+          answer_type: "practice-vs-machine",
+        }).then(resp => {
+          if (resp.status !== "success") {
+            clearChosenData();
+            f7.toast.show({
+              text: resp.message,
+              closeButton: true,
+            });
+          }
+        });
+
+        return;
+      }
+
+      showInputPopup.value = true;
+
+      return;
+    }
+
     isSending.value = true;
     status.value = quizQuestion.value.answer === chosenQuizAnswer.value ? "correct" : "wrong";
 
@@ -536,6 +594,43 @@ const sendAnswer = () => {
   }
 };
 
+const sendSecondQuizAnswer = answer => {
+  chosenQuizSecondAnswer.value = answer;
+
+  isSendingQuizSecondAnswer.value = true;
+  secondQuizAnswerStatus.value = quizQuestion.value.second_answer === answer ? "correct" : "wrong";
+  //save user second answer
+  quizQuestions.value.find(q => q.id === quizQuestion.value.id).user_answer = {
+    status: secondQuizAnswerStatus.value,
+    answer: chosenQuizSecondAnswer.value,
+    second_answer: answer,
+  };
+  playAudio(secondQuizAnswerStatus.value);
+  updateUserAnsweredQuestions({
+    users_permissions_user: user.value.id,
+    question: quizQuestion.value.id,
+    category: quizQuestion.value.category,
+    answer: chosenQuizAnswer.value,
+    second_answer: answer,
+    status: secondQuizAnswerStatus.value,
+    answer_type: "practice-vs-machine",
+  }).then(resp => {
+    if (resp.status !== "success") {
+      clearChosenData();
+      f7.toast.show({
+        text: resp.message,
+        closeButton: true,
+      });
+    }
+  });
+
+  setTimeout(() => {
+    isSendingQuizSecondAnswer.value = false;
+    sentQuizSecondAnswer.value = true;
+    showInputPopup.value = false;
+  }, 500);
+};
+
 const sendRivalAnswer = () => {
   setTimeout(() => {
     isRivalAnswerSent.value = true;
@@ -548,6 +643,10 @@ const clearChosenData = () => {
   isSending.value = false;
   isAnswerSent.value = false;
   isRivalAnswerSent.value = false;
+
+  chosenQuizSecondAnswer.value = null;
+  sentQuizSecondAnswer.value = false;
+  secondQuizAnswerStatus.value = "";
 };
 
 const sendAnswerOnCountdownEnd = () => {
@@ -720,10 +819,6 @@ const closeLeftGameByRivalPopup = async () => {
 
     props.f7router.navigate("/practice/");
   });
-};
-
-const pauseCallback = () => {
-  leavePage();
 };
 
 watch(
