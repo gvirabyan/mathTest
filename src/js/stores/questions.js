@@ -66,7 +66,7 @@ export const useQuestionsStore = defineStore("questions", () => {
         answeredQuestionsData.value = data?.data;
         answeredQuestionsPoints.value = data?.topic_points;
 
-        data?.data.forEach(answer => {
+        data?.data?.forEach(answer => {
           questionsIds.push(answer?.attributes?.question?.data?.id);
         });
       });

@@ -10,7 +10,7 @@
       <f7-input
         ref="resultInput"
         v-model:value="result"
-        type="text"
+        type="number"
         name="result"
         inputmode="numeric"
         :input-style="inputStyle"
@@ -80,13 +80,6 @@ const focusInput = () => {
 };
 
 const sendResultHandler = () => {
-  const hasNumbersOnly = /^\d+$/.test(result.value);
-
-  if (!hasNumbersOnly) {
-    error.value = i18n.t("popups.input-popup.error");
-    return;
-  }
-
   emit("input-answer", result.value);
 };
 

@@ -306,7 +306,7 @@ watch(
 
 const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
 const showSkipSendBtns = computed(() => {
-  if (question.value.second_answer) {
+  if (question.value.second_answer && status.value !== "wrong") {
     return !isSentSecondAnswer.value;
   }
 
@@ -351,6 +351,8 @@ const sendAnswer = () => {
       playAudio(status.value);
 
       if (status.value === "wrong") {
+        sentAnswer.value = true;
+
         updateUserAnsweredQuestions({
           users_permissions_user: user.value.id,
           question: question.value.id,
@@ -544,7 +546,9 @@ const next = async () => {
   const previousPoint = getPoints.value.find(v => v.present);
   if (previousPoint) {
     //update status of answered question
-    getPoints.value.find(v => v.present).status = status.value;
+    getPoints.value.find(v => v.present).status = question.value.second_answer
+      ? secondAnswerStatus.value
+      : status.value;
     getPoints.value.find(v => v.present).present = false;
   }
 
