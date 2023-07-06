@@ -131,7 +131,7 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title>
-            <math-jax :latex="'\\Large \\sf' + quizQuestion?.question" :block="true" />
+            <math-jax :latex="'\\Large \\sf ' + quizQuestion?.question" :block="true" />
           </f7-block-title>
 
           <div class="list-wrapper">
@@ -170,7 +170,7 @@
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-                  <math-jax :latex="'\\sf' + answer"></math-jax>
+                  <math-jax :latex="'\\sf ' + answer"></math-jax>
                 </f7-col>
               </f7-list-item>
             </f7-list>

@@ -49,7 +49,7 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <math-jax :latex="'\\sf' + answer"></math-jax>
+              <math-jax :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
         </f7-list>
@@ -81,7 +81,7 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <math-jax :latex="'\\sf' + answer"></math-jax>
+              <math-jax :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
         </f7-list>
