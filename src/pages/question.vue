@@ -494,6 +494,11 @@ function shuffle(a) {
 
 const skip = () => {
   status.value = "skipped";
+
+  if (question.value.second_answer) {
+    secondAnswerStatus.value = "skipped";
+  }
+
   playAudio("skipped");
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
