@@ -234,7 +234,7 @@
 
 <script setup>
 import { f7 } from "framework7-vue";
-import { defineAsyncComponent, ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
+import { computed, defineAsyncComponent, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
@@ -681,7 +681,10 @@ const sendAnswerOnCountdownEnd = () => {
 
 const next = () => {
   clearChosenData();
-  getPoints.value[presentIndex.value].status = status.value;
+
+  getPoints.value[presentIndex.value].status = quizQuestion.value.second_answer
+    ? secondQuizAnswerStatus.value
+    : status.value;
   getPoints.value[presentIndex.value].present = false;
   ++presentIndex.value;
 
