@@ -2,13 +2,13 @@
   <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData" @page:afterout="outPage">
     <f7-navbar>
       <template v-if="isLoading" #title>
-        <f7-button @click="clearStores">
+        <f7-button @click="goPreviousPage">
           <img src="@/assets/icons/backSlag.svg" alt="" />
         </f7-button>
         {{ `${$t("over.loading")}...` }}
       </template>
       <template v-else #title>
-        <f7-button @click="clearStores">
+        <f7-button @click="goPreviousPage">
           <img src="@/assets/icons/backSlag.svg" alt="" />
         </f7-button>
         {{ categoryQuestion?.name }}
@@ -629,8 +629,12 @@ const clearChosenData = () => {
   secondAnswerStatus.value = "";
 };
 
-const clearStores = async () => {
+const goPreviousPage = () => {
   props.f7router.navigate(`${props.f7router.history[props.f7router.history.length - 2]}`);
+  clearStores();
+};
+
+const clearStores = async () => {
   if (isSending.value) return;
   isAllAnsweredPopup.value = false;
   if (!offline.value) {
