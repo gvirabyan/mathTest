@@ -680,13 +680,12 @@ const sendAnswerOnCountdownEnd = () => {
 };
 
 const next = () => {
-  clearChosenData();
-
-  getPoints.value[presentIndex.value].status = quizQuestion.value.second_answer
-    ? secondQuizAnswerStatus.value
-    : status.value;
+  getPoints.value[presentIndex.value].status =
+    quizQuestion.value.second_answer && isSentQuizSecondAnswer.value ? secondQuizAnswerStatus.value : status.value;
   getPoints.value[presentIndex.value].present = false;
   ++presentIndex.value;
+
+  clearChosenData();
 
   if (presentIndex.value < getPoints.value.length) {
     getPoints.value[presentIndex.value].present = true;

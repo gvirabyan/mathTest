@@ -551,9 +551,8 @@ const next = async () => {
   const previousPoint = getPoints.value.find(v => v.present);
   if (previousPoint) {
     //update status of answered question
-    getPoints.value.find(v => v.present).status = question.value.second_answer
-      ? secondAnswerStatus.value
-      : status.value;
+    getPoints.value.find(v => v.present).status =
+      question.value.second_answer && isSentSecondAnswer.value ? secondAnswerStatus.value : status.value;
     getPoints.value.find(v => v.present).present = false;
   }
 
