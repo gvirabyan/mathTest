@@ -550,7 +550,7 @@ watch(
 
 const isLoading = ref(false);
 
-const { logout, updateNicknamedUser, deleteNicknamedUser, getUser } = authStore;
+const { logout, sendAppInfo, updateNicknamedUser, deleteNicknamedUser, getUser } = authStore;
 
 const isPopupOpened = ref(false);
 
@@ -640,13 +640,27 @@ const nicknamedUserUpdate = () => {
   errMessageNicknamed.value = "Password and password confirmation should match";
 };
 
-const nicknamedUserLogout = () => {
+const nicknamedUserLogout = async () => {
   playAudio("formSubmit");
+  await sendAppInfo(true);
   deleteNicknamedUser().then(resp => {
     if (resp.status === "success") {
       isPopupOpened.value = false;
-      logoutUser();
-      return;
+      user.value = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("user-id");
+      coursesStore.$reset();
+      authStore.$reset();
+      storeCategoryAnswer.$reset();
+      storeCategory.$reset();
+      storeNotification.$reset();
+      storeQuiz.$reset();
+      storeEmails.$reset();
+      storeTop.$reset();
+      storeQuestion.$reset();
+      storeUserStats.$reset();
+      storeClassesStore.$reset();
+      props.f7router.navigate("/login/");
     }
 
     // f7.toast.show({
