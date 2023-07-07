@@ -198,7 +198,7 @@ const emptyData = () => {
 };
 
 const getCategoriesByClass = async id => {
-  if (id && calledId.value !== id && props.f7route.name === "Topics") {
+  if (id && calledId.value !== id && props.f7route.name === "Topics" && localStorage.getItem("token")) {
     calledId.value = id;
     isLoading.value = true;
     await delay();
