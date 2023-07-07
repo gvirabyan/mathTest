@@ -47,7 +47,6 @@
         <h2 class="title">{{ $t("over.search") }}</h2>
 
         <div class="input-wrapper">
-          <img src="@/assets/icons/slag-right.svg" alt="Search class" />
           <f7-input v-model:value="searchStr" type="text" :placeholder="$t('inputs.enter-the-keyword')" />
         </div>
 
@@ -66,12 +65,12 @@
         <f7-list v-if="searchedCategories?.length" no-hairlines-md>
           <f7-list-item v-for="category in searchedCategories" :key="category.id" @click="goToQuestions(category.id)">
             <template #title>
-              <span>{{ `${category.attributes.category_class.data.attributes.name} ${$t("over.classes")}` }}</span>
               <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
             </template>
 
             <template #after>
               <p>{{ getAfterText(category) }}</p>
+              <span>{{ `${$t("over.class")} ${category.attributes.category_class.data.attributes.name}` }}</span>
             </template>
           </f7-list-item>
         </f7-list>

@@ -42,7 +42,6 @@
         <h2 class="title">{{ $t("over.search") }}</h2>
 
         <div class="input-wrapper">
-          <img src="@/assets/icons/slag-right.svg" alt="Search class" />
           <f7-input v-model:value="searchStr" type="text" :placeholder="$t('inputs.enter-the-keyword')" />
         </div>
 
