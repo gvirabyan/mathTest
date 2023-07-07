@@ -318,6 +318,8 @@ const secondQuizAnswerStatus = ref("");
 const isSendingQuizSecondAnswer = ref(false);
 const isSentQuizSecondAnswer = ref(false);
 
+const timeCancel = ref(false);
+
 const startGameTimer = reactive({
   isRunning: false,
   time: 4,
@@ -405,12 +407,12 @@ const currentBerlinTime = computed(() => {
 });
 
 const tryAgainHandler = () => {
+  timeCancel.value = true;
   clearLastFriendPractice();
-  setQuizRivalType("fake_user");
+  getPoints.value = [];
+  quizQuestions.value = [];
   isRivalAvailable.value = true;
-  props.f7router.navigate(props.f7router.currentRoute.url, {
-    reloadCurrent: true,
-  });
+  getQuizQuestionsHandler(quizMode.value?.questions || [], quizRivalType.value);
 };
 
 const toggleAppIsInBackground = () => {
@@ -420,6 +422,7 @@ const toggleAppIsInBackground = () => {
 const runCountdown = () => {
   clearInterval(answerTimer.timeInterval);
   if (!isRivalAvailable.value) return;
+  if (timeCancel.value) return;
 
   answerTimer.time = timeForAnswerInitial;
   answerTimer.isRunning = true;
@@ -512,6 +515,7 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
     checkAvailability();
 
     if (!isRivalAvailable.value) {
+      timeCancel.value = false;
       return;
     }
   }
@@ -521,6 +525,7 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
   if (quizRivalType.value !== "machine" && isRivalAvailable.value) {
     runTimer();
   }
+  timeCancel.value = false;
 };
 
 const chooseQuizAnswer = (answer, index) => {
@@ -871,13 +876,11 @@ watch(currentQuizQuestionId, value => {
   if (!answeredQuizQuestions.value.length && quizRivalType.value !== "machine") {
     setTimeout(() => {
       runCountdown();
-
       rivalAnswerDelayRefreshKey.value++;
       sendRivalAnswer();
     }, startGameTimer.time * 1000);
   } else if (answeredQuizQuestions.value.length || quizRivalType.value === "machine") {
     runCountdown();
-
     if (quizRivalType.value === "machine" || !value) return;
 
     rivalAnswerDelayRefreshKey.value++;
