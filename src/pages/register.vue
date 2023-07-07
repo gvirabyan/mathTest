@@ -196,12 +196,12 @@ const startRegister = () => {
         error.email = "";
         error.password = "";
         error.username = "";
-        if (resp.error.details.errors) {
+        if (resp.error && resp.error.details.errors) {
           resp.error.details.errors.forEach(err => {
             error[err.path[0]] = err.message;
           });
         } else {
-          error.message = resp.error.message;
+          error.message = resp.message.message;
         }
       }
     });
