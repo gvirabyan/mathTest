@@ -194,7 +194,6 @@ const openNotification = () => {
 };
 
 const getNotificationsHandler = async () => {
-  await delay(500);
   await getNotifications();
 };
 

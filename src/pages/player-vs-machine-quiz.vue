@@ -131,6 +131,9 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title>
+            <p v-if="quizQuestion?.question.startsWith('@')" style="font-size: 16px">
+              {{ quizQuestion?.question.slice(1) }}
+            </p>
             <math-jax :latex="'\\Large \\sf ' + quizQuestion?.question" :block="true" />
           </f7-block-title>
 
@@ -170,6 +173,7 @@
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+                  <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
                   <math-jax :latex="'\\sf ' + answer"></math-jax>
                 </f7-col>
               </f7-list-item>

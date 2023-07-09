@@ -29,9 +29,12 @@
     </div>
     <div v-if="questionHistory" id="element" class="questions-content">
       <div>
-        <f7-block-title
-          ><math-jax :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax
-        ></f7-block-title>
+        <f7-block-title>
+          <p v-if="questionHistory?.question.startsWith('@')" style="font-size: 16px">
+            {{ questionHistory?.question.slice(1) }}
+          </p>
+          <math-jax :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax>
+        </f7-block-title>
         <f7-list>
           <f7-list-item
             v-for="(answer, index) in shuffle([questionHistory.answer, ...questionHistory.wrong_answers])"
@@ -49,6 +52,7 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
+              <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
               <math-jax :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
@@ -59,9 +63,10 @@
     </div>
     <div v-else-if="question" id="elementId" class="questions-content">
       <div>
-        <f7-block-title
-          ><math-jax :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax
-        ></f7-block-title>
+        <f7-block-title>
+          <p v-if="question?.question.startsWith('@')" style="font-size: 16px">{{ question?.question.slice(1) }}</p>
+          <math-jax v-else :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax>
+        </f7-block-title>
         <f7-list>
           <f7-list-item
             v-for="(answer, index) in answersData"
@@ -81,7 +86,8 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <math-jax :latex="'\\sf ' + answer"></math-jax>
+              <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
+              <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
         </f7-list>
