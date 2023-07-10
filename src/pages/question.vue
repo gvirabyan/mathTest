@@ -354,8 +354,6 @@ const sendAnswer = () => {
         answer: chosenAnswer.value,
       };
 
-      playAudio(status.value);
-
       if (status.value === "wrong") {
         sentAnswer.value = true;
 
