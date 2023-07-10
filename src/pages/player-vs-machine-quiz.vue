@@ -55,10 +55,10 @@
 
     <input-popup
       v-if="showInputPopup"
-      :send-btn-class="secondQuizAnswerStatus"
-      :is-sending="isSendingQuizSecondAnswer"
-      :is-sent="isSentQuizSecondAnswer"
-      :first-answer="chooseQuizAnswer"
+      :send-btn-class="isRivalAnswerSent ? secondQuizAnswerStatus : ''"
+      :is-sending="!isRivalAnswerSent && (isSendingQuizSecondAnswer || isSentQuizSecondAnswer)"
+      :is-sent="allAnswersAreSent"
+      :first-answer="chosenQuizAnswer"
       @input-answer="sendSecondQuizAnswer"
       @go-next="next"
       @close="closeInputPopupHandler"
@@ -164,12 +164,19 @@
                 <f7-col
                   :class="{
                     'hg-selected-answer': chosenQuizAnswer === (typeof answer === 'string' ? answer : String(answer)),
-                    'hg-correct-answer': isAnswerSent && isRivalAnswerSent && quizQuestion?.answer === answer,
+                    'hg-correct-answer':
+                      (isAnswerSent && isRivalAnswerSent && quizQuestion?.answer === answer) ||
+                      (quizQuestion.second_answer &&
+                        (showInputPopup || isSentQuizSecondAnswer) &&
+                        quizQuestion?.answer === answer),
                     'hg-wrong-answer':
-                      isAnswerSent &&
-                      isRivalAnswerSent &&
-                      chosenQuizAnswerIndex === index &&
-                      quizQuestion?.answer !== answer,
+                      (isAnswerSent &&
+                        isRivalAnswerSent &&
+                        chosenQuizAnswerIndex === index &&
+                        quizQuestion?.answer !== answer) ||
+                      (quizQuestion.second_answer &&
+                        !answerTimer.time &&
+                        (status === 'wrong' || secondQuizAnswerStatus === 'wrong')),
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
@@ -382,18 +389,21 @@ const rivalStateText = computed(() => {
   return isRivalAnswerSent.value ? "" : `${quizRivalPlayer.value.username} ${i18n.t("practice.friend-think")}`;
 });
 const allAnswersAreSent = computed(() => {
+  if (quizQuestion.value?.second_answer && status.value !== "wrong") {
+    return isSentQuizSecondAnswer.value && isRivalAnswerSent.value;
+  }
+
   return isAnswerSent.value && isRivalAnswerSent.value;
 });
 const notAllAnswersAreSent = computed(() => {
+  if (quizQuestion.value?.second_answer && status.value !== "wrong") {
+    return !isSentQuizSecondAnswer.value || !isRivalAnswerSent.value;
+  }
+
   return !isAnswerSent.value || !isRivalAnswerSent.value;
 });
 const areSkipSendButtonsDisabled = computed(
-  () =>
-    !chosenQuizAnswer.value ||
-    isSending.value ||
-    isAnswerSent.value ||
-    isSentQuizSecondAnswer.value ||
-    !answerTimer.time,
+  () => !chosenQuizAnswer.value || isSending.value || isAnswerSent.value || !answerTimer.time,
 );
 const currentBerlinTime = computed(() => {
   return new Intl.DateTimeFormat("sv-SE", {
@@ -454,40 +464,40 @@ const getLetterByIndex = index => {
 };
 
 const checkAvailability = () => {
-  if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.9;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.75;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.4;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.2;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.2;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
-    isRivalAvailable.value = Math.random() >= 0.6;
-    return;
-  }
-
-  if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
-    isRivalAvailable.value = Math.random() >= 0.75;
-    return;
-  }
+  // if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.9;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.75;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.4;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.2;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.2;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.6;
+  //   return;
+  // }
+  //
+  // if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
+  //   isRivalAvailable.value = Math.random() >= 0.75;
+  //   return;
+  // }
 
   return true;
 };
@@ -552,9 +562,13 @@ const sendAnswer = () => {
         answer: chosenQuizAnswer.value,
       };
 
-      playAudio(status.value);
-
       if (status.value === "wrong") {
+        isAnswerSent.value = true;
+
+        if (quizRivalType.value === "machine") {
+          isRivalAnswerSent.value = true;
+        }
+
         updateUserAnsweredQuestions({
           users_permissions_user: user.value.id,
           question: quizQuestion.value.id,
@@ -614,13 +628,18 @@ const sendSecondQuizAnswer = answer => {
 
   isSendingQuizSecondAnswer.value = true;
   secondQuizAnswerStatus.value = quizQuestion.value.second_answer === answer ? "correct" : "wrong";
+
+  if (quizRivalType.value === "machine") {
+    isRivalAnswerSent.value = true;
+  }
   //save user second answer
   quizQuestions.value.find(q => q.id === quizQuestion.value.id).user_answer = {
     status: secondQuizAnswerStatus.value,
     answer: chosenQuizSecondAnswer.value,
     second_answer: answer,
   };
-  playAudio(secondQuizAnswerStatus.value);
+
+  updateAnsweredQuizQuestions(quizQuestion.value.id);
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
     question: quizQuestion.value.id,
@@ -642,8 +661,11 @@ const sendSecondQuizAnswer = answer => {
   setTimeout(() => {
     isSendingQuizSecondAnswer.value = false;
     isSentQuizSecondAnswer.value = true;
-    showInputPopup.value = false;
-  }, 500);
+
+    if (quizRivalType.value === "machine" && !isRivalAnswerSent.value) {
+      isRivalAnswerSent.value = true;
+    }
+  }, 200);
 };
 
 const sendRivalAnswer = () => {
@@ -673,6 +695,13 @@ const sendAnswerOnCountdownEnd = () => {
   status.value = "wrong";
   isAnswerSent.value = true;
 
+  if (quizQuestion.value.second_answer) {
+    secondQuizAnswerStatus.value = "wrong";
+    isSentQuizSecondAnswer.value = true;
+  }
+
+  playAudio(status.value);
+
   updateAnsweredQuizQuestions(quizQuestion.value.id);
   updateUserAnsweredQuestions({
     users_permissions_user: user.value.id,
@@ -682,6 +711,8 @@ const sendAnswerOnCountdownEnd = () => {
     answer_type: "practice-vs-machine",
     status: status.value,
   });
+
+  showInputPopup.value = false;
 
   setTimeout(() => {
     next();
@@ -895,14 +926,18 @@ watch(currentQuizQuestionId, value => {
 watch(allAnswersAreSent, value => {
   if (!value) return;
 
-  if (!appIsInBackground.value) {
+  if (!appIsInBackground.value && quizQuestion.value.second_answer) {
+    playAudio(secondQuizAnswerStatus.value);
+  } else if (!appIsInBackground.value) {
     playAudio(status.value);
   }
+
   updateUserScore(chosenQuizAnswer.value || "");
   updateRivalScore(quizQuestion.value.rival_answer);
   clearInterval(answerTimer.timeInterval);
 
   if (allQuizQuestionAnswered.value) {
+    showInputPopup.value = false;
     endQuiz();
   }
 });
