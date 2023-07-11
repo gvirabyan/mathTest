@@ -131,10 +131,22 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title>
-            <p v-if="quizQuestion?.question.startsWith('@')" style="font-size: 16px">
+            <div
+              v-if="quizQuestion?.question.startsWith('@@')"
+              style="
+                font-size: 20px;
+                font-family: monospace;
+                font-weight: bold;
+                letter-spacing: 5px;
+                display: flex;
+                flex-flow: column wrap;
+              "
+              v-html="$sanitize(quizQuestion?.question.slice(2))"
+            ></div>
+            <p v-else-if="quizQuestion?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
               {{ quizQuestion?.question.slice(1) }}
             </p>
-            <math-jax :latex="'\\Large \\sf ' + quizQuestion?.question" :block="true" />
+            <math-jax v-else :latex="'\\Large \\sf ' + quizQuestion?.question" :block="true" />
           </f7-block-title>
 
           <div class="list-wrapper">
@@ -180,8 +192,8 @@
                   }"
                 >
                   <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-                  <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
-                  <math-jax :latex="'\\sf ' + answer"></math-jax>
+                  <span v-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
+                  <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
                 </f7-col>
               </f7-list-item>
             </f7-list>

@@ -7,6 +7,11 @@
         <span>{{ $t("popups.input-popup.title") }}</span>
       </f7-block-title>
 
+      <div style="text-align: center; margin-bottom: 10px">
+        <span v-if="firstAnswer.startsWith('@')" style="font-weight: bold">{{ firstAnswer.slice(1) }}</span>
+        <math-jax v-else :latex="'\\sf ' + firstAnswer"></math-jax>
+      </div>
+
       <f7-input
         ref="resultInput"
         v-model:value="result"
@@ -19,8 +24,6 @@
         :error-message="error"
         :placeholder="$t('inputs.enter-the-result')"
       />
-
-      <p>{{ firstAnswer }}</p>
 
       <f7-row>
         <f7-button class="save-btn" :class="sendBtnClass" :disabled="!result || isSending" @click="inputPopupBtnClick">

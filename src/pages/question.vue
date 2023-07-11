@@ -30,10 +30,27 @@
     <div v-if="questionHistory" id="element" class="questions-content">
       <div>
         <f7-block-title>
-          <p v-if="questionHistory?.question.startsWith('@')" style="font-size: 16px">
+          <div
+            v-if="questionHistory?.question.startsWith('@@')"
+            style="
+              font-size: 20px;
+              font-family: monospace;
+              font-weight: bold;
+              letter-spacing: 5px;
+              display: flex;
+              flex-flow: column wrap;
+            "
+            v-html="$sanitize(questionHistory?.question.slice(2))"
+          ></div>
+          <div
+            v-else-if="questionHistory?.question.startsWith('@emoji@')"
+            style="font-size: 20px; line-height: 1.5; display: flex; flex-flow: column wrap"
+            v-html="$sanitize(questionHistory?.question.slice(7))"
+          ></div>
+          <p v-else-if="questionHistory?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
             {{ questionHistory?.question.slice(1) }}
           </p>
-          <math-jax :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax>
+          <math-jax v-else :latex="'\\Large \\sf ' + questionHistory?.question" :block="true"></math-jax>
         </f7-block-title>
         <f7-list>
           <f7-list-item
@@ -52,8 +69,8 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
-              <math-jax :latex="'\\sf ' + answer"></math-jax>
+              <span v-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
+              <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
         </f7-list>
@@ -64,7 +81,26 @@
     <div v-else-if="question" id="elementId" class="questions-content">
       <div>
         <f7-block-title>
-          <p v-if="question?.question.startsWith('@')" style="font-size: 16px">{{ question?.question.slice(1) }}</p>
+          <div
+            v-if="question?.question.startsWith('@@')"
+            style="
+              font-size: 20px;
+              font-family: monospace;
+              font-weight: bold;
+              letter-spacing: 5px;
+              display: flex;
+              flex-flow: column wrap;
+            "
+            v-html="$sanitize(question?.question.slice(2))"
+          ></div>
+          <div
+            v-else-if="question?.question.startsWith('@emoji@')"
+            style="font-size: 20px; line-height: 1.5; display: flex; flex-flow: column wrap"
+            v-html="$sanitize(question?.question.slice(7))"
+          ></div>
+          <p v-else-if="question?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
+            {{ question?.question.slice(1) }}
+          </p>
           <math-jax v-else :latex="'\\Large \\sf ' + question?.question" :block="true"></math-jax>
         </f7-block-title>
         <f7-list>
@@ -86,7 +122,7 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <span v-if="answer.startsWith('@')">{{ answer.slice(1) }}</span>
+              <span v-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
               <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
