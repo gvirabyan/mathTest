@@ -305,7 +305,6 @@ const {
   updateUserScore,
   updateRivalScore,
   saveQuizResult,
-  setQuizRivalType,
   clearLastFriendPractice,
   clearStore,
 } = useQuizStore();
@@ -476,40 +475,40 @@ const getLetterByIndex = index => {
 };
 
 const checkAvailability = () => {
-  // if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.9;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.75;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.4;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.2;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.2;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.6;
-  //   return;
-  // }
-  //
-  // if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
-  //   isRivalAvailable.value = Math.random() >= 0.75;
-  //   return;
-  // }
+  if (currentBerlinTime.value >= "00:00:00" && currentBerlinTime.value < "06:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.9;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "06:00:00" && currentBerlinTime.value < "08:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "08:00:00" && currentBerlinTime.value < "13:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.4;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "13:00:00" && currentBerlinTime.value < "19:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.2;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "19:00:00" && currentBerlinTime.value < "21:00:00") {
+    isRivalAvailable.value = Math.random() >= 0.6;
+    return;
+  }
+
+  if (currentBerlinTime.value >= "21:00:00" && currentBerlinTime.value < "23:59:00") {
+    isRivalAvailable.value = Math.random() >= 0.75;
+    return;
+  }
 
   return true;
 };
@@ -535,7 +534,6 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
   isLoading.value = true;
 
   await delay(questionHandlerDelay.value);
-  await getQuizQuestions(limit, rivalType);
 
   if (quizRivalType.value !== "machine") {
     checkAvailability();
@@ -546,11 +544,14 @@ const getQuizQuestionsHandler = async (limit, rivalType) => {
     }
   }
 
+  await getQuizQuestions(limit, rivalType);
+
   isLoading.value = false;
 
   if (quizRivalType.value !== "machine" && isRivalAvailable.value) {
     runTimer();
   }
+
   timeCancel.value = false;
 };
 
