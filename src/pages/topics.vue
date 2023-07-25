@@ -143,6 +143,26 @@ const keywords = ref([
     name: "Dividieren",
     active: false,
   },
+  {
+    name: "Schriftlich",
+    active: false,
+  },
+  {
+    name: "mit Übertrag",
+    active: false,
+  },
+  {
+    name: "ohne Übertrag",
+    active: false,
+  },
+  {
+    name: "Tauschaufgaben",
+    active: false,
+  },
+  {
+    name: "Geld",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

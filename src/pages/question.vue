@@ -29,11 +29,12 @@
     </div>
     <div v-if="questionHistory" id="element" class="questions-content">
       <div>
-        <f7-block-title>
+        <f7-block-title style="text-overflow: initial; overflow-x: auto">
           <div
             v-if="questionHistory?.question.startsWith('@@')"
             style="
               font-size: 20px;
+              line-height: 1;
               font-family: monospace;
               font-weight: bold;
               letter-spacing: 5px;
@@ -80,11 +81,12 @@
     </div>
     <div v-else-if="question" id="elementId" class="questions-content">
       <div>
-        <f7-block-title>
+        <f7-block-title style="text-overflow: initial; overflow-x: auto">
           <div
             v-if="question?.question.startsWith('@@')"
             style="
               font-size: 20px;
+              line-height: 1;
               font-family: monospace;
               font-weight: bold;
               letter-spacing: 5px;
