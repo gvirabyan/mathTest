@@ -1,0 +1,374 @@
+{
+  "top-bar": {
+    "questions": "questions",
+    "today-goal": "Today's Goal",
+    "notifications": "Notifications"
+  },
+  "messages": {
+    "slow-connection": "It looks like your internet connection is slow. Please be patient.",
+    "stable-connection": "Your internet is stable now, let's continue",
+    "no-connection-title": "No Connection",
+    "no-connection-text": "You have internet connection problem, we need to wait until it's stable."
+  },
+  "buttons": {
+    "skip": "überspringen",
+    "send": "abgeben",
+    "next": "nächstes",
+    "wrong-answer": "wrong answer",
+    "save": "save",
+    "start": "Start",
+    "close": "Close",
+    "ok": "OK"
+  },
+  "inputs": {
+    "E-mail-address": "E-mail address",
+    "name": "Name",
+    "surname": "Surname",
+    "nickname": "Nickname",
+    "date-of-birth": "Date of birth",
+    "country": "Country",
+    "city": "City",
+    "educational-institution": "Educational institution",
+    "class/course": "Class/course",
+    "your-class/course": "Your class/course",
+    "E-mail": "E-mail",
+    "your-email": "Your email",
+    "paste-email": "Paste the code from the email",
+    "password": "Password",
+    "enter-password": "Enter your password",
+    "enter-password-again": "Enter your password once again",
+    "confirm-password": "confirm password",
+    "new-password": "New password",
+    "confirm-new-password": "Confirm new password",
+    "enter-the-keyword": "Enter the keyword",
+    "enter-the-result": "Enter the result"
+  },
+  "popups": {
+    "leave-page-popup": {
+      "first-title": "Are you sure you want",
+      "second-title": "to leave this page ?",
+      "first-text": "If you leave this page your edited",
+      "second-text": "information will be removed",
+      "save": "Save",
+      "leave": "Leave"
+    },
+    "success-message-popup": {
+      "got-it": "Got it"
+    },
+    "input-popup": {
+      "title": "The final result",
+      "error": "Type the numbers only"
+    }
+  },
+  "over": {
+    "points": "points",
+    "week": "week",
+    "month": "month",
+    "next": "next",
+    "prev": "prev",
+    "loading": "Loading",
+    "search": "search",
+    "class": "Class"
+  },
+
+  "home": {
+    "welcome": "Welcome",
+    "play-game": "Play the game",
+    "improve-your-skills": "improve your skills",
+    "be-the-first": "Be the first in the World",
+    "start-playing": "Start playing"
+  },
+
+  "login-register": {
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "registration": "Registration",
+    "only-nickname": "Only nickname",
+    "remember-me": "Remember me",
+    "forgot-password": "Forgot Password ?",
+    "sign-in-using": "Sign In using",
+    "sign-up-using": "Sign Up using",
+    "google": "Google",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "apple": "Apple",
+    "dont-have-account": "Don't have an account? ",
+    "already-have-account": "Already have an account? ",
+    "user-cancelled-login": "User cancelled login or did not fully authorize.",
+    "user-cancelled-register": "User cancelled register or did not fully authorize."
+  },
+
+  "forgot-password": {
+    "forgot-password": "Forgot Password ?",
+    "send-email": "Send email",
+    "click": "click",
+    "here": "here",
+    "to-back-main-page": "to back Main page"
+  },
+
+  "reset-password": {
+    "reset-password": "Reset Password",
+    "error-msg": "Password and password confirmation should match"
+  },
+
+  "activity": {
+    "Activity": "Activity",
+    "tabs": {
+      "My Status": "My Status",
+      "Top List": "Top List",
+      "My Answers": "My Answers",
+      "Progress": "Progress"
+    },
+    "my-status": {
+      "set-everyday-goal": "Set everyday goal",
+      "last-quiz": "Last Quiz",
+      "experience-points": "Experience points",
+      "last-update": "Last update:",
+      "go-to-topics": "Start your journey to earn the points – go to the Topics",
+      "past-categories": "Past categories",
+      "categories-were-answered": "categories were answered",
+      "you-are-in": "You are in Math App",
+      "welcome-app": "Welcome to the Mathe App!\uD83D\uDC4B",
+      "no-goal": "No goal",
+      "today-activity": "Today’s activity",
+      "wrong": "Wrong",
+      "skipped": "Skipped",
+      "correct": "Correct",
+      "check-progress": "Check Progress"
+    },
+    "top-list": {
+     "lists": [
+       {
+         "title": "In your Class",
+         "fieldName": "class"
+       },
+       {
+         "title": "In your School",
+         "fieldName": "school"
+       },
+       {
+         "title": "In your City",
+         "fieldName": "city"
+       },
+       {
+         "title": "In your Country",
+         "fieldName": "country"
+       },
+       {
+         "title": "In World",
+         "fieldName": "world"
+       }
+     ],
+     "place": "place",
+     "please": "Please",
+     "update": "update",
+     "your": "your",
+     "from": "from",
+     "people": "people",
+     "back-to-the-top-list": "Back to the Top List",
+     "there-is-no-any-user": "There is no any user with this username"
+    },
+    "my-answers": {
+      "summary": "Summary",
+      "questions-passed": "questions passed",
+      "of": "of",
+      "correct-answers": "correct answers",
+      "wrong-answers": "wrong answers",
+      "skipped-answers": "skipped answers"
+    },
+    "progress": {
+      "you-have-registered": "You have registered on"
+    }
+  },
+
+  "topics": {
+    "topics": "Topics",
+    "classes": "classes"
+  },
+
+  "question": {
+    "question": "question",
+    "continue": "Continue",
+    "point": "point",
+    "start-practice": "Start Practice",
+    "right-answered": "right answered",
+    "score-on-this-topic": "score on this topic",
+    "check-skipped": "Check skipped",
+    "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
+    "leave-for-now": "Leave for now",
+    "your-score-on-this-topic": "Your score on this topic",
+    "will-be-update": "You have finished this topic. Your achievements will be updated soon.",
+    "skipped-first-text": "You have passed most of the topic but you have skipped",
+    "skipped-second-text": "questions. You can check them one more time or leave them for now."
+  },
+
+  "practice": {
+    "practice": "Practice",
+    "player-vs-machine": "Player VS Machine",
+    "player-vs-friend": "Player VS Friend",
+    "play-with-friends": "Player VS Player",
+    "can-practice-with-friends": "You can practice with a student\nwho has a similar rating",
+    "practice-with-friends-questions": "Questions quantity: 10-30",
+    "try-again": "Try again",
+    "practice-with-friends-load": "We are searching for your opponent \n Please wait a bit",
+    "your-score": "Your score:",
+    "machine-score": "Machine score:",
+    "nickname-score": "{nickname} score:",
+    "friend-score": "Friend score:",
+    "friend-think": "is thinking now...",
+    "answered-all-text": "You have answered all questions",
+    "popup-go-topic": {
+      "Oops": "Oops!",
+      "first-text": "You need to answer at least",
+      "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
+      "go-to-topics": "Go to topics"
+    },
+    "no-players-popup": {
+      "title": "There is no available Player",
+      "text": "Sorry, there is no available Player at this moment. Please try later.",
+      "go-to-practice": "Go to practice page",
+      "try-again": "Try Again"
+    },
+    "left-by-rival-popup": {
+      "title": "Oops!",
+      "text": "Your opponent has left the game. You are the winner."
+    },
+    "leave-page-popup": {
+      "first-text": "Your progress will be lost and you will lose",
+      "stay": "Stay"
+    },
+    "finish-game-popup": {
+      "save-btn-text": "New Game",
+      "leave-btn-text": "My Status",
+      "win": {
+        "title": "You have won",
+        "text": "You got"
+      },
+      "draw": {
+        "title": "You have played a draw",
+        "text": "You got"
+      },
+      "lose": {
+        "title": "You have lost",
+        "text": "You lost"
+      }
+    },
+    "result-win": "Won",
+    "result-draw": "Draw",
+    "result-lose": "Lost"
+  },
+
+  "profile": {
+    "profile": "Profile",
+    "tabs": [
+      "Account",
+      "Security",
+      "About Us",
+      "Send Reports",
+      "Sound"
+    ],
+    "account": {
+      "logout-warning": "Logout Warning",
+      "logout-text": "Please provide your email and password to be able to login back later. Otherwise, your account and all related data will be deleted immediately after logout. This action can't be reverted",
+      "log-out": "Log Out",
+      "save-and-logout": "Save and logout",
+      "delete-account": "Delete account"
+    },
+    "security": {
+      "popup-text": "Password has been changed"
+    },
+    "about-us": {
+      "infos": [
+        "Terms of services",
+        "Privacy",
+        "Imprint",
+        "Software licenses",
+        "Release notes",
+        "Write a review"
+      ]
+    },
+    "send-reports": {
+      "saved-email": "Saved emails:",
+      "parent-email": "Enter parent's email",
+      "not-saved-email": "You did not saved any parents' emails yet",
+      "add-four-email-text": "You can add no more than 4 emails, but you can edit one of the existing emails or remove it.",
+      "enter-new-email": "Please enter new E-mail",
+      "leave-popup-title": "Are you sure you want to <br> delete this E-mail ?",
+      "leave-popup-text": "If you close this popup E-mail will be not removed",
+      "email-can-not-be-empty": "Email cannot be empty",
+      "saved-successfully": "You have saved successfully",
+      "success-text": "You have successfully updated parent's email",
+      "remove-success-text": "You have successfully removed parent's email",
+      "successfully-updated": "Successfully updated",
+      "no": "No",
+      "yes": "Yes"
+    },
+    "sound": {
+      "sound": "Sound",
+      "sound-volume": "Sound Volume"
+    }
+  },
+  "notification": {
+    "there-arnt-notification": "There are no notifications yet",
+    "welcome-app": "Welcome to the MatheApp",
+    "play-more-games": "Play more games, improve your skills & the first in the World!"
+  },
+  "not-found": {
+    "title": "404 Not Found",
+    "text": "Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "title-offline": "No Internet",
+    "text-offline": "You don't have internet, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "mathematics": [
+      {
+        "name": "Pythagoras",
+        "bio": "Vegetarian mystical leader and number-obsessive, he owes his standing as the most famous name in maths due to a theorem about right-angled triangles, although it now appears it probably predated him. He lived in a community where numbers were venerated as much for their spiritual qualities as for their mathematical ones. His elevation of numbers as the essence of the world made him the towering primogenitor of Greek mathematics, essentially the beginning of mathematics as we know it now. And, famously, he didn't eat beans.",
+        "img": "Pythagoras"
+      },
+      {
+        "name": "Hypatia",
+        "bio": "Women are under-represented in mathematics, yet the history of the subject is not exclusively male. Hypatia was a scholar at the library in Alexandria in the 4th century CE. Her most valuable scientific legacy was her edited version of Euclid's The Elements, the most important Greek mathematical text, and one of the standard versions for centuries after her particularly horrific death: she was murdered by a Christian mob who stripped her naked, peeled away her flesh with broken pottery and ripped apart her limbs",
+        "img": "Hypatia"
+      },
+      {
+        "name": "Isaac Newton",
+        "bio": "Isaac Newton is one of the most famous scientists of all time, and he discovered some amazing things. He was the first to realize that white light is made up of all the colors of the rainbow. He invented calculus, the mathematics of moving things, which is used today to help us build skyscrapers and send rockets into space. He also figured out the force that pulls things to the ground – gravity. He was a strange character, who suffered from depression and rarely talked to anyone. He was also a secret alchemist, trying to turn lead into gold.",
+        "img": "Isaac"
+      },
+      {
+        "name": "Leonhard Euler",
+        "bio": "The most prolific mathematician of all time, publishing close to 900 books. When he went blind in his late 50s his productivity in many areas increased. His famous formula eiπ + 1 = 0, where e is the mathematical constant sometimes known as Euler's number and i is the square root of minus one, is widely considered the most beautiful in mathematics. He later took an interest in Latin squares – grids where each row and column contains each member of a set of numbers or objects once. Without this work, we might not have had sudoku.",
+        "img": "Leonhard"
+      },
+      {
+        "name": "Carl Friedrich Gauss",
+        "bio": "Known as the prince of mathematicians, Gauss made significant contributions to most fields of 19th century mathematics. An obsessive perfectionist, he didn't publish much of his work, preferring to rework and improve theorems first. His revolutionary discovery of non-Euclidean space (that it is mathematically consistent that parallel lines may diverge) was found in his notes after his death. During his analysis of astronomical data, he realised that measurement error produced a bell curve – and that shape is now known as a Gaussian distribution.",
+        "img": "Carl"
+      },
+      {
+        "name": "Georg Cantor",
+        "bio": "Of all the great mathematicians, Cantor most perfectly fulfils the (Hollywood) stereotype that a genius for maths and mental illness are somehow inextricable. Cantor's most brilliant insight was to develop a way to talk about mathematical infinity. His set theory lead to the counter-intuitive discovery that some infinities were larger than others. The result was mind-blowing. Unfortunately he suffered mental breakdowns and was frequently hospitalised. He also became fixated on proving that the works of Shakespeare were in fact written by Francis Bacon.",
+        "img": "Georg"
+      },
+      {
+        "name": "Paul Erdös",
+        "bio": "Erdös lived a nomadic, possession-less life, moving from university to university, from colleague's spare room to conference hotel. He rarely published alone, preferring to collaborate – writing about 1,500 papers, with 511 collaborators, making him the second-most prolific mathematician after Euler. As a humorous tribute, an \"Erdös number\" is given to mathematicians according to their collaborative proximity to him: No 1 for those who have authored papers with him; No 2 for those who have authored with mathematicians with an Erdös No 1, and so on.",
+        "img": "Paul"
+      },
+      {
+        "name": "Archimedes",
+        "bio": "Archimedes of Syracuse (c. 287 – c. 212 BC) was an Ancient Greek mathematician, physicist, engineer, astronomer, and inventor from the ancient city of Syracuse in Sicily. He is generally considered to be the greatest mathematician of antiquity and one of the greatest of all time, and gave the first satisfactory explanation of the principle of the lever. He is also credited with designing innovative machines, such as his screw pump, compound pulleys, and defensive war machines to protect his native Syracuse from invasion.",
+        "img": "Archimedes"
+      },
+      {
+        "name": "Grigori Perelman",
+        "bio": "Perelman was awarded $1m last month for proving one of the most famous open questions in maths, the Poincaré Conjecture. But the Russian recluse has refused to accept the cash. He had already turned down maths' most prestigious honour, the Fields Medal in 2006. \"If the proof is correct then no other recognition is needed,\" he reportedly said. The Poincaré Conjecture was first stated in 1904 by Henri Poincaré and concerns the behaviour of shapes in three dimensions. Perelman is currently unemployed and lives a frugal life with his mother in St Petersburg.",
+        "img": "Grigori"
+      },
+      {
+        "name": "Terry Tao",
+        "bio": "An Australian of Chinese heritage who lives in the US, Tao also won (and accepted) the Fields Medal in 2006. Together with Ben Green, he proved an amazing result about prime numbers – that you can find sequences of primes of any length in which every number in the sequence is a fixed distance apart. For example, the sequence 3, 7, 11 has three primes spaced 4 apart. The sequence 11, 17, 23, 29 has four primes that are 6 apart. While sequences like this of any length exist, no one has found one of more than 25 primes, since the primes by then are more than 18 digits long.",
+        "img": "Terry"
+      }
+    ]
+  }
+}

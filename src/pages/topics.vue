@@ -163,6 +163,10 @@ const keywords = ref([
     name: "Geld",
     active: false,
   },
+  {
+    name: "Zeit",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);
