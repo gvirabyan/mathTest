@@ -288,7 +288,7 @@
           border: 1.5px solid #F0EBF5;
           border-radius: 8px;
           margin-bottom: 16px;
-          height: 52px;
+          min-height: 52px;
 
           .item-content {
             padding: 0;
@@ -307,7 +307,7 @@
                 width: 100%;
                 border-radius: 8px;
                 padding: 0 16px;
-                height: 52px;
+                min-height: 52px;
 
                 .list-number {
                   font-family: Rubik;
@@ -390,7 +390,6 @@
           border-radius: 8px;
           margin-bottom: 16px;
           min-height: 52px;
-          max-height: 52px;
 
           .item-content {
             padding-right: 16px !important;
@@ -398,13 +397,13 @@
             .item-inner {
               padding: unset;
               min-height: 52px;
-              max-height: 52px;
 
               &:after {
                 display: none;
               }
 
               .col {
+                display: flex;
                 .list-number {
                   font-family: Rubik;
                   color: #212121;

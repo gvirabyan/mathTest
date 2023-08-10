@@ -8,7 +8,21 @@
       </f7-block-title>
 
       <div style="text-align: center; margin-bottom: 10px">
-        <span v-if="firstAnswer.startsWith('@')" style="font-weight: bold">{{ firstAnswer.slice(1) }}</span>
+        <span
+          v-if="firstAnswer.startsWith('@@')"
+          style="
+            padding: 5px 0;
+            line-height: 1;
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 5px;
+            display: flex;
+            flex-flow: column wrap;
+            align-items: start;
+          "
+          v-html="$sanitize(firstAnswer.slice(2))"
+        ></span>
+        <span v-else-if="firstAnswer.startsWith('@')" style="font-weight: bold">{{ firstAnswer.slice(1) }}</span>
         <math-jax v-else :latex="'\\sf ' + firstAnswer"></math-jax>
       </div>
 

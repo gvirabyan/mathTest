@@ -68,9 +68,22 @@
             name="demo-radio-end"
             radio
           >
-            <f7-col>
+            <f7-col style="display: flex">
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <span v-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
+              <span
+                v-if="answer.startsWith('@@')"
+                style="
+                  padding: 5px 0;
+                  line-height: 1;
+                  font-family: monospace;
+                  font-weight: bold;
+                  letter-spacing: 5px;
+                  display: flex;
+                  flex-flow: column wrap;
+                "
+                v-html="$sanitize(answer.slice(2))"
+              ></span>
+              <span v-else-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
               <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
@@ -124,7 +137,20 @@
           >
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
-              <span v-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
+              <span
+                v-if="answer.startsWith('@@')"
+                style="
+                  padding: 5px 0;
+                  line-height: 1;
+                  font-family: monospace;
+                  font-weight: bold;
+                  letter-spacing: 5px;
+                  display: flex;
+                  flex-flow: column wrap;
+                "
+                v-html="$sanitize(answer.slice(2))"
+              ></span>
+              <span v-else-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
               <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
             </f7-col>
           </f7-list-item>
