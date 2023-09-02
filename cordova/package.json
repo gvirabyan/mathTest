@@ -1,7 +1,7 @@
 {
   "name": "io.framework7.matheapp",
-  "displayName": "Math App",
-  "version": "1.0.1",
+  "displayName": "Mathe App",
+  "version": "1.0.2",
   "description": "Application for learning and training school mathematics in German.",
   "main": "index.js",
   "scripts": {

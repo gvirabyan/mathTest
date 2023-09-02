@@ -126,8 +126,17 @@ If your machine has problem running the application, please double check the ver
 
 > npm v8 (8.5.5)
 
-or if you dont prefer doing the above you could also make use of NVM (Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions) as per your convenience.
+or if you don't prefer doing the above you could also make use of NVM (Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions) as per your convenience.
 
 [NVM for windows](https://content.breatheco.de/en/how-to/nvm-install-windows#:~:text=Steps%20to%20install%20with%20nvm%3A&text=Install%20nvm%20Go%20to%20your,that%20you%20will%20hit%20too.)
 
 [NVM for mac](https://tecadmin.net/install-nvm-macos-with-homebrew/)
+
+
+## Development Tips
+During creating questions/answers you can use these markings.
+@ - will put text in span/div tag without any changes.
+@@ - will put text in span/div tag as an HTML with `monospace` font. It can be used for multirow expressions.
+@@@ - will put text in span/div tag as an HTML.
+@emoji@ - can be used with emoji questions. This can be used only for questions.
+If no markings are used then text will be handled by MathJax

@@ -31,7 +31,12 @@
       <div>
         <f7-block-title style="text-overflow: initial; overflow-x: auto">
           <div
-            v-if="questionHistory?.question.startsWith('@@')"
+            v-if="questionHistory?.question.startsWith('@@@')"
+            style="font-size: 20px; line-height: 1"
+            v-html="$sanitize(questionHistory?.question.slice(3))"
+          ></div>
+          <div
+            v-else-if="questionHistory?.question.startsWith('@@')"
             style="
               font-size: 20px;
               line-height: 1;
@@ -71,7 +76,12 @@
             <f7-col style="display: flex">
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
               <span
-                v-if="answer.startsWith('@@')"
+                v-if="answer.startsWith('@@@')"
+                style="font-size: 20px; line-height: 1"
+                v-html="$sanitize(answer.slice(3))"
+              ></span>
+              <span
+                v-else-if="answer.startsWith('@@')"
                 style="
                   padding: 5px 0;
                   line-height: 1;
@@ -96,7 +106,12 @@
       <div>
         <f7-block-title style="text-overflow: initial; overflow-x: auto">
           <div
-            v-if="question?.question.startsWith('@@')"
+            v-if="question?.question.startsWith('@@@')"
+            style="font-size: 20px; line-height: 1"
+            v-html="$sanitize(question?.question.slice(3))"
+          ></div>
+          <div
+            v-else-if="question?.question.startsWith('@@')"
             style="
               font-size: 20px;
               line-height: 1;
@@ -138,7 +153,12 @@
             <f7-col>
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
               <span
-                v-if="answer.startsWith('@@')"
+                v-if="answer.startsWith('@@@')"
+                style="font-size: 20px; line-height: 1"
+                v-html="$sanitize(answer.slice(3))"
+              ></span>
+              <span
+                v-else-if="answer.startsWith('@@')"
                 style="
                   padding: 5px 0;
                   line-height: 1;

@@ -167,6 +167,14 @@ const keywords = ref([
     name: "Zeit",
     active: false,
   },
+  {
+    name: "Runde",
+    active: false,
+  },
+  {
+    name: "Maßumwandlungen",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

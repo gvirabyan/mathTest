@@ -9,7 +9,12 @@
 
       <div style="text-align: center; margin-bottom: 10px">
         <span
-          v-if="firstAnswer.startsWith('@@')"
+          v-if="firstAnswer.startsWith('@@@')"
+          style="font-size: 20px; line-height: 1"
+          v-html="$sanitize(firstAnswer.slice(3))"
+        ></span>
+        <span
+          v-else-if="firstAnswer.startsWith('@@')"
           style="
             padding: 5px 0;
             line-height: 1;
