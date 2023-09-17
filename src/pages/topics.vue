@@ -175,6 +175,10 @@ const keywords = ref([
     name: "Maßumwandlungen",
     active: false,
   },
+  {
+    name: "Einstellige",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

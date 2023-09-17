@@ -1,323 +1,324 @@
-{
+﻿{
   "top-bar": {
-    "questions": "questions",
-    "today-goal": "Today's Goal",
-    "notifications": "Notifications"
+    "questions": "Fragen",
+    "today-goal": "Dein Ziel heute",
+    "notifications": "Benachrichtigungen"
   },
   "messages": {
-    "slow-connection": "It looks like your internet connection is slow. Please be patient.",
-    "stable-connection": "Your internet is stable now, let's continue",
-    "no-connection-title": "No Connection",
-    "no-connection-text": "You have internet connection problem, we need to wait until it's stable."
+    "slow-connection": " Es sieht so aus, als ob deine Internetverbindung langsam ist. Danke für deine Geduld.",
+    "stable-connection": " Dein Internet ist jetzt stabil, lass uns fortfahren. ",
+    "no-connection-title": "Keine Internetverbindung",
+    "no-connection-text": "Du hast ein Problem mit deiner Internetverbindung, bitte warte, bis es sich wieder stabilisiert."
   },
   "buttons": {
     "skip": "überspringen",
     "send": "abgeben",
     "next": "nächstes",
-    "wrong-answer": "wrong answer",
-    "save": "save",
+    "wrong-answer": "falsche Antwort",
+    "save": "speichern",
     "start": "Start",
-    "close": "Close",
+    "close": "Schließen",
     "ok": "OK"
   },
   "inputs": {
-    "E-mail-address": "E-mail address",
+    "E-mail-address": "E-Mail Adresse",
     "name": "Name",
-    "surname": "Surname",
-    "nickname": "Nickname",
-    "date-of-birth": "Date of birth",
-    "country": "Country",
-    "city": "City",
-    "educational-institution": "Educational institution",
-    "class/course": "Class/course",
-    "your-class/course": "Your class/course",
-    "E-mail": "E-mail",
-    "your-email": "Your email",
-    "paste-email": "Paste the code from the email",
-    "password": "Password",
-    "enter-password": "Enter your password",
-    "enter-password-again": "Enter your password once again",
-    "confirm-password": "confirm password",
-    "new-password": "New password",
-    "confirm-new-password": "Confirm new password",
-    "enter-the-keyword": "Enter the keyword",
-    "enter-the-result": "Enter the result"
+    "surname": "Nachname",
+    "nickname": "Spitzname",
+    "date-of-birth": "Geburtsdatum",
+    "country": "Land",
+    "city": "Stadt",
+    "educational-institution": "Schule",
+    "class/course": "Klasse / Kurs",
+    "your-class/course": "Deine Klasse/ dein Kurs",
+    "E-mail": "E-Mail",
+    "your-email": "Deine E-Mail",
+    "paste-email": "E-Mail hinzufügen",
+    "password": "Passwort",
+    "enter-password": "Passwort eingeben",
+    "enter-password-again": "passwort erneut eingeben",
+    "confirm-password": "Passwort bestätigen",
+    "new-password": "Neues Passwort",
+    "confirm-new-password": "Neues Passwort bestätigen",
+    "enter-the-keyword": "Das Schlüsselwort eingeben",
+    "enter-the-result": "Ergebnis eingeben"
   },
   "popups": {
     "leave-page-popup": {
-      "first-title": "Are you sure you want",
-      "second-title": "to leave this page ?",
-      "first-text": "If you leave this page your edited",
-      "second-text": "information will be removed",
-      "save": "Save",
-      "leave": "Leave"
+      "first-title": "Bist du sicher",
+      "second-title": "dass du diese Seite verlassen willst?",
+      "first-text": "Wenn du die Seite verlässt",
+      "second-text": "werden Informationen nicht gespeichert",
+      "save": "Speichern",
+      "leave": "Verlassen"
     },
     "success-message-popup": {
-      "got-it": "Got it"
+      "got-it": "Verstanden"
     },
     "input-popup": {
-      "title": "The final result",
-      "error": "Type the numbers only"
+      "title": "Was macht es?",
+      "error": "Nur Zahlen eingeben"
     }
   },
   "over": {
-    "points": "points",
-    "week": "week",
-    "month": "month",
-    "next": "next",
-    "prev": "prev",
-    "loading": "Loading",
-    "search": "search",
-    "class": "Class"
+    "points": "Punkte",
+    "week": "Woche",
+    "month": "Monat",
+    "next": "Nächstes",
+    "prev": "Zurück",
+    "loading": "Es lädt",
+    "search": "Suche",
+    "class": "Klasse"
   },
 
   "home": {
-    "welcome": "Welcome",
-    "play-game": "Play the game",
-    "improve-your-skills": "improve your skills",
-    "be-the-first": "Be the first in the World",
-    "start-playing": "Start playing"
+    "welcome": "Willkommen",
+    "play-game": "Spiele das Spiel",
+    "improve-your-skills": "Verbessere deine Fähigkeiten",
+    "be-the-first": "Werde täglich besser",
+    "start-playing": "Spiel starten"
   },
 
   "login-register": {
-    "sign-in": "Sign In",
-    "sign-up": "Sign Up",
-    "registration": "Registration",
-    "only-nickname": "Only nickname",
-    "remember-me": "Remember me",
-    "forgot-password": "Forgot Password ?",
-    "sign-in-using": "Sign In using",
-    "sign-up-using": "Sign Up using",
+    "sign-in": "Einloggen",
+    "sign-up": "Anmelden",
+    "registration": "Registrieren",
+    "only-nickname": "Nur Spitzname",
+    "remember-me": "Angemeldet bleiben",
+    "forgot-password": "Passwort vergessen",
+    "sign-in-using": "Einloggen mit",
+    "sign-up-using": "Anmelden mit",
     "google": "Google",
     "facebook": "Facebook",
     "tiktok": "TikTok",
     "apple": "Apple",
-    "dont-have-account": "Don't have an account? ",
-    "already-have-account": "Already have an account? ",
-    "user-cancelled-login": "User cancelled login or did not fully authorize.",
-    "user-cancelled-register": "User cancelled register or did not fully authorize."
+    "dont-have-account": "Nicht Mitglied?",
+    "already-have-account": "Ich habe schon einen Account",
+    "user-cancelled-login": "du hast die Anmeldung abgebrochen oder dich nicht vollständig autorisiert",
+    "user-cancelled-register": "du hast die Registrierung abgebrochen oder dich nicht vollständig autorisiert"
   },
 
   "forgot-password": {
-    "forgot-password": "Forgot Password ?",
-    "send-email": "Send email",
-    "click": "click",
-    "here": "here",
-    "to-back-main-page": "to back Main page"
+    "forgot-password": "Passwort vergessen",
+    "send-email": "E-Mail senden",
+    "click": "gehe",
+    "here": "zurück",
+    "to-back-main-page": "auf Start"
   },
 
   "reset-password": {
-    "reset-password": "Reset Password",
+    "reset-password": "Passwort zurücksetzen",
     "error-msg": "Password and password confirmation should match"
   },
 
   "activity": {
-    "Activity": "Activity",
+    "Activity": "Aktivität",
     "tabs": {
-      "My Status": "My Status",
+      "My Status": "Mein Status",
       "Top List": "Top List",
-      "My Answers": "My Answers",
+      "My Answers": "Meine Antworten",
       "Progress": "Progress"
     },
     "my-status": {
-      "set-everyday-goal": "Set everyday goal",
-      "last-quiz": "Last Quiz",
-      "experience-points": "Experience points",
-      "last-update": "Last update:",
-      "go-to-topics": "Start your journey to earn the points – go to the Topics",
-      "past-categories": "Past categories",
-      "categories-were-answered": "categories were answered",
-      "you-are-in": "You are in Math App",
-      "welcome-app": "Welcome to the Mathe App!\uD83D\uDC4B",
-      "no-goal": "No goal",
-      "today-activity": "Today’s activity",
-      "wrong": "Wrong",
-      "skipped": "Skipped",
-      "correct": "Correct",
-      "check-progress": "Check Progress"
+      "set-everyday-goal": "Tägliches Ziel setzen",
+      "last-quiz": "Letztes Quiz",
+      "experience-points": "Punkte",
+      "last-update": "Letztes Update:",
+      "go-to-topics": "Beginne deine Reise, um Punkte zu sammeln - wähle ein Thema",
+      "past-categories": "Vergangene Kategorien",
+      "categories-were-answered": "Beantwortete Kategorien",
+      "you-are-in": "Du bist in Math App",
+      "welcome-app": "Willkommen auf Mathe App!\uD83D\uDC4B",
+      "no-goal": "Kein Ziel",
+      "today-activity": "Heutige Aktivität",
+      "wrong": "Falsch",
+      "skipped": "Übersprungen",
+      "correct": "Richtig",
+      "check-progress": "Fortschritt prüfen"
     },
     "top-list": {
      "lists": [
        {
-         "title": "In your Class",
-         "fieldName": "class"
+         "title": "In deiner Klasse",
+         "fieldName": "Klasse"
        },
        {
-         "title": "In your School",
-         "fieldName": "school"
+         "title": "In deiner Schule",
+         "fieldName": "Schule"
        },
        {
-         "title": "In your City",
-         "fieldName": "city"
+         "title": "In deiner Stadt",
+         "fieldName": "Stadt"
        },
        {
-         "title": "In your Country",
-         "fieldName": "country"
+         "title": "In deinem Land",
+         "fieldName": "Land"
        },
        {
-         "title": "In World",
-         "fieldName": "world"
+         "title": "In der Welt",
+         "fieldName": "Welt"
        }
      ],
-     "place": "place",
-     "please": "Please",
-     "update": "update",
-     "your": "your",
-     "from": "from",
-     "people": "people",
-     "back-to-the-top-list": "Back to the Top List",
-     "there-is-no-any-user": "There is no any user with this username"
+     "place": "Platz",
+     "please": "Bitte",
+     "update": "Update",
+     "your": "",
+     "from": "aus",
+     "people": "Spielern",
+     "back-to-the-top-list": "Zurück zur Top-List",
+     "there-is-no-any-user": "Es gibt keinen Benutzer mit diesem Benutzernamen"
     },
     "my-answers": {
-      "summary": "Summary",
-      "questions-passed": "questions passed",
-      "of": "of",
-      "correct-answers": "correct answers",
-      "wrong-answers": "wrong answers",
-      "skipped-answers": "skipped answers"
+      "summary": "Zusammenfassung",
+      "questions-passed": "Beantwortete Fragen",
+      "of": "von",
+      "correct-answers": "Richtige Antworten",
+      "wrong-answers": "Falsche Antworten",
+      "skipped-answers": "übersprungene Antworten"
     },
     "progress": {
-      "you-have-registered": "You have registered on"
+      "you-have-registered": "du hast dich registriert"
     }
   },
 
   "topics": {
-    "topics": "Topics",
-    "classes": "classes"
+    "topics": "Themen",
+    "classes": "Klassen"
   },
 
   "question": {
-    "question": "question",
-    "continue": "Continue",
-    "point": "point",
-    "start-practice": "Start Practice",
-    "right-answered": "right answered",
-    "score-on-this-topic": "score on this topic",
-    "check-skipped": "Check skipped",
-    "single-skipped-text": "You have passed most of the topic but you have skipped 1 question. You can check it one more time or leave it for now.",
-    "leave-for-now": "Leave for now",
-    "your-score-on-this-topic": "Your score on this topic",
-    "will-be-update": "You have finished this topic. Your achievements will be updated soon.",
-    "skipped-first-text": "You have passed most of the topic but you have skipped",
-    "skipped-second-text": "questions. You can check them one more time or leave them for now."
+    "question": "Fragen",
+    "continue": "Weitermachen",
+    "point": "Punkt",
+    "start-practice": "Üben beginnen",
+    "right-answered": "Richtige Antworten",
+    "score-on-this-topic": "s Punkte",
+    "check-skipped": "Übersprungene Fragen zeigen",
+    "single-skipped-text": "Du hast den Großteil des Themas bestanden, aber du hast 1 Frage übersprungen. Du kannst es noch einmal überprüfen oder es vorerst lassen",
+    "leave-for-now": "Vorerst verlassen",
+    "your-score-on-this-topic": "Deine Punkte zu diesem Thema",
+    "will-be-update": "Du hast dieses Thema abgeschlossen. Deine Erfolge werden aktualisiert.",
+    "skipped-first-text": "du hast den Großteil des Temas bestanden, du hast aber Fragen übersprungen.",
+    "skipped-second-text": "Du kannst sie noch einmal überprüfen oder sie vorerst lassen."
   },
 
   "practice": {
-    "practice": "Practice",
-    "player-vs-machine": "Player VS Machine",
-    "player-vs-friend": "Player VS Friend",
-    "play-with-friends": "Player VS Player",
-    "can-practice-with-friends": "You can practice with a student\nwho has a similar rating",
+    "practice": "Üben",
+    "player-vs-machine": "Spieler gegen Maschine",
+    "player-vs-friend": "Spieler gegen Freund",
+    "play-with-friends": "Spieler gegen Spieler",
+    "can-practice-with-friends": "Du kannst mit jemandem üben, der eine ähnliche Bewertung hat",
     "practice-with-friends-questions": "Questions quantity: 10-30",
-    "try-again": "Try again",
-    "practice-with-friends-load": "We are searching for your opponent \n Please wait a bit",
-    "your-score": "Your score:",
-    "machine-score": "Machine score:",
-    "nickname-score": "{nickname} score:",
-    "friend-score": "Friend score:",
-    "friend-think": "is thinking now...",
-    "answered-all-text": "You have answered all questions",
+    "try-again": "Erneut probieren",
+    "practice-with-friends-load": "Wir suchen nach einem Spieler, bitte warte",
+    "your-score": "Deine Punke:",
+    "machine-score": "Punkte der Maschine:",
+    "nickname-score": "{Spiznamen} Punkte:",
+    "friend-score": "Pukte der Freunde:",
+    "friend-think": "denkt gerade...",
+    "answered-all-text": "Du hast alle Fragen beantwortet",
     "popup-go-topic": {
-      "Oops": "Oops!",
-      "first-text": "You need to answer at least",
+      "Oops": "Ups!",
+      "first-text": "Du musst eine Antwort geben",
       "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
-      "go-to-topics": "Go to topics"
+      "go-to-topics": "Gehe zum Thema"
     },
     "no-players-popup": {
-      "title": "There is no available Player",
-      "text": "Sorry, there is no available Player at this moment. Please try later.",
+      "title": "Kein Spieler ist verfügbar",
+      "text": "Sorry, aktuell ist kein Spieler verfügbar. Probiere später noch einmal.",
       "go-to-practice": "Go to practice page",
-      "try-again": "Try Again"
+      "try-again": "Probiere später"
     },
     "left-by-rival-popup": {
-      "title": "Oops!",
-      "text": "Your opponent has left the game. You are the winner."
+      "title": "Ups!",
+      "text": "Dein Gegner hat das Spiel verlassen. Du hast das Spiel gewonnen."
     },
     "leave-page-popup": {
-      "first-text": "Your progress will be lost and you will lose",
-      "stay": "Stay"
+      "first-text": "Du wirst verlieren und dein Fortschritt wird verloren gehen.",
+      "stay": "Bleibe"
     },
     "finish-game-popup": {
-      "save-btn-text": "New Game",
-      "leave-btn-text": "My Status",
+      "save-btn-text": "Neues Spiel",
+      "leave-btn-text": "Mein Status",
       "win": {
-        "title": "You have won",
-        "text": "You got"
+        "title": "Prima!",
+        "text": "Du hast gewonnen"
       },
       "draw": {
-        "title": "You have played a draw",
-        "text": "You got"
+        "title": "Unentschieden",
+        "text": "Unentschieden gespielt"
       },
       "lose": {
-        "title": "You have lost",
-        "text": "You lost"
+        "title": "Oh schade",
+        "text": "Du hast verloren"
       }
     },
-    "result-win": "Won",
-    "result-draw": "Draw",
-    "result-lose": "Lost"
+    "result-win": "Gewonnen",
+    "result-draw": "Unentschieden",
+    "result-lose": "Verloren"
   },
 
   "profile": {
-    "profile": "Profile",
+    "profile": "Profil",
     "tabs": [
       "Account",
-      "Security",
-      "About Us",
-      "Send Reports",
-      "Sound"
+      "Sicherheit",
+      "Über uns",
+      "Erfolg teilen",
+      "Ton"
     ],
     "account": {
-      "logout-warning": "Logout Warning",
-      "logout-text": "Please provide your email and password to be able to login back later. Otherwise, your account and all related data will be deleted immediately after logout. This action can't be reverted",
+      "logout-warning": "Abmeldenachricht",
+      "logout-text": "Bitte gib deine E-Mail und dein Passwort an, um dich später wieder anmelden zu können. Andernfalls werden dein Konto und alle damit verbundenen Daten sofort nach der Abmeldung gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
       "log-out": "Log Out",
       "save-and-logout": "Save and logout",
-      "delete-account": "Delete account"
+      "delete-account": "Account löschen"
     },
     "security": {
-      "popup-text": "Password has been changed"
+      "popup-text": "Passwort wurde aktualisiert"
     },
     "about-us": {
       "infos": [
-        "Terms of services",
-        "Privacy",
-        "Imprint",
-        "Software licenses",
-        "Release notes",
-        "Write a review"
+        "AGB",
+        "Datenschutz",
+        "Impresum",
+        "Software-Lizenzen",
+        "Versionshinweise",
+        "Eine Bewertung schreiben"
       ]
     },
     "send-reports": {
-      "saved-email": "Saved emails:",
-      "parent-email": "Enter parent's email",
-      "not-saved-email": "You did not saved any parents' emails yet",
-      "add-four-email-text": "You can add no more than 4 emails, but you can edit one of the existing emails or remove it.",
-      "enter-new-email": "Please enter new E-mail",
-      "leave-popup-title": "Are you sure you want to <br> delete this E-mail ?",
-      "leave-popup-text": "If you close this popup E-mail will be not removed",
-      "email-can-not-be-empty": "Email cannot be empty",
-      "saved-successfully": "You have saved successfully",
-      "success-text": "You have successfully updated parent's email",
-      "remove-success-text": "You have successfully removed parent's email",
-      "successfully-updated": "Successfully updated",
-      "no": "No",
-      "yes": "Yes"
+		"introduction-text": "Teile deinen Erfolg mit deinen Eltern, Lehrern und Freunde per E-Mail",
+      "saved-email": "Gespeicherte E-Mails:",
+      "parent-email": "E-Mail Adresse angeben",
+      "not-saved-email": "Du hast keine E-Mail-Adresse gespeichert",
+      "add-four-email-text": "Du kannst bis zu vier E-Mail Adressen speichern. Die E-Mail Adressen können später bearbeitet oder gelöscht werden",
+      "enter-new-email": "Neue E-Mail Adresse angeben",
+      "leave-popup-title": "Bist du sicher, <br> dass du diese E-Mail löschen möchtest?",
+      "leave-popup-text": "Wenn du dieses Popup schließt, wird die E-Mail nicht entfernt",
+      "email-can-not-be-empty": "E-Mail kann nicht leer sein",
+      "saved-successfully": "Erfolgreich gespeichert",
+      "success-text": "Du hast die E-Mail erfolgreich aktualisiert",
+      "remove-success-text": "Die E-Mail-Adresse wurde gelöscht",
+      "successfully-updated": "Erfolgreich aktualisiert",
+      "no": "Nein",
+      "yes": "Ja"
     },
     "sound": {
-      "sound": "Sound",
-      "sound-volume": "Sound Volume"
+      "sound": "Ton",
+      "sound-volume": "Lautstärke"
     }
   },
   "notification": {
-    "there-arnt-notification": "There are no notifications yet",
-    "welcome-app": "Welcome to the MatheApp",
+    "there-arnt-notification": "Es liegen noch keine Benachrichtigungen vor.",
+    "welcome-app": "Willkommen zur MatheApp",
     "play-more-games": "Play more games, improve your skills & the first in the World!"
   },
   "not-found": {
-    "title": "404 Not Found",
-    "text": "Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
-    "title-offline": "No Internet",
-    "text-offline": "You don't have internet, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "title": "404 Seite nicht gefunden",
+    "text": "Leider konnten wir die Seite, die du suchst, nicht finden, aber wir haben einige Kunstwerke über Partys, Freunde und menschliche Beziehungen gefunden. Viel Spaß!",
+    "title-offline": "Kein Internet",
+    "text-offline": "Leider konnten wir die Seite, die du suchst, nicht finden, aber wir haben einige Kunstwerke über Partys, Freunde und menschliche Beziehungen gefunden. Viel Spaß))",
     "mathematics": [
       {
         "name": "Pythagoras",
