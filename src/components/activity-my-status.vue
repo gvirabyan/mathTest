@@ -70,8 +70,8 @@
         <f7-block class="experience">
           <h3 class="experience-title">{{ $t("activity.my-status.experience-points") }}</h3>
 
-          <p v-if="lastUpdate" class="experience-update">
-            {{ `${$t("activity.my-status.last-update")}  ${lastUpdate}` }}
+          <p v-if="userStatus.last_update" class="experience-update">
+            {{ `${$t("activity.my-status.last-update")}  ${userStatus.last_update}` }}
           </p>
 
           <div class="experience-points-wrapper">
@@ -169,10 +169,6 @@ const goalsOptions = [
 const isLoading = ref(false);
 const disableSelect = ref(false);
 const showSelectGoalSuccess = ref(false);
-
-const lastUpdate = computed(() =>
-  userStatus.value.last_update ? timeAgo(new Date(userStatus.value.last_update)) : null,
-);
 
 const amountAnswered = computed(() => {
   let amount = 0;

@@ -4,7 +4,9 @@
       <div class="display-flex flex-direction-column align-items-center">
         <h2 class="title">{{ $t("activity.my-answers.summary") }}</h2>
 
-        <p v-if="lastUpdate" class="last-update-info">{{ `${$t("activity.my-status.last-update")} ${lastUpdate}` }}</p>
+        <p v-if="answersStats.last_update" class="last-update-info">
+          {{ `${$t("activity.my-status.last-update")} ${answersStats.last_update}` }}
+        </p>
 
         <div class="stats">
           <custom-gauge
@@ -94,8 +96,6 @@ const customGaugeOptions = {
 };
 
 const isLoading = ref(false);
-
-const lastUpdate = computed(() => answersStats.value.last_update && timeAgo(new Date(answersStats.value.last_update)));
 
 const getAnswersStatsHandler = async () => {
   isLoading.value = true;

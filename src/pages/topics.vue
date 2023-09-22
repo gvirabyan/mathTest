@@ -179,6 +179,10 @@ const keywords = ref([
     name: "Einstellige",
     active: false,
   },
+  {
+    name: "Klammern",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

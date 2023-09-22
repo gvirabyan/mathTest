@@ -127,7 +127,7 @@
       "go-to-topics": "Beginne deine Reise, um Punkte zu sammeln - wähle ein Thema",
       "past-categories": "Vergangene Kategorien",
       "categories-were-answered": "Beantwortete Kategorien",
-      "you-are-in": "Du bist in Math App",
+      "you-are-in": "Du bist in Mathe App",
       "welcome-app": "Willkommen auf Mathe App!\uD83D\uDC4B",
       "no-goal": "Kein Ziel",
       "today-activity": "Heutige Aktivität",
@@ -177,7 +177,7 @@
       "skipped-answers": "übersprungene Antworten"
     },
     "progress": {
-      "you-have-registered": "du hast dich registriert"
+      "you-have-registered": "Du hast dich registriert am"
     }
   },
 
@@ -208,7 +208,7 @@
     "player-vs-friend": "Spieler gegen Freund",
     "play-with-friends": "Spieler gegen Spieler",
     "can-practice-with-friends": "Du kannst mit jemandem üben, der eine ähnliche Bewertung hat",
-    "practice-with-friends-questions": "Questions quantity: 10-30",
+    "practice-with-friends-questions": "Anzahl der Fragen: 10-30",
     "try-again": "Erneut probieren",
     "practice-with-friends-load": "Wir suchen nach einem Spieler, bitte warte",
     "your-score": "Deine Punke:",
@@ -270,8 +270,8 @@
     "account": {
       "logout-warning": "Abmeldenachricht",
       "logout-text": "Bitte gib deine E-Mail und dein Passwort an, um dich später wieder anmelden zu können. Andernfalls werden dein Konto und alle damit verbundenen Daten sofort nach der Abmeldung gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
-      "log-out": "Log Out",
-      "save-and-logout": "Save and logout",
+      "log-out": "Abmelden",
+      "save-and-logout": "Speichern und abmelden",
       "delete-account": "Account löschen"
     },
     "security": {
@@ -312,7 +312,7 @@
   "notification": {
     "there-arnt-notification": "Es liegen noch keine Benachrichtigungen vor.",
     "welcome-app": "Willkommen zur MatheApp",
-    "play-more-games": "Play more games, improve your skills & the first in the World!"
+    "play-more-games": "Spiele und trainiere, verbessere deine Fähigkeiten und sei der Erste in der Welt!"
   },
   "not-found": {
     "title": "404 Seite nicht gefunden",

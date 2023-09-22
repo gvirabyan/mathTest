@@ -134,7 +134,9 @@
             @click="prevDate"
             >{{ `${$t("over.prev")} ${$t(`over.${rules.unitOfTime}`)}` }}</f7-button
           >
-          <span v-else>You have registered on {{ user.createdAt.substring(0, 10) }}</span>
+          <span v-else style="flex: 1">
+            {{ `${$t("activity.progress.you-have-registered")} ${user.createdAt.substring(0, 10)}` }}</span
+          >
           <f7-button
             v-if="
               (rules.unitOfTime === 'week' && moment() > rules.currentDate.clone().add(7, 'day').startOf('week')) ||
@@ -180,7 +182,7 @@ const topValueOfAmount = ref(0);
 const amountLargest = ref(0);
 
 const getCountByStatus = computed(() => status => {
-  let quantity = 0;
+  let quantity = "0";
   for (const key in userProgress.value) {
     if (userProgress.value[key][status]) quantity += Number(userProgress.value[key][status]);
   }
