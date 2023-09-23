@@ -19,8 +19,9 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
 
   const getAnswersList = (data, wrongAnswers, answer) => {
     if (wrongAnswers && wrongAnswers.length) {
-      const result = createRandomData(wrongAnswers, answer);
-      return result.length > 1 ? result : createRandomData(data, answer);
+      const strData = wrongAnswers.map(item => (typeof item === "string" ? item : String(item)));
+      strData.push(answer);
+      return shuffle(strData);
     }
 
     return data.length ? createRandomData(data, answer, 3) : null;
@@ -37,6 +38,20 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
     }
 
     return [...randomData].sort(() => 0.5 - Math.random());
+  };
+
+  const shuffle = array => {
+    let currentIndex = array.length,
+      randomIndex;
+
+    while (currentIndex > 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
   };
 
   const updateUserAnsweredQuestions = async (answer, mode = "topic") => {

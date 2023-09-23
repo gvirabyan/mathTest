@@ -97,7 +97,7 @@
               <p>{{ $t("activity.my-status.correct") }}</p>
             </div>
             <p class="info-status-quantity quantity-correct">
-              {{ getCountByStatus("correct") || " " }}
+              {{ getCountByStatus("correct") || "0" }}
             </p>
           </div>
 
@@ -107,7 +107,7 @@
               <p>{{ $t("activity.my-status.skipped") }}</p>
             </div>
             <p class="info-status-quantity quantity-skipped">
-              {{ getCountByStatus("skipped") || " " }}
+              {{ getCountByStatus("skipped") || "0" }}
             </p>
           </div>
 
@@ -117,7 +117,7 @@
               <p>{{ $t("activity.my-status.wrong") }}</p>
             </div>
             <p class="info-status-quantity quantity-wrong">
-              {{ getCountByStatus("wrong") || " " }}
+              {{ getCountByStatus("wrong") || "0" }}
             </p>
           </div>
         </div>
@@ -182,7 +182,7 @@ const topValueOfAmount = ref(0);
 const amountLargest = ref(0);
 
 const getCountByStatus = computed(() => status => {
-  let quantity = "0";
+  let quantity = 0;
   for (const key in userProgress.value) {
     if (userProgress.value[key][status]) quantity += Number(userProgress.value[key][status]);
   }
