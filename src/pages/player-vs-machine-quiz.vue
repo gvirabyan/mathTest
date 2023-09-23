@@ -131,6 +131,7 @@
       <f7-block v-if="quizQuestion" class="player-machine-questions-content">
         <div>
           <f7-block-title style="text-overflow: initial; overflow-x: auto">
+            <div class="title">{{ quizQuestion?.category_name }}</div>
             <div
               v-if="quizQuestion?.question.startsWith('@@@')"
               style="font-size: 20px; line-height: 1"
