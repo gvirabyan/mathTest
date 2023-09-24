@@ -74,8 +74,22 @@
             </template>
           </f7-list-item>
         </f7-list>
-        <div v-else-if="searchStr" class="loading-for-search">
+        <div v-else-if="loading" class="loading-for-search">
           <loading-small />
+        </div>
+        <div v-else-if="searchStr && searchedCategories?.length === 0">
+          <p>{{ $t("over.no-search-results") }}</p>
+          <div class="keywords">
+            <f7-button
+              v-for="({ name, active }, index) in keywords"
+              :key="`keyword_${index + 1}`"
+              class="keyword"
+              :class="{ active: active }"
+              @click="selectKeyword(index)"
+            >
+              {{ name }}
+            </f7-button>
+          </div>
         </div>
       </f7-page>
     </f7-popup>
@@ -108,7 +122,7 @@ const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
 const { user } = storeToRefs(authStore);
-const { categories, searchedCategories } = storeToRefs(categoriesStore);
+const { categories, searchedCategories, loading } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
 const { getCategoryClasses } = categoriesClassesStore;

@@ -68,7 +68,8 @@
     "prev": "prev",
     "loading": "Loading",
     "search": "search",
-    "class": "Class"
+    "class": "Class",
+    "no-search-results": "Unfortunately, there are no search results for your request. Please change your request or choose from the list below."
   },
 
   "home": {

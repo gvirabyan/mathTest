@@ -68,7 +68,8 @@
     "prev": "Zurück",
     "loading": "Es lädt",
     "search": "Suche",
-    "class": "Klasse"
+    "class": "Klasse",
+    "no-search-results": "Leider gibt es keine Suchergebnisse für Ihre Anfrage. Bitte ändern Sie Ihre Anfrage oder wählen Sie aus der Liste unten."
   },
 
   "home": {
@@ -288,7 +289,7 @@
       ]
     },
     "send-reports": {
-		"introduction-text": "Teile deinen Erfolg mit deinen Eltern, Lehrern und Freunde per E-Mail",
+      "introduction-text": "Teile deinen Erfolg mit deinen Eltern, Lehrern und Freunde per E-Mail",
       "saved-email": "Gespeicherte E-Mails:",
       "parent-email": "E-Mail Adresse angeben",
       "not-saved-email": "Du hast keine E-Mail-Adresse gespeichert",

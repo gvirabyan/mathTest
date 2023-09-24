@@ -9,8 +9,10 @@ export const useCategoryStore = defineStore("category", () => {
   const pastCategoriesData = ref([]);
 
   const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
+  const loading = ref(false);
 
   const getCategories = async searchStr => {
+    loading.value = true;
     if (searchStr && searchedCategories.value.length) {
       searchedCategories.value = [];
     }
@@ -20,6 +22,7 @@ export const useCategoryStore = defineStore("category", () => {
       : "categories?populate[0]=category_class";
 
     api.get(url).then(data => {
+      loading.value = false;
       if (searchStr) {
         searchedCategories.value = data?.data;
         return;
@@ -64,6 +67,7 @@ export const useCategoryStore = defineStore("category", () => {
     lastCategoryData,
     pastCategoriesData,
     pastCategoriesIds,
+    loading,
     getCategories,
     getCategoriesByCategoryClass,
     getLastCategory,
