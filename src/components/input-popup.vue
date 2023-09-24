@@ -10,7 +10,7 @@
       <div style="text-align: center; margin-bottom: 10px">
         <span
           v-if="firstAnswer.startsWith('@@@')"
-          style="font-size: 20px; line-height: 1"
+          style="font-size: 20px; line-height: 1; font-family: Rubik"
           v-html="$sanitize(firstAnswer.slice(3))"
         ></span>
         <span

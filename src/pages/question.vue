@@ -77,7 +77,7 @@
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
               <span
                 v-if="answer.startsWith('@@@')"
-                style="font-size: 20px; line-height: 1"
+                style="font-size: 20px; line-height: 1; font-family: Rubik"
                 v-html="$sanitize(answer.slice(3))"
               ></span>
               <span
@@ -154,7 +154,7 @@
               <span class="list-number">{{ `${getLetterByIndex(index)}.` }}</span>
               <span
                 v-if="answer.startsWith('@@@')"
-                style="font-size: 20px; line-height: 1"
+                style="font-size: 20px; line-height: 1; font-family: Rubik"
                 v-html="$sanitize(answer.slice(3))"
               ></span>
               <span
