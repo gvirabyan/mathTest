@@ -225,7 +225,6 @@ watch(
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/profile";
 @import "@/assets/scss/mixins/form-button.scss";
 @import "@/assets/scss/mixins/form-content.scss";
 @import "@/assets/scss/pages/security.scss";

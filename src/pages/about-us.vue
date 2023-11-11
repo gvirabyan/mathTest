@@ -94,27 +94,27 @@ const profileTabs = ref([
 
 const infos = reactive([
   {
-    title: i18n.t("profile.about-us.infos.0"),
+    title: i18n.t("profile.about-us.terms-of-services"),
     popup: "TermsPopup",
   },
   {
-    title: i18n.t("profile.about-us.infos.1"),
+    title: i18n.t("profile.about-us.privacy"),
     popup: "PrivacyPopup",
   },
   {
-    title: i18n.t("profile.about-us.infos.2"),
+    title: i18n.t("profile.about-us.imprint"),
     popup: "ImprintPopup",
   },
   {
-    title: i18n.t("profile.about-us.infos.3"),
+    title: i18n.t("profile.about-us.software-licenses"),
     popup: "SoftwarePopup",
   },
   {
-    title: i18n.t("profile.about-us.infos.4"),
+    title: i18n.t("profile.about-us.release-notes"),
     popup: "ReleasePopup",
   },
   {
-    title: i18n.t("profile.about-us.infos.5"),
+    title: i18n.t("profile.about-us.write-review"),
     popup: "ReviewPopup",
   },
 ]);
@@ -156,8 +156,10 @@ const getPopup = computed(() =>
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/profile";
+//@import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/about-us";
+@import "@/assets/scss/components/about-us-popups.scss";
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;

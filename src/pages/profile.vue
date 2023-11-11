@@ -85,8 +85,6 @@ const getAllData = async () => {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/profile";
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;

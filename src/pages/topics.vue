@@ -197,6 +197,10 @@ const keywords = ref([
     name: "Klammern",
     active: false,
   },
+  {
+    name: "Exponenten",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

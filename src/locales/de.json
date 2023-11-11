@@ -27,10 +27,14 @@
     "nickname": "Spitzname",
     "date-of-birth": "Geburtsdatum",
     "country": "Land",
+    "your-country": "In welchem Land lebst du?",
     "city": "Stadt",
+    "your-city": "In welcher Stadt lebst du?",
     "educational-institution": "Schule",
-    "class/course": "Klasse / Kurs",
-    "your-class/course": "Deine Klasse/ dein Kurs",
+    "your-educational-institution": "Name deiner Schule",
+    "class/course": "Klasse",
+    "your-class/course": "Deine Klasse (z.B. 7a oder 7.1)",
+    "class-error": "Bitte gib den Namen deine Schule an",
     "E-mail": "E-Mail",
     "your-email": "Deine E-Mail",
     "paste-email": "E-Mail hinzufügen",
@@ -279,14 +283,12 @@
       "popup-text": "Passwort wurde aktualisiert"
     },
     "about-us": {
-      "infos": [
-        "AGB",
-        "Datenschutz",
-        "Impresum",
-        "Software-Lizenzen",
-        "Versionshinweise",
-        "Eine Bewertung schreiben"
-      ]
+      "terms-of-services": "AGB",
+      "privacy": "Datenschutz",
+      "imprint": "Impresum",
+      "software-licenses": "Software-Lizenzen",
+      "release-notes": "Versionshinweise",
+      "write-review": "Eine Bewertung schreiben"
     },
     "send-reports": {
       "introduction-text": "Teile deinen Erfolg mit deinen Eltern, Lehrern und Freunde per E-Mail",
@@ -372,5 +374,14 @@
         "img": "Terry"
       }
     ]
-  }
+  },
+  "versions": [
+    {
+      "v": "1.0.0",
+      "date": "2023-10-13",
+      "changes": [
+          "Erste Funktionalität."
+      ]
+    }
+  ]
 }

@@ -64,6 +64,7 @@
               name="country"
               class="custom-list-input country-autocomplete"
               :label="$t('inputs.country')"
+              :placeholder="$t('inputs.your-country')"
               @focus="initAutocompleteInputs"
               @input="updateCountry"
               @input:clear="updateCountry"
@@ -75,6 +76,7 @@
               name="city"
               class="custom-list-input city-autocomplete"
               :label="$t('inputs.city')"
+              :placeholder="$t('inputs.your-city')"
               @focus="initAutocompleteInputs"
               @input="updateCity"
               @input:clear="updateCity"
@@ -86,6 +88,7 @@
               name="education"
               class="custom-list-input institution-autocomplete"
               :label="$t('inputs.educational-institution')"
+              :placeholder="$t('inputs.your-educational-institution')"
               @focus="initAutocompleteInputs"
               @input="setCourseInputValid"
             />

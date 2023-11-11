@@ -4,11 +4,11 @@
       <img src="@/assets/icons/x.svg" />
     </f7-button>
     <f7-block>
-      <f7-block-title>Imprint</f7-block-title>
+      <f7-block-title>{{ $t("profile.about-us.imprint") }}</f7-block-title>
     </f7-block>
   </div>
 </template>
 
 <style lang="scss">
-@import "@/assets/scss/components/about-us-popups.scss";
+//@import "@/assets/scss/components/about-us-popups.scss";
 </style>

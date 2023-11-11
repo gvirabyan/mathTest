@@ -27,10 +27,14 @@
     "nickname": "Nickname",
     "date-of-birth": "Date of birth",
     "country": "Country",
+    "your-country": "Which country do you live?",
     "city": "City",
+    "your-city": "In which city do you live?",
     "educational-institution": "Educational institution",
-    "class/course": "Class/course",
-    "your-class/course": "Your class/course",
+    "your-educational-institution": "What's the name of your school?",
+    "class/course": "Class",
+    "your-class/course": "Your class (e.g. 7a or 7.1)",
+    "class-error": "Please first fill your school name",
     "E-mail": "E-mail",
     "your-email": "Your email",
     "paste-email": "Paste the code from the email",
@@ -279,14 +283,12 @@
       "popup-text": "Password has been changed"
     },
     "about-us": {
-      "infos": [
-        "Terms of services",
-        "Privacy",
-        "Imprint",
-        "Software licenses",
-        "Release notes",
-        "Write a review"
-      ]
+      "terms-of-services": "Terms of services",
+      "privacy": "Privacy",
+      "imprint": "Imprint",
+      "software-licenses": "Software licenses",
+      "release-notes": "Release notes",
+      "write-review": "Write a review"
     },
     "send-reports": {
       "saved-email": "Saved emails:",
@@ -371,5 +373,14 @@
         "img": "Terry"
       }
     ]
-  }
+  },
+  "versions": [
+    {
+      "v": "1.0.0",
+      "date": "2023-10-13",
+      "changes": [
+        "Initial functionality."
+      ]
+    }
+  ]
 }

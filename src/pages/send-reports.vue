@@ -253,7 +253,6 @@ onMounted(() => {
 @import "@/assets/scss/mixins/form-button.scss";
 @import "@/assets/scss/mixins/form-content.scss";
 @import "@/assets/scss/mixins/form-title.scss";
-@import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/send-reports";
 
 .send-reports-dash {

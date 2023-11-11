@@ -152,6 +152,5 @@ function updateSoundVolume() {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/profile-sound";
 </style>
