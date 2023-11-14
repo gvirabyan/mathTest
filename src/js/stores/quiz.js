@@ -75,6 +75,7 @@ export const useQuizStore = defineStore("quiz", () => {
   const getNextQuizQuestion = () => {
     quizQuestionIndex.value++;
     quizQuestion.value = quizQuestions.value[quizQuestionIndex.value];
+    document.getElementsByClassName("player-machine-questions-content")[0].scrollTo(0, 0);
   };
 
   const updateAnsweredQuizQuestions = id => {

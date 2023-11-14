@@ -153,7 +153,7 @@
             <div
               v-else-if="quizQuestion?.question.startsWith('@emoji@')"
               style="font-size: 20px; line-height: 1.5; display: flex; flex-flow: column wrap"
-              v-html="$sanitize(question?.question.slice(7))"
+              v-html="$sanitize(quizQuestion?.question.slice(7))"
             ></div>
             <p v-else-if="quizQuestion?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
               {{ quizQuestion?.question.slice(1) }}
