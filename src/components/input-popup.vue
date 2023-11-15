@@ -42,6 +42,7 @@
         :error-message-force="!!error"
         :error-message="error"
         :placeholder="$t('inputs.enter-the-result')"
+        @keyup.enter="inputPopupBtnClick()"
       />
 
       <f7-row>
