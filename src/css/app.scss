@@ -1,4 +1,9 @@
 /* Your app custom styles here */
+body {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .pac-container {
   z-index: 9999;
 }

@@ -24,9 +24,11 @@ export const useNotifications = defineStore("notifications", () => {
         }&sort[0]=read&sort[1]=createdAt:desc`,
       )
       .then(data => {
-        pageCount.value = data.meta.pagination.pageCount;
-        notifications.value = pagination ? [...notifications.value, ...data?.data] || [] : data?.data || [];
-        querySending.value = false;
+        if (data.meta) {
+          pageCount.value = data.meta.pagination.pageCount;
+          notifications.value = pagination ? [...notifications.value, ...data?.data] || [] : data?.data || [];
+          querySending.value = false;
+        }
       });
   };
 

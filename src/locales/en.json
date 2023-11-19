@@ -314,7 +314,8 @@
   "notification": {
     "there-arnt-notification": "There are no notifications yet",
     "welcome-app": "Welcome to the MatheApp",
-    "play-more-games": "Play more games, improve your skills & be the first in the World!"
+    "play-more-games": "Play more games, improve your skills & be the first in the World!",
+    "mark-all-read": "Mark all as read"
   },
   "not-found": {
     "title": "404 Not Found",

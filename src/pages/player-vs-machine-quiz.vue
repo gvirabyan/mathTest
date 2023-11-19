@@ -1011,13 +1011,20 @@ onMounted(() => {
     },
     false,
   );
+  // document.addEventListener("backbutton", onBack(), false);
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", onOrientationChange);
   document.removeEventListener("pause", toggleAppIsInBackground, false);
   document.removeEventListener("resume", toggleAppIsInBackground, false);
+  // document.removeEventListener("backbutton", onBack(), false);
 });
+
+// function onBack() {
+//   breakQuiz();
+//   return false;
+// }
 </script>
 
 <style lang="scss">

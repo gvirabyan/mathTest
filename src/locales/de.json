@@ -315,7 +315,8 @@
   "notification": {
     "there-arnt-notification": "Es liegen noch keine Benachrichtigungen vor.",
     "welcome-app": "Willkommen zur MatheApp",
-    "play-more-games": "Spiele und trainiere, verbessere deine Fähigkeiten und sei der Erste in der Welt!"
+    "play-more-games": "Spiele und trainiere, verbessere deine Fähigkeiten und sei der Erste in der Welt!",
+    "mark-all-read": "Alle als gelesen markieren"
   },
   "not-found": {
     "title": "404 Seite nicht gefunden",

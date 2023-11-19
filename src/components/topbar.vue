@@ -68,7 +68,6 @@ import { useEventBus } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
 import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import playAudioMixin from "@/js/mixins/play_audio";
-import delay from "@/js/helpers/delay";
 
 const bus = useEventBus("notifications");
 const categoriesClassesStore = useCategoryClassesStore();

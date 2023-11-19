@@ -201,6 +201,10 @@ const keywords = ref([
     name: "Exponenten",
     active: false,
   },
+  {
+    name: "mit x",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);
