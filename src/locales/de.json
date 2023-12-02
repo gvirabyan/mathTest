@@ -106,14 +106,14 @@
   "forgot-password": {
     "forgot-password": "Passwort vergessen",
     "send-email": "E-Mail senden",
-    "click": "gehe",
-    "here": "zurück",
-    "to-back-main-page": "auf Start"
+    "click": "",
+    "here": "Zurück",
+    "to-back-main-page": "zur Startseite"
   },
 
   "reset-password": {
     "reset-password": "Passwort zurücksetzen",
-    "error-msg": "Password and password confirmation should match"
+    "error-msg": "Passwort und Passwortbestätigung sollten übereinstimmen"
   },
 
   "activity": {
@@ -203,7 +203,7 @@
     "leave-for-now": "Vorerst verlassen",
     "your-score-on-this-topic": "Deine Punkte zu diesem Thema",
     "will-be-update": "Du hast dieses Thema abgeschlossen. Deine Erfolge werden aktualisiert.",
-    "skipped-first-text": "du hast den Großteil des Temas bestanden, du hast aber Fragen übersprungen.",
+    "skipped-first-text": "du hast den Großteil des Themas bestanden, du hast aber Fragen übersprungen.",
     "skipped-second-text": "Du kannst sie noch einmal überprüfen oder sie vorerst lassen."
   },
 
@@ -216,46 +216,46 @@
     "practice-with-friends-questions": "Anzahl der Fragen: 10-30",
     "try-again": "Erneut probieren",
     "practice-with-friends-load": "Wir suchen nach einem Spieler, bitte warte",
-    "your-score": "Deine Punke:",
+    "your-score": "Deine Punkte:",
     "machine-score": "Punkte der Maschine:",
-    "nickname-score": "{Spiznamen} Punkte:",
-    "friend-score": "Pukte der Freunde:",
+    "nickname-score": "{nickname} Punkte:",
+    "friend-score": "Punkte der Freunde:",
     "friend-think": "denkt gerade...",
     "answered-all-text": "Du hast alle Fragen beantwortet",
     "popup-go-topic": {
       "Oops": "Ups!",
-      "first-text": "Du musst eine Antwort geben",
-      "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
+      "first-text": "Sie müssen mindestens",
+      "second-text": "Fragen beantworten, um gegen die Maschine spielen zu können. Gehe zu den \"Themen\", um weiter zu lernen.",
       "go-to-topics": "Gehe zum Thema"
     },
     "no-players-popup": {
       "title": "Kein Spieler ist verfügbar",
-      "text": "Sorry, aktuell ist kein Spieler verfügbar. Probiere später noch einmal.",
-      "go-to-practice": "Go to practice page",
+      "text": "Sorry, aktuell ist kein Spieler verfügbar \uD83E\uDD37\u200D♀\uFE0F. Probiere später noch einmal.",
+      "go-to-practice": "Gehe zum Üben",
       "try-again": "Probiere später"
     },
     "left-by-rival-popup": {
       "title": "Ups!",
-      "text": "Dein Gegner hat das Spiel verlassen. Du hast das Spiel gewonnen."
+      "text": "Dein Gegner hat das Spiel verlassen \uD83E\uDD2A. Du hast das Spiel gewonnen."
     },
     "leave-page-popup": {
-      "first-text": "Du wirst verlieren und dein Fortschritt wird verloren gehen.",
+      "first-text": "Du wirst verlieren und dein Fortschritt wird verloren gehen \uD83E\uDD7A.",
       "stay": "Bleibe"
     },
     "finish-game-popup": {
       "save-btn-text": "Neues Spiel",
       "leave-btn-text": "Mein Status",
       "win": {
-        "title": "Prima!",
-        "text": "Du hast gewonnen"
+        "title": "Prima! \uD83C\uDF89",
+        "text": "Du hast {points} Punkte gewonnen"
       },
       "draw": {
-        "title": "Unentschieden",
-        "text": "Unentschieden gespielt"
+        "title": "Unentschieden gespielt",
+        "text": "Du hast {points} Punkte gewonnen"
       },
       "lose": {
-        "title": "Oh schade",
-        "text": "Du hast verloren"
+        "title": "Oh schade \uD83D\uDE40",
+        "text": "Du hast {points} Punkte verloren"
       }
     },
     "result-win": "Gewonnen",

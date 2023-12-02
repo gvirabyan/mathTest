@@ -27,7 +27,8 @@
     .button {
       text-transform: unset;
       width: 146px;
-      height: 40px;
+      min-height: 40px;
+      height: auto;
       border-radius: 6px;
       font-family: "Rubik";
       font-style: normal;
@@ -35,6 +36,7 @@
       font-size: 16px !important;
       line-height: 24px;
       color: #fff;
+      white-space: initial;
       &.leave-btn {
         background: #212121;
         opacity: 0.3;

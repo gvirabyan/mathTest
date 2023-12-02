@@ -225,12 +225,12 @@
     "popup-go-topic": {
       "Oops": "Oops!",
       "first-text": "You need to answer at least",
-      "second-text": "questions to be able to play against the machine. Please continue your learning in Topics page for now.",
+      "second-text": "questions to play against the machine. Please continue your learning on the Topics page for now.",
       "go-to-topics": "Go to topics"
     },
     "no-players-popup": {
       "title": "There is no available Player",
-      "text": "Sorry, there is no available Player at this moment. Please try later.",
+      "text": "Sorry, there is no available Player at this moment \uD83E\uDD37\u200D♀\uFE0F. Please try later.",
       "go-to-practice": "Go to practice page",
       "try-again": "Try Again"
     },
@@ -247,15 +247,15 @@
       "leave-btn-text": "My Status",
       "win": {
         "title": "You have won",
-        "text": "You got"
+        "text": "You got {points} points"
       },
       "draw": {
         "title": "You have played a draw",
-        "text": "You got"
+        "text": "You got {points} points"
       },
       "lose": {
         "title": "You have lost",
-        "text": "You lost"
+        "text": "You lost {points} points"
       }
     },
     "result-win": "Won",

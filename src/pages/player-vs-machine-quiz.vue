@@ -803,15 +803,15 @@ const endQuiz = () => {
   const alertTextObj = {
     win: {
       title: i18n.t("practice.finish-game-popup.win.title"),
-      text: `${i18n.t("practice.finish-game-popup.win.text")} ${quizMode.value.winPoints} ${i18n.t("over.points")}`,
+      text: `${i18n.t("practice.finish-game-popup.win.text", { points: quizMode.value.winPoints })}`,
     },
     draw: {
       title: i18n.t("practice.finish-game-popup.draw.title"),
-      text: `${i18n.t("practice.finish-game-popup.draw.text")} ${quizMode.value.drawPoints} ${i18n.t("over.points")}`,
+      text: `${i18n.t("practice.finish-game-popup.draw.text", { points: quizMode.value.drawPoints })}`,
     },
     lose: {
       title: i18n.t("practice.finish-game-popup.lose.title"),
-      text: `${i18n.t("practice.finish-game-popup.lose.text")} ${quizMode.value.losePoints} ${i18n.t("over.points")}`,
+      text: `${i18n.t("practice.finish-game-popup.lose.text", { points: quizMode.value.losePoints })}`,
     },
   };
 

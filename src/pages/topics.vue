@@ -205,6 +205,10 @@ const keywords = ref([
     name: "mit x",
     active: false,
   },
+  {
+    name: "Schriftliche",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);
