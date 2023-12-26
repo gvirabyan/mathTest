@@ -14,8 +14,17 @@ Steps for building of .apk file for tests (instruction for the first time, the n
 8. Run `cordova platform add android` inside `cordova` folder
 9. Go back to main folder
 10. Run `npm run build-cordova-android`
+OR, IF YOU NEED TO BUILD PRODUCTION VERSION (.aab):
+11. go to `cordova` folder and run `cordova build --release android`
 
 Now you should find app-debug.apk in cordova/platforms/android/app/build/outputs/apk/debug/ folder.
+
+## How to build for Play Market
+
+1. Update build version in `cordova/platforms/android/app/src/main/AndroidManifest.xml` file
+2. Open `cordova/platforms/android/app` file in Android Studio 
+3. Go to Build -> Build Bundle(s) / APK(s) -> Build Bundle(s)
+4. In Main menu select Build -> Generate Signed Bundle / APK
 
 ## Framework7 CLI Options
 
