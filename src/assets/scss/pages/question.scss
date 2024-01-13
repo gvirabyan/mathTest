@@ -311,8 +311,7 @@
 
                 .list-number {
                   font-family: Rubik;
-                  color: #212121;
-                  opacity: 0.4;
+                  color: #757575;
                   margin-right: 6px;
                 }
               }
@@ -404,8 +403,7 @@
                 display: flex;
                 .list-number {
                   font-family: Rubik;
-                  color: #212121;
-                  opacity: 0.4;
+                  color: #757575;
                   margin-right: 6px;
                 }
               }
@@ -467,13 +465,20 @@
 
   .hg-actions-btns-content {
     padding: 0 24px;
-    display: flex;
 
     .row {
       width: 100%;
       flex-wrap: nowrap !important;
     }
-
+    .button-solution {
+      display: inline-block;
+      width: unset;
+      margin-bottom: 20px;
+      color: #8419FF !important;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      font-size: 14px;
+    }
     .button {
       padding: 20px 0;
       text-transform: revert !important;
@@ -484,9 +489,8 @@
         margin-right: 14px;
         padding-right: 26px;
         padding-left: 26px;
-        color: #212121 !important;
+        color: #757575 !important;
         border: 1px solid #212121 !important;
-        opacity: 0.5 !important;
       }
 
       &.button-submit {

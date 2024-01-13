@@ -14,6 +14,7 @@
     "skip": "überspringen",
     "send": "abgeben",
     "next": "nächstes",
+    "description": "solution",
     "wrong-answer": "wrong answer",
     "save": "save",
     "start": "Start",
@@ -204,7 +205,9 @@
     "your-score-on-this-topic": "Your score on this topic",
     "will-be-update": "You have finished this topic. Your achievements will be updated soon.",
     "skipped-first-text": "You have passed most of the topic but you have skipped",
-    "skipped-second-text": "questions. You can check them one more time or leave them for now."
+    "skipped-second-text": "questions. You can check them one more time or leave them for now.",
+    "exercise-solution": "Exercise solution",
+    "no-solution": "Sorry, we don't have solution right now."
   },
 
   "practice": {

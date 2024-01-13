@@ -31,7 +31,7 @@
             }
             .diagram-answer-skipped {
               transition: all 0.5s ease;
-              background: #89838f;
+              background: #777481;
             }
             .diagram-answer-correct {
               transition: all 0.5s ease;
@@ -88,7 +88,7 @@
                       background: #2EE56B;
                     }
                     &.point-skipped {
-                      background: #89838f;
+                      background: #777481;
                     }
                     &.point-wrong {
                       background: #dc1212;
@@ -193,7 +193,7 @@
         color: #2EE56B;
       }
       &.quantity-skipped {
-        color: #89838f;
+        color: #777481;
       }
       &.quantity-wrong {
         color: #dc1212;
@@ -210,7 +210,7 @@
           background: #2EE56B;
         }
         &.point-skipped {
-          background: #89838f;
+          background: #777481;
         }
         &.point-wrong {
           background: #dc1212;

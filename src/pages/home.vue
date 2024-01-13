@@ -1,8 +1,7 @@
 <template>
   <f7-page class="hg-home-page" name="home">
-    <h1 class="welcome-message">{{ $t("home.welcome") }}</h1>
-
     <img class="points-left" src="@/assets/images/pointsLeft.svg" alt="points left" />
+    <img class="welcome-message" src="@/assets/images/welcomeMessage.svg" alt="Welcome Message" />
 
     <div class="titles-block">
       <h4 class="small-title">{{ $t("home.play-game") }}</h4>

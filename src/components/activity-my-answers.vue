@@ -59,7 +59,7 @@
             :height="customGaugeOptions.height"
             :radius="customGaugeOptions.radius"
             :stroke-width="customGaugeOptions.strokeWidth"
-            color="#89838F"
+            color="#777481"
             :percent="answersStats.skipped_answers.percent"
           >
             <template #percent>{{ answersStats.skipped_answers.percent }}</template>

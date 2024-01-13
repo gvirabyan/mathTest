@@ -21,7 +21,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      min-width: auto;
+      min-width: 48px;
       padding: 0;
 
       &.active {
@@ -41,7 +41,7 @@
       }
 
       .link-title {
-        color: #89838f;
+        color: #777481;
         font-size: 14px;
         line-height: 16px;
       }

@@ -25,7 +25,7 @@
         :cx="radius"
         :cy="radius"
         :r="innerRadiusComp"
-        stroke="#89838F"
+        stroke="#777481"
         fill="transparent"
         :stroke-dasharray="dashArray"
         :stroke-dashoffset="offsetGray"
@@ -155,7 +155,7 @@ const offsetGray = computed(() => {
       font-weight: bold;
     }
     .skipped-answered {
-      color: #89838f;
+      color: #777481;
       font-weight: bold;
     }
     .wrong-answered {

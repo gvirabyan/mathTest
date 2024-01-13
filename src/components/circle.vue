@@ -50,7 +50,7 @@ const checkPoint = () => props.historyCircle !== null && props.point === Number(
 
   &.skip,
   &.normal {
-    color: #89838f;
+    color: #777481;
     border: 2px solid #f0ebf5;
   }
 

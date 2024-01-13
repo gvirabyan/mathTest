@@ -177,6 +177,11 @@
         </f7-list>
       </div>
       <div class="hg-actions-btns-content">
+        <div>
+          <span class="button-solution" @click="showSolution">
+            {{ $t("buttons.description") }}
+          </span>
+        </div>
         <f7-row v-if="showSkipSendBtns">
           <f7-button
             :class="{
@@ -207,6 +212,8 @@
 
     <loading-small v-else-if="isLoading" />
   </f7-page>
+
+  <solution-popup v-if="popupSolution" :solution="solution" @close="changPopupSolution(false)" />
 
   <leave-page-popup
     v-if="checkSkipPopup"
@@ -286,6 +293,7 @@ import pluralizeWord from "../js/utils/pluralize-word";
 import playAudioMixin from "@/js/mixins/play_audio";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
+import SolutionPopup from "@/components/solution-popup.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
@@ -324,7 +332,7 @@ const {
 const { answersData } = storeToRefs(categoryAnswerStore);
 
 const { clearCategory } = questionStore;
-const { getQuestions, getNextQuestion, getAnsweredQuestions } = questionStore;
+const { getQuestions, getNextQuestion, getAnsweredQuestions, getSolution } = questionStore;
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
 const isLoading = ref(false);
@@ -342,6 +350,7 @@ const chosenSecondAnswer = ref(null);
 const secondAnswerStatus = ref("");
 const isSendingSecondAnswer = ref(false);
 const isSentSecondAnswer = ref(false);
+const solution = ref("");
 
 watch(
   () => questions.value,
@@ -617,6 +626,27 @@ const goBack = () => {
 
 const keepPresentIndex = ref(null);
 
+const showSolution = () => {
+  if (question.value.solution) {
+    solution.value = question.value.solution;
+    changPopupSolution(true);
+  } else {
+    getSolution(question.value.id, props.f7route.params.categoryID)
+      .then(resp => {
+        if (resp.solution) {
+          solution.value = resp.solution;
+          changPopupSolution(true);
+        }
+      })
+      .catch(() => {
+        alert(i18n.t("question.no-solution"));
+      });
+  }
+};
+const popupSolution = ref(false);
+const changPopupSolution = value => {
+  popupSolution.value = value;
+};
 const goPresentQuestion = () => {
   questionHistory.value = null;
   indexHistory.value = null;
@@ -763,4 +793,5 @@ const outPage = () => {
 
 <style lang="scss">
 @import "../assets/scss/pages/question";
+@import "@/assets/scss/components/solution-popup.scss";
 </style>

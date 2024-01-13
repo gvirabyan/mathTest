@@ -19,6 +19,10 @@ OR, IF YOU NEED TO BUILD PRODUCTION VERSION (.aab):
 
 Now you should find app-debug.apk in cordova/platforms/android/app/build/outputs/apk/debug/ folder.
 
+## How to sign the application
+
+https://support.google.com/googleplay/android-developer/answer/9842756?hl=en-GB&visit_id=638390175088165962-4165502714&rd=1
+
 ## How to build for Play Market
 
 1. Update build version in `cordova/platforms/android/app/src/main/AndroidManifest.xml` file

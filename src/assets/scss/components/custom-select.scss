@@ -2,7 +2,6 @@
   position: relative;
   width: 100%;
   margin-bottom: 30px;
-  padding: 8px 0;
   color: #212121;
   border-bottom: 1px solid #e4e4e4;
 
@@ -22,6 +21,7 @@
     border: none;
     cursor: pointer;
     user-select: none;
+    line-height: 48px;
   }
 
   .items {

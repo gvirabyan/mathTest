@@ -13,6 +13,7 @@
   "buttons": {
     "skip": "überspringen",
     "send": "abgeben",
+    "description": "Erklärung",
     "next": "nächstes",
     "wrong-answer": "falsche Antwort",
     "save": "speichern",
@@ -204,7 +205,9 @@
     "your-score-on-this-topic": "Deine Punkte zu diesem Thema",
     "will-be-update": "Du hast dieses Thema abgeschlossen. Deine Erfolge werden aktualisiert.",
     "skipped-first-text": "du hast den Großteil des Themas bestanden, du hast aber Fragen übersprungen.",
-    "skipped-second-text": "Du kannst sie noch einmal überprüfen oder sie vorerst lassen."
+    "skipped-second-text": "Du kannst sie noch einmal überprüfen oder sie vorerst lassen.",
+    "exercise-solution": "Übungslösung",
+    "no-solution": "Tut uns leid, wir haben im Moment keine Lösung."
   },
 
   "practice": {
