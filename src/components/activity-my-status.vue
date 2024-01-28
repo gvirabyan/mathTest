@@ -122,7 +122,6 @@ import { f7 } from "framework7-vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useUserStats } from "@/js/stores/user-stats";
-import timeAgo from "@/js/utils/time-ago";
 import CustomSelect from "@/components/custom-select.vue";
 import playAudioMixin from "@/js/mixins/play_audio";
 // import CustomGauge from "@/components/custom-gauge.vue";

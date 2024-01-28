@@ -80,7 +80,6 @@
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStats } from "@/js/stores/user-stats";
-import timeAgo from "@/js/utils/time-ago";
 import CustomGauge from "@/components/custom-gauge.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 
