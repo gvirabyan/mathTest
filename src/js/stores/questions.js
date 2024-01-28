@@ -96,9 +96,14 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   const getSolution = async (questionID, categoryID) => {
-    return await api.get(`solution?questionID=${questionID}&categoryID=${categoryID}`).then(data => {
-      return data;
-    });
+    return await api
+      .get(`solution?questionID=${questionID}&categoryID=${categoryID}`)
+      .then(data => {
+        return data;
+      })
+      .catch(err => {
+        return err;
+      });
   };
 
   return {

@@ -5,16 +5,24 @@
     </f7-button>
     <f7-block>
       <f7-block-title>{{ $t("question.exercise-solution") }}</f7-block-title>
-      <div class="solution-content" v-html="solution"></div>
+      <div class="solution-content">
+        <iframe
+          :src="`https://schulmatheapp.de/solution.php?questionID=${questionID}&categoryName=${categoryName}`"
+        ></iframe>
+      </div>
     </f7-block>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
-  solution: {
+  questionID: {
+    type: Number,
+    default: 0,
+  },
+  categoryName: {
     type: String,
-    default: "bla-bla",
+    default: "",
   },
 });
 </script>

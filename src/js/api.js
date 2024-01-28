@@ -51,6 +51,8 @@ const get = async url => {
             f7.views.main.router.navigate("/login/");
             return err;
           });
+        } else if (url.split("?")[0] === "solution" && err.status === undefined) {
+          return err;
         } else if (
           !exceptionUrls.includes(url.split("?")[0]) &&
           err.message.indexOf("aborted") === -1 &&

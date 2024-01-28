@@ -213,7 +213,14 @@
     <loading-small v-else-if="isLoading" />
   </f7-page>
 
-  <solution-popup v-if="popupSolution" :solution="solution" @close="changPopupSolution(false)" />
+  <loading-small v-if="isSolutionLoading" class="solution-loading-parent" />
+
+  <solution-popup
+    v-if="popupSolution"
+    :question-i-d="questionID"
+    :category-name="categoryQuestion?.name"
+    @close="changPopupSolution(false)"
+  />
 
   <leave-page-popup
     v-if="checkSkipPopup"
@@ -336,6 +343,7 @@ const { getQuestions, getNextQuestion, getAnsweredQuestions, getSolution } = que
 const { updateUserAnsweredQuestions } = categoryAnswerStore;
 
 const isLoading = ref(false);
+const isSolutionLoading = ref(false);
 const isSending = ref(false);
 const chosenAnswer = ref(null);
 const chosenAnswerIndex = ref(null);
@@ -351,6 +359,7 @@ const secondAnswerStatus = ref("");
 const isSendingSecondAnswer = ref(false);
 const isSentSecondAnswer = ref(false);
 const solution = ref("");
+const questionID = ref(0);
 
 watch(
   () => questions.value,
@@ -628,17 +637,20 @@ const keepPresentIndex = ref(null);
 
 const showSolution = () => {
   if (question.value.solution) {
-    solution.value = question.value.solution;
+    questionID.value = question.value.id;
     changPopupSolution(true);
   } else {
+    isSolutionLoading.value = true;
     getSolution(question.value.id, props.f7route.params.categoryID)
       .then(resp => {
         if (resp.solution) {
-          solution.value = resp.solution;
+          questionID.value = question.value.id;
           changPopupSolution(true);
         }
+        isSolutionLoading.value = false;
       })
       .catch(() => {
+        isSolutionLoading.value = false;
         alert(i18n.t("question.no-solution"));
       });
   }
