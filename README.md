@@ -25,10 +25,13 @@ https://support.google.com/googleplay/android-developer/answer/9842756?hl=en-GB&
 
 ## How to build for Play Market
 
-1. Update build version in `cordova/platforms/android/app/src/main/AndroidManifest.xml` file
+1. Update build version in `cordova/config.xml` file
 2. Open `cordova/platforms/android/app` file in Android Studio 
 3. Go to Build -> Build Bundle(s) / APK(s) -> Build Bundle(s)
 4. In Main menu select Build -> Generate Signed Bundle / APK
+   4.1. Select Android App Bundle
+   4.2. Select keystore file and password (most probably it's already saved in Android Studio)
+   4.3. Click Next and Create
 
 ## Framework7 CLI Options
 
