@@ -65,6 +65,37 @@
   }
 }
 
+.admin {
+  .list {
+    .item-inner {
+      flex-direction: column;
+      .admin-button {
+        text-transform: unset;
+        min-height: 40px;
+        height: auto;
+        padding: 0 20px;
+        border-radius: 6px;
+        font-family: "Rubik";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px !important;
+        line-height: 24px;
+        color: #fff;
+        white-space: initial;
+        &.generate {
+          background: #24f807;
+        }
+        &.review {
+          background: #8419ff;
+        }
+        &.red {
+          background: red;
+        }
+      }
+    }
+  }
+}
+
 .search-popup {
   @include search-popup;
 

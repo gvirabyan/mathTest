@@ -34,6 +34,9 @@ export const useAuthStore = defineStore("auth", () => {
   const isNicknamedOnlyUser = computed(() => {
     return user.value && user.value?.username && !user.value?.email;
   });
+  const isAdmin = computed(() => {
+    return user.value?.email === import.meta.env.VITE_ADMIN_EMAIL;
+  });
 
   // actions
   // for security page
@@ -309,6 +312,7 @@ export const useAuthStore = defineStore("auth", () => {
     suggestedCredentials,
     userData,
     isNicknamedOnlyUser,
+    isAdmin,
     passwords,
     checkPassSave,
     securityLeavePopup,

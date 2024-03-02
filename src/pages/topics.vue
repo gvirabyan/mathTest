@@ -1,6 +1,6 @@
 <template>
   <f7-page
-    class="hg-categories-page"
+    :class="{ 'hg-categories-page': true, admin: isAdmin }"
     name="categories"
     @page:beforein="getCategoriesClassesHandler"
     @page:beforeout="emptyData"
@@ -20,15 +20,43 @@
 
     <template v-if="!isLoading">
       <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
-        <f7-list-item v-for="category in categories" :key="category.id" :link="`/categories/${category.id}/questions/`">
-          <template #title>
-            <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
-          </template>
+        <template v-if="isAdmin">
+          <f7-list-item v-for="category in categories" :key="category.id">
+            <f7-link :href="`/categories/${category.id}/questions/`">
+              <span class="item-title">
+                <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
+              </span>
+              <span class="item-after">
+                <p>{{ getAfterText(category) }}</p>
+              </span>
+            </f7-link>
+            <div style="display: flex; justify-content: space-between; gap: 30px; margin-top: 20px; width: 100%">
+              <f7-link :href="`/categories/${category.id}/generateQuestions/`" class="admin-button generate"
+                >Generate</f7-link
+              >
+              <f7-link
+                :href="`/categories/${category.id}/reviewQuestions/`"
+                :class="[{ red: category.unpublishedQuestions }, 'admin-button review']"
+                >Review {{ category.unpublishedQuestions ? category.unpublishedQuestions : "" }}</f7-link
+              >
+            </div>
+          </f7-list-item>
+        </template>
+        <template v-else>
+          <f7-list-item
+            v-for="category in categories"
+            :key="category.id"
+            :link="`/categories/${category.id}/questions/`"
+          >
+            <template #title>
+              <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
+            </template>
 
-          <template #after>
-            <p>{{ getAfterText(category) }}</p>
-          </template>
-        </f7-list-item>
+            <template #after>
+              <p>{{ getAfterText(category) }}</p>
+            </template>
+          </f7-list-item>
+        </template>
       </f7-list>
     </template>
 
@@ -121,7 +149,7 @@ const { playAudio, tabChange } = playAudioMixin.setup();
 const authStore = useAuthStore();
 const categoriesStore = useCategoryStore();
 const categoriesClassesStore = useCategoryClassesStore();
-const { user } = storeToRefs(authStore);
+const { user, isAdmin } = storeToRefs(authStore);
 const { categories, searchedCategories, loading } = storeToRefs(categoriesStore);
 const { categoryClasses } = storeToRefs(categoriesClassesStore);
 const { getCategories, getCategoriesByCategoryClass, clearSearchedCategories } = categoriesStore;
@@ -158,7 +186,15 @@ const keywords = ref([
     active: false,
   },
   {
-    name: "Schriftlich",
+    name: "Addieren",
+    active: false,
+  },
+  {
+    name: "Subtrahieren",
+    active: false,
+  },
+  {
+    name: "Schriftliche",
     active: false,
   },
   {
@@ -268,7 +304,7 @@ const getCategoriesByClass = async id => {
     calledId.value = id;
     isLoading.value = true;
     await delay();
-    await getCategoriesByCategoryClass(id);
+    await getCategoriesByCategoryClass(id, isAdmin.value);
     isLoading.value = false;
   }
 };

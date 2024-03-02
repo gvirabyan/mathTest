@@ -8,7 +8,7 @@ async function checkAuth({ to, from, resolve, reject }) {
   const store = useAuthStore();
   const token = localStorage.getItem("token");
   const { getUser } = store;
-  const { user } = storeToRefs(store);
+  const { user, isAdmin } = storeToRefs(store);
   if (token && !user.value) {
     await getUser();
   }
@@ -25,6 +25,8 @@ async function checkAuth({ to, from, resolve, reject }) {
   ) {
     reject();
     this.navigate("/login/");
+  } else if (!isAdmin.value && ["GenerateQuestion", "ReviewQuestion"].includes(to.name)) {
+    reject();
   } else {
     resolve();
   }
@@ -152,6 +154,18 @@ const routes = [
     path: "/categories/:categoryID/questions",
     name: "Question",
     asyncComponent: () => import("../pages/question.vue"),
+    beforeEnter: [checkAuth, playAudio],
+  },
+  {
+    path: "/categories/:categoryID/generateQuestions",
+    name: "GenerateQuestion",
+    asyncComponent: () => import("../pages/generate-question.vue"),
+    beforeEnter: [checkAuth, playAudio],
+  },
+  {
+    path: "/categories/:categoryID/reviewQuestions",
+    name: "ReviewQuestion",
+    asyncComponent: () => import("../pages/review-question.vue"),
     beforeEnter: [checkAuth, playAudio],
   },
   {

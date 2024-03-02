@@ -358,7 +358,6 @@ const chosenSecondAnswer = ref(null);
 const secondAnswerStatus = ref("");
 const isSendingSecondAnswer = ref(false);
 const isSentSecondAnswer = ref(false);
-const solution = ref("");
 const questionID = ref(0);
 
 watch(

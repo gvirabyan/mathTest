@@ -54,6 +54,23 @@ export const useQuestionsStore = defineStore("questions", () => {
     });
   };
 
+  const getQuestionsForAdmin = (categoryID, isAdmin) => {
+    return api
+      .get(`topic-questions-for-admin?categoryId=${categoryID}&pagination[page]=1&isAdmin=${isAdmin}`)
+      .then(data => {
+        return data;
+      });
+  };
+
+  const updateExercise = (data, isAdmin) => {
+    return api
+      .put("update-exercise", { data: data, isAdmin: isAdmin })
+      .then(res => res.json())
+      .then(response => {
+        return response;
+      });
+  };
+
   const getAnsweredQuestions = async categoryID => {
     const questionsIds = [];
     await api
@@ -106,6 +123,18 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
   };
 
+  const createNewQuestions = async data => {
+    return await api
+      .post("create-new-questions", { data: data })
+      .then(res => res.json())
+      .then(data => {
+        return data;
+      })
+      .catch(err => {
+        return err;
+      });
+  };
+
   return {
     questions,
     history,
@@ -123,9 +152,12 @@ export const useQuestionsStore = defineStore("questions", () => {
     offline,
     clearCategory,
     getQuestions,
+    getQuestionsForAdmin,
+    updateExercise,
     getAnsweredQuestions,
     getAnsweredQuestionsCount,
     getNextQuestion,
     getSolution,
+    createNewQuestions,
   };
 });

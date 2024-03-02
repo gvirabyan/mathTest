@@ -32,17 +32,19 @@ export const useCategoryStore = defineStore("category", () => {
     });
   };
 
-  const getCategoriesByCategoryClass = async categoryID => {
+  const getCategoriesByCategoryClass = async (categoryID, isAdmin) => {
     categories.value = [];
 
-    api.get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}`).then(data => {
-      if (data.data) {
-        categories.value = data.data.map(c => {
-          c.classId = categoryID;
-          return c;
-        });
-      }
-    });
+    api
+      .get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}&isAdmin=${isAdmin}`)
+      .then(data => {
+        if (data.data) {
+          categories.value = data.data.map(c => {
+            c.classId = categoryID;
+            return c;
+          });
+        }
+      });
   };
 
   const getLastCategory = async () => {
