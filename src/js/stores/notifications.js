@@ -41,6 +41,16 @@ export const useNotifications = defineStore("notifications", () => {
       });
   };
 
+  const readAllNotifications = async () => {
+    console.log("readNotification");
+    return api
+      .put(`readAllNotifications`, { data: { read: true } })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      });
+  };
+
   const addNotification = notification => {
     notifications.value.push(notification);
   };
@@ -53,6 +63,7 @@ export const useNotifications = defineStore("notifications", () => {
     hasUnreadNotifications,
     getNotifications,
     readNotification,
+    readAllNotifications,
     addNotification,
   };
 });

@@ -108,6 +108,9 @@
         border-top: 1px solid gray;
       "
     >
+      <div style="text-align: center">
+        <f7-link :href="`/categories/${categoryId}/reviewQuestions/`">Review</f7-link>
+      </div>
       <div
         v-for="(exercise, index) in shortlistedExercises"
         :key="index"
@@ -178,13 +181,15 @@ const { getQuestionsForAdmin, createNewQuestions } = questionStore;
 
 const isLoading = ref(false);
 const categoryName = ref("");
+const categoryId = ref("");
 const allQuestions = ref([]);
 const shortlistedExercises = ref({});
 
 const getAllQuestionData = async () => {
+  categoryId.value = props.f7route.params.categoryID;
   isLoading.value = true;
   await delay();
-  await getQuestionsForAdmin(props.f7route.params.categoryID, isAdmin.value).then(data => {
+  await getQuestionsForAdmin(categoryId.value, isAdmin.value).then(data => {
     allQuestions.value = data.data.results;
     categoryName.value = data.data.category_name;
     isLoading.value = false;

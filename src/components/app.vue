@@ -27,12 +27,12 @@
 
           {{ $t("top-bar.notifications") }}
         </h2>
-        <p style="display: flex; align-items: center; gap: 8px; margin-bottom: 0">
+        <!--        <p @click="readAllNotifications" style="display: flex; align-items: center; gap: 8px; margin-bottom: 0">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="5" cy="5" r="5" fill="#FFC700" />
           </svg>
           {{ $t("notification.mark-all-read") }}
-        </p>
+        </p>-->
       </template>
 
       <template #content>
@@ -69,6 +69,7 @@ import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
 import CustomPopup from "@/components/custom-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
+import { useNotifications } from "@/js/stores/notifications";
 
 const i18n = useI18n();
 
@@ -88,6 +89,7 @@ const { updateUserAnsweredQuestions } = categoryAnswerStore;
 const { getQuestions, getAnsweredQuestions } = questionStore;
 const { offline, questions, categoryQuestion } = storeToRefs(questionStore);
 const { getUserStatus } = userStatsStore;
+const { readAllNotifications } = useNotifications();
 
 const f7params = {
   name: "Mathe App", // App name

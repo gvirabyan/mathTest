@@ -31,7 +31,9 @@ https://support.google.com/googleplay/android-developer/answer/9842756?hl=en-GB&
 4. In Main menu select Build -> Generate Signed Bundle / APK
    4.1. Select Android App Bundle
    4.2. Select keystore file and password (most probably it's already saved in Android Studio)
-   4.3. Click Next and Create
+   4.3. Click Next
+   4.4. Choose "release" and Create
+5. Get the .aab file from `\cordova\platforms\android\app\build\outputs\bundle\release` folder
 
 ## Framework7 CLI Options
 

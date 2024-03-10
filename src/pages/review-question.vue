@@ -10,12 +10,13 @@
       <template v-else #title>
         <f7-button @click="goPreviousPage">
           <img src="@/assets/icons/backSlag.svg" alt="" />
+          {{ categoryID }}
         </f7-button>
         {{ categoryName }}
       </template>
       <p style="width: auto">{{ allQuestions.length }}</p>
     </f7-navbar>
-    <div style="padding: 0 10px 120px">
+    <div style="padding: 0 10px 20px">
       <div v-for="(exercise, index) in allQuestions" :key="exercise.id">
         <div
           v-if="exercise?.question.startsWith('@@@')"
@@ -99,9 +100,12 @@
             Unpublish
           </button>
           <p>{{ exercise.id }}</p>
-          <button class="admin-button red" @click="editExercise(index, 'delete')">Delete</button>
+          <button class="admin-button red" @dblclick="editExercise(index, 'delete')">Delete</button>
         </div>
         <hr />
+      </div>
+      <div>
+        <f7-link :href="`/categories/${categoryID}/generateQuestions/`">Generate</f7-link>
       </div>
     </div>
     <loading-small v-if="isLoading" />
@@ -139,12 +143,14 @@ const { getQuestionsForAdmin, updateExercise } = questionStore;
 
 const isLoading = ref(false);
 const categoryName = ref("");
+const categoryID = ref("");
 const allQuestions = ref([]);
 
 const getAllQuestionData = async () => {
+  categoryID.value = props.f7route.params.categoryID;
   isLoading.value = true;
   await delay();
-  await getQuestionsForAdmin(props.f7route.params.categoryID, isAdmin.value).then(data => {
+  await getQuestionsForAdmin(categoryID.value, isAdmin.value).then(data => {
     allQuestions.value = data.data.results;
     categoryName.value = data.data.category_name;
     isLoading.value = false;

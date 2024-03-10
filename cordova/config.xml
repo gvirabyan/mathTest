@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.framework7.matheapp" version="1.0.11" xmlns:android="http://schemas.android.com/apk/res/android">
+<widget id="io.framework7.matheapp" version="1.0.12" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>MatheApp</name>
     <description>Die App zur Schule Mathe Lernen</description>
-    <author email="info@schulmatheapp.de" href="https://schulmatheapp.de">
+    <author email="leoni@schulmatheapp.de" href="https://schulmatheapp.de">
         5Devs
     </author>
     <content src="index.html" />

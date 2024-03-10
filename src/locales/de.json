@@ -204,8 +204,8 @@
     "leave-for-now": "Vorerst verlassen",
     "your-score-on-this-topic": "Deine Punkte zu diesem Thema",
     "will-be-update": "Du hast dieses Thema abgeschlossen. Deine Erfolge werden aktualisiert.",
-    "skipped-first-text": "du hast den Großteil des Themas bestanden, du hast aber Fragen übersprungen.",
-    "skipped-second-text": "Du kannst sie noch einmal überprüfen oder sie vorerst lassen.",
+    "skipped-first-text": "Du hast den Großteil des Themas bestanden, aber du hast ",
+    "skipped-second-text": " Fragen übersprungen. Du kannst sie noch einmal überprüfen oder sie vorerst lassen.",
     "exercise-solution": "Übungslösung",
     "no-solution": "Tut uns leid, wir haben im Moment keine Lösung."
   },

@@ -22,7 +22,7 @@
       <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
         <template v-if="isAdmin">
           <f7-list-item v-for="category in categories" :key="category.id">
-            <f7-link :href="`/categories/${category.id}/questions/`">
+            <f7-link :href="`/categories/${category.id}/questions/`" style="width: 100%">
               <span class="item-title">
                 <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
               </span>
@@ -261,7 +261,7 @@ const touchStart = event => {
 };
 
 const touchEnd = event => {
-  let offset = 50; //at least 50px are a swipe
+  let offset = 150; //at least 50px are a swipe
   if (start) {
     //the only finger that hit the screen left it
     let end = event.changedTouches.item(0).clientX;

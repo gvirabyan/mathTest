@@ -14,7 +14,6 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^11.0.0",
-    "cordova-clarity": "^0.0.4",
     "cordova-ios": "^6.3.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-keyboard": "^1.2.0",
@@ -52,8 +51,8 @@
         "AUTO_INIT": "true",
         "REQUIRES_USER_CONSENT": "false"
       },
-      "cordova-clarity": {},
-      "cordova-plugin-network-information": {}
+      "cordova-plugin-network-information": {},
+      "cordova-clarity": {}
     },
     "platforms": [
       "android",
@@ -61,6 +60,7 @@
     ]
   },
   "dependencies": {
+    "cordova-clarity": "2.1.0",
     "cordova-plugin-facebook-connect": "3.2.0"
   }
 }

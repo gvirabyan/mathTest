@@ -78,6 +78,12 @@ const cordovaApp = {
 
       // eslint-disable-next-line no-undef
       ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
+      // Set custom tag for the current session.
+      // eslint-disable-next-line no-undef
+      ClarityPlugin.setCustomTag("userID", localStorage.getItem("user-id"), success, failure);
+      // Set custom user id.
+      // eslint-disable-next-line no-undef
+      ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
     }
   },
 };
