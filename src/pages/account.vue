@@ -188,7 +188,7 @@
               class="custom-list-input"
               type="password"
               name="password"
-              :placeholder="$t('inputs.confirm password')"
+              :placeholder="$t('inputs.confirm-password')"
               :error-message="nicknamedUserDataError.confirmPassword"
               :error-message-force="true"
             ></f7-list-input>

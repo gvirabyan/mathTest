@@ -28,12 +28,12 @@ https://support.google.com/googleplay/android-developer/answer/9842756?hl=en-GB&
 1. Update build version in `cordova/config.xml` file
 2. Open `cordova/platforms/android/app` file in Android Studio 
 3. Go to Build -> Build Bundle(s) / APK(s) -> Build Bundle(s)
-4. In Main menu select Build -> Generate Signed Bundle / APK
-   4.1. Select Android App Bundle
-   4.2. Select keystore file and password (most probably it's already saved in Android Studio)
-   4.3. Click Next
-   4.4. Choose "release" and Create
-5. Get the .aab file from `\cordova\platforms\android\app\build\outputs\bundle\release` folder
+4. In Main menu select Build -> Generate Signed Bundle / APK 
+   - 4.1. Select Android App Bundle
+   - 4.2. Select keystore file and password (most probably it's already saved in Android Studio)
+   - 4.3. Click Next
+   - 4.4. Choose "release" and Create
+5. Get the .aab file from `\cordova\platforms\android\app\release` folder
 
 ## Framework7 CLI Options
 
@@ -156,5 +156,6 @@ During creating questions/answers you can use these markings.
 @ - will put text in span/div tag without any changes.
 @@ - will put text in span/div tag as an HTML with `monospace` font. It can be used for multirow expressions.
 @@@ - will put text in span/div tag as an HTML.
-@emoji@ - can be used with emoji questions. This can be used only for questions.
+@emoji@ - can be used with emoji questions. This can be used only for questions with emojis. Most probably this template can be removed.
+@pre@ - put text in `pre` tag. It is in used for column exercises (սյունյակով հանում/գումարում/․․․). Most probably it will replace `@@` syntax in the future.
 If no markings are used then text will be handled by MathJax

@@ -40,6 +40,9 @@
           style="font-size: 20px; line-height: 1.5; display: flex; flex-flow: column wrap"
           v-html="$sanitize(exercise?.question.slice(7))"
         ></div>
+        <span v-else-if="exercise?.question.startsWith('@pre@')" style="font-size: 20px; line-height: 1">
+          <pre v-html="$sanitize(exercise?.question.slice(5))"></pre>
+        </span>
         <p v-else-if="exercise?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
           {{ exercise?.question.slice(1) }}
         </p>
@@ -63,6 +66,9 @@
             "
             v-html="$sanitize(exercise?.answer.slice(2))"
           ></span>
+          <span v-else-if="exercise?.answer.startsWith('@pre@')" style="font-size: 20px; line-height: 1">
+            <pre v-html="$sanitize(exercise?.answer.slice(5))"></pre>
+          </span>
           <span v-else-if="exercise?.answer.startsWith('@')" style="font-weight: bold">{{
             exercise.answer.slice(1)
           }}</span>
@@ -87,6 +93,9 @@
             "
             v-html="$sanitize(answer.slice(2))"
           ></span>
+          <span v-else-if="answer.startsWith('@pre@')" style="font-size: 20px; line-height: 1">
+            <pre v-html="$sanitize(answer.slice(5))"></pre>
+          </span>
           <span v-else-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
           <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
         </p>
@@ -139,6 +148,9 @@
           style="font-size: 20px; line-height: 1.5; display: flex; flex-flow: column wrap"
           v-html="$sanitize(exercise?.question.slice(7))"
         ></div>
+        <div v-else-if="exercise?.question.startsWith('@pre@')" style="font-size: 20px; line-height: 1">
+          <pre v-html="$sanitize(exercise?.question.slice(5))"></pre>
+        </div>
         <p v-else-if="exercise?.question.startsWith('@')" style="font-size: 20px; line-height: 1">
           {{ exercise?.question.slice(1) }}
         </p>

@@ -198,6 +198,10 @@ const keywords = ref([
     active: false,
   },
   {
+    name: "Vergleichen",
+    active: false,
+  },
+  {
     name: "mit Übertrag",
     active: false,
   },
