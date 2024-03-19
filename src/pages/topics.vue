@@ -308,8 +308,9 @@ const getCategoriesByClass = async id => {
     calledId.value = id;
     isLoading.value = true;
     await delay();
-    await getCategoriesByCategoryClass(id, isAdmin.value);
-    isLoading.value = false;
+    await getCategoriesByCategoryClass(id, isAdmin.value).then(() => {
+      isLoading.value = false;
+    });
   }
 };
 

@@ -38,7 +38,22 @@ import(`../../src/locales/${lang}.json`).then(data => {
 .list {
   .list {
     margin: 0 0 0 -56px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
     font-size: 14px;
+    ul {
+      li :deep(.item-content) {
+        min-height: auto;
+        .item-inner {
+          padding-top: 0;
+          padding-bottom: 0;
+          min-height: auto;
+          &:after {
+            display: none;
+          }
+        }
+      }
+    }
   }
 }
 </style>

@@ -77,7 +77,7 @@ export const useQuestionsStore = defineStore("questions", () => {
       .get(
         `user-answers?populate[0]=question&filters[question][category][id][$eq]=${categoryID}&filters[users_permissions_user][id][$eq][0]=${localStorage.getItem(
           "user-id",
-        )}&filters[status][$ne][1]=skipped&populate[question][fields]=id&fields=id&pagination[limit]=200`,
+        )}&filters[status][$ne][1]=skipped&pagination[limit]=100`,
       )
       .then(data => {
         answeredQuestionsData.value = data?.data;

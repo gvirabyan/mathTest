@@ -16,7 +16,7 @@
         </f7-list-item>
         <f7-list-item>
           <p>Strapi</p>
-          <f7-link target="_blank" href="https://strapi.io/" external>www.strapi.io/</f7-link>
+          <f7-link target="_blank" href="https://strapi.io/" external>www.strapi.io</f7-link>
         </f7-list-item>
         <f7-list-item>
           <p>Framework7</p>
@@ -30,7 +30,7 @@
         </f7-list-item>
         <f7-list-item>
           <p>Moment.js</p>
-          <f7-link target="_blank" href="https://momentjs.com/" external>www.momentjs.com</f7-link>
+          <a class="link external" href="https://momentjs.com/">www.momentjs.com</a>
         </f7-list-item>
         <f7-list-item>
           <p>better-sqlite3</p>

@@ -362,41 +362,43 @@ const initAutocompleteInputs = () => {
 
   // init autocomplete on inputs
   const autocompleteClasses = ["country", "city", "institution"];
+  // eslint-disable-next-line no-undef
+  if (typeof google !== "undefined") {
+    for (const elName of autocompleteClasses) {
+      // eslint-disable-next-line no-undef
+      const autocomplete = new google.maps.places.Autocomplete(document.querySelector(`.${elName}-autocomplete input`));
 
-  for (const elName of autocompleteClasses) {
-    // eslint-disable-next-line no-undef
-    const autocomplete = new google.maps.places.Autocomplete(document.querySelector(`.${elName}-autocomplete input`));
+      elName === "country" && autocomplete.setTypes(["country"]);
+      elName === "city" && autocomplete.setTypes(["(cities)"]);
+      elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
 
-    elName === "country" && autocomplete.setTypes(["country"]);
-    elName === "city" && autocomplete.setTypes(["(cities)"]);
-    elName === "institution" && autocomplete.setTypes(["university", "primary_school", "secondary_school", "school"]);
+      countryCode.value &&
+        autocomplete.setComponentRestrictions({
+          // restrict the country
+          country: countryCode.value,
+        });
 
-    countryCode.value &&
-      autocomplete.setComponentRestrictions({
-        // restrict the country
-        country: countryCode.value,
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        const countryValue = place.address_components.filter(c => c.types.includes("country"))[0]?.long_name;
+        const cityValue = place.address_components.filter(c => c.types.includes("locality"))[0]?.long_name;
+
+        if (elName === "institution") {
+          profileData.institution.name = place.name;
+          profileData.institution.place_id = place.place_id;
+        } else {
+          profileData[elName] = place.name;
+        }
+
+        if (countryValue) {
+          profileData.country = countryValue;
+        }
+
+        if (cityValue) {
+          profileData.city = cityValue;
+        }
       });
-
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      const countryValue = place.address_components.filter(c => c.types.includes("country"))[0]?.long_name;
-      const cityValue = place.address_components.filter(c => c.types.includes("locality"))[0]?.long_name;
-
-      if (elName === "institution") {
-        profileData.institution.name = place.name;
-        profileData.institution.place_id = place.place_id;
-      } else {
-        profileData[elName] = place.name;
-      }
-
-      if (countryValue) {
-        profileData.country = countryValue;
-      }
-
-      if (cityValue) {
-        profileData.city = cityValue;
-      }
-    });
+    }
   }
 };
 

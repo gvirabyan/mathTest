@@ -381,10 +381,140 @@
   },
   "versions": [
     {
+      "v": "1.0.14",
+      "date": "2024-03-19",
+      "changes": [
+        "Aktualisierung des Versions-Popups.",
+        "Meta-Aktualisierungen.",
+        "Kleiner Fehler bei Google Autocomplete behoben.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.13",
+      "date": "2024-03-15",
+      "changes": [
+        "Änderung der Wischlänge für eine bessere Erfahrung.",
+        "Klarheitsaktualisierung.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.12",
+      "date": "2024-03-12",
+      "changes": [
+        "Neue Vorlage von Übungen.",
+        "SMTP-Server-Fix.",
+        "Aktualisierung fehlender Übersetzungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.11",
+      "date": "2024-03-08",
+      "changes": [
+        "Neue Vorlage von Übungen.",
+        "Viele neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.10",
+      "date": "2024-02-29",
+      "changes": [
+        "Designaktualisierungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.9",
+      "date": "2024-02-19",
+      "changes": [
+        "Designaktualisierungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.8",
+      "date": "2024-02-09",
+      "changes": [
+        "Designaktualisierungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.7",
+      "date": "2024-02-02",
+      "changes": [
+        "Datenschutzerklärung-Aktualisierung.",
+        "Erstellung einer Liste genutzter Dienste.",
+        "Aktualisierung der Logik für die zweite Antwort.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.6",
+      "date": "2024-01-18",
+      "changes": [
+        "KI-Implementierung für Übungen.",
+        "Stiländerungen.",
+        "Bugfixes und Leistungsverbesserungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.5",
+      "date": "2024-01-18",
+      "changes": [
+        "Integration von Verwaltungstools.",
+        "Benachrichtigung-Update.",
+        "Verbesserung des Android-Builds.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.4",
+      "date": "2024-01-04",
+      "changes": [
+        "KI-Nachrichten-Update.",
+        "Implementierung der Grundlogik für Lösungen.",
+        "E-Mail-Update.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.3",
+      "date": "2023-12-18",
+      "changes": [
+        "Grundlegende KI-Integration.",
+        "Designkorrekturen.",
+        "Leistungsverbesserungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.2",
+      "date": "2023-11-10",
+      "changes": [
+        "Unveröffentlichte Übungen aus der Liste entfernen.",
+        "Statistik-API hinzufügen.",
+        "Korrekturen bei Benachrichtigungen zu täglichen Zielen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
+      "v": "1.0.1",
+      "date": "2023-10-26",
+      "changes": [
+        "Benachrichtigung-Update.",
+        "Bugfixes und Leistungsverbesserungen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
       "v": "1.0.0",
       "date": "2023-10-13",
       "changes": [
-          "Erste Funktionalität."
+        "Erste Funktionalität."
       ]
     }
   ]
