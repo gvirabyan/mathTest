@@ -4,8 +4,9 @@
       <f7-login-screen-title>{{ $t("login-register.sign-in") }}</f7-login-screen-title>
       <f7-list-input
         v-model:value="userData.identifier"
-        type="text"
+        type="email"
         name="email"
+        autocapitalize="none"
         :input-style="inputStyle"
         class="custom-list-input"
         :error-message-force="!!error.identifier"

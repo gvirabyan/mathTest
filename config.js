@@ -1,3 +1,1 @@
-export default {
-  exceptionUrls: ["notifications", "courses"],
-};
+export default { exceptionUrls: ["notifications", "courses"] };

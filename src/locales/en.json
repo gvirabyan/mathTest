@@ -380,6 +380,17 @@
   },
   "versions": [
     {
+      "v": "1.0.15",
+      "date": "2024-03-21",
+      "changes": [
+        "Main email update.",
+        "Translations fixes",
+        "Password reset functionality update.",
+        "Loading animation improvement",
+        "New exercises added."
+      ]
+    },
+    {
       "v": "1.0.14",
       "date": "2024-03-19",
       "changes": [

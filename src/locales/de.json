@@ -38,10 +38,10 @@
     "class-error": "Bitte gib den Namen deine Schule an",
     "E-mail": "E-Mail",
     "your-email": "Deine E-Mail",
-    "paste-email": "E-Mail hinzufügen",
+    "paste-email": "Fügen Sie den Code aus der E-Mail ein",
     "password": "Passwort",
     "enter-password": "Passwort eingeben",
-    "enter-password-again": "passwort erneut eingeben",
+    "enter-password-again": "Passwort erneut eingeben",
     "confirm-password": "Passwort bestätigen",
     "new-password": "Neues Passwort",
     "confirm-new-password": "Neues Passwort bestätigen",
@@ -380,6 +380,17 @@
     ]
   },
   "versions": [
+    {
+      "v": "1.0.15",
+      "date": "2024-03-21",
+      "changes": [
+        "Haupt-E-Mail-Aktualisierung.",
+        "Korrekturen bei Übersetzungen",
+        "Aktualisierung der Passwort-Zurücksetzungsfunktion.",
+        "Verbesserung der Ladeanimation",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
     {
       "v": "1.0.14",
       "date": "2024-03-19",

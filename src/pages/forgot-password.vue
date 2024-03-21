@@ -6,8 +6,9 @@
       <f7-list-input
         v-model:value="email"
         class="custom-list-input"
-        type="text"
+        type="email"
         name="email"
+        autocapitalize="none"
         :error-message-force="!!error.length"
         :error-message="error"
         :placeholder="$t('inputs.your-email')"

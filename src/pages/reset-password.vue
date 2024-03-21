@@ -13,17 +13,31 @@
         <f7-list-input
           v-model:value="resetPasswordData.password"
           class="custom-list-input"
-          type="password"
+          :type="showPassword1 ? 'text' : 'password'"
           name="password"
           :placeholder="$t('inputs.enter-password')"
-        />
+        >
+          <template #media>
+            <div class="eye-icons" @click="showPassword1 = !showPassword1">
+              <img v-if="showPassword1" src="@/assets/icons/eye.svg" alt="eye" />
+              <img v-else src="@/assets/icons/eyeline.svg" alt="eyeline" />
+            </div>
+          </template>
+        </f7-list-input>
         <f7-list-input
           v-model:value="resetPasswordData.passwordConfirmation"
           class="custom-list-input"
-          type="password"
+          :type="showPassword2 ? 'text' : 'password'"
           name="passwordConfirmation"
           :placeholder="$t('inputs.enter-password-again')"
-        />
+        >
+          <template #media>
+            <div class="eye-icons" @click="showPassword2 = !showPassword2">
+              <img v-if="showPassword2" src="@/assets/icons/eye.svg" alt="eye" />
+              <img v-else src="@/assets/icons/eyeline.svg" alt="eyeline" />
+            </div>
+          </template>
+        </f7-list-input>
       </f7-list>
     </div>
     <f7-list>
@@ -61,6 +75,8 @@ const resetPasswordData = reactive({
 
 const i18n = useI18n();
 const errText = ref("");
+const showPassword1 = ref(false);
+const showPassword2 = ref(false);
 
 const resetPasswordHandler = async () => {
   errText.value = "";
