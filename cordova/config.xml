@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.framework7.matheapp" version="1.0.15" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>MatheApp: Mathematik auf Deutsch</name>
-    <description>MatheApp ist die App zur Schulmathe lernen</description>
+<widget id="io.framework7.matheapp" version="1.0.16" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>MatheApp</name>
+    <description>Die Math App zur Schulmathe lernen</description>
     <author email="leonie@schulmatheapp.de" href="https://schulmatheapp.de">
         5Devs
     </author>
@@ -69,5 +69,4 @@
     <preference name="Allow3DTouchLinkPreview" value="false" />
     <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <preference name="AllowInlineMediaPlayback" value="true" />
-    <engine name="android" />
 </widget>

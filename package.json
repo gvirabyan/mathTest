@@ -1,8 +1,8 @@
 {
-  "name": "mathe-app",
+  "name": "matheapp",
   "private": true,
-  "version": "1.0.1",
-  "description": "Mathe App",
+  "version": "1.0.16",
+  "description": "MatheApp ist die App zur Schulmathe lernen",
   "repository": "",
   "license": "UNLICENSED",
   "scripts": {

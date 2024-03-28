@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStats } from "@/js/stores/user-stats";
 import CustomGauge from "@/components/custom-gauge.vue";

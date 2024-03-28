@@ -6,7 +6,7 @@
     <f7-block>
       <f7-block-title>{{ $t("profile.about-us.release-notes") }}</f7-block-title>
       <f7-list>
-        <f7-list-item v-for="(version, index) in versions" :key="version.v">
+        <f7-list-item v-for="version in versions" :key="version.v">
           <p>
             <b>v{{ version.v }}</b>
           </p>

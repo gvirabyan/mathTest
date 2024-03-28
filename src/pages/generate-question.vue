@@ -76,12 +76,12 @@
         </p>
         <p v-for="answer in exercise?.wrong_answers" :key="answer">
           <span
-            v-if="answer.startsWith('@@@')"
+            v-if="String(answer).startsWith('@@@')"
             style="font-size: 20px; line-height: 1; font-family: Rubik"
             v-html="$sanitize(answer.slice(3))"
           ></span>
           <span
-            v-else-if="answer.startsWith('@@')"
+            v-else-if="String(answer).startsWith('@@')"
             style="
               padding: 5px 0;
               line-height: 1;
@@ -93,10 +93,10 @@
             "
             v-html="$sanitize(answer.slice(2))"
           ></span>
-          <span v-else-if="answer.startsWith('@pre@')" style="font-size: 20px; line-height: 1">
+          <span v-else-if="String(answer).startsWith('@pre@')" style="font-size: 20px; line-height: 1">
             <pre v-html="$sanitize(answer.slice(5))"></pre>
           </span>
-          <span v-else-if="answer.startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
+          <span v-else-if="String(answer).startsWith('@')" style="font-weight: bold">{{ answer.slice(1) }}</span>
           <math-jax v-else :latex="'\\sf ' + answer"></math-jax>
         </p>
         <p v-if="exercise?.second_answer" style="background: lightblue">{{ exercise?.second_answer }}</p>
@@ -233,7 +233,7 @@ const createQuestions = async () => {
   }
   createNewQuestions({ categoryID: props.f7route.params.categoryID, content: content })
     .then(resp => {
-      alert(resp.amount);
+      alert(resp.amount + ", " + resp.finish_reason);
       isLoading.value = false;
     })
     .catch(() => {
@@ -256,6 +256,7 @@ const clearStores = async () => {
 <style lang="scss">
 @import "../assets/scss/pages/question";
 .loading-container {
+  position: fixed;
   width: 100%;
   height: 100%;
 }
