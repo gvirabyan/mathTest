@@ -87,14 +87,12 @@ const cordovaApp = {
       // alert(3);
       var onSuccess = function (strSuccess) {
         console.log(strSuccess);
-        // alert(1);
       };
       var onFailure = function (strError) {
         console.warn(strError);
-        // alert(2);
       };
       // eslint-disable-next-line no-undef
-      InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+      cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
     }
   },
 };

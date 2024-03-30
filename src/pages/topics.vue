@@ -11,7 +11,7 @@
       @tab-selected="getCategoriesByClass"
       @show-search-popup="toggleSearchPopup"
     >
-      <template #title>Topics</template>
+      <template #title>{{ $t("topics.topics") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle-data
         >{{ `${user.everyday_goal} ${$t("top-bar.questions")}` }}
