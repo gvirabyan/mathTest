@@ -105,8 +105,12 @@
           </f7-list-item>
         </f7-list>
       </div>
-
-      <f7-button class="question-continue-btn" @click="goPresentQuestion">{{ $t("question.continue") }}</f7-button>
+      <div>
+        <span class="button-solution" style="margin-left: 24px" @click="showSolution(questionHistory.id)">
+          {{ $t("buttons.description") }}
+        </span>
+        <f7-button class="question-continue-btn" @click="goPresentQuestion">{{ $t("question.continue") }}</f7-button>
+      </div>
     </div>
     <div v-else-if="question" id="elementId" class="questions-content">
       <div>
@@ -190,7 +194,7 @@
       </div>
       <div class="hg-actions-btns-content">
         <div>
-          <span class="button-solution" @click="showSolution">
+          <span class="button-solution" @click="showSolution(question.id)">
             {{ $t("buttons.description") }}
           </span>
         </div>
@@ -423,7 +427,7 @@ watch(
   },
 );
 
-const correctAnswers = computed(() => answeredQuestionsData.value.filter(q => q.attributes.status === "correct"));
+const correctAnswers = computed(() => answeredQuestionsData?.value.filter(q => q.attributes.status === "correct"));
 const showSkipSendBtns = computed(() => {
   if (question.value.second_answer && status.value !== "wrong") {
     return !isSentSecondAnswer.value;
@@ -646,16 +650,16 @@ const goBack = () => {
 
 const keepPresentIndex = ref(null);
 
-const showSolution = () => {
+const showSolution = id => {
   if (question.value.solution) {
-    questionID.value = question.value.id;
+    questionID.value = id;
     changPopupSolution(true);
   } else {
     isSolutionLoading.value = true;
-    getSolution(question.value.id, props.f7route.params.categoryID)
+    getSolution(id, props.f7route.params.categoryID)
       .then(resp => {
         if (resp.solution) {
-          questionID.value = question.value.id;
+          questionID.value = id;
           changPopupSolution(true);
         }
         isSolutionLoading.value = false;

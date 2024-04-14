@@ -265,7 +265,7 @@ const touchStart = event => {
 };
 
 const touchEnd = event => {
-  let offset = 150; //at least 50px are a swipe
+  let offset = 150; //at least 150px are a swipe
   if (start) {
     //the only finger that hit the screen left it
     let end = event.changedTouches.item(0).clientX;

@@ -454,7 +454,6 @@
     text-transform: revert !important;
     text-align: center;
     width: calc(100vw - 48px);
-    height: 48px;
     margin: 0 auto;
     color: #fff;
     background-color: #FFC700 !important;
@@ -469,15 +468,6 @@
     .row {
       width: 100%;
       flex-wrap: nowrap !important;
-    }
-    .button-solution {
-      display: inline-block;
-      width: unset;
-      margin-bottom: 20px;
-      color: #8419FF !important;
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      font-size: 14px;
     }
     .button {
       padding: 20px 0;
@@ -516,6 +506,16 @@
       }
     }
   }
+}
+
+.button-solution {
+  display: inline-block;
+  width: unset;
+  margin-bottom: 20px;
+  color: #8419FF !important;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .ios label.item-radio:not(.item-radio-icon-start) input[type='radio'] ~ .icon-radio {

@@ -30,7 +30,9 @@
         </f7-list-item>
         <f7-list-item>
           <p>Moment.js</p>
-          <a class="link external" href="https://momentjs.com/">www.momentjs.com</a>
+          <span class="link external" onclick="window.open(encodeURI('https://momentjs.com/'), '_system')"
+            >www.momentjs.com</span
+          >
         </f7-list-item>
         <f7-list-item>
           <p>better-sqlite3</p>

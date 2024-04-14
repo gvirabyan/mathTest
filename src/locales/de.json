@@ -61,7 +61,7 @@
       "got-it": "Verstanden"
     },
     "input-popup": {
-      "title": "Was macht es?",
+      "title": "Erechne das Ergebnis",
       "error": "Nur Zahlen eingeben"
     }
   },
@@ -130,7 +130,7 @@
       "last-quiz": "Letztes Quiz",
       "experience-points": "Punkte",
       "last-update": "Letztes Update:",
-      "go-to-topics": "Beginne deine Reise, um Punkte zu sammeln - wähle ein Thema",
+      "go-to-topics": "Beginne deine Reise, um Punkte zu sammeln - wähle ein Mathe-Themengebiet",
       "past-categories": "Vergangene Kategorien",
       "categories-were-answered": "Beantwortete Kategorien",
       "you-are-in": "Du bist in Mathe App",
@@ -189,7 +189,7 @@
 
   "topics": {
     "topics": "Themen",
-    "classes": "Klassen"
+    "classes": "Klasse"
   },
 
   "question": {
@@ -380,6 +380,16 @@
     ]
   },
   "versions": [
+    {
+      "v": "1.0.18",
+      "date": "2024-04-13",
+      "changes": [
+        "Übersetzungskorrekturen.",
+        "Ladeanimationskorrekturen.",
+        "Lösungen bei beantworteten Fragen.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
     {
       "v": "1.0.17",
       "date": "2024-03-30",

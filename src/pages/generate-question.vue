@@ -253,7 +253,7 @@ const clearStores = async () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../assets/scss/pages/question";
 .loading-container {
   position: fixed;
