@@ -381,6 +381,15 @@
   },
   "versions": [
     {
+      "v": "1.0.19",
+      "date": "2024-04-30",
+      "changes": [
+        "Machen Sie mehr Themen in der Klasse sichtbar.",
+        "Offene Fragen zur zuletzt verwendeten Klasse.",
+        "Neue Übungen hinzugefügt."
+      ]
+    },
+    {
       "v": "1.0.18",
       "date": "2024-04-13",
       "changes": [

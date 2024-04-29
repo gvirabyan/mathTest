@@ -66,12 +66,9 @@ import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useEventBus } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
-import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import playAudioMixin from "@/js/mixins/play_audio";
 
 const bus = useEventBus("notifications");
-const categoriesClassesStore = useCategoryClassesStore();
-const { selectedClass } = storeToRefs(categoriesClassesStore);
 const { hasUnreadNotifications } = storeToRefs(useNotifications());
 const { getNotifications } = useNotifications();
 
@@ -174,7 +171,11 @@ const selectTab = (id, index) => {
 
 const selectFirstTab = async (tabs, selected = true) => {
   const tabIndex =
-    f7.views.main.router.currentRoute.name === "Topics" && selected ? selectedClass.value : props.firstLoadIndex + 1;
+    f7.views.main.router.currentRoute.name === "Topics" && selected
+      ? localStorage.getItem("actualClass") !== undefined
+        ? Number(localStorage.getItem("actualClass")) + 1
+        : 1
+      : props.firstLoadIndex + 1;
   tabsResult.value = tabs
     .sort((a, b) => a.id - b.id)
     .map((t, index) => {

@@ -350,6 +350,7 @@ watch(
       }
       changeClass.value = select - 1;
       checkPageRedirect.value = true;
+      localStorage.setItem("actualClass", changeClass.value.toString());
     }
   },
 );

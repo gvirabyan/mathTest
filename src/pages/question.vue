@@ -310,7 +310,6 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
-import { useCategoryClassesStore } from "@/js/stores/category-classes";
 import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import playAudioMixin from "@/js/mixins/play_audio";
@@ -322,8 +321,6 @@ const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-pag
 const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
 
 const { playAudio } = playAudioMixin.setup();
-const storeCategoryClass = useCategoryClassesStore();
-const { selectedClass } = storeToRefs(storeCategoryClass);
 
 const i18n = useI18n();
 
@@ -380,7 +377,7 @@ watch(
   () => questions.value,
   async () => {
     if (checkAnswers.value && categoryQuestion.value) {
-      selectedClass.value = categoryQuestion.value.classId;
+      localStorage.setItem("actualClass", (categoryQuestion.value.classId - 1).toString());
       presentIndex.value = history.value.length;
       keepPresentIndex.value = presentIndex.value;
       checkAnswers.value = false;

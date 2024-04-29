@@ -36,7 +36,9 @@ export const useCategoryStore = defineStore("category", () => {
     categories.value = [];
 
     return api
-      .get(`categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}&isAdmin=${isAdmin}`)
+      .get(
+        `categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}&isAdmin=${isAdmin}&pagination[limit]=100`,
+      )
       .then(data => {
         if (data.data) {
           categories.value = data.data;

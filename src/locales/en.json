@@ -380,6 +380,15 @@
   },
   "versions": [
     {
+      "v": "1.0.19",
+      "date": "2024-04-30",
+      "changes": [
+        "Make more topics visible in the class.",
+        "Open questions on last used class.",
+        "New exercises added."
+      ]
+    },
+    {
       "v": "1.0.18",
       "date": "2024-04-13",
       "changes": [
