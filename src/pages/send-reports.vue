@@ -257,6 +257,7 @@ onMounted(() => {
 
 .send-reports-dash {
   .loading-container {
+    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%);

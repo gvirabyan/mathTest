@@ -140,7 +140,8 @@
       "wrong": "Wrong",
       "skipped": "Skipped",
       "correct": "Correct",
-      "check-progress": "Check Progress"
+      "check-progress": "Check Progress",
+      "goal-set": "Your everyday goal has been set"
     },
     "top-list": {
      "lists": [
@@ -379,6 +380,16 @@
     ]
   },
   "versions": [
+    {
+      "v": "1.0.20",
+      "date": "2024-08-01",
+      "changes": [
+        "Translations fixes.",
+        "Popup and loading animation fixes.",
+        "New topics for search.",
+        "Android version update."
+      ]
+    },
     {
       "v": "1.0.19",
       "date": "2024-04-30",

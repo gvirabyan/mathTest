@@ -249,6 +249,14 @@ const keywords = ref([
     name: "Schriftliche",
     active: false,
   },
+  {
+    name: "binomische",
+    active: false,
+  },
+  {
+    name: "lineare",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);

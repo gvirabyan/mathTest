@@ -140,7 +140,8 @@
       "wrong": "Falsch",
       "skipped": "Übersprungen",
       "correct": "Richtig",
-      "check-progress": "Fortschritt prüfen"
+      "check-progress": "Fortschritt prüfen",
+      "goal-set": "Ihr tägliches Ziel wurde festgelegt"
     },
     "top-list": {
      "lists": [
@@ -235,7 +236,7 @@
       "title": "Kein Spieler ist verfügbar",
       "text": "Sorry, aktuell ist kein Spieler verfügbar \uD83E\uDD37\u200D♀\uFE0F. Probiere später noch einmal.",
       "go-to-practice": "Gehe zum Üben",
-      "try-again": "Probiere später"
+      "try-again": "Erneut versuchen"
     },
     "left-by-rival-popup": {
       "title": "Ups!",
@@ -380,6 +381,16 @@
     ]
   },
   "versions": [
+    {
+      "v": "1.0.20",
+      "date": "2024-08-01",
+      "changes": [
+        "Übersetzungsfehler behoben.",
+        "Pop-up- und Ladeanimationsfehler behoben.",
+        "Neue Themen für die Suche.",
+        "Android-Version aktualisiert."
+      ]
+    },
     {
       "v": "1.0.19",
       "date": "2024-04-30",
