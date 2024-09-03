@@ -103,7 +103,7 @@
     </f7-list>
 
     <f7-list class="f7-footer">
-      <f7-block class="f7-content-title">
+      <!--      <f7-block class="f7-content-title">
         <div class="f7-line" />
         <p class="f7-content-title-text">{{ $t("login-register.sign-up-using") }}</p>
         <div class="f7-line" />
@@ -111,10 +111,10 @@
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <!--          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>-->
+          &lt;!&ndash;          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>&ndash;&gt;
           <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
-      </f7-block>
+      </f7-block>-->
 
       <!--      <f7-block class="f7-content-btn">-->
       <!--        <f7-row class="justify-content-space-between">-->
@@ -134,10 +134,10 @@
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
+// import { useI18n } from "vue-i18n";
 import { computed, reactive, ref } from "vue";
 import { useAuthStore } from "@/js/stores/auth";
-import fbHandler from "@/js/handlers/fb-handler";
+// import fbHandler from "@/js/handlers/fb-handler";
 
 import playAudioMixin from "@/js/mixins/play_audio";
 const { playAudio } = playAudioMixin.setup();
@@ -170,7 +170,7 @@ const error = reactive({
 
 const remember = ref(false);
 
-const { register, registerByNickname, loginViaProvider } = useAuthStore();
+const { register, registerByNickname /*, loginViaProvider*/ } = useAuthStore();
 
 const registerMode = ref("credentials");
 const rememberUser = ref(false);
@@ -236,9 +236,9 @@ const startRegister = () => {
   });
 };
 
-const i18n = useI18n();
+// const i18n = useI18n();
 
-const fbLoginHandler = async function () {
+/*const fbLoginHandler = async function () {
   await fbHandler.login().then(response => {
     if (response.authResponse) {
       loginViaProvider("facebook", `?access_token=${response.authResponse.accessToken}`).then(resp => {
@@ -252,7 +252,7 @@ const fbLoginHandler = async function () {
       alert(i18n.t("login-register.user-cancelled-register"));
     }
   });
-};
+};*/
 </script>
 
 <style lang="scss">

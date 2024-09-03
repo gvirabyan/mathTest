@@ -60,7 +60,7 @@
     </f7-list>
 
     <f7-list class="f7-footer">
-      <f7-block class="f7-content-title">
+      <!--      <f7-block class="f7-content-title">
         <div class="f7-line" />
         <p class="f7-content-title-text">{{ $t("login-register.sign-in-using") }}</p>
         <div class="f7-line" />
@@ -68,10 +68,10 @@
 
       <f7-block class="f7-content-btn">
         <f7-row class="justify-content-space-between">
-          <!--          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>-->
+          &lt;!&ndash;          <f7-button class="f7-btn">{{ $t("login-register.google") }}</f7-button>&ndash;&gt;
           <f7-button class="f7-btn" @click="fbLoginHandler">{{ $t("login-register.facebook") }}</f7-button>
         </f7-row>
-      </f7-block>
+      </f7-block>-->
 
       <!--      <f7-block class="f7-content-btn">-->
       <!--        <f7-row class="justify-content-space-between">-->
@@ -94,8 +94,8 @@
 import { ref, reactive, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/js/stores/auth";
-import fbHandler from "@/js/handlers/fb-handler";
-import { useI18n } from "vue-i18n";
+/*import fbHandler from "@/js/handlers/fb-handler";
+import { useI18n } from "vue-i18n";*/
 import playAudioMixin from "@/js/mixins/play_audio";
 
 const { playAudio } = playAudioMixin.setup();
@@ -108,7 +108,7 @@ const props = defineProps({
 const showPassword = ref(false);
 
 const { suggestedCredentials } = storeToRefs(useAuthStore());
-const { login, loginViaProvider } = useAuthStore();
+const { login /*, loginViaProvider*/ } = useAuthStore();
 
 const rememberUser = ref(false);
 const remember = ref(false);
@@ -153,9 +153,9 @@ const startLogin = () => {
   });
 };
 
-const i18n = useI18n();
+// const i18n = useI18n();
 
-const fbLoginHandler = async function () {
+/*const fbLoginHandler = async function () {
   await fbHandler.login().then(response => {
     error.identifier = "";
     error.message = "";
@@ -172,7 +172,7 @@ const fbLoginHandler = async function () {
       alert(i18n.t("login-register.user-cancelled-login"));
     }
   });
-};
+};*/
 
 userData.identifier = suggestedCredentials.value.suggestedLogin;
 userData.password = suggestedCredentials.value.suggestedPassword;
