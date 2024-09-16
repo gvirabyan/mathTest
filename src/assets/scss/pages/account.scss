@@ -316,6 +316,21 @@
         }
       }
 
+      .delete-btn {
+        all: unset;
+
+        p {
+          margin-top: 8px;
+          margin-bottom: 31px;
+          text-align: left;
+          font-family: 'Rubik';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: #FF0000;
+        }
+      }
       .class-options {
         position: absolute;
         bottom: -10px;

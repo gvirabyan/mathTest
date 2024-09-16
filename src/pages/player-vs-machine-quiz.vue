@@ -269,7 +269,7 @@
     </loading-small>
 
     <transition v-else-if="!isLoading && startGameTimer.isRunning">
-      <div class="timer-wrapper">
+      <div v-if="customGaugeOptions" class="timer-wrapper">
         <custom-gauge
           :width="customGaugeOptions.width"
           :height="customGaugeOptions.height"

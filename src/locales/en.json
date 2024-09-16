@@ -57,6 +57,14 @@
       "save": "Save",
       "leave": "Leave"
     },
+    "delete-page-popup": {
+      "first-title": "Are you sure you want",
+      "second-title": "to delete your account ?",
+      "first-text": "If you delete your account now",
+      "second-text": "you will not be able to revert this action, all your data will be deleted forever.",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
     "success-message-popup": {
       "got-it": "Got it"
     },
@@ -280,6 +288,7 @@
       "logout-warning": "Logout Warning",
       "logout-text": "Please provide your email and password to be able to login back later. Otherwise, your account and all related data will be deleted immediately after logout. This action can't be reverted",
       "log-out": "Log Out",
+      "delete": "Delete account",
       "save-and-logout": "Save and logout",
       "delete-account": "Delete account"
     },

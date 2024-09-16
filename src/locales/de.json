@@ -57,6 +57,14 @@
       "save": "Speichern",
       "leave": "Verlassen"
     },
+    "delete-page-popup": {
+      "first-title": "Sind Sie sicher, dass Sie",
+      "second-title": "Ihr Konto löschen möchten?",
+      "first-text": "Wenn Sie Ihr Konto jetzt löschen,",
+      "second-text": "können Sie diese Aktion nicht rückgängig machen, alle Ihre Daten werden dauerhaft gelöscht.",
+      "delete": "Löschen",
+      "cancel": "Abbrechen"
+    },
     "success-message-popup": {
       "got-it": "Verstanden"
     },
@@ -280,6 +288,7 @@
       "logout-warning": "Abmeldenachricht",
       "logout-text": "Bitte gib deine E-Mail und dein Passwort an, um dich später wieder anmelden zu können. Andernfalls werden dein Konto und alle damit verbundenen Daten sofort nach der Abmeldung gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
       "log-out": "Abmelden",
+      "delete": "Konto löschen",
       "save-and-logout": "Speichern und abmelden",
       "delete-account": "Account löschen"
     },

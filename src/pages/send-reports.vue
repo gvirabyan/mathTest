@@ -10,7 +10,7 @@
 
     <main class="profile-tab-content">
       <Transition v-if="!isLoading" name="fade">
-        <div class="send-reports-page">
+        <div v-if="parentsEmails" class="send-reports-page">
           <div class="content">
             <f7-block v-if="!isLoading" class="emails-block">
               <div v-if="parentsEmails.length">
