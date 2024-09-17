@@ -16,7 +16,7 @@
 
     <main class="profile-tab-content">
       <Transition name="fade">
-        <div class="profile-security">
+        <div v-if="updatePasswordData" class="profile-security">
           <f7-list form>
             <f7-list-input
               v-model:value="updatePasswordData.newPassword"

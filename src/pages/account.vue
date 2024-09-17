@@ -15,7 +15,7 @@
 
     <main class="profile-tab-content">
       <Transition name="fade">
-        <div class="profile-account">
+        <div v-if="profileData" class="profile-account">
           <f7-list form class="main-list">
             <f7-list-input
               v-model:value="profileData.email"
@@ -111,6 +111,9 @@
             <f7-button class="log-out-btn" @click="logoutHandler">
               <p>{{ $t("profile.account.log-out") }}</p>
             </f7-button>
+            <f7-button class="delete-btn" @click="openAccountPopup">
+              <p>{{ $t("profile.account.delete") }}</p>
+            </f7-button>
           </f7-list>
           <f7-block class="save-btn-block">
             <f7-button class="button-save button-large" @click="updateProfile">{{ $t("buttons.save") }}</f7-button>
@@ -148,6 +151,8 @@
       @save-changes="updateProfile"
       @close="closeLeavePopup"
     />
+
+    <delete-page-popup v-if="accountDeletePopup" @cancel-changes="closeDeletePopup" @delete-changes="blockAccount" />
 
     <bottom-menu :current-path="f7route.path" />
     <f7-popup class="logout-popup" swipe-to-close :opened="isPopupOpened" @popup:closed="isPopupOpened = false">
@@ -233,6 +238,7 @@ import Topbar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";
+import DeletePagePopup from "@/components/delete-page-popup.vue";
 
 import "v-calendar/dist/style.css";
 
@@ -273,6 +279,7 @@ const { isNicknamedOnlyUser } = storeToRefs(authStore);
 const { changeCheckAccountData } = authStore;
 const dateStr = ref(null);
 const successPopup = ref(false);
+const accountDeletePopup = ref(false);
 const countryCode = computed(() => (profileData.country !== "" ? getCountryCode(profileData.country) : null));
 
 const coursesCurrent = computed(() => {
@@ -330,6 +337,21 @@ const profileData = reactive({
     place_id: "",
   },
   course: "",
+});
+
+const profileDeleteData = reactive({
+  email: "Del" + Date.now() + "@schulmatheapp.de",
+  name: "",
+  surname: "",
+  username: "Del" + Date.now(),
+  country: "",
+  city: "",
+  institution: {
+    name: "",
+    place_id: "",
+  },
+  course: "",
+  coefficient: 0.99,
 });
 
 const checkOutSideClick = ref(true);
@@ -425,11 +447,26 @@ const updateProfile = () => {
   initAutocompleteInputs();
 };
 
+const blockAccount = () => {
+  updateUser(profileDeleteData).then(res => {
+    if (res.status === "success") {
+      logoutUser();
+    }
+  });
+};
+
+const openAccountPopup = () => {
+  accountDeletePopup.value = true;
+};
+
 const { accountLeavePopup } = storeToRefs(authStore);
 const { accountPath } = storeToRefs(authStore);
 
 function closeLeavePopup() {
   accountLeavePopup.value = false;
+}
+function closeDeletePopup() {
+  accountDeletePopup.value = false;
 }
 
 function discardChanges() {
