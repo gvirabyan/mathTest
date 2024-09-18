@@ -390,6 +390,16 @@
   },
   "versions": [
     {
+      "v": "1.0.21",
+      "date": "2024-09-18",
+      "changes": [
+        "Account deletion functionality.",
+        "Translations fixes.",
+        "Software updates.",
+        "Language fixes."
+      ]
+    },
+    {
       "v": "1.0.20",
       "date": "2024-08-01",
       "changes": [
