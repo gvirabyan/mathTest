@@ -15,7 +15,7 @@ const cordovaApp = {
     const currentView = f7.views.current;
     currentView.router.allowPageChange = false;
 
-    if (f7.device.electron) return;
+    if (f7.device.electron || f7.device.ios) return;
 
     document.addEventListener(
       "backbutton",
@@ -65,34 +65,34 @@ const cordovaApp = {
     cordovaApp.handleSplashScreen();
 
     if (window.cordova) {
-      // eslint-disable-next-line no-undef
-      WonderPush.subscribeToNotifications();
-
-      // Start Clarify
-      const success = message => {
-        console.log(message);
-      };
-      const failure = message => {
-        console.log(message);
-      };
-
-      // eslint-disable-next-line no-undef
-      ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
-      // Set custom tag for the current session.
-      // eslint-disable-next-line no-undef
-      ClarityPlugin.setCustomTag("userID", localStorage.getItem("user-id"), success, failure);
-      // Set custom user id.
-      // eslint-disable-next-line no-undef
-      ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
-      // alert(3);
-      var onSuccess = function (strSuccess) {
-        console.log(strSuccess);
-      };
-      var onFailure = function (strError) {
-        console.warn(strError);
-      };
-      // eslint-disable-next-line no-undef
-      cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+      document.addEventListener("deviceready", () => {
+        // eslint-disable-next-line no-undef
+        WonderPush.subscribeToNotifications();
+        // Start Clarify
+        const success = message => {
+          console.log(message);
+        };
+        const failure = message => {
+          console.log(message);
+        };
+        // eslint-disable-next-line no-undef
+        ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
+        // Set custom tag for the current session.
+        // eslint-disable-next-line no-undef
+        ClarityPlugin.setCustomTag("userID", localStorage.getItem("user-id"), success, failure);
+        // Set custom user id.
+        // eslint-disable-next-line no-undef
+        ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
+        // alert(3);
+        var onSuccess = function (strSuccess) {
+          console.log(strSuccess);
+        };
+        var onFailure = function (strError) {
+          console.warn(strError);
+        };
+        // eslint-disable-next-line no-undef
+        cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+      });
     }
   },
 };

@@ -14,7 +14,6 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^12.0.0",
-    "cordova-ios": "^6.3.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-keyboard": "^1.2.0",
     "cordova-plugin-network-information": "^3.0.0",
@@ -59,13 +58,14 @@
       }
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
   "dependencies": {
     "cordova": "^12.0.0",
     "cordova-clarity": "2.2.0",
+    "cordova-ios": "^7.1.1",
     "cordova-plugin-facebook-connect": "3.2.0",
     "wonderpush-cordova-sdk-fcm": "1.0.6"
   }
