@@ -391,6 +391,15 @@
   },
   "versions": [
     {
+      "v": "1.0.22",
+      "date": "2024-09-24",
+      "changes": [
+        "Über Uns-Seiten aktualisieren.",
+        "Stilkorrekturen.",
+        "Benachrichtigungen reparieren."
+      ]
+    },
+    {
       "v": "1.0.21",
       "date": "2024-09-18",
       "changes": [

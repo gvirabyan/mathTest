@@ -93,18 +93,18 @@ const profileTabs = ref([
 ]);
 
 const infos = reactive([
-  {
+  /*{
     title: i18n.t("profile.about-us.terms-of-services"),
     popup: "TermsPopup",
-  },
+  },*/
   {
     title: i18n.t("profile.about-us.privacy"),
     popup: "PrivacyPopup",
   },
-  {
+  /*{
     title: i18n.t("profile.about-us.imprint"),
     popup: "ImprintPopup",
-  },
+  },*/
   {
     title: i18n.t("profile.about-us.software-licenses"),
     popup: "SoftwarePopup",
@@ -113,10 +113,10 @@ const infos = reactive([
     title: i18n.t("profile.about-us.release-notes"),
     popup: "ReleasePopup",
   },
-  {
+  /*{
     title: i18n.t("profile.about-us.write-review"),
     popup: "ReviewPopup",
-  },
+  },*/
 ]);
 
 const isLoading = ref(false);

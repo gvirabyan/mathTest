@@ -390,6 +390,15 @@
   },
   "versions": [
     {
+      "v": "1.0.22",
+      "date": "2024-09-24",
+      "changes": [
+        "Update About Us pages.",
+        "Style fixes.",
+        "Push notifications fix."
+      ]
+    },
+    {
       "v": "1.0.21",
       "date": "2024-09-18",
       "changes": [

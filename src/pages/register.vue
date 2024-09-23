@@ -328,6 +328,8 @@ const startRegister = () => {
           opacity: 0.5;
           margin: 10px;
           &.active-segment {
+            font-weight: 600;
+            opacity: 1;
             &:after {
               margin-top: 3px;
               content: "";
@@ -337,8 +339,6 @@ const startRegister = () => {
               width: 100%;
               border-radius: 4px;
             }
-            font-weight: 600;
-            opacity: 1;
           }
         }
       }
@@ -346,13 +346,13 @@ const startRegister = () => {
         max-width: unset;
         margin: 0;
         .button-large {
+          margin-top: 15px;
           &.button-margin {
             margin-top: 44px;
           }
           &.button-minimal-margin {
             margin-top: 15px;
           }
-          margin-top: 15px;
         }
         .error-message {
           color: red;

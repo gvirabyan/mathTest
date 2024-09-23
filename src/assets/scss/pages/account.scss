@@ -63,13 +63,10 @@
 
           .item-inner {
             margin: 0;
-
+            padding: 0 !important;
             input {
               height: 36px !important;
             }
-
-            padding: 0 !important;
-
             &:after {
               display: none;
               background: #212121 !important;
@@ -195,13 +192,10 @@
 
         .item-inner {
           margin: 0;
-
+          padding: 0 !important;
           input {
             height: 36px !important;
           }
-
-          padding: 0 !important;
-
           &:after {
             display: none;
             background: #212121 !important;

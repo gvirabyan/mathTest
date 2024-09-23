@@ -160,12 +160,12 @@
   }
 
   .loading-for-search {
-    .loading-text {
-      display: none;
-    }
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -40%);
+    .loading-text {
+      display: none;
+    }
   }
 }
