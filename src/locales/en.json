@@ -394,6 +394,8 @@
       "date": "2024-09-24",
       "changes": [
         "Update About Us pages.",
+        "About Us popups update.",
+        "Native behavior for some popups.",
         "Style fixes.",
         "Push notifications fix."
       ]

@@ -13,7 +13,7 @@
         <f7-list>
           <f7-list-item v-for="info in infos" :key="info.title">
             <template #title>
-              <f7-button @click="changPopupAboutUs(info.popup)">
+              <f7-button fill popup-open=".popup-swipe" @click="changPopupAboutUs(info.popup, info.title)">
                 <f7-row class="justify-content-space-between align-items-center">
                   <p class="info-title">{{ info.title }}</p>
                   <img src="@/assets/icons/arrow-right.svg" alt="" />
@@ -25,7 +25,19 @@
       </Transition>
     </main>
 
-    <component :is="getPopup" v-if="popupAboutUs" @close="changPopupAboutUs(false)" />
+    <f7-popup class="popup-swipe" swipe-to-close>
+      <f7-page>
+        <f7-navbar>
+          <f7-nav-left>{{ popupTitle }}</f7-nav-left>
+          <f7-nav-right>
+            <f7-link popup-close>
+              <img src="@/assets/icons/x-white.svg" height="24" width="24" />
+            </f7-link>
+          </f7-nav-right>
+        </f7-navbar>
+        <component :is="getPopup" />
+      </f7-page>
+    </f7-popup>
 
     <bottom-menu :current-path="f7route.path" />
   </f7-page>
@@ -45,6 +57,7 @@ import ImprintPopup from "@/components/imprint-popup.vue";
 import SoftwarePopup from "@/components/software-popup.vue";
 import ReleasePopup from "@/components/release-popup.vue";
 import ReviewPopup from "@/components/review-popup.vue";
+import { f7Popup } from "framework7-vue";
 
 const props = defineProps({
   f7route: {
@@ -135,8 +148,10 @@ const getAllData = async () => {
 };
 
 const popupAboutUs = ref(false);
-const changPopupAboutUs = value => {
+const popupTitle = ref("");
+const changPopupAboutUs = (value, title) => {
   popupAboutUs.value = value;
+  popupTitle.value = title;
 };
 const getPopup = computed(() =>
   popupAboutUs.value === "TermsPopup"

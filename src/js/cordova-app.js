@@ -92,6 +92,60 @@ const cordovaApp = {
         };
         // eslint-disable-next-line no-undef
         cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+
+        /*var updates = {
+          getInAppUpdate: function () {
+            var onSuccess = function (strSuccess) {
+              alert(strSuccess);
+              if (strSuccess == "UPDATE_AVAILABLE" || strSuccess == "DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS") {
+                // updates.updateFlexible(); // uncomment this to show background update dialog!
+                updates.updateImmediate(); // uncomment this to show foreground update dialog!
+              }
+            };
+            var onFailure = function (strError) {
+              console.warn(strError);
+            };
+            cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+          },
+          updateFlexible: function () {
+            var onSuccess = function (strSuccess) {
+              console.log(strSuccess);
+            };
+            var onFailure = function (strError) {
+              console.warn(strError);
+            };
+            var snackbarText = "Actualización lista para instalar!"; // Translation: Update ready to install!
+            var snackbarButton = "REINICIAR"; // Translation: RESTART
+            var snackbarButtonColor = "#FF80AB";
+            cordova.plugins.InAppUpdate.setSnackbarOptions(
+              onSuccess,
+              onFailure,
+              snackbarText,
+              snackbarButton,
+              snackbarButtonColor,
+            );
+            var onUpdateSuccess = function (strSuccess) {
+              console.log(strSuccess);
+            };
+            var onUpdateFailure = function (strError) {
+              console.warn(strError);
+            };
+            cordova.plugins.InAppUpdate.updateFlexible(onUpdateSuccess, onUpdateFailure);
+          },
+          updateImmediate: function () {
+            var onSuccess = function (strSuccess) {
+              console.log(strSuccess);
+              if (strSuccess == "RESULT_CANCELED") {
+                console.log("User declined immediate update dialog.");
+              }
+            };
+            var onFailure = function (strError) {
+              console.warn(strError);
+            };
+            cordova.plugins.InAppUpdate.updateImmediate(onSuccess, onFailure);
+          },
+        };
+        updates.getInAppUpdate();*/
       });
     }
   },
