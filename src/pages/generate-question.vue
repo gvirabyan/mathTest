@@ -163,6 +163,7 @@
 </template>
 
 <script setup>
+import { f7 } from "framework7-vue";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
@@ -233,12 +234,12 @@ const createQuestions = async () => {
   }
   createNewQuestions({ categoryID: props.f7route.params.categoryID, content: content })
     .then(resp => {
-      alert(resp.amount + ", " + resp.finish_reason);
+      f7.dialog.alert(resp.amount + ", " + resp.finish_reason);
       isLoading.value = false;
     })
     .catch(() => {
       isLoading.value = false;
-      alert(i18n.t("question.no-solution"));
+      f7.dialog.alert(i18n.t("question.no-solution"));
     });
 };
 

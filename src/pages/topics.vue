@@ -5,12 +5,7 @@
     @page:beforein="getCategoriesClassesHandler"
     @page:beforeout="emptyData"
   >
-    <top-bar
-      :tabs="classesTabs"
-      :change-tab="changeClass"
-      @tab-selected="getCategoriesByClass"
-      @show-search-popup="toggleSearchPopup"
-    >
+    <top-bar :tabs="classesTabs" :change-tab="changeClass" @tab-selected="getCategoriesByClass">
       <template #title>{{ $t("topics.topics") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle-data
@@ -64,50 +59,22 @@
 
     <bottom-menu :current-path="f7route.path" />
 
-    <f7-popup class="search-popup" :opened="isSearchPopup">
+    <f7-popup class="search-popup popup-swipe" swipe-to-close @popup:closed="closeSearchPopup">
       <f7-page>
-        <div class="close-btn-wrapper display-flex justify-content-end">
-          <f7-button class="close-btn" @click="toggleSearchPopup">
-            <img src="@/assets/icons/close.svg" alt="Close popup" />
-          </f7-button>
-        </div>
+        <f7-navbar>
+          <f7-nav-left>{{ $t("over.search") }}</f7-nav-left>
+          <f7-nav-right>
+            <f7-link popup-close>
+              <img src="@/assets/icons/x-white.svg" height="24" width="24" />
+            </f7-link>
+          </f7-nav-right>
+        </f7-navbar>
+        <f7-block>
+          <div class="input-wrapper">
+            <f7-input v-model:value="searchStr" type="text" :placeholder="$t('inputs.enter-the-keyword')" />
+          </div>
 
-        <h2 class="title">{{ $t("over.search") }}</h2>
-
-        <div class="input-wrapper">
-          <f7-input v-model:value="searchStr" type="text" :placeholder="$t('inputs.enter-the-keyword')" />
-        </div>
-
-        <div v-if="!searchStr" class="keywords">
-          <f7-button
-            v-for="({ name, active }, index) in keywords"
-            :key="`keyword_${index + 1}`"
-            class="keyword"
-            :class="{ active: active }"
-            @click="selectKeyword(index)"
-          >
-            {{ name }}
-          </f7-button>
-        </div>
-
-        <f7-list v-if="searchedCategories?.length" no-hairlines-md>
-          <f7-list-item v-for="category in searchedCategories" :key="category.id" @click="goToQuestions(category.id)">
-            <template #title>
-              <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
-            </template>
-
-            <template #after>
-              <p>{{ getAfterText(category) }}</p>
-              <span>{{ `${$t("over.class")} ${category.attributes.category_class.data.attributes.name}` }}</span>
-            </template>
-          </f7-list-item>
-        </f7-list>
-        <div v-else-if="loading" class="loading-for-search">
-          <loading-small />
-        </div>
-        <div v-else-if="searchStr && searchedCategories?.length === 0">
-          <p>{{ $t("over.no-search-results") }}</p>
-          <div class="keywords">
+          <div v-if="!searchStr" class="keywords">
             <f7-button
               v-for="({ name, active }, index) in keywords"
               :key="`keyword_${index + 1}`"
@@ -118,7 +85,41 @@
               {{ name }}
             </f7-button>
           </div>
-        </div>
+
+          <f7-list v-if="searchedCategories?.length" no-hairlines-md>
+            <f7-list-item v-for="category in searchedCategories" :key="category.id">
+              <template #title>
+                <f7-link :href="`/categories/${category.id}/questions/`" style="width: 100%" popup-close>
+                  <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
+                </f7-link>
+              </template>
+
+              <template #after>
+                <f7-link :href="`/categories/${category.id}/questions/`" style="width: 100%" popup-close>
+                  <p>{{ getAfterText(category) }}</p>
+                  <span>{{ `${$t("over.class")} ${category.attributes.category_class.data.attributes.name}` }}</span>
+                </f7-link>
+              </template>
+            </f7-list-item>
+          </f7-list>
+          <div v-else-if="loading" class="loading-for-search">
+            <loading-small />
+          </div>
+          <div v-else-if="searchStr && searchedCategories?.length === 0">
+            <p>{{ $t("over.no-search-results") }}</p>
+            <div class="keywords">
+              <f7-button
+                v-for="({ name, active }, index) in keywords"
+                :key="`keyword_${index + 1}`"
+                class="keyword"
+                :class="{ active: active }"
+                @click="selectKeyword(index)"
+              >
+                {{ name }}
+              </f7-button>
+            </div>
+          </div>
+        </f7-block>
       </f7-page>
     </f7-popup>
   </f7-page>
@@ -158,7 +159,6 @@ const { getCategoryClasses } = categoriesClassesStore;
 const i18n = useI18n();
 
 const isLoading = ref(false);
-const isSearchPopup = ref(false);
 const searchStr = useDebouncedRef("");
 const keywords = ref([
   {
@@ -322,24 +322,15 @@ const getCategoriesByClass = async id => {
   }
 };
 
-const toggleSearchPopup = () => {
-  if (isSearchPopup.value) {
-    searchStr.value = "";
-    keywords.value.forEach(k => (k.active = false));
-    clearSearchedCategories();
-  }
-
-  isSearchPopup.value = !isSearchPopup.value;
+const closeSearchPopup = () => {
+  searchStr.value = "";
+  keywords.value.forEach(k => (k.active = false));
+  clearSearchedCategories();
 };
 
 const selectKeyword = index => {
   keywords.value = keywords.value.map((k, i) => ({ ...k, active: i === index }));
   searchStr.value = keywords.value[index].name;
-};
-
-const goToQuestions = categoryId => {
-  toggleSearchPopup();
-  props.f7router.navigate(`/categories/${categoryId}/questions/`);
 };
 
 watch(searchStr, async value => {
@@ -366,4 +357,5 @@ watch(
 
 <style lang="scss">
 @import "../assets/scss/pages/topics";
+@import "@/assets/scss/components/popup.scss";
 </style>

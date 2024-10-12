@@ -68,5 +68,5 @@
 </template>
 
 <style lang="scss">
-//@import "@/assets/scss/components/about-us-popups.scss";
+//@import "@/assets/scss/components/popup.scss";
 </style>

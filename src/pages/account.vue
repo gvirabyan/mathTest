@@ -108,6 +108,10 @@
               @click="openDropdown"
             >
             </f7-list-input>
+            <f7-block class="save-btn-block">
+              <f7-button class="button-save button-large" @click="updateProfile">{{ $t("buttons.save") }}</f7-button>
+              <p class="error-message">{{ errorMessage }}</p>
+            </f7-block>
             <f7-button class="log-out-btn" @click="logoutHandler">
               <p>{{ $t("profile.account.log-out") }}</p>
             </f7-button>
@@ -115,10 +119,6 @@
               <p>{{ $t("profile.account.delete") }}</p>
             </f7-button>
           </f7-list>
-          <f7-block class="save-btn-block">
-            <f7-button class="button-save button-large" @click="updateProfile">{{ $t("buttons.save") }}</f7-button>
-            <p class="error-message">{{ errorMessage }}</p>
-          </f7-block>
           <div
             v-if="courses && isCoursesDropdown && coursesCurrent.length"
             class="courses-list"
@@ -155,14 +155,21 @@
     <delete-page-popup v-if="accountDeletePopup" @cancel-changes="closeDeletePopup" @delete-changes="blockAccount" />
 
     <bottom-menu :current-path="f7route.path" />
-    <f7-popup class="logout-popup" swipe-to-close :opened="isPopupOpened" @popup:closed="isPopupOpened = false">
+    <f7-popup
+      class="logout-popup popup-swipe"
+      swipe-to-close
+      :opened="isPopupOpened"
+      @popup:closed="isPopupOpened = false"
+    >
       <f7-page>
-        <f7-block class="logout-popup-header">
-          <f7-link class="x-icon" popup-close>
-            <img src="@/assets/icons/x.svg" />
-          </f7-link>
-          <f7-block-title>{{ $t("profile.account.logout-warning") }}</f7-block-title>
-        </f7-block>
+        <f7-navbar>
+          <f7-nav-left>{{ $t("profile.account.logout-warning") }}</f7-nav-left>
+          <f7-nav-right>
+            <f7-link popup-close>
+              <img src="@/assets/icons/x-white.svg" height="24" width="24" />
+            </f7-link>
+          </f7-nav-right>
+        </f7-navbar>
         <div class="scrolling-box">
           <f7-block>
             <p>{{ $t("profile.account.logout-text") }}</p>
@@ -729,6 +736,7 @@ function onBackKeyDown() {
 <style lang="scss">
 @import "../assets/scss/pages/profile";
 @import "@/assets/scss/pages/account.scss";
+@import "@/assets/scss/components/popup.scss";
 
 .fade-enter-active,
 .fade-leave-active {

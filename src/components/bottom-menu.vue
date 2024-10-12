@@ -1,5 +1,5 @@
 <template>
-  <f7-toolbar class="hg-bottom-menu" position="bottom">
+  <f7-toolbar class="hg-bottom-menu" bottom>
     <f7-link
       v-for="(link, index) in menuLinksRes"
       :key="`menu-link_${index + 1}`"

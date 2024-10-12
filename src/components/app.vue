@@ -1,44 +1,52 @@
 <template>
   <f7-app v-bind="f7params">
-    <custom-popup
-      ref="customPopupRef"
-      :is-opened-initial="openRightPanel"
-      class="notifications-panel"
-      @close-popup="openRightPanel = false"
+    <f7-panel
+      id="notifications-panel"
+      right
+      cover
+      swipe-only-close
+      backdrop
+      container-el=".framework7-root"
+      @panel:open="playAudio('notificationOpen')"
     >
-      <template #title>
-        <h2 class="title">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M16.4997 8.25C16.4997 9.77778 16.4997 11.3056 16.4997 12.8333C16.4997 14.6667 17.1108 15.8889 18.333 16.5H3.66634C4.88856 15.8889 5.49968 14.6667 5.49968 12.8333C5.49968 11.3056 5.49968 9.77778 5.49968 8.25C5.49968 5.21243 7.96211 2.75 10.9997 2.75C14.0372 2.75 16.4997 5.21243 16.4997 8.25Z"
-              stroke="#8419FF"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M9.16634 17.4165C9.16634 18.429 9.98715 19.2498 10.9997 19.2498C12.0122 19.2498 12.833 18.429 12.833 17.4165"
-              stroke="#8419FF"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-
-          {{ $t("top-bar.notifications") }}
-        </h2>
-        <!--        <p @click="readAllNotifications" style="display: flex; align-items: center; gap: 8px; margin-bottom: 0">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="5" cy="5" r="5" fill="#FFC700" />
-          </svg>
-          {{ $t("notification.mark-all-read") }}
-        </p>-->
-      </template>
-
-      <template #content>
-        <notifications />
-      </template>
-    </custom-popup>
+      <f7-page>
+        <f7-navbar>
+          <f7-nav-left>
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16.4997 8.25C16.4997 9.77778 16.4997 11.3056 16.4997 12.8333C16.4997 14.6667 17.1108 15.8889 18.333 16.5H3.66634C4.88856 15.8889 5.49968 14.6667 5.49968 12.8333C5.49968 11.3056 5.49968 9.77778 5.49968 8.25C5.49968 5.21243 7.96211 2.75 10.9997 2.75C14.0372 2.75 16.4997 5.21243 16.4997 8.25Z"
+                stroke="#8419FF"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.16634 17.4165C9.16634 18.429 9.98715 19.2498 10.9997 19.2498C12.0122 19.2498 12.833 18.429 12.833 17.4165"
+                stroke="#8419FF"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            {{ $t("top-bar.notifications") }}
+          </f7-nav-left>
+          <f7-nav-right>
+            <f7-link panel-close>
+              <img src="@/assets/icons/close.svg" height="20" width="20" />
+            </f7-link>
+          </f7-nav-right>
+        </f7-navbar>
+        <f7-block strong-ios outline-ios>
+          <!--          <p @click="readAllNotifications" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="5" r="5" fill="#FFC700" />
+            </svg>
+            {{ $t("notification.mark-all-read") }}
+          </p>-->
+          <notifications />
+        </f7-block>
+      </f7-page>
+    </f7-panel>
 
     <success-message-popup
       v-if="isNoConnectionPopup"
@@ -57,7 +65,7 @@
 import { ref, reactive, watch, onMounted } from "vue";
 import { f7, f7ready } from "framework7-vue";
 import { storeToRefs } from "pinia/dist/pinia";
-import { useNetwork, useElementVisibility, useEventBus } from "@vueuse/core";
+import { useNetwork } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import routes from "../js/routes.js";
 import cordovaApp from "@/js/cordova-app";
@@ -67,16 +75,12 @@ import { useQuestionsStore } from "@/js/stores/questions";
 import { useUserStats } from "@/js/stores/user-stats";
 import Loading from "@/components/loading.vue";
 import Notifications from "@/components/notifications.vue";
-import CustomPopup from "@/components/custom-popup.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import { useNotifications } from "@/js/stores/notifications";
+import playAudioMixin from "@/js/mixins/play_audio";
 
+const { playAudio } = playAudioMixin.setup();
 const i18n = useI18n();
-
-const bus = useEventBus("notifications");
-bus.on((e, payload) => {
-  openRightPanel.value = payload;
-});
 
 const authStore = useAuthStore();
 const categoryAnswerStore = useCategoryAnswerStore();
@@ -100,9 +104,6 @@ const f7params = {
 const slowConnectionTypes = ["Cell 2G connection", "Cell 3G connection"];
 
 const loaded = ref(false);
-const openRightPanel = ref(false);
-const customPopupRef = ref(null);
-const customPopupIsVisible = useElementVisibility(customPopupRef);
 const isNoConnectionPopup = ref(false);
 const network = reactive(useNetwork());
 const networkCurrentState = ref(null);
@@ -151,12 +152,6 @@ const addGmapsScript = () => {
 const closeNoConnectionPopupHandler = () => {
   isNoConnectionPopup.value = false;
 };
-
-watch(customPopupIsVisible, value => {
-  if (value) return;
-
-  openRightPanel.value = false;
-});
 
 watch(
   () => network.isOnline,
@@ -251,8 +246,28 @@ onMounted(async () => {
 </script>
 
 <style>
+:root {
+  --f7-panel-width: 80%;
+  --f7-panel-backdrop-bg-color: rgba(0, 0, 0, 0.62);
+}
+.ios {
+  --f7-page-bg-color: #fff;
+  --f7-toolbar-height: 74px;
+}
+.md {
+  --f7-toolbar-height: 74px;
+}
 .loading-page {
   padding: 20px;
   background: #212121;
+}
+#notifications-panel {
+  max-width: 450px;
+  .navbar-inner {
+    padding: 0 12px;
+    .left {
+      font-weight: 700;
+    }
+  }
 }
 </style>

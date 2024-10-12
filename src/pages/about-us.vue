@@ -173,7 +173,7 @@ const getPopup = computed(() =>
 <style lang="scss">
 //@import "../assets/scss/pages/profile";
 @import "../assets/scss/pages/about-us";
-@import "@/assets/scss/components/about-us-popups.scss";
+@import "@/assets/scss/components/popup.scss";
 
 .fade-enter-active,
 .fade-leave-active {

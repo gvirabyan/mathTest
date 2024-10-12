@@ -1,12 +1,6 @@
 @import "@/assets/scss/mixins/lg-yellow-btn";
 
 .logout-popup {
-  display: block;
-  height: 100vh !important;
-  width: 100% !important;
-  margin: 0 !important;
-  top: 0 !important;
-  left: 0 !important;
 
   .page-content {
     background: #fff;
@@ -19,35 +13,8 @@
       }
     }
 
-    .logout-popup-header {
-      margin: 0;
-      position: relative;
-
-      .link {
-        &.x-icon {
-          all: unset;
-          position: absolute;
-          top: 24px;
-          right: 24px;
-          z-index: 90;
-        }
-      }
-
-      .block-title {
-        margin: 0;
-        padding: 70px 0 0 0;
-        text-align: center;
-        font-family: 'Rubik';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 22px;
-        color: #212121;
-      }
-    }
-
     .scrolling-box {
-      height: calc(100vh - 223px);
+      height: calc(100vh - 200px);
       overflow: auto;
 
       .list {
@@ -175,13 +142,11 @@
   }
 
   .profile-account {
-    margin-bottom: -30px;
 
     .main-list {
       overflow-y: auto;
       margin: 0 -24px;
       padding: 0 24px;
-      height: calc(100vh - 346px);
 
       .custom-list-input {
         height: 81px;

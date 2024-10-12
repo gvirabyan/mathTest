@@ -4,7 +4,7 @@
       <h1 class="top-bar-title"><slot name="title" /></h1>
 
       <div class="top-bar-button-wrapper">
-        <f7-button v-if="search" class="top-bar-btn" @click="emit('show-search-popup')">
+        <f7-button v-if="search" popup-open=".search-popup" class="top-bar-btn">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 16L20 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path
@@ -17,7 +17,7 @@
           </svg>
         </f7-button>
 
-        <f7-button class="top-bar-btn" @click="openNotification">
+        <f7-button class="top-bar-btn" panel-open="#notifications-panel">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M18 9C18 10.6667 18 12.3333 18 14C18 16 18.6667 17.3333 20 18H4C5.33333 17.3333 6 16 6 14C6 12.3333 6 10.6667 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9Z"
@@ -97,7 +97,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["tab-selected", "show-search-popup", "show-notifications-popup"]);
+const emit = defineEmits(["tab-selected"]);
 
 const topBarTabs = ref(null);
 const tabsResult = ref(props.tabs);
@@ -186,11 +186,6 @@ const selectFirstTab = async (tabs, selected = true) => {
   if (topBarTabs.value.children[tabIndex - 1]) {
     selectTab(tabIndex, tabIndex - 1);
   }
-};
-
-const openNotification = () => {
-  playAudio("notificationOpen");
-  bus.emit("open-notifications", true);
 };
 
 const getNotificationsHandler = async () => {

@@ -7,13 +7,7 @@
     @page:afterin="loadFirstTab"
     @page:beforeout="resetSomeDataInPage"
   >
-    <topbar
-      ref="topBar"
-      :tabs="activityTabs"
-      :search="hasSearch"
-      @tab-selected="setActiveComponent"
-      @show-search-popup="toggleSearchPopup"
-    >
+    <topbar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
       <template #title>{{ $t("activity.Activity") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
       <template v-if="user && user.everyday_goal" #subtitle-data>{{
@@ -76,7 +70,6 @@ import playAudioMixin from "@/js/mixins/play_audio.js";
 import { defineAsyncComponent, ref, markRaw, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
-import { useEventBus } from "@vueuse/core";
 import { useAuthStore } from "@/js/stores/auth";
 import { useTopListStore } from "@/js/stores/top-list";
 import { useUserStats } from "@/js/stores/user-stats";
@@ -102,10 +95,6 @@ defineProps({
 });
 
 const i18n = useI18n();
-const bus = useEventBus("toplist-search");
-bus.on((e, payload) => {
-  hasSearch.value = payload;
-});
 
 const { user } = storeToRefs(useAuthStore());
 const { getUser } = useAuthStore();
@@ -140,7 +129,6 @@ const activityTabs = ref([
 const isLoading = ref(false);
 const topBar = ref(null);
 const currentActivityComponent = ref(null);
-const hasSearch = ref(false);
 const isSearchPopup = ref(false);
 const searchStr = ref("");
 let active = null;

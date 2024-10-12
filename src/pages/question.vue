@@ -227,16 +227,23 @@
     </div>
 
     <loading-small v-else-if="isLoading" />
+
+    <f7-popup class="popup-swipe" :opened="popupSolution" swipe-to-close>
+      <f7-page>
+        <f7-navbar>
+          <f7-nav-left>{{ $t("question.exercise-solution") }}</f7-nav-left>
+          <f7-nav-right>
+            <f7-link popup-close>
+              <img src="@/assets/icons/x-white.svg" height="24" width="24" />
+            </f7-link>
+          </f7-nav-right>
+        </f7-navbar>
+        <solution-popup v-if="popupSolution" :question-i-d="questionID" :category-name="categoryQuestion?.name" />
+      </f7-page>
+    </f7-popup>
   </f7-page>
 
   <loading-small v-if="isSolutionLoading" class="solution-loading-parent" />
-
-  <solution-popup
-    v-if="popupSolution"
-    :question-i-d="questionID"
-    :category-name="categoryQuestion?.name"
-    @close="changPopupSolution(false)"
-  />
 
   <leave-page-popup
     v-if="checkSkipPopup"
@@ -263,11 +270,11 @@
   <teleport to=".hg-question-page">
     <f7-popup class="all-answered-popup" :opened="isAllAnsweredPopup">
       <f7-page>
-        <div class="width-100 display-flex justify-content-flex-end">
+        <!--        <div class="width-100 display-flex justify-content-flex-end">
           <f7-button class="close-btn" @click="closeAndNavigate('topics')">
             <img src="@/assets/icons/close.svg" alt="Close popup" />
           </f7-button>
-        </div>
+        </div>-->
 
         <div class="content">
           <h2 class="title"><span>Mathe</span>App</h2>
@@ -663,13 +670,16 @@ const showSolution = id => {
       })
       .catch(() => {
         isSolutionLoading.value = false;
-        alert(i18n.t("question.no-solution"));
+        f7.dialog.alert(i18n.t("question.no-solution"));
       });
   }
 };
 const popupSolution = ref(false);
 const changPopupSolution = value => {
-  popupSolution.value = value;
+  setTimeout(() => {
+    popupSolution.value = !value;
+    popupSolution.value = value;
+  }, 100);
 };
 const goPresentQuestion = () => {
   questionHistory.value = null;
@@ -817,5 +827,5 @@ const outPage = () => {
 
 <style lang="scss">
 @import "../assets/scss/pages/question";
-@import "@/assets/scss/components/solution-popup.scss";
+@import "@/assets/scss/components/popup.scss";
 </style>

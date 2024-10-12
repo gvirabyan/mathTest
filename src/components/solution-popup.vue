@@ -1,17 +1,11 @@
 <template>
-  <div class="solution-popup">
-    <f7-button class="x-icon" @click="$emit('close')">
-      <img src="@/assets/icons/x.svg" />
-    </f7-button>
-    <f7-block>
-      <f7-block-title>{{ $t("question.exercise-solution") }}</f7-block-title>
-      <div class="solution-content">
-        <iframe
-          :src="`https://schulmatheapp.de/solution.php?questionID=${questionID}&categoryName=${categoryName}`"
-        ></iframe>
-      </div>
-    </f7-block>
-  </div>
+  <f7-block>
+    <iframe
+      id="solution-iframe"
+      :src="`https://schulmatheapp.de/solution.php?questionID=${questionID}&categoryName=${categoryName}`"
+      style="width: 100%; border: none"
+    ></iframe>
+  </f7-block>
 </template>
 
 <script setup>
@@ -25,5 +19,16 @@ const props = defineProps({
     default: "",
   },
 });
+window.addEventListener(
+  "message",
+  function (event) {
+    const iframe = document.getElementById("solution-iframe");
+    console.log(event.data);
+    if (iframe && event.data) {
+      iframe.style.height = event.data + 60 + "px";
+    }
+  },
+  false,
+);
 </script>
 <style lang="scss"></style>

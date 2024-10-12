@@ -66,6 +66,7 @@
       "cancel": "Abbrechen"
     },
     "success-message-popup": {
+      "title": "Fertig",
       "got-it": "Verstanden"
     },
     "input-popup": {
@@ -392,13 +393,15 @@
   "versions": [
     {
       "v": "1.0.22",
-      "date": "2024-09-24",
+      "date": "2024-10-12",
       "changes": [
-        "Über Uns-Seiten aktualisieren.",
-        "Über uns Popups aktualisieren.",
-        "Natives Verhalten für einige Popups.",
+        "Aktualisierung der Über-uns-Seiten.",
+        "Aktualisierung der Über-uns-, Abmelde-, Such-, Benachrichtigungs- und Lösungspopups.",
+        "Aktualisierung der Alarmfenster.",
+        "Natürliches Verhalten für einige Popups.",
+        "Korrektur des Navigationsstils.",
         "Stilkorrekturen.",
-        "Benachrichtigungen reparieren."
+        "Korrektur der Push-Benachrichtigungen."
       ]
     },
     {

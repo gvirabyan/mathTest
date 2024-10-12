@@ -66,6 +66,7 @@
       "cancel": "Cancel"
     },
     "success-message-popup": {
+      "title": "Ready",
       "got-it": "Got it"
     },
     "input-popup": {
@@ -391,11 +392,13 @@
   "versions": [
     {
       "v": "1.0.22",
-      "date": "2024-09-24",
+      "date": "2024-10-12",
       "changes": [
         "Update About Us pages.",
-        "About Us popups update.",
+        "About Us, Logout, Search, Notifications, Solutions popups update.",
+        "Alerts windows update.",
         "Native behavior for some popups.",
+        "Navigation style fix.",
         "Style fixes.",
         "Push notifications fix."
       ]

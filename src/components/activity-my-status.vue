@@ -107,8 +107,8 @@
 
     <teleport v-if="showSelectGoalSuccess" to="#activity-page">
       <success-message-popup
-        title="Success"
-        text="Your everyday goal has been set"
+        :title="$t('popups.success-message-popup.got-it')"
+        :text="$t('activity.my-status.goal-set')"
         @close="showSelectGoalSuccess = false"
       />
     </teleport>
