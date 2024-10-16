@@ -120,3 +120,100 @@ During creating questions/answers you can use these markings.
 - `@emoji@` - can be used with emoji questions. This can be used only for questions with emojis. Most probably this template can be removed.
 - `@pre@` - put text in `pre` tag. It is in used for column exercises (սյունյակով հանում/գումարում/․․․). Most probably it will replace `@@` syntax in the future.
 - If no markings are used then text will be handled by MathJax
+
+## How to distribute new iOS build  
+
+### Prerequisites
+
+You should have macOS device, also you should have Xcode and Transporter installed, if you don't have – please install.
+
+* [Xcode](https://developer.apple.com/xcode/)
+* [Transporter](https://apps.apple.com/us/app/transporter/id1450874784?mt=12)
+
+### Steps
+
+1. Pull the Latest Code
+
+`git pull`
+
+2. Clean and Prepare Cordova iOS Platform
+
+```
+cd cordova
+cordova clean ios && cordova prepare ios
+```
+
+3. Build the App
+
+`npm run build-cordova-ios`
+
+4. Open the Project in Xcode
+
+`open platforms/ios/MatheApp.xcworkspace`
+
+5. Create and Export the .ipa File in Xcode
+
+   - 5.1 Archive the App
+   In Xcode, select Any iOS Device (arm64).
+   Go to Product > Archive to create an archive.
+   The Organizer window will open automatically.
+
+   - 5.2 Distribute the App
+   Select your archive in the Organizer and click Distribute App.
+
+   - 5.3 Distribution Steps
+     - Step 1: Choose Custom as the method for distribution.
+     - Step 2: Choose App Store Connect as the distribution method.
+     - Step 3: Choose Export to save the .ipa file locally.
+     - Step 4: In the App Store Connect distribution options, leave the default options and click Next.
+     - Step 5: In the Re-sign section, choose Automatically manage signing and click Next.
+     - Step 6: Review all details and click Export to generate the .ipa file.
+
+   - 5.4 Upload the .ipa File to App Store Connect
+   
+   - 5.5 Use the Transporter app to upload the .ipa file to App Store Connect.
+
+6. Submit the App for Review on App Store Connect
+   - 6.1 Log in to App Store Connect
+   Go to App Store Connect and log in with your Apple Developer account.
+   
+   - 6.2 Select Your App
+   Click My Apps, and select the app you want to submit for review.
+   
+   - 6.3 Prepare the App for Submission
+   Review and update the following sections:
+   App Information: Verify metadata such as name, subtitle, and version.
+   Pricing and Availability: Set your app’s pricing and availability.
+   Version Information: Ensure the version number and release notes are correct.
+   
+   - 6.4 Select the Build
+   In the App Store tab, go to the Build section and click Select a Build before you submit your app.
+   Choose the correct build uploaded via Transporter.
+   
+   - 6.5 Missing Compliance Prompt
+   In the TestFlight tab, a Missing Compliance warning may appear.
+   Select None of these algorithms if your app does not use encryption algorithms requiring compliance documentation.
+   Click Done to resolve the warning.
+   
+   - 6.6 Complete App Information
+   Description: Ensure the app description is correct.
+   Keywords: Add relevant keywords for discoverability.
+   Support URL and Privacy Policy URL: Ensure these are accurate.
+   
+   - 6.7 App Review Information
+   Provide contact details for the reviewer.
+   Add any necessary notes for the review team, such as login details for testing.
+   
+   - 6.8 Submit for Review
+   Click Submit for Review.
+   Answer any compliance-related questions (e.g., encryption or sensitive content).
+   
+   - 6.9 Choose Release Options
+   Select when to release your app after approval:
+   Automatic Release: The app will be released immediately after approval.
+   Manual Release: You can release it manually after approval.
+   Scheduled Release: Set a future release date.
+   
+   - 6.10 Monitor App Status
+   The app will enter Waiting for Review status.
+   Track the submission progress under the Activity tab.
