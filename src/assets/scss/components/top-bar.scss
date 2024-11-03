@@ -1,10 +1,10 @@
 .top-bar {
-  position: sticky;
-  top: 0;
+  width: 100%;
   z-index: 70;
   min-height: 152px;
   padding: 36px 24px 0 28px;
   font-family: 'Rubik', sans-serif;
+  opacity: 1;
   background: #8419FF url("@/assets/images/pointsRight.svg") no-repeat right top 6px;
   box-sizing: border-box;
 }

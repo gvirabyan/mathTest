@@ -64,15 +64,10 @@
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
-import { useEventBus } from "@vueuse/core";
 import { useNotifications } from "@/js/stores/notifications";
-import playAudioMixin from "@/js/mixins/play_audio";
 
-const bus = useEventBus("notifications");
 const { hasUnreadNotifications } = storeToRefs(useNotifications());
 const { getNotifications } = useNotifications();
-
-const { playAudio } = playAudioMixin.setup();
 
 const props = defineProps({
   tabs: {

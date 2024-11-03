@@ -1,6 +1,6 @@
 <template>
   <f7-block>
-    <f7-block v-for="version in versions" :key="version.v">
+    <div v-for="version in versions" :key="version.v">
       <p>
         <b>v{{ version.v }}</b>
         <br />
@@ -11,7 +11,7 @@
           {{ change }}
         </f7-list-item>
       </f7-list>
-    </f7-block>
+    </div>
   </f7-block>
 </template>
 

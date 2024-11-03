@@ -1,14 +1,19 @@
 <template>
   <f7-page class="hg-dashboard-content about-us-page" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" :search="false" :first-load-index="2" @tab-selected="setProfileComponent">
-      <template #title>{{ $t("profile.profile") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal}  ${$t("top-bar.questions")}`
-      }}</template>
-    </top-bar>
+    <f7-navbar id="main-navbar">
+      <top-bar :tabs="profileTabs" :search="false" :first-load-index="2" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition name="fade">
         <f7-list>
           <f7-list-item v-for="info in infos" :key="info.title">
@@ -23,7 +28,7 @@
           </f7-list-item>
         </f7-list>
       </Transition>
-    </main>
+    </f7-block>
 
     <f7-popup class="popup-swipe" swipe-to-close>
       <f7-page>
@@ -38,8 +43,6 @@
         <component :is="getPopup" />
       </f7-page>
     </f7-popup>
-
-    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 

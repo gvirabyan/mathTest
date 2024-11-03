@@ -1,14 +1,19 @@
 <template>
   <f7-page class="hg-dashboard-content profile-sound" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" :search="false" :first-load-index="4" @tab-selected="setProfileComponent">
-      <template #title>{{ $t("profile.profile") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal}  ${$t("top-bar.questions")}`
-      }}</template>
-    </top-bar>
+    <f7-navbar id="main-navbar">
+      <top-bar :tabs="profileTabs" :search="false" :first-load-index="4" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition name="fade">
         <f7-list>
           <f7-list-item>
@@ -33,9 +38,7 @@
           </f7-list-item>
         </f7-list>
       </Transition>
-    </main>
-
-    <bottom-menu :current-path="f7route.path" />
+    </f7-block>
   </f7-page>
 </template>
 

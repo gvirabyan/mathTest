@@ -1034,5 +1034,10 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+.navbar-inner {
+  .title {
+    color: #212121;
+  }
+}
 @import "../assets/scss/pages/question";
 </style>

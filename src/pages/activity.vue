@@ -7,23 +7,26 @@
     @page:afterin="loadFirstTab"
     @page:beforeout="resetSomeDataInPage"
   >
-    <topbar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
-      <template #title>{{ $t("activity.Activity") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal} ${$t("top-bar.questions")}`
-      }}</template>
-    </topbar>
-
+    <f7-navbar id="main-navbar">
+      <top-bar ref="topBar" :tabs="activityTabs" :search="false" @tab-selected="setActiveComponent">
+        <template #title>{{ $t("activity.Activity") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
+    <!-- example-hidden-start -->
     <slot />
 
-    <main class="activity-tab-content">
+    <f7-block class="activity-tab-content">
       <Transition name="fade">
         <component :is="currentActivityComponent" :req-loading="isLoading" @go-progress-tab="goProgressTab" />
       </Transition>
-    </main>
-
-    <bottom-menu :current-path="f7route.path" />
+    </f7-block>
 
     <f7-popup class="search-popup" :opened="isSearchPopup">
       <f7-page>
@@ -74,7 +77,7 @@ import { useAuthStore } from "@/js/stores/auth";
 import { useTopListStore } from "@/js/stores/top-list";
 import { useUserStats } from "@/js/stores/user-stats";
 import delay from "@/js/helpers/delay";
-import Topbar from "@/components/topbar.vue";
+import TopBar from "@/components/topbar.vue";
 import MyStatus from "@/components/activity-my-status.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import LoadingSmall from "@/components/loading-small.vue";
@@ -194,16 +197,4 @@ watch(isSearchPopup, value => {
 });
 </script>
 
-<style lang="scss">
-@import "../assets/scss/pages/activity";
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
+<style lang="scss"></style>

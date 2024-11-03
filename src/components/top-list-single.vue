@@ -152,8 +152,6 @@ onUnmounted(() => {
 @import "@/assets/scss/mixins/top-list-item-points";
 
 .single-list {
-  height: calc(100vh - 290px);
-
   .back-block {
     opacity: 0.5;
 
@@ -245,7 +243,6 @@ onUnmounted(() => {
         overflow: auto;
         margin-right: -24px;
         padding-right: 24px;
-        height: calc(100vh - 443px);
       }
     }
 
@@ -328,7 +325,6 @@ onUnmounted(() => {
     overflow: auto;
     margin-right: -24px;
     padding-right: 24px;
-    height: calc(100vh - 305px);
 
     .block {
       margin: 10px 0;

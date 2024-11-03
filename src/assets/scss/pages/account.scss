@@ -238,6 +238,7 @@
           &:not(.item-input-outline) {
             .item-input-wrap {
               &:after {
+                top: 40px;
                 transform: unset !important;
                 height: 0.9px !important;
                 background: #E4E4E4 !important;

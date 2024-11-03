@@ -1,14 +1,19 @@
 <template>
   <f7-page class="hg-dashboard-content send-reports-dash" name="dashboard">
-    <top-bar :first-load-index="3" :search="false" :tabs="profileTabs" @tab-selected="setProfileComponent">
-      <template #title>{{ $t("profile.profile") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal}  ${$t("top-bar.questions")}`
-      }}</template>
-    </top-bar>
+    <f7-navbar id="main-navbar">
+      <top-bar :tabs="profileTabs" :search="false" :first-load-index="3" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition v-if="!isLoading" name="fade">
         <div v-if="parentsEmails" class="send-reports-page">
           <div class="content">
@@ -86,7 +91,7 @@
       <Transition v-else class="loading-reports" mode="in-out" name="loader-fadeout">
         <loading-small />
       </Transition>
-    </main>
+    </f7-block>
 
     <success-message-popup v-if="successPopup" :title="successPopupText" @close="successPopup = false" />
 
@@ -100,7 +105,6 @@
       @leave-changes="deletePopup = false"
       @save-changes="removeParentEmailHandler"
     />
-    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 

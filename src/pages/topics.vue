@@ -5,59 +5,62 @@
     @page:beforein="getCategoriesClassesHandler"
     @page:beforeout="emptyData"
   >
-    <top-bar :tabs="classesTabs" :change-tab="changeClass" @tab-selected="getCategoriesByClass">
-      <template #title>{{ $t("topics.topics") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data
-        >{{ `${user.everyday_goal} ${$t("top-bar.questions")}` }}
-      </template>
-    </top-bar>
-
-    <template v-if="!isLoading">
-      <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
-        <template v-if="isAdmin">
-          <f7-list-item v-for="category in categories" :key="category.id">
-            <f7-link :href="`/categories/${category.id}/questions/`" style="width: 100%">
-              <span class="item-title">
+    <f7-navbar id="main-navbar">
+      <top-bar :tabs="classesTabs" :change-tab="changeClass" @tab-selected="getCategoriesByClass">
+        <template #title>{{ $t("topics.topics") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data
+          >{{ `${user.everyday_goal} ${$t("top-bar.questions")}` }}
+        </template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
+    <f7-block>
+      <template v-if="!isLoading">
+        <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
+          <template v-if="isAdmin">
+            <f7-list-item v-for="category in categories" :key="category.id">
+              <f7-link :href="`/categories/${category.id}/questions/`" style="width: 100%">
+                <span class="item-title">
+                  <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
+                </span>
+                <span class="item-after">
+                  <p>{{ getAfterText(category) }}</p>
+                </span>
+              </f7-link>
+              <div style="display: flex; justify-content: space-between; gap: 30px; margin-top: 20px; width: 100%">
+                <f7-link :href="`/categories/${category.id}/generateQuestions/`" class="admin-button generate"
+                  >Generate</f7-link
+                >
+                <f7-link
+                  :href="`/categories/${category.id}/reviewQuestions/`"
+                  :class="[{ red: category.unpublishedQuestions }, 'admin-button review']"
+                  >Review {{ category.unpublishedQuestions ? category.unpublishedQuestions : "" }}</f7-link
+                >
+              </div>
+            </f7-list-item>
+          </template>
+          <template v-else>
+            <f7-list-item
+              v-for="category in categories"
+              :key="category.id"
+              :link="`/categories/${category.id}/questions/`"
+            >
+              <template #title>
                 <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
-              </span>
-              <span class="item-after">
+              </template>
+
+              <template #after>
                 <p>{{ getAfterText(category) }}</p>
-              </span>
-            </f7-link>
-            <div style="display: flex; justify-content: space-between; gap: 30px; margin-top: 20px; width: 100%">
-              <f7-link :href="`/categories/${category.id}/generateQuestions/`" class="admin-button generate"
-                >Generate</f7-link
-              >
-              <f7-link
-                :href="`/categories/${category.id}/reviewQuestions/`"
-                :class="[{ red: category.unpublishedQuestions }, 'admin-button review']"
-                >Review {{ category.unpublishedQuestions ? category.unpublishedQuestions : "" }}</f7-link
-              >
-            </div>
-          </f7-list-item>
-        </template>
-        <template v-else>
-          <f7-list-item
-            v-for="category in categories"
-            :key="category.id"
-            :link="`/categories/${category.id}/questions/`"
-          >
-            <template #title>
-              <text-clamp :text="category.attributes.name" :max-lines="2" :max-width="280" ellipsis="" />
-            </template>
-
-            <template #after>
-              <p>{{ getAfterText(category) }}</p>
-            </template>
-          </f7-list-item>
-        </template>
-      </f7-list>
-    </template>
-
-    <loading-small v-else />
-
-    <bottom-menu :current-path="f7route.path" />
+              </template>
+            </f7-list-item>
+          </template>
+        </f7-list>
+      </template>
+      <loading-small v-else />
+    </f7-block>
 
     <f7-popup class="search-popup popup-swipe" swipe-to-close @popup:closed="closeSearchPopup">
       <f7-page>

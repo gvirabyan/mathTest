@@ -392,6 +392,15 @@
   },
   "versions": [
     {
+      "v": "1.0.23",
+      "date": "2024-11-",
+      "changes": [
+        "Popup-Kopfzeilenaktualisierung.",
+        "Kopf- und Fußzeilenkorrekturen.",
+        "Korrekturen des sicheren Bereichs."
+      ]
+    },
+    {
       "v": "1.0.22",
       "date": "2024-10-12",
       "changes": [

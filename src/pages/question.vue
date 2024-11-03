@@ -3,13 +3,13 @@
     <f7-navbar>
       <template v-if="isLoading" #title>
         <f7-button @click="goPreviousPage">
-          <img src="@/assets/icons/backSlag.svg" alt="" />
+          <img src="@/assets/icons/backSlagWhite.svg" alt="" />
         </f7-button>
         {{ `${$t("over.loading")}...` }}
       </template>
       <template v-else #title>
         <f7-button @click="goPreviousPage">
-          <img src="@/assets/icons/backSlag.svg" alt="" />
+          <img src="@/assets/icons/backSlagWhite.svg" alt="" />
         </f7-button>
         {{ categoryQuestion?.name }}
       </template>
@@ -228,7 +228,7 @@
 
     <loading-small v-else-if="isLoading" />
 
-    <f7-popup class="popup-swipe" :opened="popupSolution" swipe-to-close>
+    <f7-popup class="popup-swipe" :opened="popupSolution" swipe-to-close @popup:closed="popupSolution = false">
       <f7-page>
         <f7-navbar>
           <f7-nav-left>{{ $t("question.exercise-solution") }}</f7-nav-left>
@@ -677,7 +677,6 @@ const showSolution = id => {
 const popupSolution = ref(false);
 const changPopupSolution = value => {
   setTimeout(() => {
-    popupSolution.value = !value;
     popupSolution.value = value;
   }, 100);
 };

@@ -5,83 +5,90 @@
     @page:beforein="loadTab"
     @page:afterout="clearLastFriendPractice"
   >
-    <topbar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
-      <template #title>{{ $t("practice.practice") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal} ${$t("top-bar.questions")}`
-      }}</template>
-    </topbar>
+    <f7-navbar id="main-navbar">
+      <top-bar ref="topBar" :tabs="practiceTabs" :search="false" @tab-selected="setRivalTypeHandler">
+        <template #title>{{ $t("practice.practice") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="props.f7route.path" />
+    </f7-toolbar>
 
-    <f7-list v-if="activeTabId === 1 || (activeTabId === 2 && startPracticeVsFriend)">
-      <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
-        <template #title>
-          <f7-row class="justify-content-space-between align-items-center">
-            <p class="question">
-              {{ mode.questions }}
-              <span>{{ $t("top-bar.questions") }}</span>
-            </p>
-            <p class="points">{{ mode.showPoints }}</p>
-          </f7-row>
-        </template>
-      </f7-list-item>
-    </f7-list>
-
-    <f7-block v-else-if="activeTabId === 2 && !startPracticeVsFriend" class="can-practice">
-      <div v-if="!isLoading && isLastFriendPractice" class="score-block-wrapper">
-        <div class="score-blocks">
-          <div class="score-block">
-            <f7-row class="justify-content-space-between">
-              <f7-block-title>
-                {{ lastFriendPractice.firstPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
-              </f7-block-title>
-              <p class="place-txt">
-                {{ lastFriendPractice.firstPlayer.score }}
-                {{ pluralizeWord(lastFriendPractice.firstPlayer.score, $t("question.point")) }}
-              </p>
-            </f7-row>
-
+    <f7-block>
+      <f7-list v-if="activeTabId === 1 || (activeTabId === 2 && startPracticeVsFriend)">
+        <f7-list-item v-for="mode in gameModes" :key="mode.id" @click="setMode(mode)">
+          <template #title>
             <f7-row class="justify-content-space-between align-items-center">
-              <p class="from-txt">
-                {{ lastFriendPractice.firstPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
-                {{ $t("question.right-answered") }}
+              <p class="question">
+                {{ mode.questions }}
+                <span>{{ $t("top-bar.questions") }}</span>
               </p>
-              <p class="result-txt">{{ getResultText(lastFriendPractice.firstPlayer.result) }}</p>
+              <p class="points">{{ mode.showPoints }}</p>
             </f7-row>
+          </template>
+        </f7-list-item>
+      </f7-list>
+
+      <f7-block v-else-if="activeTabId === 2 && !startPracticeVsFriend" class="can-practice">
+        <div v-if="!isLoading && isLastFriendPractice" class="score-block-wrapper">
+          <div class="score-blocks">
+            <div class="score-block">
+              <f7-row class="justify-content-space-between">
+                <f7-block-title>
+                  {{ lastFriendPractice.firstPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
+                </f7-block-title>
+                <p class="place-txt">
+                  {{ lastFriendPractice.firstPlayer.score }}
+                  {{ pluralizeWord(lastFriendPractice.firstPlayer.score, $t("question.point")) }}
+                </p>
+              </f7-row>
+
+              <f7-row class="justify-content-space-between align-items-center">
+                <p class="from-txt">
+                  {{ lastFriendPractice.firstPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
+                  {{ $t("question.right-answered") }}
+                </p>
+                <p class="result-txt">{{ getResultText(lastFriendPractice.firstPlayer.result) }}</p>
+              </f7-row>
+            </div>
+
+            <div class="score-block">
+              <f7-row class="justify-content-space-between">
+                <f7-block-title>
+                  {{ lastFriendPractice.secondPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
+                </f7-block-title>
+                <p class="place-txt">
+                  {{ lastFriendPractice.secondPlayer.score }}
+                  {{ pluralizeWord(lastFriendPractice.secondPlayer.score, $t("question.point")) }}
+                </p>
+              </f7-row>
+
+              <f7-row class="justify-content-space-between align-items-center">
+                <p class="from-txt">
+                  {{ lastFriendPractice.secondPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
+                  {{ $t("question.right-answered") }}
+                </p>
+                <p class="result-txt">{{ getResultText(lastFriendPractice.secondPlayer.result) }}</p>
+              </f7-row>
+            </div>
           </div>
 
-          <div class="score-block">
-            <f7-row class="justify-content-space-between">
-              <f7-block-title>
-                {{ lastFriendPractice.secondPlayer.nickname }} {{ $t("question.score-on-this-topic") }}
-              </f7-block-title>
-              <p class="place-txt">
-                {{ lastFriendPractice.secondPlayer.score }}
-                {{ pluralizeWord(lastFriendPractice.secondPlayer.score, $t("question.point")) }}
-              </p>
-            </f7-row>
-
-            <f7-row class="justify-content-space-between align-items-center">
-              <p class="from-txt">
-                {{ lastFriendPractice.secondPlayer.rightAnswers }}/{{ lastFriendPractice.mode.questions }}
-                {{ $t("question.right-answered") }}
-              </p>
-              <p class="result-txt">{{ getResultText(lastFriendPractice.secondPlayer.result) }}</p>
-            </f7-row>
-          </div>
+          <f7-button class="can-practice-btn" @click="tryAgainHandler">{{ $t("practice.try-again") }}</f7-button>
         </div>
 
-        <f7-button class="can-practice-btn" @click="tryAgainHandler">{{ $t("practice.try-again") }}</f7-button>
-      </div>
-
-      <div v-else-if="!isLoading" class="can-practice-content">
-        <h2 class="can-practice-title">{{ $t("practice.can-practice-with-friends") }}</h2>
-        <p class="can-practice-subtitle">{{ $t("practice.practice-with-friends-questions") }}</p>
-        <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{ $t("buttons.start") }}</f7-button>
-      </div>
+        <div v-else-if="!isLoading" class="can-practice-content">
+          <h2 class="can-practice-title">{{ $t("practice.can-practice-with-friends") }}</h2>
+          <p class="can-practice-subtitle">{{ $t("practice.practice-with-friends-questions") }}</p>
+          <f7-button class="can-practice-btn" @click="startPracticeVsFriend = true">{{
+            $t("buttons.start")
+          }}</f7-button>
+        </div>
+      </f7-block>
     </f7-block>
-
-    <bottom-menu :current-path="props.f7route.path" />
   </f7-page>
 </template>
 
@@ -94,7 +101,7 @@ import { useQuizStore } from "@/js/stores/quiz";
 import quizModes from "@/js/constants/quiz-modes";
 import pluralizeWord from "@/js/utils/pluralize-word";
 import { isNullish } from "@/js/utils/objects-utils";
-import Topbar from "@/components/topbar.vue";
+import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import playAudioMixin from "@/js/mixins/play_audio";
 

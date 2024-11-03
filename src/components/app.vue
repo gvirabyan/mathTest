@@ -15,14 +15,14 @@
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M16.4997 8.25C16.4997 9.77778 16.4997 11.3056 16.4997 12.8333C16.4997 14.6667 17.1108 15.8889 18.333 16.5H3.66634C4.88856 15.8889 5.49968 14.6667 5.49968 12.8333C5.49968 11.3056 5.49968 9.77778 5.49968 8.25C5.49968 5.21243 7.96211 2.75 10.9997 2.75C14.0372 2.75 16.4997 5.21243 16.4997 8.25Z"
-                stroke="#8419FF"
+                stroke="#fff"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M9.16634 17.4165C9.16634 18.429 9.98715 19.2498 10.9997 19.2498C12.0122 19.2498 12.833 18.429 12.833 17.4165"
-                stroke="#8419FF"
+                stroke="#fff"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -32,7 +32,7 @@
           </f7-nav-left>
           <f7-nav-right>
             <f7-link panel-close>
-              <img src="@/assets/icons/close.svg" height="20" width="20" />
+              <img src="@/assets/icons/x-white.svg" height="20" width="20" />
             </f7-link>
           </f7-nav-right>
         </f7-navbar>
@@ -249,13 +249,23 @@ onMounted(async () => {
 :root {
   --f7-panel-width: 80%;
   --f7-panel-backdrop-bg-color: rgba(0, 0, 0, 0.62);
+  --f7-navbar-bg-color: #8419ff;
+  --f7-navbar-bg-color-rgb: 132, 25, 255;
+  --f7-navbar-bg-image: url("@/assets/images/pointsRight.svg");
+  --f7-bars-bg-image: "../assets/images/pointsRight.svg";
+  --f7-navbar-inner-padding-right: 0;
+  --f7-navbar-inner-padding-left: 0;
+  --f7-navbar-text-color: #fff;
+  --f7-block-padding-horizontal: 28px;
 }
 .ios {
   --f7-page-bg-color: #fff;
   --f7-toolbar-height: 74px;
+  --f7-navbar-height: 152px;
 }
 .md {
   --f7-toolbar-height: 74px;
+  --f7-navbar-height: 152px;
 }
 .loading-page {
   padding: 20px;
@@ -263,6 +273,7 @@ onMounted(async () => {
 }
 #notifications-panel {
   max-width: 450px;
+  --f7-navbar-height: 56px;
   .navbar-inner {
     padding: 0 12px;
     .left {

@@ -1,5 +1,11 @@
 @import "../mixins/footer-button";
-
+.hg-question-page {
+  --f7-navbar-height: 56px;
+  --f7-block-padding-horizontal: 12px;
+}
+:deep(.top-bar) {
+  display: none;
+}
 .navbar {
   &.players-machine {
     z-index: 10;
@@ -43,8 +49,8 @@
   }
 
   .navbar-bg {
-    background: #fff;
-
+    background-position-x: right;
+    background-repeat: no-repeat;
     &:before {
       display: none;
     }
@@ -94,6 +100,7 @@
     }
 
     .title {
+      width: 100%;
       font-family: Poppins !important;
       font-size: 16px !important;
       font-weight: 600 !important;

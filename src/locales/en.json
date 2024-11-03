@@ -391,6 +391,15 @@
   },
   "versions": [
     {
+      "v": "1.0.23",
+      "date": "2024-11-",
+      "changes": [
+        "Popup header update.",
+        "Header and Footer fixes.",
+        "Safe Area fixes."
+      ]
+    },
+    {
       "v": "1.0.22",
       "date": "2024-10-12",
       "changes": [

@@ -1,20 +1,25 @@
 <template>
   <f7-page class="hg-dashboard-content" name="dashboard" @page:beforein="getAllData">
-    <top-bar :tabs="profileTabs" @tab-selected="setProfileComponent">
-      <template #title>Profile</template>
-      <template v-if="user && user.everyday_goal" #subtitle>Today's Goal</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{ user.everyday_goal }} questions</template>
-    </top-bar>
+    <f7-navbar id="main-navbar">
+      <top-bar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition name="fade">
         <f7-view />
       </Transition>
-    </main>
+    </f7-block>
 
     <success-message-popup v-if="successPopup" :title="successPopup" @close="successPopup = false" />
-
-    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 

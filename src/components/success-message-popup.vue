@@ -48,7 +48,7 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["appeared", "close"]);
+const emit = defineEmits(["appeared", "close", "second-button-event"]);
 
 onMounted(() => {
   emit("appeared");

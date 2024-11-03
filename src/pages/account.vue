@@ -5,15 +5,20 @@
     @page:beforein="getAllData"
     @page:afterin="loadFirstTab"
   >
-    <topbar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
-      <template #title>{{ $t("profile.profile") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal}  ${$t("top-bar.questions")}`
-      }}</template>
-    </topbar>
+    <f7-navbar id="main-navbar">
+      <top-bar ref="topBar" :tabs="profileTabs" :search="false" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition name="fade">
         <div v-if="profileData" class="profile-account">
           <f7-list form class="main-list">
@@ -133,7 +138,7 @@
           </div>
         </div>
       </Transition>
-    </main>
+    </f7-block>
 
     <div v-if="isCalendarOpened" class="date-popup" @click="closeCalendar">
       <date-picker v-model="profileData.dateOfBirth" :max-date="new Date()" @click.stop />
@@ -154,7 +159,6 @@
 
     <delete-page-popup v-if="accountDeletePopup" @cancel-changes="closeDeletePopup" @delete-changes="blockAccount" />
 
-    <bottom-menu :current-path="f7route.path" />
     <f7-popup
       class="logout-popup popup-swipe"
       swipe-to-close
@@ -241,7 +245,7 @@ import { getCountryCode } from "@/js/helpers/country-name-to-iso";
 import playAudioMixin from "@/js/mixins/play_audio";
 import delay from "@/js/helpers/delay";
 
-import Topbar from "@/components/topbar.vue";
+import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import SuccessMessagePopup from "@/components/success-message-popup.vue";
 import LeavePagePopup from "@/components/leave-page-popup.vue";

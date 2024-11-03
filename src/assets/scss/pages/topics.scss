@@ -5,12 +5,15 @@
   .page-content {
     display: flex;
     flex-direction: column;
-    padding-top: 0;
+    &>.block {
+      margin-top: 0;
+    }
   }
 
   .list {
     flex: 1;
-    margin-top: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
 
     ul::before,
     ul::after {
@@ -18,7 +21,7 @@
     }
 
     .item-content {
-      padding: 0 24px !important;
+      padding: 0 !important;
       min-height: 60px;
 
       .item-inner {
@@ -96,8 +99,12 @@
 }
 
 .search-popup {
+  --f7-navbar-height: 56px;
+  --f7-block-padding-horizontal: 12px;
   @include search-popup;
-
+  .right {
+    padding-right: 12px;
+  }
   .list {
     margin-top: 20px;
     li {

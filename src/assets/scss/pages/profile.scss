@@ -1,15 +1,8 @@
 .hg-dashboard-content {
   background-color: #fff;
   .page-content {
-    //overflow: unset;
     display: flex;
     flex-direction: column;
-
-    .profile-tab-content {
-      flex: 1;
-      padding: 30px 24px;
-      //overflow: auto;
-    }
   }
 
   .hg-statistics-content {
@@ -74,5 +67,3 @@
     width: 100%;
   }
 }
-
-

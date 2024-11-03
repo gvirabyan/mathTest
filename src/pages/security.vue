@@ -1,20 +1,19 @@
 <template>
   <f7-page class="hg-dashboard-content" name="dashboard">
-    <top-bar
-      :tabs="profileTabs"
-      :search="false"
-      by-route="Security"
-      :first-load-index="1"
-      @tab-selected="setProfileComponent"
-    >
-      <template #title>{{ $t("profile.profile") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
-      <template v-if="user && user.everyday_goal" #subtitle-data>{{
-        `${user.everyday_goal}  ${$t("top-bar.questions")}`
-      }}</template>
-    </top-bar>
+    <f7-navbar id="main-navbar">
+      <top-bar :tabs="profileTabs" :search="false" :first-load-index="1" @tab-selected="setProfileComponent">
+        <template #title>{{ $t("profile.profile") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle>{{ $t("top-bar.today-goal") }}</template>
+        <template v-if="user && user.everyday_goal" #subtitle-data>{{
+          `${user.everyday_goal} ${$t("top-bar.questions")}`
+        }}</template>
+      </top-bar>
+    </f7-navbar>
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
 
-    <main class="profile-tab-content">
+    <f7-block class="profile-tab-content">
       <Transition name="fade">
         <div v-if="updatePasswordData" class="profile-security">
           <f7-list form>
@@ -64,7 +63,7 @@
           </f7-list>
         </div>
       </Transition>
-    </main>
+    </f7-block>
 
     <success-message-popup v-if="successPopup" :title="$t('profile.security.popup-text')" @close="closeSuccessPopup" />
 
@@ -74,8 +73,6 @@
       @save-changes="updatePasswordHandler"
       @close="closeLeavePopup"
     />
-
-    <bottom-menu :current-path="f7route.path" />
   </f7-page>
 </template>
 
