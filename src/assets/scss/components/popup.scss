@@ -1,14 +1,16 @@
 .popup-swipe {
   --f7-navbar-height: 56px;
   --f7-block-padding-horizontal: 12px;
+  --f7-navbar-inner-padding-right: 12px;
+  --f7-navbar-inner-padding-left: 12px;
+  --f7-navbar-font-size: 24px;
   .navbar-bg {
     background: #8419FF url("@/assets/images/pointsRight.svg") no-repeat right top 6px;
   }
   .navbar-inner {
     .left {
-      padding-left: 12px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
   }
 }

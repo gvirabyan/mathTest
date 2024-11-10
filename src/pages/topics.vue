@@ -17,7 +17,7 @@
     <f7-toolbar position="bottom">
       <bottom-menu :current-path="f7route.path" />
     </f7-toolbar>
-    <f7-block>
+    <f7-block :style="[isLoading ? { height: '100%' } : '']">
       <template v-if="!isLoading">
         <f7-list no-hairlines-md @touchstart="touchStart" @touchend="touchEnd">
           <template v-if="isAdmin">

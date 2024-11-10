@@ -2,6 +2,12 @@
 .hg-question-page {
   --f7-navbar-height: 56px;
   --f7-block-padding-horizontal: 12px;
+  --f7-navbar-title-font-weight: 600;
+  --f7-navbar-title-font-size: 16px;
+  --f7-navbar-title-text-align: left;
+  --f7-navbar-title-margin-left: 0;
+  --f7-bars-text-color: #fff;
+  --f7-navbar-text-color: #fff;
 }
 :deep(.top-bar) {
   display: none;
@@ -101,13 +107,7 @@
 
     .title {
       width: 100%;
-      font-family: Poppins !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
-      position: unset !important;
-      margin-left: 0 !important;
-      margin-right: auto !important;
-      text-align: left;
+      font-family: Poppins;
       white-space: unset;
       display: flex;
       align-items: center;

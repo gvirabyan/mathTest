@@ -257,6 +257,7 @@ onMounted(async () => {
   --f7-navbar-inner-padding-left: 0;
   --f7-navbar-text-color: #fff;
   --f7-block-padding-horizontal: 28px;
+  --f7-list-link-pressed-bg-color: rgba(0, 0, 0, 0);
 }
 .ios {
   --f7-page-bg-color: #fff;
@@ -273,9 +274,11 @@ onMounted(async () => {
 }
 #notifications-panel {
   max-width: 450px;
+  min-width: 300px;
   --f7-navbar-height: 56px;
+  --f7-navbar-inner-padding-right: 12px;
+  --f7-navbar-inner-padding-left: 12px;
   .navbar-inner {
-    padding: 0 12px;
     .left {
       font-weight: 700;
     }

@@ -10,11 +10,15 @@
 <style lang="scss">
 .loading-container {
   display: grid;
+  height: 100%;
   place-items: center;
   flex: 1;
 }
 
 .loading-block {
+  display: flex;
+  height: 100%;
+  align-items: center;
   text-align: center;
 }
 

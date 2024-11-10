@@ -102,9 +102,6 @@
   --f7-navbar-height: 56px;
   --f7-block-padding-horizontal: 12px;
   @include search-popup;
-  .right {
-    padding-right: 12px;
-  }
   .list {
     margin-top: 20px;
     li {
