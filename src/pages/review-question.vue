@@ -109,7 +109,7 @@
             Unpublish
           </button>
           <p>{{ exercise.id }}</p>
-          <button class="admin-button red" @dblclick="editExercise(index, 'delete')">Delete</button>
+          <button class="admin-button red" @click="deleteExercise(index)">Delete</button>
         </div>
         <hr />
       </div>
@@ -155,6 +155,7 @@ const isLoading = ref(false);
 const categoryName = ref("");
 const categoryID = ref("");
 const allQuestions = ref([]);
+const clickedToDelete = ref(0);
 
 const getAllQuestionData = async () => {
   categoryID.value = props.f7route.params.categoryID;
@@ -165,6 +166,18 @@ const getAllQuestionData = async () => {
     categoryName.value = data.data.category_name;
     isLoading.value = false;
   });
+};
+
+const deleteExercise = index => {
+  if (clickedToDelete.value) {
+    if (new Date().getTime() - clickedToDelete.value < 500) {
+      editExercise(index, "delete");
+    } else {
+      clickedToDelete.value = new Date().getTime();
+    }
+  } else {
+    clickedToDelete.value = new Date().getTime();
+  }
 };
 
 const editExercise = async (index, action) => {
