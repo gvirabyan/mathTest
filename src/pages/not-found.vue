@@ -16,7 +16,9 @@
       </f7-block>
     </div>
 
-    <bottom-menu :current-path="f7route.path" />
+    <f7-toolbar position="bottom">
+      <bottom-menu :current-path="f7route.path" />
+    </f7-toolbar>
   </f7-page>
 </template>
 

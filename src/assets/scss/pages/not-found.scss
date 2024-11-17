@@ -1,4 +1,5 @@
 .not-found-page {
+  --f7-navbar-height: 0px;
   overflow: auto;
   .page-content {
     display: flex;
@@ -40,10 +41,10 @@
           .mathematician-name {
             display: block;
             text-align: center;
+            font-style: italic;
           }
         }
       }
-
     }
   }
 }

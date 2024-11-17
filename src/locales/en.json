@@ -333,9 +333,9 @@
   },
   "not-found": {
     "title": "404 Not Found",
-    "text": "Unfortunately we couldn't find the page you are looking for, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "text": "Unfortunately we couldn't find the page you are looking for, but we find some information about famous mathematician. Enjoy :).",
     "title-offline": "No Internet",
-    "text-offline": "You don't have internet, but we find some artwork about parties, friends\n and human relationships. Enjoy)).",
+    "text-offline": "You don't have internet, but we find some information about famous mathematician. Enjoy :).",
     "mathematics": [
       {
         "name": "Pythagoras",
@@ -343,34 +343,9 @@
         "img": "Pythagoras"
       },
       {
-        "name": "Hypatia",
-        "bio": "Women are under-represented in mathematics, yet the history of the subject is not exclusively male. Hypatia was a scholar at the library in Alexandria in the 4th century CE. Her most valuable scientific legacy was her edited version of Euclid's The Elements, the most important Greek mathematical text, and one of the standard versions for centuries after her particularly horrific death: she was murdered by a Christian mob who stripped her naked, peeled away her flesh with broken pottery and ripped apart her limbs",
-        "img": "Hypatia"
-      },
-      {
-        "name": "Isaac Newton",
-        "bio": "Isaac Newton is one of the most famous scientists of all time, and he discovered some amazing things. He was the first to realize that white light is made up of all the colors of the rainbow. He invented calculus, the mathematics of moving things, which is used today to help us build skyscrapers and send rockets into space. He also figured out the force that pulls things to the ground – gravity. He was a strange character, who suffered from depression and rarely talked to anyone. He was also a secret alchemist, trying to turn lead into gold.",
-        "img": "Isaac"
-      },
-      {
-        "name": "Leonhard Euler",
-        "bio": "The most prolific mathematician of all time, publishing close to 900 books. When he went blind in his late 50s his productivity in many areas increased. His famous formula eiπ + 1 = 0, where e is the mathematical constant sometimes known as Euler's number and i is the square root of minus one, is widely considered the most beautiful in mathematics. He later took an interest in Latin squares – grids where each row and column contains each member of a set of numbers or objects once. Without this work, we might not have had sudoku.",
-        "img": "Leonhard"
-      },
-      {
-        "name": "Carl Friedrich Gauss",
-        "bio": "Known as the prince of mathematicians, Gauss made significant contributions to most fields of 19th century mathematics. An obsessive perfectionist, he didn't publish much of his work, preferring to rework and improve theorems first. His revolutionary discovery of non-Euclidean space (that it is mathematically consistent that parallel lines may diverge) was found in his notes after his death. During his analysis of astronomical data, he realised that measurement error produced a bell curve – and that shape is now known as a Gaussian distribution.",
-        "img": "Carl"
-      },
-      {
-        "name": "Georg Cantor",
-        "bio": "Of all the great mathematicians, Cantor most perfectly fulfils the (Hollywood) stereotype that a genius for maths and mental illness are somehow inextricable. Cantor's most brilliant insight was to develop a way to talk about mathematical infinity. His set theory lead to the counter-intuitive discovery that some infinities were larger than others. The result was mind-blowing. Unfortunately he suffered mental breakdowns and was frequently hospitalised. He also became fixated on proving that the works of Shakespeare were in fact written by Francis Bacon.",
-        "img": "Georg"
-      },
-      {
-        "name": "Paul Erdös",
-        "bio": "Erdös lived a nomadic, possession-less life, moving from university to university, from colleague's spare room to conference hotel. He rarely published alone, preferring to collaborate – writing about 1,500 papers, with 511 collaborators, making him the second-most prolific mathematician after Euler. As a humorous tribute, an \"Erdös number\" is given to mathematicians according to their collaborative proximity to him: No 1 for those who have authored papers with him; No 2 for those who have authored with mathematicians with an Erdös No 1, and so on.",
-        "img": "Paul"
+        "name": "Euclid",
+        "bio": "Known as the 'Father of Geometry', Euclid was an ancient Greek mathematician who wrote 'The Elements', one of the most influential works in the history of mathematics, which served as a main textbook for teaching mathematics until the late 19th century.",
+        "img": "Euclid"
       },
       {
         "name": "Archimedes",
@@ -378,18 +353,70 @@
         "img": "Archimedes"
       },
       {
-        "name": "Grigori Perelman",
-        "bio": "Perelman was awarded $1m last month for proving one of the most famous open questions in maths, the Poincaré Conjecture. But the Russian recluse has refused to accept the cash. He had already turned down maths' most prestigious honour, the Fields Medal in 2006. \"If the proof is correct then no other recognition is needed,\" he reportedly said. The Poincaré Conjecture was first stated in 1904 by Henri Poincaré and concerns the behaviour of shapes in three dimensions. Perelman is currently unemployed and lives a frugal life with his mother in St Petersburg.",
-        "img": "Grigori"
+        "name": "Isaac Newton",
+        "bio": "Isaac Newton is one of the most famous scientists of all time, and he discovered some amazing things. He was the first to realize that white light is made up of all the colors of the rainbow. He invented calculus, the mathematics of moving things, which is used today to help us build skyscrapers and send rockets into space. He also figured out the force that pulls things to the ground – gravity. He was a strange character, who suffered from depression and rarely talked to anyone. He was also a secret alchemist, trying to turn lead into gold.",
+        "img": "Isaac"
       },
       {
-        "name": "Terry Tao",
-        "bio": "An Australian of Chinese heritage who lives in the US, Tao also won (and accepted) the Fields Medal in 2006. Together with Ben Green, he proved an amazing result about prime numbers – that you can find sequences of primes of any length in which every number in the sequence is a fixed distance apart. For example, the sequence 3, 7, 11 has three primes spaced 4 apart. The sequence 11, 17, 23, 29 has four primes that are 6 apart. While sequences like this of any length exist, no one has found one of more than 25 primes, since the primes by then are more than 18 digits long.",
-        "img": "Terry"
+        "name": "Carl Friedrich Gauss",
+        "bio": "Known as the prince of mathematicians, Gauss made significant contributions to most fields of 19th century mathematics. An obsessive perfectionist, he didn't publish much of his work, preferring to rework and improve theorems first. His revolutionary discovery of non-Euclidean space (that it is mathematically consistent that parallel lines may diverge) was found in his notes after his death. During his analysis of astronomical data, he realised that measurement error produced a bell curve – and that shape is now known as a Gaussian distribution.",
+        "img": "Carl"
+      },
+      {
+        "name": "Leonhard Euler",
+        "bio": "The most prolific mathematician of all time, publishing close to 900 books. When he went blind in his late 50s his productivity in many areas increased. His famous formula `eiπ + 1 = 0`, where `e` is the mathematical constant sometimes known as Euler's number and `i` is the square root of minus one, is widely considered the most beautiful in mathematics. He later took an interest in Latin squares – grids where each row and column contains each member of a set of numbers or objects once. Without this work, we might not have had sudoku.",
+        "img": "Leonhard"
+      },
+      {
+        "name": "René Descartes",
+        "bio": "Often referred to as the 'Father of Modern Philosophy', Descartes was also a key figure in mathematics for laying the foundation for the development of calculus and for his work in analytic geometry.",
+        "img": "Descartes"
+      },
+      {
+        "name": "Blaise Pascal",
+        "bio": "Mathematician and physicist Blaise Pascal is noted for his work in the fields of probability and fluid mechanics. His inventions include the Pascaline, an early calculator, and his contributions to hydrodynamics and pressure measurement.",
+        "img": "Blaise"
+      },
+      {
+        "name": "Pierre-Simon Laplace",
+        "bio": "Laplace was a mathematician and astronomer whose work was pivotal to the development of mathematical statistics, celestial mechanics, and the theory of probability.",
+        "img": "Laplace"
+      },
+      {
+        "name": "Bernhard Riemann",
+        "bio": "Known for the Riemann Hypothesis, one of the unsolved problems in mathematics, Riemann was a key figure in analysis and differential geometry, influencing areas such as number theory.",
+        "img": "Riemann"
+      },
+      {
+        "name": "Johannes Kepler",
+        "bio": "Kepler is best known for his laws of planetary motion, which laid the groundwork for Newton's theory of universal gravitation. His contributions to astronomy made him a key figure in the 17th-century scientific revolution.",
+        "img": "Kepler"
+      },
+      {
+        "name": "Évariste Galois",
+        "bio": "Galois was a pioneering figure in the development of abstract algebra. His work laid the foundations for group theory and was fundamental to the understanding of quadratic equations.",
+        "img": "Galois"
+      },
+      {
+        "name": "David Hilbert",
+        "bio": "Hilbert was a leading figure in formalizing mathematics and developing mathematical logic. His 23 unsolved problems, presented at the International Congress of Mathematicians in 1900, set the agenda for much of 20th-century mathematics research.",
+        "img": "Hilbert"
+      },
+      {
+        "name": "Georg Cantor",
+        "bio": "Of all the great mathematicians, Cantor most perfectly fulfils the (Hollywood) stereotype that a genius for maths and mental illness are somehow inextricable. Cantor's most brilliant insight was to develop a way to talk about mathematical infinity. His set theory led to the counter-intuitive discovery that some infinities were larger than others. The result was mind-blowing. Unfortunately, he suffered mental breakdowns and was frequently hospitalised. He also became fixated on proving that the works of Shakespeare were in fact written by Francis Bacon.",
+        "img": "Georg"
       }
     ]
   },
   "versions": [
+    {
+      "v": "1.0.24",
+      "date": "2024-11",
+      "changes": [
+        "Nicht gefundene Seite: beheben und aktualisieren."
+      ]
+    },
     {
       "v": "1.0.23",
       "date": "2024-11-12",
