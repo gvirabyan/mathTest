@@ -9,6 +9,23 @@
   --f7-bars-text-color: #fff;
   --f7-navbar-text-color: #fff;
 }
+
+.ios .hg-question-page .page-content {
+  padding-top: var(--f7-navbar-height);
+}
+
+.ios .navbar.hg-question-page-header {
+  height: 56px;
+
+  .title {
+    color: #fff
+  }
+}
+
+.ios .navbar.navbar-previous:has(+ .navbar.navbar-current) {
+  display: none;
+}
+
 :deep(.top-bar) {
   display: none;
 }
@@ -145,6 +162,7 @@
 
   .page-content {
     background: #fff !important;
+    padding-top: var(--f7-navbar-height);
 
     .block-title {
       font-family: Rubik;

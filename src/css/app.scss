@@ -53,3 +53,16 @@ body {
 .text-right {
   text-align: right;
 }
+
+.ios {
+  .navbar-hidden {
+    transform: translate3d(0, calc(-1 * var(--f7-navbar-height) * 3), 0);
+  }
+}
+
+@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+  .ios-translucent-bars .navbar-bg {
+    background: var(--f7-navbar-bg-color);
+    background-image: var(--f7-navbar-bg-image, var(--f7-bars-bg-image));
+  }
+}

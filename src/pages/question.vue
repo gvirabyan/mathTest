@@ -1,6 +1,6 @@
 <template>
   <f7-page class="hg-question-page" name="question" @page:beforein="getAllQuestionData" @page:afterout="outPage">
-    <f7-navbar>
+    <f7-navbar class="hg-question-page-header">
       <template v-if="isLoading" #title>
         <f7-button @click="goPreviousPage">
           <img src="@/assets/icons/backSlagWhite.svg" alt="" />
