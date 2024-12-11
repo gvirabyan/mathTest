@@ -15,11 +15,15 @@
 }
 
 .ios .hg-question-page[data-name="player-vs-machine"] .page-content {
-  padding-top: calc(var(--f7-navbar-height))
+  padding-top: 0
 }
 
 .ios .navbar.hg-question-page-header {
   height: calc(56px +  var(--f7-safe-area-top));
+
+  .navbar-inner {
+    padding-top: 36px;
+  }
 
   .title {
     color: #fff
