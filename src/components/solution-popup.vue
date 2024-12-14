@@ -23,7 +23,7 @@ window.addEventListener(
   "message",
   function (event) {
     const iframe = document.getElementById("solution-iframe");
-    console.log(event.data);
+
     if (iframe && event.data) {
       iframe.style.height = event.data + 60 + "px";
     }
