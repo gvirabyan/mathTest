@@ -413,11 +413,11 @@
   "versions": [
     {
       "v": "1.0.24",
-      "date": "2024-11-",
+      "date": "2024-12-15",
       "changes": [
-        "Popup-Kopfzeilenaktualisierung.",
-        "Kopf- und Fußzeilenkorrekturen.",
-        "Korrekturen des sicheren Bereichs."
+        "Nicht gefundene Seite: beheben und aktualisieren.",
+        "Kopf- und Fußzeilenaktualisierung",
+        "Push-Benachrichtigungen beheben."
       ]
     },
     {

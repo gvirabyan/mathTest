@@ -412,9 +412,11 @@
   "versions": [
     {
       "v": "1.0.24",
-      "date": "2024-11",
+      "date": "2024-12-15",
       "changes": [
-        "Nicht gefundene Seite: beheben und aktualisieren."
+        "Page not found: fix and update.",
+        "Header and Footer update.",
+        "Push notifications fix."
       ]
     },
     {
