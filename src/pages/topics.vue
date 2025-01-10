@@ -130,6 +130,7 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import TextClamp from "vue3-text-clamp";
@@ -260,6 +261,14 @@ const keywords = ref([
     name: "lineare",
     active: false,
   },
+  {
+    name: "Wurzel",
+    active: false,
+  },
+  {
+    name: "quadratische",
+    active: false,
+  },
 ]);
 
 const changeClass = ref(0);
@@ -337,6 +346,8 @@ const selectKeyword = index => {
 };
 
 watch(searchStr, async value => {
+  // const device = getDevice();
+  console.log(f7.device, f7.device.ios);
   clearSearchedCategories();
   value && (await getCategories(value));
 });

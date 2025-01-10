@@ -411,6 +411,13 @@
   },
   "versions": [
     {
+      "v": "1.0.",
+      "date": "2025-01-10",
+      "changes": [
+        "Minor style changes on search popup"
+      ]
+    },
+    {
       "v": "1.0.24",
       "date": "2024-12-15",
       "changes": [

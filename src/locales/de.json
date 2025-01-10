@@ -412,6 +412,13 @@
   },
   "versions": [
     {
+      "v": "1.0.",
+      "date": "2025-01-10",
+      "changes": [
+        "Kleinere Stiländerungen am Such-Popup"
+      ]
+    },
+    {
       "v": "1.0.24",
       "date": "2024-12-15",
       "changes": [
