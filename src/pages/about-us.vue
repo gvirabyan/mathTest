@@ -26,6 +26,28 @@
               </f7-button>
             </template>
           </f7-list-item>
+          <f7-list-item v-if="f7.device.android">
+            <template #title>
+              <f7-button
+                @click="openExternalLink('https://play.google.com/store/apps/details?id=io.framework7.matheapp')"
+              >
+                <f7-row class="justify-content-space-between align-items-center">
+                  <p class="info-title">{{ $t("profile.about-us.write-review") }}</p>
+                  <img src="@/assets/icons/arrow-right.svg" alt="" />
+                </f7-row>
+              </f7-button>
+            </template>
+          </f7-list-item>
+          <f7-list-item v-if="f7.device.ios">
+            <template #title>
+              <f7-button @click="openExternalLink('https://apps.apple.com/de/app/matheappde/id6447060725')">
+                <f7-row class="justify-content-space-between align-items-center">
+                  <p class="info-title">{{ $t("profile.about-us.write-review") }}</p>
+                  <img src="@/assets/icons/arrow-right.svg" alt="" />
+                </f7-row>
+              </f7-button>
+            </template>
+          </f7-list-item>
         </f7-list>
       </Transition>
     </f7-block>
@@ -47,11 +69,13 @@
 </template>
 
 <script setup>
+import { f7 } from "framework7-vue";
 import { ref, reactive, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import delay from "@/js/helpers/delay";
+import openExternalLink from "@/js/utils/external-link";
 import TopBar from "@/components/topbar.vue";
 import BottomMenu from "@/components/bottom-menu.vue";
 import TermsPopup from "@/components/terms-popup.vue";
@@ -59,7 +83,6 @@ import PrivacyPopup from "@/components/privacy-popup.vue";
 import ImprintPopup from "@/components/imprint-popup.vue";
 import SoftwarePopup from "@/components/software-popup.vue";
 import ReleasePopup from "@/components/release-popup.vue";
-import ReviewPopup from "@/components/review-popup.vue";
 import { f7Popup } from "framework7-vue";
 
 const props = defineProps({
@@ -129,10 +152,6 @@ const infos = reactive([
     title: i18n.t("profile.about-us.release-notes"),
     popup: "ReleasePopup",
   },
-  /*{
-    title: i18n.t("profile.about-us.write-review"),
-    popup: "ReviewPopup",
-  },*/
 ]);
 
 const isLoading = ref(false);
@@ -167,8 +186,6 @@ const getPopup = computed(() =>
     ? SoftwarePopup
     : popupAboutUs.value === "ReleasePopup"
     ? ReleasePopup
-    : popupAboutUs.value === "ReviewPopup"
-    ? ReviewPopup
     : false,
 );
 </script>

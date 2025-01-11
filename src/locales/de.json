@@ -412,10 +412,11 @@
   },
   "versions": [
     {
-      "v": "1.0.",
-      "date": "2025-01-10",
+      "v": "1.0.25",
+      "date": "2025-01-11",
       "changes": [
-        "Kleinere Stiländerungen am Such-Popup"
+        "Kleinere Stiländerungen am Such-Popup",
+        "Aktualisierung externer Links"
       ]
     },
     {

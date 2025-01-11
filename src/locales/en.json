@@ -411,10 +411,11 @@
   },
   "versions": [
     {
-      "v": "1.0.",
-      "date": "2025-01-10",
+      "v": "1.0.25",
+      "date": "2025-01-11",
       "changes": [
-        "Minor style changes on search popup"
+        "Minor style changes on search popup",
+        "External links update"
       ]
     },
     {

@@ -60,12 +60,16 @@
     <h3>Kontakt</h3>
     <p>
       Bei Fragen oder Anliegen zur Datenschutzrichtlinie von MatheApp kontaktieren Sie uns bitte unter
-      <a href="mailto:info@ferienhausmiete.de">info@schulmatheapp.de</a> oder auf unserer Website
-      <a href="https://schulmatheapp.de">https://schulmatheapp.de</a>.
+      <f7-link @click="openExternalLink('mailto:info@schulmatheapp.de')">info@schulmatheapp.de</f7-link> oder auf
+      unserer Website <f7-link @click="openExternalLink('https://schulmatheapp.de')">https://schulmatheapp.de</f7-link>.
     </p>
     <i>Datum der Datenschutzerklärung: 15.03.2024</i>
   </f7-block>
 </template>
+
+<script setup>
+import openExternalLink from "@/js/utils/external-link";
+</script>
 
 <style lang="scss">
 //@import "@/assets/scss/components/popup.scss";
