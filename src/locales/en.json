@@ -411,6 +411,13 @@
   },
   "versions": [
     {
+      "v": "1.0.26",
+      "date": "2025-01-21",
+      "changes": [
+        "Push notifications fix"
+      ]
+    },
+    {
       "v": "1.0.25",
       "date": "2025-01-11",
       "changes": [

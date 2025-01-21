@@ -412,6 +412,13 @@
   },
   "versions": [
     {
+      "v": "1.0.26",
+      "date": "2025-01-21",
+      "changes": [
+        "Fehlerbehebung bei Push-Benachrichtigungen"
+      ]
+    },
+    {
       "v": "1.0.25",
       "date": "2025-01-11",
       "changes": [
