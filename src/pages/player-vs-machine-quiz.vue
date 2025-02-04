@@ -5,75 +5,12 @@
     @page:beforein="getQuizQuestionsHandler(quizMode?.questions || [], quizRivalType)"
     @page:afterout="clearStore"
   >
-    <leave-page-popup
-      v-if="leavePopupPageText"
-      :text="leavePopupPageText"
-      :save-btn="$t('practice.leave-page-popup.stay')"
-      @save-changes="leavePopupPageText = ''"
-      @leave-changes="leavePage"
-      @close="leavePopupPageText = ''"
-    />
-
-    <leave-page-popup
-      v-if="finishGame"
-      :title="finishGame"
-      :text="finishGameText"
-      :save-btn="$t('practice.finish-game-popup.save-btn-text')"
-      :leave-btn="$t('practice.finish-game-popup.leave-btn-text')"
-      @leave-changes="goMyStatus"
-      @save-changes="closeFinishPopup"
-      @close="closeFinishPopup"
-    />
-
-    <success-message-popup
-      v-if="!isRivalAvailable"
-      :title="$t('practice.no-players-popup.title')"
-      :text="$t('practice.no-players-popup.text')"
-      :btn-text="$t('practice.no-players-popup.go-to-practice')"
-      :second-btn-text="$t('practice.no-players-popup.try-again')"
-      @close="f7router.navigate('/practice/')"
-      @second-button-event="tryAgainHandler"
-    />
-
-    <success-message-popup
-      v-if="isLeftByRival"
-      :title="$t('practice.left-by-rival-popup.title')"
-      :text="$t('practice.left-by-rival-popup.text')"
-      :btn-text="$t('buttons.ok')"
-      @close="closeLeftGameByRivalPopup"
-    />
-
-    <success-message-popup
-      v-if="!isLoading && !startGameTimer.isRunning && quizQuestions.length < quizMode?.questions"
-      :title="$t('practice.popup-go-topic.Oops')"
-      :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
-        'practice.popup-go-topic.second-text',
-      )}`"
-      :btn-text="$t('practice.popup-go-topic.go-to-topics')"
-      @close="f7router.navigate('/topics/')"
-    />
-
-    <input-popup
-      v-if="showInputPopup"
-      :send-btn-class="isRivalAnswerSent ? secondQuizAnswerStatus : ''"
-      :is-sending="!isRivalAnswerSent && (isSendingQuizSecondAnswer || isSentQuizSecondAnswer)"
-      :is-sent="allAnswersAreSent"
-      :first-answer="chosenQuizAnswer"
-      @input-answer="sendSecondQuizAnswer"
-      @go-next="next"
-      @close="closeInputPopupHandler"
-    />
-
-    <div class="navbar players-machine">
-      <div class="navbar-inner">
-        <div class="left">
-          <a href="#" class="link icon-only" @click="breakQuiz">
-            <img src="@/assets/icons/arrow-right.svg" alt="" />
-          </a>
-        </div>
-
+    <f7-navbar class="hg-question-page-header">
+      <template #title>
+        <f7-button @click="breakQuiz">
+          <img src="@/assets/icons/backSlagWhite.svg" alt="" />
+        </f7-button>
         <div class="title">{{ practiceTitle }}</div>
-
         <div class="countdown-wrapper">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -91,11 +28,10 @@
               stroke-linejoin="round"
             />
           </svg>
-
           <p class="countdown">{{ timeToAnswerFormatted }}</p>
         </div>
-      </div>
-    </div>
+      </template>
+    </f7-navbar>
 
     <div
       v-if="quizQuestions?.length >= quizMode?.questions && isRivalAvailable"
@@ -288,6 +224,65 @@
         <div class="loader-circle"></div>
       </div>
     </teleport>
+
+    <leave-page-popup
+      v-if="leavePopupPageText"
+      :text="leavePopupPageText"
+      :save-btn="$t('practice.leave-page-popup.stay')"
+      @save-changes="leavePopupPageText = ''"
+      @leave-changes="leavePage"
+      @close="leavePopupPageText = ''"
+    />
+
+    <leave-page-popup
+      v-if="finishGame"
+      :title="finishGame"
+      :text="finishGameText"
+      :save-btn="$t('practice.finish-game-popup.save-btn-text')"
+      :leave-btn="$t('practice.finish-game-popup.leave-btn-text')"
+      @leave-changes="goMyStatus"
+      @save-changes="closeFinishPopup"
+      @close="closeFinishPopup"
+    />
+
+    <success-message-popup
+      v-if="!isRivalAvailable"
+      :title="$t('practice.no-players-popup.title')"
+      :text="$t('practice.no-players-popup.text')"
+      :btn-text="$t('practice.no-players-popup.go-to-practice')"
+      :second-btn-text="$t('practice.no-players-popup.try-again')"
+      @close="f7router.navigate('/practice/')"
+      @second-button-event="tryAgainHandler"
+    />
+
+    <success-message-popup
+      v-if="isLeftByRival"
+      :title="$t('practice.left-by-rival-popup.title')"
+      :text="$t('practice.left-by-rival-popup.text')"
+      :btn-text="$t('buttons.ok')"
+      @close="closeLeftGameByRivalPopup"
+    />
+
+    <success-message-popup
+      v-if="!isLoading && !startGameTimer.isRunning && quizQuestions.length < quizMode?.questions"
+      :title="$t('practice.popup-go-topic.Oops')"
+      :text="`${$t('practice.popup-go-topic.first-text')} ${quizMode.questions} ${$t(
+        'practice.popup-go-topic.second-text',
+      )}`"
+      :btn-text="$t('practice.popup-go-topic.go-to-topics')"
+      @close="f7router.navigate('/topics/')"
+    />
+
+    <input-popup
+      v-if="showInputPopup"
+      :send-btn-class="isRivalAnswerSent ? secondQuizAnswerStatus : ''"
+      :is-sending="!isRivalAnswerSent && (isSendingQuizSecondAnswer || isSentQuizSecondAnswer)"
+      :is-sent="allAnswersAreSent"
+      :first-answer="chosenQuizAnswer"
+      @input-answer="sendSecondQuizAnswer"
+      @go-next="next"
+      @close="closeInputPopupHandler"
+    />
   </f7-page>
 </template>
 
@@ -1034,10 +1029,5 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-.navbar-inner {
-  .title {
-    color: #212121;
-  }
-}
 @import "../assets/scss/pages/question";
 </style>

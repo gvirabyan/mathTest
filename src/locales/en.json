@@ -411,6 +411,14 @@
   },
   "versions": [
     {
+      "v": "1.0.",
+      "date": "2025-02-04",
+      "changes": [
+        "Practice design update",
+        "Style fixes"
+      ]
+    },
+    {
       "v": "1.0.26",
       "date": "2025-01-21",
       "changes": [

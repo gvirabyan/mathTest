@@ -38,47 +38,6 @@
   display: none;
 }
 .navbar {
-  &.players-machine {
-    z-index: 10;
-
-    .navbar-inner {
-      position: unset;
-      padding: 40px 24px 30px 30px;
-
-      .left {
-        margin-right: 18px;
-
-        a {
-          width: unset;
-          padding: 0;
-
-          img {
-            transform: rotate(180deg);
-          }
-        }
-      }
-
-      .countdown-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        padding: 4px 8px;
-        color: #fff;
-        background-color: #212121;
-        border-radius: 8px;
-      }
-
-      .countdown {
-        margin: 0;
-        font-size: 18px;
-        font-feature-settings: "tnum";
-        font-variant-numeric: tabular-nums;
-        line-height: 24px;
-      }
-    }
-  }
-
   .navbar-bg {
     background-position-x: right;
     background-repeat: no-repeat;
@@ -136,6 +95,24 @@
       white-space: unset;
       display: flex;
       align-items: center;
+      .countdown-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 4px 8px;
+        margin: 0 8px;
+        color: #fff;
+        background-color: #8419FF;
+        border-radius: 8px;
+        .countdown {
+          margin: 0;
+          font-size: 18px;
+          font-feature-settings: "tnum";
+          font-variant-numeric: tabular-nums;
+          line-height: 24px;
+        }
+      }
     }
   }
 }

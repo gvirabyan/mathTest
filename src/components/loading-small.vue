@@ -17,6 +17,8 @@
 
 .loading-block {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 100%;
   align-items: center;
   text-align: center;

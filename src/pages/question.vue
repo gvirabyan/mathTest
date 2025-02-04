@@ -796,7 +796,6 @@ const clearStores = async () => {
 };
 
 const closeAndNavigate = href => {
-  clearStores();
   isAllAnsweredPopup.value = false;
   dataYetNotUpdating.value = "";
   href === "/" ? props.f7router.navigate(href) : props.f7router.navigate(`/${href}/`);
@@ -820,6 +819,7 @@ const onOrientationChange = () => {
 };
 
 const outPage = () => {
+  clearStores();
   window.removeEventListener("resize", onOrientationChange);
 };
 </script>
