@@ -7,6 +7,7 @@ export const useCategoryStore = defineStore("category", () => {
   const searchedCategories = ref([]);
   const lastCategoryData = ref(null);
   const pastCategoriesData = ref([]);
+  const allCategories = ref([]);
 
   const pastCategoriesIds = computed(() => pastCategoriesData.value.map(c => c.id));
   const loading = ref(false);
@@ -33,8 +34,9 @@ export const useCategoryStore = defineStore("category", () => {
   };
 
   const getCategoriesByCategoryClass = async (categoryID, isAdmin) => {
-    categories.value = [];
-
+    if (allCategories.value[categoryID]) {
+      categories.value = allCategories.value[categoryID];
+    }
     return api
       .get(
         `categories?populate[0]=category_class&filters[category_class][id][$eq]=${categoryID}&isAdmin=${isAdmin}&pagination[limit]=100`,
@@ -42,6 +44,7 @@ export const useCategoryStore = defineStore("category", () => {
       .then(data => {
         if (data.data) {
           categories.value = data.data;
+          allCategories.value[categoryID] = data.data;
         }
         return true;
       });
