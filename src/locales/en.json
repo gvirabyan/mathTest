@@ -411,13 +411,14 @@
   },
   "versions": [
     {
-      "v": "1.0.",
-      "date": "2025-02-04",
+      "v": "1.0.27",
+      "date": "2025-02-25",
       "changes": [
         "Practice design update",
         "Style fixes",
         "Topic header update",
-        "Speed improvements"
+        "Speed improvements",
+        "Whiteboard"
       ]
     },
     {

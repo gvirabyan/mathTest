@@ -228,6 +228,11 @@
 
     <loading-small v-else-if="isLoading" />
 
+    <div class="whiteboard" :class="opened ? 'opened' : ''">
+      <f7-button class="whiteboard-button" @click="moveCanvas">{{ $t("question.whiteboard-button") }}</f7-button>
+      <whiteboard></whiteboard>
+    </div>
+
     <f7-popup class="popup-swipe" :opened="popupSolution" swipe-to-close @popup:closed="popupSolution = false">
       <f7-page>
         <f7-navbar>
@@ -317,12 +322,12 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/js/stores/auth";
 import { useCategoryAnswerStore } from "@/js/stores/category-answer";
 import { useQuestionsStore } from "@/js/stores/questions";
-import delay from "@/js/helpers/delay";
 import pluralizeWord from "../js/utils/pluralize-word";
 import playAudioMixin from "@/js/mixins/play_audio";
 import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import SolutionPopup from "@/components/solution-popup.vue";
+import Whiteboard from "@/components/whiteboard.vue";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
@@ -379,6 +384,7 @@ const secondAnswerStatus = ref("");
 const isSendingSecondAnswer = ref(false);
 const isSentSecondAnswer = ref(false);
 const questionID = ref(0);
+const opened = ref(false);
 
 watch(
   () => questions.value,
@@ -443,7 +449,6 @@ const showSkipSendBtns = computed(() => {
 const getAllQuestionData = async () => {
   window.addEventListener("resize", onOrientationChange);
   isLoading.value = true;
-  await delay();
   await getQuestions(props.f7route.params.categoryID);
   isLoading.value = false;
 };
@@ -821,6 +826,10 @@ const onOrientationChange = () => {
 const outPage = () => {
   clearStores();
   window.removeEventListener("resize", onOrientationChange);
+};
+
+const moveCanvas = () => {
+  opened.value = !opened.value;
 };
 </script>
 

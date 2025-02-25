@@ -1,43 +1,26 @@
 {
   "project_info": {
-    "project_number": "991929394310",
-    "project_id": "math-app-13e8f",
-    "storage_bucket": "math-app-13e8f.appspot.com"
+    "project_number": "749772344507",
+    "project_id": "math-project-370321",
+    "storage_bucket": "math-project-370321.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:991929394310:android:762f88396a0e36f20c5d07",
+        "mobilesdk_app_id": "1:749772344507:android:0b78462fb6a8031754ad9e",
         "android_client_info": {
           "package_name": "io.framework7.matheapp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "991929394310-4qn2escqv1bhaeammn5hj31v706hc7tu.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAnLm8CjogjIDNx8oy-47VlW0yX5Va25s8"
+          "current_key": "AIzaSyAbKYFbpCfjnLeo2GaxZy_lqpRBTsoW35E"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "991929394310-4qn2escqv1bhaeammn5hj31v706hc7tu.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "991929394310-g0vu0robs75u1dabr9bjfte5issp7aet.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "io.framework7.matheapp"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -217,7 +217,8 @@
     "skipped-first-text": "Du hast den Großteil des Themas bestanden, aber du hast ",
     "skipped-second-text": " Fragen übersprungen. Du kannst sie noch einmal überprüfen oder sie vorerst lassen.",
     "exercise-solution": "Übungslösung",
-    "no-solution": "Tut uns leid, wir haben im Moment keine Lösung."
+    "no-solution": "Tut uns leid, wir haben im Moment keine Lösung.",
+    "whiteboard-button": "Whiteboard"
   },
 
   "practice": {
@@ -412,10 +413,14 @@
   },
   "versions": [
     {
-      "v": "1.0.",
-      "date": "2025-02-04",
+      "v": "1.0.27",
+      "date": "2025-02-25",
       "changes": [
-        "Fehlerbehebung bei Push-Benachrichtigungen"
+        "Übungsdesign-Update",
+        "Stilkorrekturen",
+        "Themenkopfzeilen-Update",
+        "Geschwindigkeitsverbesserungen",
+        "Whiteboard"
       ]
     },
     {

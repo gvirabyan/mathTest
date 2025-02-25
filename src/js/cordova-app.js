@@ -83,15 +83,15 @@ const cordovaApp = {
         // Set custom user id.
         // eslint-disable-next-line no-undef
         ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
-        // alert(3);
-        var onSuccess = function (strSuccess) {
+
+        /*var onSuccess = function (strSuccess) {
           console.log(strSuccess);
         };
         var onFailure = function (strError) {
           console.warn(strError);
         };
         // eslint-disable-next-line no-undef
-        cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);
+        cordova.plugins.InAppUpdate.getUpdateAvailability(onSuccess, onFailure);*/
 
         /*var updates = {
           getInAppUpdate: function () {
