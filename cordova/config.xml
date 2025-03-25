@@ -38,8 +38,11 @@
     </platform>
     <platform name="android">
         <preference name="android-minSdkVersion" value="21" />
-        <preference name="android-targetSdkVersion" value="34" />
-        <preference name="android-compileSdkVersion" value="34" />
+        <preference name="android-targetSdkVersion" value="35" />
+        <preference name="android-compileSdkVersion" value="35" />
+        <preference name="GradleVersion" value="8.10.2" />
+        <preference name="GradleDistributionUrl" value="https://services.gradle.org/distributions/gradle-8.10.2-bin.zip" />
+        <preference name="AndroidGradlePluginVersion" value="8.8.2" />
         <preference name="AndroidXEnabled" value="true" />
         <preference name="SplashMaintainAspectRatio" value="true" />
         <preference name="SplashShowOnlyFirstTime" value="true" />

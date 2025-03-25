@@ -13,8 +13,9 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^12.0.0",
+    "cordova-android": "^13.0.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
+    "cordova-plugin-in-app-updates": "^2.2.0",
     "cordova-plugin-inappbrowser": "^3.2.0",
     "cordova-plugin-keyboard": "^1.2.0",
     "cordova-plugin-network-information": "^3.0.0",
@@ -42,7 +43,10 @@
       },
       "wonderpush-cordova-sdk": {
         "CLIENT_ID": "f6cfb28dda9a55ce96b95a138c60318883faa2d0",
-        "CLIENT_SECRET": "1b89aecf7e1cd414319cd7411e378ac10749a4ba2ef58caa3cf940df43326321"
+        "CLIENT_SECRET": "1b89aecf7e1cd414319cd7411e378ac10749a4ba2ef58caa3cf940df43326321",
+        "LOGGING": "false",
+        "AUTO_INIT": "true",
+        "REQUIRES_USER_CONSENT": "false"
       },
       "cordova-plugin-network-information": {},
       "cordova-plugin-in-app-updates": {
@@ -56,8 +60,8 @@
       }
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "dependencies": {
