@@ -25,8 +25,8 @@ https://support.google.com/googleplay/android-developer/answer/9842756?hl=en-GB&
 
 1. Update build version in `cordova/config.xml` file
 2. go to `cordova` folder and run `cordova build --release android`
-3. Open `cordova/platforms/android/app` file in Android Studio 
-4. Go to Build -> Build Bundle(s) / APK(s) -> Build Bundle(s)
+3. Open `cordova/platforms/android` file in Android Studio 
+4. Go to Build -> Generate App Bundle(s) or APKs -> Generate Bundles
 5. In Main menu select Build -> Generate Signed Bundle / APK 
    - 5.1. Select Android App Bundle
    - 5.2. Select keystore file and password (most probably it's already saved in Android Studio)

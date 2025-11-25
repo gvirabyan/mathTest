@@ -1,4 +1,5 @@
 import Dom7 from "dom7";
+import { admobInitRewarded } from "./admob-rewarded.js";
 
 const cordovaApp = {
   f7: null,
@@ -64,6 +65,9 @@ const cordovaApp = {
     // Handle Splash Screen
     cordovaApp.handleSplashScreen();
 
+    // Admob
+    admobInitRewarded();
+
     if (window.cordova) {
       document.addEventListener("deviceready", () => {
         // eslint-disable-next-line no-undef
@@ -76,13 +80,16 @@ const cordovaApp = {
           console.log(message);
         };
         // eslint-disable-next-line no-undef
-        ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
-        // Set custom tag for the current session.
-        // eslint-disable-next-line no-undef
-        ClarityPlugin.setCustomTag("userID", localStorage.getItem("user-id"), success, failure);
-        // Set custom user id.
-        // eslint-disable-next-line no-undef
-        ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
+        if (window.ClarityPlugin && typeof ClarityPlugin.initialize === "function") {
+          // eslint-disable-next-line no-undef
+          ClarityPlugin.initialize(import.meta.env.VITE_CLARITY_APP_ID, success, failure);
+          // Set custom tag for the current session.
+          // eslint-disable-next-line no-undef
+          ClarityPlugin.setCustomTag("userID", localStorage.getItem("user-id"), success, failure);
+          // Set custom user id.
+          // eslint-disable-next-line no-undef
+          ClarityPlugin.setCustomUserId(localStorage.getItem("user-id"), success, failure);
+        }
 
         /*var onSuccess = function (strSuccess) {
           console.log(strSuccess);

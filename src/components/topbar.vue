@@ -65,6 +65,7 @@ import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { f7 } from "framework7-vue";
 import { storeToRefs } from "pinia";
 import { useNotifications } from "@/js/stores/notifications";
+import { admobInitRewarded } from "@/js/admob-rewarded";
 
 const { hasUnreadNotifications } = storeToRefs(useNotifications());
 const { getNotifications } = useNotifications();
@@ -162,6 +163,10 @@ const selectTab = (id, index) => {
   });
 
   emit("tab-selected", id);
+
+  if (index) {
+    admobInitRewarded();
+  }
 };
 
 const selectFirstTab = async (tabs, selected = true) => {

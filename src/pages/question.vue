@@ -328,6 +328,7 @@ import Circle from "@/components/circle.vue";
 import LoadingSmall from "@/components/loading-small.vue";
 import SolutionPopup from "@/components/solution-popup.vue";
 import Whiteboard from "@/components/whiteboard.vue";
+import { admobInitRewarded } from "@/js/admob-rewarded.js";
 
 const LeavePagePopup = defineAsyncComponent(() => import("@/components/leave-page-popup.vue"));
 const InputPopup = defineAsyncComponent(() => import("@/components/input-popup.vue"));
@@ -662,6 +663,7 @@ const keepPresentIndex = ref(null);
 const showSolution = id => {
   if (question.value.solution) {
     questionID.value = id;
+    admobInitRewarded();
     changPopupSolution(true);
   } else {
     isSolutionLoading.value = true;

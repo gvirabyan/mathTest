@@ -1,6 +1,7 @@
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import api from "@/js/api";
+import { admobInitRewarded } from "@/js/admob-rewarded";
 
 export const useQuestionsStore = defineStore("questions", () => {
   const questions = ref([]);
@@ -113,14 +114,16 @@ export const useQuestionsStore = defineStore("questions", () => {
   };
 
   const getSolution = async (questionID, categoryID) => {
-    return await api
-      .get(`solution?questionID=${questionID}&categoryID=${categoryID}`)
-      .then(data => {
-        return data;
-      })
-      .catch(err => {
-        return err;
-      });
+    const req = api.get(`solution?questionID=${questionID}&categoryID=${categoryID}`);
+
+    admobInitRewarded();
+
+    // eslint-disable-next-line no-useless-catch
+    try {
+      return await req;
+    } catch (err) {
+      throw err;
+    }
   };
 
   const createNewQuestions = async data => {

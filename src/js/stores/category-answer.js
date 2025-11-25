@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { useQuestionsStore } from "@/js/stores/questions";
 import { useQuizStore } from "@/js/stores/quiz";
 import api from "@/js/api";
+import { admobInitRewarded } from "@/js/admob-rewarded";
 
 export const useCategoryAnswerStore = defineStore("category-answer", () => {
   const questionStore = useQuestionsStore();
@@ -55,20 +56,25 @@ export const useCategoryAnswerStore = defineStore("category-answer", () => {
   };
 
   const updateUserAnsweredQuestions = async (answer, mode = "topic") => {
-    return api
-      .post("user-answers", { data: answer })
-      .then(res => res.json())
+    const req = api.post("user-answers", { data: answer });
+
+    if (mode === "topic") {
+      admobInitRewarded();
+    }
+
+    return req
+      .then(res => (typeof res?.json === "function" ? res.json() : res?.data ?? res))
       .then(data => {
-        if (!data.error) {
+        if (!data?.error) {
           if (mode === "topic") {
             questionStore.answeredQuestions.push(answer.question);
           }
 
           return { status: "success" };
-        } else {
-          return { status: "error", message: data.error?.message };
         }
-      });
+        return { status: "error", message: data.error?.message };
+      })
+      .catch(err => ({ status: "error", message: err?.message ?? String(err) }));
   };
 
   return {

@@ -154,11 +154,13 @@
 
     <span class="link-title">{{ link.name }}</span>
   </f7-link>
+  <div @click="onRewardClick">Add2</div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { showRewarded } from "../js/admob-rewarded";
 
 const i18n = useI18n();
 
@@ -206,6 +208,11 @@ const resetPage = linkName => {
     document.getElementsByClassName("top-bar-tabs")[0].children[0].click();
   }
 };
+
+async function onRewardClick() {
+  alert(123);
+  await showRewarded();
+}
 </script>
 
 <style lang="scss">
