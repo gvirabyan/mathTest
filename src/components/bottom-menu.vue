@@ -160,7 +160,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { showRewarded } from "../js/admob-rewarded";
+import { showInterstitial } from "../js/admob-interstitial";
 
 const i18n = useI18n();
 
@@ -210,8 +210,7 @@ const resetPage = linkName => {
 };
 
 async function onRewardClick() {
-  alert(123);
-  await showRewarded();
+  await showInterstitial();
 }
 </script>
 

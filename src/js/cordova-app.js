@@ -1,4 +1,5 @@
 import Dom7 from "dom7";
+import { admobInitInterstitial } from "./admob-interstitial.js";
 import { admobInitRewarded } from "./admob-rewarded.js";
 
 const cordovaApp = {
@@ -67,6 +68,7 @@ const cordovaApp = {
 
     // Admob
     admobInitRewarded();
+    admobInitInterstitial();
 
     if (window.cordova) {
       document.addEventListener("deviceready", () => {
