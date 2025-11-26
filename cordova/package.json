@@ -58,12 +58,7 @@
       "wonderpush-cordova-sdk-fcm": {
         "SENDER_ID": "math-project-370321"
       },
-      "onesignal-cordova-plugin": {},
-      "admob-plus-cordova": {
-        "APP_ID_ANDROID": "ca-app-pub-4463307428680168~1797861467",
-        "APP_ID_IOS": "ca-app-pub-4463307428680168~7443217617",
-        "PLAY_SERVICES_VERSION": "20.6.0"
-      }
+      "onesignal-cordova-plugin": {}
     },
     "platforms": [
       "ios",

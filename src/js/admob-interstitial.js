@@ -36,8 +36,8 @@ export function admobInitInterstitial() {
 function createInterstitial() {
   const adUnitId =
     window.cordova.platformId === "android"
-      ? import.meta.env.VITE_AD_UNIT_INTERSTITIAL_ANDROID
-      : import.meta.env.VITE_AD_UNIT_INTERSTITIAL_IOS;
+      ? "ca-app-pub-4463307428680168/4381275310"
+      : "ca-app-pub-4463307428680168/5694356980";
 
   const ad = new admob.InterstitialAd({
     adUnitId,

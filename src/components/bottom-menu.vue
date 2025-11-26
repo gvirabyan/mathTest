@@ -154,7 +154,7 @@
 
     <span class="link-title">{{ link.name }}</span>
   </f7-link>
-  <div @click="onRewardClick">Add2</div>
+  <div @click="onShowAdClick">Add2</div>
 </template>
 
 <script setup>
@@ -209,7 +209,7 @@ const resetPage = linkName => {
   }
 };
 
-async function onRewardClick() {
+async function onShowAdClick() {
   await showInterstitial();
 }
 </script>
