@@ -1,6 +1,5 @@
 import Dom7 from "dom7";
 import { admobInitInterstitial } from "./admob-interstitial.js";
-import { admobInitRewarded } from "./admob-rewarded.js";
 
 const cordovaApp = {
   f7: null,
@@ -67,7 +66,6 @@ const cordovaApp = {
     cordovaApp.handleSplashScreen();
 
     // Admob
-    admobInitRewarded();
     admobInitInterstitial();
 
     if (window.cordova) {

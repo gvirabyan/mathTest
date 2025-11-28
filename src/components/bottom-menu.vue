@@ -210,6 +210,7 @@ const resetPage = linkName => {
 };
 
 async function onShowAdClick() {
+  // Show interstitial ad on "Add2" button click
   await showInterstitial();
 }
 </script>
